@@ -1,17 +1,32 @@
 package arn
 
-import as "github.com/aerospike/aerospike-client-go"
+import (
+	"errors"
+	"os"
+	"strings"
+
+	as "github.com/aerospike/aerospike-client-go"
+)
 
 // Client ...
 var client *as.Client
 
 // Get ...
 func Get(set string, key interface{}) (as.BinMap, error) {
-	pk, _ := as.NewKey("arn", set, key)
+	pk, keyErr := as.NewKey("arn", set, key)
+
+	if keyErr != nil {
+		return nil, keyErr
+	}
+
 	rec, err := client.Get(nil, pk)
 
 	if err != nil {
 		return nil, err
+	}
+
+	if rec == nil {
+		return nil, errors.New("Record not found")
 	}
 
 	return rec.Bins, nil
@@ -19,7 +34,12 @@ func Get(set string, key interface{}) (as.BinMap, error) {
 
 // GetObject ...
 func GetObject(set string, key interface{}, obj interface{}) error {
-	pk, _ := as.NewKey("arn", set, key)
+	pk, keyErr := as.NewKey("arn", set, key)
+
+	if keyErr != nil {
+		return keyErr
+	}
+
 	return client.GetObject(nil, pk, obj)
 }
 
@@ -79,11 +99,23 @@ func GetAnime(id int) (*Anime, error) {
 	return anime, err
 }
 
+// GetDBHost ...
+func GetDBHost() string {
+	hostname, _ := os.Hostname()
+
+	if strings.HasPrefix(hostname, "arn-") {
+		return "10.138.144.132"
+	}
+
+	return "127.0.0.1"
+}
+
+// init
 func init() {
 	as.SetAerospikeTag("json")
 
 	var err error
-	client, err = as.NewClient("127.0.0.1", 3000)
+	client, err = as.NewClient(GetDBHost(), 3000)
 
 	if err != nil {
 		panic(err)
