@@ -2,8 +2,6 @@ package arn
 
 import (
 	"errors"
-	"os"
-	"strings"
 
 	as "github.com/aerospike/aerospike-client-go"
 )
@@ -101,13 +99,7 @@ func GetAnime(id int) (*Anime, error) {
 
 // GetDBHost ...
 func GetDBHost() string {
-	hostname, _ := os.Hostname()
-
-	if strings.HasPrefix(hostname, "arn-") {
-		return "10.138.144.132"
-	}
-
-	return "127.0.0.1"
+	return "arn-db"
 }
 
 // init

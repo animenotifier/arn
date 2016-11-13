@@ -5,8 +5,8 @@ import "sort"
 // Genres ...
 var Genres []string
 
-// GenreIcons ...
-var GenreIcons = map[string]string{
+// Icons
+var genreIcons = map[string]string{
 	"Action":        "bomb",
 	"Adventure":     "diamond",
 	"Cars":          "car",
@@ -42,8 +42,19 @@ var GenreIcons = map[string]string{
 	"Vampire":       "eye",
 }
 
+// GetGenreIcon returns the unprefixed icon class name for the genre.
+func GetGenreIcon(genre string) string {
+	icon, exists := genreIcons[genre]
+
+	if exists {
+		return icon
+	}
+
+	return "circle"
+}
+
 func init() {
-	for k := range GenreIcons {
+	for k := range genreIcons {
 		Genres = append(Genres, k)
 	}
 	sort.Strings(Genres)
