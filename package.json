@@ -1,0 +1,48 @@
+{
+	"name": "arn",
+	"version": "1.0.0",
+	"homepage": "https://notify.moe",
+	"description": "Library access for notify.moe.",
+	"main": "index.js",
+	"license": "GPL-3.0",
+	"dependencies": {
+		"@types/bluebird": "*",
+		"@types/chalk": "*",
+		"@types/gravatar": "*",
+		"@types/http-status-codes": "*",
+		"@types/natural": "*",
+		"@types/node": "*",
+		"@types/node-cache": "*",
+		"@types/request-promise": "*",
+		"@types/shortid": "*",
+		"@types/xml2js": "*",
+		"bluebird": "*",
+		"chalk": "*",
+		"gravatar": "*",
+		"http-status-codes": "*",
+		"natural": "*",
+		"node-cache": "*",
+		"request-promise": "*",
+		"shortid": "*",
+		"striptags": "*",
+		"web-push": "*",
+		"xml2js": "*"
+	},
+	"scripts": {
+		"postinstall": "tsc"
+	},
+	"keywords": [
+		"anime",
+		"notifier",
+		"notify.moe"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/animenotifier/arn"
+	},
+	"author": {
+		"name": "Eduard Urbach",
+		"email": "e.urbach@gmail.com",
+		"url": "https://blitzprog.org"
+	}
+}
