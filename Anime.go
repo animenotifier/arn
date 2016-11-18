@@ -69,3 +69,10 @@ type AnimeRelation struct {
 	ID   int    `json:"id"`
 	Type string `json:"type"`
 }
+
+// GetAnime ...
+func GetAnime(id int) (*Anime, error) {
+	anime := new(Anime)
+	err := GetObject("Anime", id, anime)
+	return anime, err
+}

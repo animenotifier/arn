@@ -6,8 +6,8 @@ import (
 	as "github.com/aerospike/aerospike-client-go"
 )
 
-// Client ...
 var client *as.Client
+var scanPolicy *as.ScanPolicy
 
 // Get ...
 func Get(set string, key interface{}) (as.BinMap, error) {
@@ -42,23 +42,14 @@ func GetObject(set string, key interface{}, obj interface{}) error {
 }
 
 // Scan ...
-func Scan(set string, channel interface{}) {
-	spolicy := as.NewScanPolicy()
-	spolicy.ConcurrentNodes = true
-	spolicy.Priority = as.HIGH
-	spolicy.IncludeBinData = true
-
-	client.ScanAllObjects(spolicy, channel, "arn", set)
+func Scan(set string, channel interface{}) error {
+	_, err := client.ScanAllObjects(scanPolicy, channel, "arn", set)
+	return err
 }
 
 // ForEach ...
 func ForEach(set string, callback func(as.BinMap)) {
-	spolicy := as.NewScanPolicy()
-	spolicy.ConcurrentNodes = true
-	spolicy.Priority = as.HIGH
-	spolicy.IncludeBinData = true
-
-	recs, _ := client.ScanAll(spolicy, "arn", set)
+	recs, _ := client.ScanAll(scanPolicy, "arn", set)
 
 	for res := range recs.Results() {
 		if res.Err != nil {
@@ -72,31 +63,6 @@ func ForEach(set string, callback func(as.BinMap)) {
 	recs.Close()
 }
 
-// GetUser ...
-func GetUser(id string) (*User, error) {
-	user := new(User)
-	err := GetObject("Users", id, user)
-	return user, err
-}
-
-// GetUserByNick ...
-func GetUserByNick(nick string) (*User, error) {
-	rec, err := Get("NickToUser", nick)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return GetUser(rec["userId"].(string))
-}
-
-// GetAnime ...
-func GetAnime(id int) (*Anime, error) {
-	anime := new(Anime)
-	err := GetObject("Anime", id, anime)
-	return anime, err
-}
-
 // GetDBHost ...
 func GetDBHost() string {
 	return "arn-db"
@@ -105,6 +71,11 @@ func GetDBHost() string {
 // init
 func init() {
 	as.SetAerospikeTag("json")
+
+	scanPolicy = as.NewScanPolicy()
+	scanPolicy.ConcurrentNodes = true
+	scanPolicy.Priority = as.HIGH
+	scanPolicy.IncludeBinData = true
 
 	var err error
 	client, err = as.NewClient(GetDBHost(), 3000)

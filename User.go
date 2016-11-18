@@ -57,7 +57,7 @@ type UserLocation struct {
 type UserAccounts struct {
 	Facebook string `json:"facebook"`
 	Google   string `json:"google"`
-	Twitter  string `json:"twitter"`
+	Twitter  int    `json:"twitter"`
 }
 
 // UserAgent ...
@@ -105,4 +105,22 @@ type PushEndpoint struct {
 		P256DH string `json:"p256dh"`
 		Auth   string `json:"auth"`
 	} `json:"keys"`
+}
+
+// GetUser ...
+func GetUser(id string) (*User, error) {
+	user := new(User)
+	err := GetObject("Users", id, user)
+	return user, err
+}
+
+// GetUserByNick ...
+func GetUserByNick(nick string) (*User, error) {
+	rec, err := Get("NickToUser", nick)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return GetUser(rec["userId"].(string))
 }
