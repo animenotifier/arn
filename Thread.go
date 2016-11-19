@@ -1,8 +1,6 @@
 package arn
 
-import "sort"
-
-// Thread ...
+// Thread represents a forum thread.
 type Thread struct {
 	ID       string   `json:"id"`
 	Title    string   `json:"title"`
@@ -14,6 +12,37 @@ type Thread struct {
 	Sticky   bool     `json:"sticky"`
 	Replies  int      `json:"replies"`
 	Created  string   `json:"created"`
+}
+
+// ToPostable converts a thread into an object that implements the Postable interface.
+// Threads, posts and messages can be converted to the generic Postable type.
+func (thread *Thread) ToPostable() *ThreadPostable {
+	return &ThreadPostable{thread}
+}
+
+// ThreadPostable implements the Postable interface following Go naming convetions.
+type ThreadPostable struct {
+	thread *Thread
+}
+
+// ID returns the thread ID.
+func (postable *ThreadPostable) ID() string {
+	return postable.thread.ID
+}
+
+// Text returns the Markdown text.
+func (postable *ThreadPostable) Text() string {
+	return postable.thread.Text
+}
+
+// Author returns the user object representing the thread's author.
+func (postable *ThreadPostable) Author() *User {
+	return postable.thread.Author
+}
+
+// Likes returns an array of user IDs for the post.
+func (postable *ThreadPostable) Likes() []string {
+	return postable.thread.Likes
 }
 
 // ThreadList ...
@@ -52,7 +81,7 @@ func GetThread(id string) (*Thread, error) {
 }
 
 // GetThreadsByTag ...
-func GetThreadsByTag(tag string) ([]*Thread, error) {
+func GetThreadsByTag(tag string) (ThreadList, error) {
 	var threads ThreadList
 
 	scan := make(chan *Thread)
@@ -63,8 +92,6 @@ func GetThreadsByTag(tag string) ([]*Thread, error) {
 			threads = append(threads, thread)
 		}
 	}
-
-	sort.Sort(threads)
 
 	return threads, err
 }
