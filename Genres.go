@@ -31,7 +31,7 @@ var genreIcons = map[string]string{
 	"Sci-Fi":        "rocket",
 	"School":        "graduation-cap",
 	"Seinen":        "male",
-	"Shounen":       "male",
+	"Shounen":       "child",
 	"Shoujo":        "female",
 	"Slice of Life": "hand-peace-o",
 	"Space":         "space-shuttle",

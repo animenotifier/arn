@@ -12,10 +12,15 @@ type Thread struct {
 	Sticky   bool     `json:"sticky"`
 	Replies  int      `json:"replies"`
 	Created  string   `json:"created"`
+	Edited   string   `json:"edited"`
+}
+
+// Init fetches additional data like the author.
+func (thread *Thread) Init() {
+	thread.Author, _ = GetUser(thread.AuthorID)
 }
 
 // ToPostable converts a thread into an object that implements the Postable interface.
-// Threads, posts and messages can be converted to the generic Postable type.
 func (thread *Thread) ToPostable() *ThreadPostable {
 	return &ThreadPostable{thread}
 }

@@ -2,6 +2,14 @@ package arn
 
 // Genre ...
 type Genre struct {
-	Genre     string   `json:"genre"`
+	ID        string   `json:"genre"`
+	Name      string   `json:"-"`
 	AnimeList []*Anime `json:"animeList"`
+}
+
+// GetGenre ...
+func GetGenre(id string) (*Genre, error) {
+	genre := new(Genre)
+	err := GetObject("Genres", id, genre)
+	return genre, err
 }

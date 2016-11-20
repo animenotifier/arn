@@ -11,8 +11,8 @@ var stripTagsRegex = regexp.MustCompile(`<[^>]*>`)
 var sourceRegex = regexp.MustCompile(`\(Source: (.*?)\)`)
 var writtenByRegex = regexp.MustCompile(`\[Written by (.*?)\]`)
 
-// FixGenre ...
-func FixGenre(genre string) string {
+// GetGenreIDByName ...
+func GetGenreIDByName(genre string) string {
 	genre = strings.Replace(genre, "-", "", -1)
 	genre = strings.Replace(genre, " ", "", -1)
 	genre = strings.ToLower(genre)

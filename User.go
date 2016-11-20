@@ -1,5 +1,7 @@
 package arn
 
+import "math/rand"
+
 // User ...
 type User struct {
 	ID            string            `json:"id"`
@@ -27,6 +29,7 @@ type User struct {
 		Min int `json:"min"`
 		Max int `json:"max"`
 	} `json:"ageRange"`
+	CoverImage    UserCoverImage          `json:"coverImage"`
 	Agent         UserAgent               `json:"agent"`
 	Location      UserLocation            `json:"location"`
 	OsuDetails    UserOsuDetails          `json:"osuDetails"`
@@ -107,9 +110,55 @@ type PushEndpoint struct {
 	} `json:"keys"`
 }
 
+// UserCoverImage ...
+type UserCoverImage struct {
+	URL      string      `json:"url"`
+	Position CSSPosition `json:"position"`
+}
+
+// CSSPosition ...
+type CSSPosition struct {
+	X string `json:"x"`
+	Y string `json:"y"`
+}
+
+// CoverImageStyle ...
+func (user *User) CoverImageStyle() string {
+	url := user.CoverImage.URL
+
+	if url == "" {
+		wallpapers := []string{
+			"https://www.pixelstalk.net/wp-content/uploads/2016/08/1080p-Anime-Desktop-Wallpaper.jpg",
+			"https://i.imgur.com/6cJrxzx.jpg",
+			"https://cdn.cloudpix.co/images/wallpaper-1366x768/angel-angel-beats-anime-wallpaper-666806d97b32a8a8e2b1ad9a55ab962e-large-1135606.jpg",
+		}
+		url = wallpapers[rand.Intn(len(wallpapers))]
+	}
+
+	return "background-image: url('" + url + "'); background-position: " + user.CoverImage.Position.X + " " + user.CoverImage.Position.Y + ";"
+}
+
+// Save saves the user object in the database.
+func (user *User) Save() {
+	SetObject("Users", user.ID, user)
+}
+
+// NewUser creates a new user object with default values.
+func NewUser() *User {
+	return &User{
+		CoverImage: UserCoverImage{
+			URL: "",
+			Position: CSSPosition{
+				X: "50%",
+				Y: "50%",
+			},
+		},
+	}
+}
+
 // GetUser ...
 func GetUser(id string) (*User, error) {
-	user := new(User)
+	user := NewUser()
 	err := GetObject("Users", id, user)
 	return user, err
 }

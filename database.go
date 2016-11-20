@@ -41,6 +41,17 @@ func GetObject(set string, key interface{}, obj interface{}) error {
 	return client.GetObject(nil, pk, obj)
 }
 
+// SetObject ...
+func SetObject(set string, key interface{}, obj interface{}) error {
+	pk, keyErr := as.NewKey("arn", set, key)
+
+	if keyErr != nil {
+		return keyErr
+	}
+
+	return client.PutObject(nil, pk, obj)
+}
+
 // Scan ...
 func Scan(set string, channel interface{}) error {
 	_, err := client.ScanAllObjects(scanPolicy, channel, "arn", set)
