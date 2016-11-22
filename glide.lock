@@ -1,0 +1,23 @@
+hash: f3d18c8d066124d7a3e7632e19b38c58daa1161752215f08578bb3a511ee60e6
+updated: 2016-11-23T00:58:48.603313091+09:00
+imports:
+- name: github.com/aerospike/aerospike-client-go
+  version: 43beaedd687afef4bc62fdb128408611a5ed6ee5
+  subpackages:
+  - internal/lua
+  - internal/lua/resources
+  - logger
+  - pkg/bcrypt
+  - pkg/ripemd160
+  - types
+  - types/atomic
+  - types/particle_type
+  - types/rand
+  - utils/buffer
+- name: github.com/yuin/gopher-lua
+  version: d0d5dd3565a9f3c86ff5bc42a0b1cc9e5bfcf55e
+  subpackages:
+  - ast
+  - parse
+  - pm
+testImports: []
