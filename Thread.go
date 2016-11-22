@@ -5,7 +5,6 @@ type Thread struct {
 	ID       string   `json:"id"`
 	Title    string   `json:"title"`
 	Text     string   `json:"text"`
-	Author   *User    `json:"-"`
 	AuthorID string   `json:"authorId"`
 	Tags     []string `json:"tags"`
 	Likes    []string `json:"likes"`
@@ -13,69 +12,28 @@ type Thread struct {
 	Replies  int      `json:"replies"`
 	Created  string   `json:"created"`
 	Edited   string   `json:"edited"`
+
+	author *User
 }
 
-// Init fetches additional data like the author.
-func (thread *Thread) Init() {
-	thread.Author, _ = GetUser(thread.AuthorID)
+// Author returns the thread author.
+func (thread *Thread) Author() *User {
+	if thread.author != nil {
+		return thread.author
+	}
+
+	thread.author, _ = GetUser(thread.AuthorID)
+	return thread.author
+}
+
+// Link returns the relative URL of the thread.
+func (thread *Thread) Link() string {
+	return "/threads/" + thread.ID
 }
 
 // ToPostable converts a thread into an object that implements the Postable interface.
 func (thread *Thread) ToPostable() *ThreadPostable {
 	return &ThreadPostable{thread}
-}
-
-// ThreadPostable implements the Postable interface following Go naming convetions.
-type ThreadPostable struct {
-	thread *Thread
-}
-
-// ID returns the thread ID.
-func (postable *ThreadPostable) ID() string {
-	return postable.thread.ID
-}
-
-// Text returns the Markdown text.
-func (postable *ThreadPostable) Text() string {
-	return postable.thread.Text
-}
-
-// Author returns the user object representing the thread's author.
-func (postable *ThreadPostable) Author() *User {
-	return postable.thread.Author
-}
-
-// Likes returns an array of user IDs for the post.
-func (postable *ThreadPostable) Likes() []string {
-	return postable.thread.Likes
-}
-
-// ThreadList ...
-type ThreadList []*Thread
-
-func (c ThreadList) Len() int {
-	return len(c)
-}
-
-func (c ThreadList) Swap(i, j int) {
-	c[i], c[j] = c[j], c[i]
-}
-
-func (c ThreadList) Less(i, j int) bool {
-	a := c[i]
-	b := c[j]
-
-	if a.Sticky != b.Sticky {
-		if a.Sticky {
-			return true
-		}
-
-		if b.Sticky {
-			return false
-		}
-	}
-
-	return a.Created > b.Created
 }
 
 // GetThread ...

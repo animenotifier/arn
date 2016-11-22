@@ -4,17 +4,39 @@ package arn
 type Post struct {
 	ID       string   `json:"id"`
 	Text     string   `json:"text"`
-	Author   *User    `json:"-"`
 	AuthorID string   `json:"authorId"`
 	ThreadID string   `json:"threadId"`
 	Likes    []string `json:"likes"`
 	Created  string   `json:"created"`
 	Edited   string   `json:"edited"`
+
+	author *User
+	thread *Thread
 }
 
-// Init fetches additional post data like the author and thread objects.
-func (post *Post) Init() {
-	post.Author, _ = GetUser(post.AuthorID)
+// Author returns the post author.
+func (post *Post) Author() *User {
+	if post.author != nil {
+		return post.author
+	}
+
+	post.author, _ = GetUser(post.AuthorID)
+	return post.author
+}
+
+// Thread returns the thread this post was posted in.
+func (post *Post) Thread() *Thread {
+	if post.thread != nil {
+		return post.thread
+	}
+
+	post.thread, _ = GetThread(post.ThreadID)
+	return post.thread
+}
+
+// Link returns the relative URL of the post.
+func (post *Post) Link() string {
+	return "/posts/" + post.ID
 }
 
 // ToPostable converts a post into an object that implements the Postable interface.
@@ -22,44 +44,25 @@ func (post *Post) ToPostable() *PostPostable {
 	return &PostPostable{post}
 }
 
-// PostPostable implements the Postable interface following Go naming convetions.
-type PostPostable struct {
-	post *Post
+// GetPost ...
+func GetPost(id string) (*Post, error) {
+	post := new(Post)
+	err := GetObject("Posts", id, post)
+	return post, err
 }
 
-// ID returns the post ID.
-func (postable *PostPostable) ID() string {
-	return postable.post.ID
-}
+// GetPosts ...
+func GetPosts() (PostList, error) {
+	var posts PostList
 
-// Text returns the Markdown text.
-func (postable *PostPostable) Text() string {
-	return postable.post.Text
-}
+	scan := make(chan *Post)
+	err := Scan("Posts", scan)
 
-// Author returns the user object representing the post's author.
-func (postable *PostPostable) Author() *User {
-	return postable.post.Author
-}
+	for post := range scan {
+		posts = append(posts, post)
+	}
 
-// Likes returns an array of user IDs for the post.
-func (postable *PostPostable) Likes() []string {
-	return postable.post.Likes
-}
-
-// PostList ...
-type PostList []*Post
-
-func (c PostList) Len() int {
-	return len(c)
-}
-
-func (c PostList) Swap(i, j int) {
-	c[i], c[j] = c[j], c[i]
-}
-
-func (c PostList) Less(i, j int) bool {
-	return c[i].Created < c[j].Created
+	return posts, err
 }
 
 // FilterPosts filters all forum posts by a custom function.
@@ -67,7 +70,7 @@ func FilterPosts(filter func(*Post) bool) (PostList, error) {
 	var filtered PostList
 
 	channel := make(chan *Post)
-	_, err := client.ScanAllObjects(scanPolicy, channel, "arn", "Posts")
+	err := Scan("Posts", channel)
 
 	if err != nil {
 		return filtered, err
@@ -75,7 +78,6 @@ func FilterPosts(filter func(*Post) bool) (PostList, error) {
 
 	for post := range channel {
 		if filter(post) {
-			post.Init()
 			filtered = append(filtered, post)
 		}
 	}

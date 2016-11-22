@@ -6,4 +6,6 @@ type Postable interface {
 	Text() string
 	Likes() []string
 	Author() *User
+	Link() string
+	Type() string
 }

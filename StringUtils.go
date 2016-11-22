@@ -1,6 +1,7 @@
 package arn
 
 import (
+	"fmt"
 	"regexp"
 	"strings"
 	"unicode"
@@ -34,4 +35,18 @@ func Capitalize(s string) string {
 	}
 	r, n := utf8.DecodeRuneInString(s)
 	return string(unicode.ToUpper(r)) + s[n:]
+}
+
+// ToString converts anything into a string.
+func ToString(v interface{}) string {
+	return fmt.Sprint(v)
+}
+
+// Plural returns the number concatenated to the proper pluralization of the word.
+func Plural(count int, singular string) string {
+	if count == 1 || count == -1 {
+		return ToString(count) + " " + singular
+	}
+
+	return ToString(count) + " " + singular + "s"
 }
