@@ -1,7 +1,5 @@
 package arn
 
-import "github.com/animenotifier/arn"
-
 // Anime ...
 type Anime struct {
 	ID            int             `json:"id"`
@@ -28,6 +26,14 @@ type Anime struct {
 	Relations     []AnimeRelation `json:"relations"`
 	Created       string          `json:"created"`
 	CreatedBy     string          `json:"createdBy"`
+}
+
+// AnimeSmall is a smaller version of Anime that consumes less memory.
+type AnimeSmall struct {
+	ID       int        `json:"id"`
+	Title    AnimeTitle `json:"title"`
+	Image    string     `json:"image"`
+	Watching int        `json:"watching"`
 }
 
 // AnimeTitle ...
@@ -70,6 +76,18 @@ type AnimeStudio struct {
 type AnimeRelation struct {
 	ID   int    `json:"id"`
 	Type string `json:"type"`
+
+	anime *Anime
+}
+
+// Anime ...
+func (relation *AnimeRelation) Anime() *Anime {
+	if relation.anime != nil {
+		return relation.anime
+	}
+
+	relation.anime, _ = GetAnime(relation.ID)
+	return relation.anime
 }
 
 // GetAnime ...
@@ -79,20 +97,29 @@ func GetAnime(id int) (*Anime, error) {
 	return anime, err
 }
 
-// GetAiringAnime ...
-func GetAiringAnime() []*arn.Anime {
-	var animeList []*arn.Anime
+// FilterAnime filters all anime by a custom function.
+func FilterAnime(filter func(*Anime) bool) ([]*Anime, error) {
+	var filtered []*Anime
 
-	scan := make(chan *arn.Anime)
-	arn.Scan("Anime", scan)
+	channel := make(chan *Anime)
+	err := Scan("Anime", channel)
 
-	for anime := range scan {
-		if anime.AiringStatus != "currently airing" || anime.Adult {
-			continue
-		}
-
-		animeList = append(animeList, anime)
+	if err != nil {
+		return filtered, err
 	}
 
-	return animeList
+	for post := range channel {
+		if filter(post) {
+			filtered = append(filtered, post)
+		}
+	}
+
+	return filtered, nil
+}
+
+// GetAiringAnime ...
+func GetAiringAnime() ([]*Anime, error) {
+	return FilterAnime(func(anime *Anime) bool {
+		return anime.AiringStatus == "currently airing" && !anime.Adult
+	})
 }
