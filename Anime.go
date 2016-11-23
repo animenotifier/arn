@@ -1,5 +1,7 @@
 package arn
 
+import "github.com/animenotifier/arn"
+
 // Anime ...
 type Anime struct {
 	ID            int             `json:"id"`
@@ -75,4 +77,22 @@ func GetAnime(id int) (*Anime, error) {
 	anime := new(Anime)
 	err := GetObject("Anime", id, anime)
 	return anime, err
+}
+
+// GetAiringAnime ...
+func GetAiringAnime() []*arn.Anime {
+	var animeList []*arn.Anime
+
+	scan := make(chan *arn.Anime)
+	arn.Scan("Anime", scan)
+
+	for anime := range scan {
+		if anime.AiringStatus != "currently airing" || anime.Adult {
+			continue
+		}
+
+		animeList = append(animeList, anime)
+	}
+
+	return animeList
 }
