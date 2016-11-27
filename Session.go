@@ -8,7 +8,7 @@ type SessionDatabase struct {
 
 // Load loads the initial session values from the database.
 func (db *SessionDatabase) Load(sid string) map[string]interface{} {
-	key, _ := as.NewKey("arn", "Sessions", sid)
+	key, _ := as.NewKey(namespace, "Sessions", sid)
 	record, err := client.Get(nil, key)
 
 	if err != nil {
@@ -20,7 +20,7 @@ func (db *SessionDatabase) Load(sid string) map[string]interface{} {
 
 // Update updates the session values in the database.
 func (db *SessionDatabase) Update(sid string, newValues map[string]interface{}) {
-	key, _ := as.NewKey("arn", "Sessions", sid)
+	key, _ := as.NewKey(namespace, "Sessions", sid)
 
 	if len(newValues) == 0 {
 		go client.Delete(nil, key)

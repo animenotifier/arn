@@ -6,12 +6,13 @@ import (
 	as "github.com/aerospike/aerospike-client-go"
 )
 
+var namespace = "arn"
 var client *as.Client
 var scanPolicy *as.ScanPolicy
 
 // Get ...
 func Get(set string, key interface{}) (as.BinMap, error) {
-	pk, keyErr := as.NewKey("arn", set, key)
+	pk, keyErr := as.NewKey(namespace, set, key)
 
 	if keyErr != nil {
 		return nil, keyErr
@@ -32,7 +33,7 @@ func Get(set string, key interface{}) (as.BinMap, error) {
 
 // GetObject ...
 func GetObject(set string, key interface{}, obj interface{}) error {
-	pk, keyErr := as.NewKey("arn", set, key)
+	pk, keyErr := as.NewKey(namespace, set, key)
 
 	if keyErr != nil {
 		return keyErr
@@ -43,7 +44,7 @@ func GetObject(set string, key interface{}, obj interface{}) error {
 
 // SetObject ...
 func SetObject(set string, key interface{}, obj interface{}) error {
-	pk, keyErr := as.NewKey("arn", set, key)
+	pk, keyErr := as.NewKey(namespace, set, key)
 
 	if keyErr != nil {
 		return keyErr
@@ -54,13 +55,13 @@ func SetObject(set string, key interface{}, obj interface{}) error {
 
 // Scan ...
 func Scan(set string, channel interface{}) error {
-	_, err := client.ScanAllObjects(scanPolicy, channel, "arn", set)
+	_, err := client.ScanAllObjects(scanPolicy, channel, namespace, set)
 	return err
 }
 
 // ForEach ...
 func ForEach(set string, callback func(as.BinMap)) {
-	recs, _ := client.ScanAll(scanPolicy, "arn", set)
+	recs, _ := client.ScanAll(scanPolicy, namespace, set)
 
 	for res := range recs.Results() {
 		if res.Err != nil {
