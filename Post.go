@@ -1,5 +1,7 @@
 package arn
 
+import "sort"
+
 // Post represents a forum post.
 type Post struct {
 	ID       string   `json:"id"`
@@ -52,8 +54,8 @@ func GetPost(id string) (*Post, error) {
 }
 
 // GetPosts ...
-func GetPosts() (PostList, error) {
-	var posts PostList
+func GetPosts() ([]*Post, error) {
+	var posts []*Post
 
 	scan := make(chan *Post)
 	err := Scan("Posts", scan)
@@ -65,9 +67,23 @@ func GetPosts() (PostList, error) {
 	return posts, err
 }
 
+// SortPostsLatestFirst sorts the slice of posts.
+func SortPostsLatestFirst(posts []*Post) {
+	sort.Slice(posts, func(i, j int) bool {
+		return posts[i].Created > posts[j].Created
+	})
+}
+
+// SortPostsLatestLast sorts the slice of posts.
+func SortPostsLatestLast(posts []*Post) {
+	sort.Slice(posts, func(i, j int) bool {
+		return posts[i].Created < posts[j].Created
+	})
+}
+
 // FilterPosts filters all forum posts by a custom function.
-func FilterPosts(filter func(*Post) bool) (PostList, error) {
-	var filtered PostList
+func FilterPosts(filter func(*Post) bool) ([]*Post, error) {
+	var filtered []*Post
 
 	channel := make(chan *Post)
 	err := Scan("Posts", channel)

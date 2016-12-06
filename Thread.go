@@ -1,5 +1,7 @@
 package arn
 
+import "sort"
+
 // Thread represents a forum thread.
 type Thread struct {
 	ID       string   `json:"id"`
@@ -44,17 +46,38 @@ func GetThread(id string) (*Thread, error) {
 }
 
 // GetThreadsByTag ...
-func GetThreadsByTag(tag string) (ThreadList, error) {
-	var threads ThreadList
+func GetThreadsByTag(tag string) ([]*Thread, error) {
+	var threads []*Thread
 
 	scan := make(chan *Thread)
 	err := Scan("Threads", scan)
+	allTags := (tag == "" || tag == "<nil>")
 
 	for thread := range scan {
-		if tag == "<nil>" || Contains(thread.Tags, tag) {
+		if allTags || Contains(thread.Tags, tag) {
 			threads = append(threads, thread)
 		}
 	}
 
 	return threads, err
+}
+
+// SortThreads sorts a slice of threads.
+func SortThreads(threads []*Thread) {
+	sort.Slice(threads, func(i, j int) bool {
+		a := threads[i]
+		b := threads[j]
+
+		if a.Sticky != b.Sticky {
+			if a.Sticky {
+				return true
+			}
+
+			if b.Sticky {
+				return false
+			}
+		}
+
+		return a.Created > b.Created
+	})
 }
