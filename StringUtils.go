@@ -25,7 +25,7 @@ func FixAnimeDescription(description string) string {
 	description = stripTagsRegex.ReplaceAllString(description, "")
 	description = sourceRegex.ReplaceAllString(description, "")
 	description = writtenByRegex.ReplaceAllString(description, "")
-	return description
+	return strings.TrimSpace(description)
 }
 
 // Capitalize returns the string with the first letter capitalized.

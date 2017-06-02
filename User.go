@@ -4,56 +4,56 @@ import "math/rand"
 
 // User ...
 type User struct {
-	ID            string            `json:"id"`
-	Nick          string            `json:"nick"`
-	FirstName     string            `json:"firstName"`
-	LastName      string            `json:"lastName"`
-	Email         string            `json:"email"`
-	Gender        string            `json:"gender"`
-	Language      string            `json:"language"`
-	Avatar        string            `json:"avatar"`
-	Osu           string            `json:"osu"`
-	Registered    string            `json:"registered"`
-	Role          string            `json:"role"`
-	SortBy        string            `json:"sortBy"`
-	Tagline       string            `json:"tagline"`
-	TitleLanguage string            `json:"titleLanguage"`
-	Twitter       string            `json:"twitter"`
-	Website       string            `json:"website"`
-	IP            string            `json:"ip"`
-	LastLogin     string            `json:"lastLogin"`
-	Providers     UserProviders     `json:"providers"`
-	ListProviders UserListProviders `json:"listProviders"`
-	Accounts      UserAccounts      `json:"accounts"`
-	AgeRange      struct {
-		Min int `json:"min"`
-		Max int `json:"max"`
-	} `json:"ageRange"`
-	CoverImage    UserCoverImage          `json:"coverImage"`
-	Agent         UserAgent               `json:"agent"`
-	Location      UserLocation            `json:"location"`
-	OsuDetails    UserOsuDetails          `json:"osuDetails"`
-	Following     []string                `json:"following"`
-	PushEndpoints map[string]PushEndpoint `json:"pushEndpoints"`
-	LastView      struct {
-		Date string `json:"date"`
-		URL  string `json:"url"`
-	} `json:"lastView"`
-}
+	ID   string `json:"id"`
+	Nick string `json:"nick"`
+	// 	FirstName     string            `json:"firstName"`
+	// 	LastName      string            `json:"lastName"`
+	// 	Email         string            `json:"email"`
+	// 	Gender        string            `json:"gender"`
+	// 	Language      string            `json:"language"`
+	Avatar string `json:"avatar"`
+	// 	Osu           string            `json:"osu"`
+	Registered string `json:"registered"`
+	Role       string `json:"role"`
+	// 	SortBy        string            `json:"sortBy"`
+	Tagline string `json:"tagline"`
+	// 	TitleLanguage string            `json:"titleLanguage"`
+	// 	Twitter       string            `json:"twitter"`
+	// 	Website       string            `json:"website"`
+	// 	IP            string            `json:"ip"`
+	// 	LastLogin     string            `json:"lastLogin"`
+	// 	Providers     UserProviders     `json:"providers"`
+	// 	ListProviders UserListProviders `json:"listProviders"`
+	// 	Accounts      UserAccounts      `json:"accounts"`
+	// 	AgeRange      struct {
+	// 		Min int `json:"min"`
+	// 		Max int `json:"max"`
+	// 	} `json:"ageRange"`
+	CoverImage UserCoverImage `json:"coverImage"`
+	// 	Agent         UserAgent               `json:"agent"`
+	// 	Location      UserLocation            `json:"location"`
+	// 	OsuDetails    UserOsuDetails          `json:"osuDetails"`
+	// 	Following     []string                `json:"following"`
+	// 	PushEndpoints map[string]PushEndpoint `json:"pushEndpoints"`
+	// 	LastView      struct {
+	// 		Date string `json:"date"`
+	// 		URL  string `json:"url"`
+	// 	} `json:"lastView"`
+	// }
 
-// UserLocation ...
-type UserLocation struct {
-	CountryName   string `json:"countryName"`
-	CountryCode   string `json:"countryCode"`
-	Latitude      string `json:"latitude"`
-	Longitude     string `json:"longitude"`
-	IPAddress     string `json:"ipAddress"`
-	ZipCode       string `json:"zipCode"`
-	CityName      string `json:"cityName"`
-	TimeZone      string `json:"timeZone"`
-	RegionName    string `json:"regionName"`
-	StatusCode    string `json:"statusCode"`
-	StatusMessage string `json:"statusMessage"`
+	// // UserLocation ...
+	// type UserLocation struct {
+	// 	CountryName   string `json:"countryName"`
+	// 	CountryCode   string `json:"countryCode"`
+	// 	Latitude      string `json:"latitude"`
+	// 	Longitude     string `json:"longitude"`
+	// 	IPAddress     string `json:"ipAddress"`
+	// 	ZipCode       string `json:"zipCode"`
+	// 	CityName      string `json:"cityName"`
+	// 	TimeZone      string `json:"timeZone"`
+	// 	RegionName    string `json:"regionName"`
+	// 	StatusCode    string `json:"statusCode"`
+	// 	StatusMessage string `json:"statusMessage"`
 }
 
 // UserAccounts ...
