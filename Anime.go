@@ -2,7 +2,7 @@ package arn
 
 // Anime ...
 type Anime struct {
-	ID       int             `json:"id"`
+	ID       string          `json:"id"`
 	Type     string          `json:"type"`
 	Title    AnimeTitle      `json:"title"`
 	Image    string          `json:"image"`
@@ -45,7 +45,7 @@ type AnimeTrailer struct {
 }
 
 // GetAnime ...
-func GetAnime(id int) (*Anime, error) {
+func GetAnime(id string) (*Anime, error) {
 	anime := new(Anime)
 	err := GetObject("Anime", id, anime)
 	return anime, err

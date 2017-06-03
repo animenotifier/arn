@@ -28,6 +28,15 @@ func FixAnimeDescription(description string) string {
 	return strings.TrimSpace(description)
 }
 
+// FixGender ...
+func FixGender(gender string) string {
+	if gender != "male" && gender != "female" {
+		return ""
+	}
+
+	return gender
+}
+
 // Capitalize returns the string with the first letter capitalized.
 func Capitalize(s string) string {
 	if s == "" {

@@ -1,91 +1,101 @@
 package arn
 
-import "math/rand"
-
 // User ...
 type User struct {
-	ID   string `json:"id"`
-	Nick string `json:"nick"`
-	// 	FirstName     string            `json:"firstName"`
-	// 	LastName      string            `json:"lastName"`
-	// 	Email         string            `json:"email"`
-	// 	Gender        string            `json:"gender"`
-	// 	Language      string            `json:"language"`
-	Avatar string `json:"avatar"`
-	// 	Osu           string            `json:"osu"`
-	Registered string `json:"registered"`
-	Role       string `json:"role"`
-	// 	SortBy        string            `json:"sortBy"`
-	Tagline string `json:"tagline"`
-	// 	TitleLanguage string            `json:"titleLanguage"`
-	// 	Twitter       string            `json:"twitter"`
-	// 	Website       string            `json:"website"`
-	// 	IP            string            `json:"ip"`
-	// 	LastLogin     string            `json:"lastLogin"`
-	// 	Providers     UserProviders     `json:"providers"`
-	// 	ListProviders UserListProviders `json:"listProviders"`
-	// 	Accounts      UserAccounts      `json:"accounts"`
-	// 	AgeRange      struct {
-	// 		Min int `json:"min"`
-	// 		Max int `json:"max"`
-	// 	} `json:"ageRange"`
-	CoverImage UserCoverImage `json:"coverImage"`
-	// 	Agent         UserAgent               `json:"agent"`
-	// 	Location      UserLocation            `json:"location"`
-	// 	OsuDetails    UserOsuDetails          `json:"osuDetails"`
-	// 	Following     []string                `json:"following"`
-	// 	PushEndpoints map[string]PushEndpoint `json:"pushEndpoints"`
-	// 	LastView      struct {
-	// 		Date string `json:"date"`
-	// 		URL  string `json:"url"`
-	// 	} `json:"lastView"`
-	// }
+	ID         string       `json:"id"`
+	Nick       string       `json:"nick"`
+	FirstName  string       `json:"firstName"`
+	LastName   string       `json:"lastName"`
+	Email      string       `json:"email"`
+	Role       string       `json:"role"`
+	Registered string       `json:"registered"`
+	LastLogin  string       `json:"lastLogin"`
+	Gender     string       `json:"gender"`
+	Language   string       `json:"language"`
+	Avatar     string       `json:"avatar"`
+	Tagline    string       `json:"tagline"`
+	Website    string       `json:"website"`
+	IP         string       `json:"ip"`
+	UserAgent  string       `json:"agent"`
+	AgeRange   UserAgeRange `json:"ageRange"`
+	Location   UserLocation `json:"location"`
+	Accounts   UserAccounts `json:"accounts"`
+	Browser    UserBrowser  `json:"browser"`
+	OS         UserOS       `json:"os"`
+	Following  []string     `json:"following"`
+}
 
-	// // UserLocation ...
-	// type UserLocation struct {
-	// 	CountryName   string `json:"countryName"`
-	// 	CountryCode   string `json:"countryCode"`
-	// 	Latitude      string `json:"latitude"`
-	// 	Longitude     string `json:"longitude"`
-	// 	IPAddress     string `json:"ipAddress"`
-	// 	ZipCode       string `json:"zipCode"`
-	// 	CityName      string `json:"cityName"`
-	// 	TimeZone      string `json:"timeZone"`
-	// 	RegionName    string `json:"regionName"`
-	// 	StatusCode    string `json:"statusCode"`
-	// 	StatusMessage string `json:"statusMessage"`
+// UserLocation ...
+type UserLocation struct {
+	CountryName string  `json:"countryName"`
+	CountryCode string  `json:"countryCode"`
+	Latitude    float64 `json:"latitude"`
+	Longitude   float64 `json:"longitude"`
+	CityName    string  `json:"cityName"`
+	RegionName  string  `json:"regionName"`
+	TimeZone    string  `json:"timeZone"`
+	ZipCode     string  `json:"zipCode"`
+}
+
+// UserAgeRange ...
+type UserAgeRange struct {
+	Min int `json:"min"`
+	Max int `json:"max"`
 }
 
 // UserAccounts ...
 type UserAccounts struct {
-	Facebook string `json:"facebook"`
-	Google   string `json:"google"`
-	Twitter  int    `json:"twitter"`
-}
+	Facebook struct {
+		ID string `json:"id"`
+	} `json:"facebook"`
 
-// UserAgent ...
-type UserAgent struct {
-	Family string `json:"family"`
-	Patch  string `json:"patch"`
-	Minor  string `json:"minor"`
-	Major  string `json:"major"`
-	Source string `json:"source"`
+	Google struct {
+		ID string `json:"id"`
+	} `json:"google"`
+
+	Twitter struct {
+		ID   string `json:"id"`
+		Nick string `json:"nick"`
+	} `json:"twitter"`
+
+	Osu UserOsuDetails `json:"osu"`
+
+	AniList struct {
+		Nick string `json:"nick"`
+	} `json:"anilist"`
+
+	AnimePlanet struct {
+		Nick string `json:"nick"`
+	} `json:"animeplanet"`
+
+	MyAnimeList struct {
+		Nick string `json:"nick"`
+	} `json:"myanimelist"`
+
+	Kitsu struct {
+		Nick string `json:"nick"`
+	} `json:"kitsu"`
 }
 
 // UserOsuDetails ...
 type UserOsuDetails struct {
-	PP        float64 `json:"pp"`
-	Level     float64 `json:"level"`
-	Nick      string  `json:"nick"`
-	Accuracy  float64 `json:"accuracy"`
-	PlayCount int     `json:"playCount"`
+	Nick     string  `json:"nick"`
+	PP       float64 `json:"pp"`
+	Accuracy float64 `json:"accuracy"`
+	Level    float64 `json:"level"`
 }
 
-// UserProviders ...
-type UserProviders struct {
-	AiringDate string `json:"airingDate"`
-	Anime      string `json:"anime"`
-	List       string `json:"list"`
+// UserBrowser ...
+type UserBrowser struct {
+	Name     string `json:"name"`
+	Version  string `json:"version"`
+	IsMobile bool   `json:"isMobile"`
+}
+
+// UserOS ...
+type UserOS struct {
+	Name    string `json:"name"`
+	Version string `json:"version"`
 }
 
 // UserListProviders ...
@@ -122,20 +132,27 @@ type CSSPosition struct {
 	Y string `json:"y"`
 }
 
-// CoverImageStyle ...
-func (user *User) CoverImageStyle() string {
-	url := user.CoverImage.URL
+// // CoverImageStyle ...
+// func (user *User) CoverImageStyle() string {
+// 	url := user.CoverImage.URL
 
-	if url == "" {
-		wallpapers := []string{
-			"https://www.pixelstalk.net/wp-content/uploads/2016/08/1080p-Anime-Desktop-Wallpaper.jpg",
-			"https://i.imgur.com/6cJrxzx.jpg",
-			"https://cdn.cloudpix.co/images/wallpaper-1366x768/angel-angel-beats-anime-wallpaper-666806d97b32a8a8e2b1ad9a55ab962e-large-1135606.jpg",
-		}
-		url = wallpapers[rand.Intn(len(wallpapers))]
-	}
+// 	if url == "" {
+// 		wallpapers := []string{
+// 			"https://www.pixelstalk.net/wp-content/uploads/2016/08/1080p-Anime-Desktop-Wallpaper.jpg",
+// 			"https://i.imgur.com/6cJrxzx.jpg",
+// 			"https://cdn.cloudpix.co/images/wallpaper-1366x768/angel-angel-beats-anime-wallpaper-666806d97b32a8a8e2b1ad9a55ab962e-large-1135606.jpg",
+// 		}
+// 		url = wallpapers[rand.Intn(len(wallpapers))]
+// 	}
 
-	return "background-image: url('" + url + "'); background-position: " + user.CoverImage.Position.X + " " + user.CoverImage.Position.Y + ";"
+// 	return "background-image: url('" + url + "'); background-position: " + user.CoverImage.Position.X + " " + user.CoverImage.Position.Y + ";"
+// }
+
+// Settings ...
+func (user *User) Settings() *Settings {
+	settings := new(Settings)
+	GetObject("Settings", user.ID, settings)
+	return settings
 }
 
 // Save saves the user object in the database.
@@ -146,13 +163,13 @@ func (user *User) Save() {
 // NewUser creates a new user object with default values.
 func NewUser() *User {
 	return &User{
-		CoverImage: UserCoverImage{
-			URL: "",
-			Position: CSSPosition{
-				X: "50%",
-				Y: "50%",
-			},
-		},
+	// CoverImage: UserCoverImage{
+	// 	URL: "",
+	// 	Position: CSSPosition{
+	// 		X: "50%",
+	// 		Y: "50%",
+	// 	},
+	// },
 	}
 }
 
