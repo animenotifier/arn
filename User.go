@@ -157,7 +157,7 @@ func (user *User) Settings() *Settings {
 
 // Save saves the user object in the database.
 func (user *User) Save() {
-	SetObject("Users", user.ID, user)
+	SetObject("User", user.ID, user)
 }
 
 // NewUser creates a new user object with default values.
@@ -176,7 +176,7 @@ func NewUser() *User {
 // GetUser ...
 func GetUser(id string) (*User, error) {
 	user := NewUser()
-	err := GetObject("Users", id, user)
+	err := GetObject("User", id, user)
 	return user, err
 }
 

@@ -41,7 +41,7 @@ func (thread *Thread) ToPostable() *ThreadPostable {
 // GetThread ...
 func GetThread(id string) (*Thread, error) {
 	thread := new(Thread)
-	err := GetObject("Threads", id, thread)
+	err := GetObject("Thread", id, thread)
 	return thread, err
 }
 
@@ -50,7 +50,7 @@ func GetThreadsByTag(tag string) ([]*Thread, error) {
 	var threads []*Thread
 
 	scan := make(chan *Thread)
-	err := Scan("Threads", scan)
+	err := Scan("Thread", scan)
 	allTags := (tag == "" || tag == "<nil>")
 
 	for thread := range scan {

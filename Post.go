@@ -49,7 +49,7 @@ func (post *Post) ToPostable() *PostPostable {
 // GetPost ...
 func GetPost(id string) (*Post, error) {
 	post := new(Post)
-	err := GetObject("Posts", id, post)
+	err := GetObject("Post", id, post)
 	return post, err
 }
 
@@ -58,7 +58,7 @@ func GetPosts() ([]*Post, error) {
 	var posts []*Post
 
 	scan := make(chan *Post)
-	err := Scan("Posts", scan)
+	err := Scan("Post", scan)
 
 	for post := range scan {
 		posts = append(posts, post)
@@ -86,7 +86,7 @@ func FilterPosts(filter func(*Post) bool) ([]*Post, error) {
 	var filtered []*Post
 
 	channel := make(chan *Post)
-	err := Scan("Posts", channel)
+	err := Scan("Post", channel)
 
 	if err != nil {
 		return filtered, err
