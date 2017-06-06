@@ -132,6 +132,12 @@ type CSSPosition struct {
 	Y string `json:"y"`
 }
 
+// NickToUser ...
+type NickToUser struct {
+	Nick   string `json:"nick"`
+	UserID string `json:"userId"`
+}
+
 // // CoverImageStyle ...
 // func (user *User) CoverImageStyle() string {
 // 	url := user.CoverImage.URL
@@ -158,6 +164,23 @@ func (user *User) Settings() *Settings {
 // Save saves the user object in the database.
 func (user *User) Save() {
 	SetObject("User", user.ID, user)
+}
+
+// ChangeNick changes the user's nickname safely.
+func (user *User) ChangeNick(newName string) {
+	// Delete old nick reference
+	Delete("NickToUser", user.Nick)
+
+	// Set new nick
+	user.Nick = newName
+
+	// New nick reference
+	record := &NickToUser{
+		Nick:   user.Nick,
+		UserID: user.ID,
+	}
+
+	SetObject("NickToUser", record.Nick, record)
 }
 
 // NewUser creates a new user object with default values.
@@ -189,4 +212,12 @@ func GetUserByNick(nick string) (*User, error) {
 	}
 
 	return GetUser(rec["userId"].(string))
+}
+
+// AllUsers ...
+func AllUsers() (chan *User, error) {
+	channel := make(chan *User)
+	err := Scan("User", channel)
+
+	return channel, err
 }

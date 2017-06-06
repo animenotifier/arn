@@ -53,6 +53,22 @@ func SetObject(set string, key interface{}, obj interface{}) error {
 	return client.PutObject(nil, pk, obj)
 }
 
+// Delete ...
+func Delete(set string, key interface{}) (bool, error) {
+	pk, keyErr := as.NewKey(namespace, set, key)
+
+	if keyErr != nil {
+		return false, keyErr
+	}
+
+	return client.Delete(nil, pk)
+}
+
+// Truncate ...
+func Truncate(set string) error {
+	return client.Truncate(nil, namespace, set, nil)
+}
+
 // Scan ...
 func Scan(set string, channel interface{}) error {
 	_, err := client.ScanAllObjects(scanPolicy, channel, namespace, set)
