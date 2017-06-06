@@ -2,20 +2,33 @@ package arn
 
 import "encoding/json"
 
+// NotFoundAnime is the dummy object representing
+var NotFoundAnime = &Anime{
+	ID:   "error",
+	Type: "error",
+	Title: AnimeTitle{
+		Canonical: "Error",
+		Romaji:    "Error",
+		Japanese:  "Error",
+	},
+	Summary: "Error fetching anime data",
+}
+
 // Anime ...
 type Anime struct {
-	ID            string         `json:"id"`
-	Type          string         `json:"type"`
-	Title         AnimeTitle     `json:"title"`
-	Image         ImageTypes     `json:"image"`
-	StartDate     string         `json:"startDate"`
-	EndDate       string         `json:"endDate"`
-	EpisodeCount  int            `json:"episodeCount"`
-	EpisodeLength int            `json:"episodeLength"`
-	Summary       string         `json:"summary"`
-	Trailers      []AnimeTrailer `json:"trailers"`
+	ID            string          `json:"id"`
+	Type          string          `json:"type"`
+	Title         AnimeTitle      `json:"title"`
+	Image         AnimeImageTypes `json:"image"`
+	StartDate     string          `json:"startDate"`
+	EndDate       string          `json:"endDate"`
+	EpisodeCount  int             `json:"episodeCount"`
+	EpisodeLength int             `json:"episodeLength"`
+	Status        string          `json:"status"`
+	NSFW          bool            `json:"nsfw"`
+	Summary       string          `json:"summary"`
+	Trailers      []AnimeTrailer  `json:"trailers"`
 
-	// AiringStatus  string          `json:"airingStatus"`
 	// Adult         bool            `json:"adult"`
 
 	// Hashtag       string          `json:"hashtag"`
@@ -32,8 +45,8 @@ type Anime struct {
 	// CreatedBy     string          `json:"createdBy"`
 }
 
-// ImageTypes ...
-type ImageTypes struct {
+// AnimeImageTypes ...
+type AnimeImageTypes struct {
 	Tiny     string `json:"tiny"`
 	Small    string `json:"small"`
 	Large    string `json:"large"`
@@ -89,18 +102,18 @@ func FilterAnime(filter func(*Anime) bool) ([]*Anime, error) {
 		return filtered, err
 	}
 
-	for post := range channel {
-		if filter(post) {
-			filtered = append(filtered, post)
+	for obj := range channel {
+		if filter(obj) {
+			filtered = append(filtered, obj)
 		}
 	}
 
 	return filtered, nil
 }
 
-// // GetAiringAnime ...
-// func GetAiringAnime() ([]*Anime, error) {
-// 	return FilterAnime(func(anime *Anime) bool {
-// 		return anime.AiringStatus == "currently airing" && !anime.Adult
-// 	})
-// }
+// GetAiringAnime ...
+func GetAiringAnime() ([]*Anime, error) {
+	return FilterAnime(func(anime *Anime) bool {
+		return anime.Status == "current" && anime.Type == "tv" && !anime.NSFW
+	})
+}
