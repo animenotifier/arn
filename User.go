@@ -1,5 +1,9 @@
 package arn
 
+import (
+	"time"
+)
+
 // User ...
 type User struct {
 	ID         string       `json:"id"`
@@ -138,21 +142,25 @@ type NickToUser struct {
 	UserID string `json:"userId"`
 }
 
-// // CoverImageStyle ...
-// func (user *User) CoverImageStyle() string {
-// 	url := user.CoverImage.URL
+// CoverImageURL ...
+func (user *User) CoverImageURL() string {
+	return "/images/cover/default"
+	// url := user.CoverImage.URL
+	// url := ""
 
-// 	if url == "" {
-// 		wallpapers := []string{
-// 			"https://www.pixelstalk.net/wp-content/uploads/2016/08/1080p-Anime-Desktop-Wallpaper.jpg",
-// 			"https://i.imgur.com/6cJrxzx.jpg",
-// 			"https://cdn.cloudpix.co/images/wallpaper-1366x768/angel-angel-beats-anime-wallpaper-666806d97b32a8a8e2b1ad9a55ab962e-large-1135606.jpg",
-// 		}
-// 		url = wallpapers[rand.Intn(len(wallpapers))]
-// 	}
+	// if url == "" {
+	// 	wallpapers := []string{
+	// 		"https://www.pixelstalk.net/wp-content/uploads/2016/08/1080p-Anime-Desktop-Wallpaper.jpg",
+	// 		"https://i.imgur.com/6cJrxzx.jpg",
+	// 		"https://cdn.cloudpix.co/images/wallpaper-1366x768/angel-angel-beats-anime-wallpaper-666806d97b32a8a8e2b1ad9a55ab962e-large-1135606.jpg",
+	// 		"https://s-media-cache-ak0.pinimg.com/originals/26/bc/e8/26bce85b5a225f294859ff9be7ba7326.jpg",
+	// 	}
+	// 	url = wallpapers[rand.Intn(len(wallpapers))]
+	// }
 
-// 	return "background-image: url('" + url + "'); background-position: " + user.CoverImage.Position.X + " " + user.CoverImage.Position.Y + ";"
-// }
+	// return url
+	//  background-position: " + user.CoverImage.Position.X + " " + user.CoverImage.Position.Y + ";"
+}
 
 // Settings ...
 func (user *User) Settings() *Settings {
@@ -181,6 +189,12 @@ func (user *User) ChangeNick(newName string) {
 	}
 
 	SetObject("NickToUser", record.Nick, record)
+}
+
+// RegisteredTime ...
+func (user *User) RegisteredTime() time.Time {
+	reg, _ := time.Parse(time.RFC3339, user.Registered)
+	return reg
 }
 
 // NewUser creates a new user object with default values.
