@@ -142,6 +142,12 @@ type NickToUser struct {
 	UserID string `json:"userId"`
 }
 
+// EmailToUser ...
+type EmailToUser struct {
+	Email  string `json:"email"`
+	UserID string `json:"userId"`
+}
+
 // CoverImageURL ...
 func (user *User) CoverImageURL() string {
 	return "/images/cover/default"
@@ -174,8 +180,8 @@ func (user *User) Save() {
 	SetObject("User", user.ID, user)
 }
 
-// ChangeNick changes the user's nickname safely.
-func (user *User) ChangeNick(newName string) {
+// SetNick changes the user's nickname safely.
+func (user *User) SetNick(newName string) {
 	// Delete old nick reference
 	Delete("NickToUser", user.Nick)
 
@@ -189,6 +195,23 @@ func (user *User) ChangeNick(newName string) {
 	}
 
 	SetObject("NickToUser", record.Nick, record)
+}
+
+// SetEmail changes the user's email safely.
+func (user *User) SetEmail(newName string) {
+	// Delete old email reference
+	Delete("EmailToUser", user.Email)
+
+	// Set new email
+	user.Email = newName
+
+	// New email reference
+	record := &EmailToUser{
+		Email:  user.Email,
+		UserID: user.ID,
+	}
+
+	SetObject("EmailToUser", record.Email, record)
 }
 
 // RegisteredTime ...
@@ -220,6 +243,17 @@ func GetUser(id string) (*User, error) {
 // GetUserByNick ...
 func GetUserByNick(nick string) (*User, error) {
 	rec, err := Get("NickToUser", nick)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return GetUser(rec["userId"].(string))
+}
+
+// GetUserByEmail ...
+func GetUserByEmail(email string) (*User, error) {
+	rec, err := Get("EmailToUser", email)
 
 	if err != nil {
 		return nil, err
