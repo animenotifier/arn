@@ -175,6 +175,12 @@ func (user *User) Settings() *Settings {
 	return settings
 }
 
+// AnimeList ...
+func (user *User) AnimeList() *AnimeList {
+	animeList, _ := GetAnimeList(user.ID)
+	return animeList
+}
+
 // Save saves the user object in the database.
 func (user *User) Save() {
 	SetObject("User", user.ID, user)
