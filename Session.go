@@ -1,30 +1,40 @@
 package arn
 
 import as "github.com/aerospike/aerospike-client-go"
+import "github.com/aerogo/aero"
 
-// SessionDatabase ...
-type SessionDatabase struct {
+// SessionStoreAerospike is a store saving sessions in an Aerospike database.
+type SessionStoreAerospike struct {
+	namespace string
 }
 
-// Load loads the initial session values from the database.
-func (db *SessionDatabase) Load(sid string) map[string]interface{} {
-	key, _ := as.NewKey(namespace, "Sessions", sid)
+// NewAerospikeStore creates a session store using an Aerospike database.
+func NewAerospikeStore() *SessionStoreAerospike {
+	return &SessionStoreAerospike{
+		namespace: "Session",
+	}
+}
+
+// Get loads the initial session values from the database.
+func (store *SessionStoreAerospike) Get(sid string) *aero.Session {
+	key, _ := as.NewKey(namespace, store.namespace, sid)
 	record, err := client.Get(nil, key)
 
 	if err != nil {
 		return nil
 	}
 
-	return record.Bins
+	return aero.NewSession(sid, record.Bins)
 }
 
-// Update updates the session values in the database.
-func (db *SessionDatabase) Update(sid string, newValues map[string]interface{}) {
-	key, _ := as.NewKey(namespace, "Sessions", sid)
+// Set updates the session values in the database.
+func (store *SessionStoreAerospike) Set(sid string, session *aero.Session) {
+	sessionData := session.Data()
+	key, _ := as.NewKey(namespace, store.namespace, sid)
 
-	if len(newValues) == 0 {
+	if len(sessionData) == 0 {
 		go client.Delete(nil, key)
 	} else {
-		go client.PutObject(nil, key, newValues)
+		go client.PutObject(nil, key, sessionData)
 	}
 }
