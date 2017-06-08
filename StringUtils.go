@@ -52,6 +52,15 @@ func AnimeRatingStars(rating float64) string {
 	return strings.Repeat("★", stars) + strings.Repeat("☆", 5-stars)
 }
 
+// EpisodesToString shows a question mark if the episode count is zero.
+func EpisodesToString(episodes int) string {
+	if episodes == 0 {
+		return "?"
+	}
+
+	return ToString(episodes)
+}
+
 // ToString converts anything into a string.
 func ToString(v interface{}) string {
 	return fmt.Sprint(v)

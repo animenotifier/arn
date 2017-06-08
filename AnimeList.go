@@ -1,5 +1,14 @@
 package arn
 
+// AnimeListStatus values for anime list items
+const (
+	AnimeListStatusWatching  = "watching"
+	AnimeListStatusCompleted = "completed"
+	AnimeListStatusPlanned   = "planned"
+	AnimeListStatusDropped   = "dropped"
+	AnimeListStatusHold      = "hold"
+)
+
 // AnimeList ...
 type AnimeList struct {
 	UserID string          `json:"userId"`
@@ -19,6 +28,17 @@ type AnimeListItem struct {
 	anime *Anime
 }
 
+// Contains checks if the list contains the anime ID already.
+func (list *AnimeList) Contains(animeID string) bool {
+	for _, item := range list.Items {
+		if item.AnimeID == animeID {
+			return true
+		}
+	}
+
+	return false
+}
+
 // Anime fetches the associated anime data.
 func (item *AnimeListItem) Anime() *Anime {
 	if item.anime == nil {
@@ -28,9 +48,16 @@ func (item *AnimeListItem) Anime() *Anime {
 	return item.anime
 }
 
+// Save saves the anime list in the database.
+func (list *AnimeList) Save() error {
+	return SetObject("AnimeList", list.UserID, list)
+}
+
 // GetAnimeList ...
 func GetAnimeList(userID string) (*AnimeList, error) {
-	animeList := new(AnimeList)
+	animeList := &AnimeList{
+		UserID: userID,
+	}
 	err := GetObject("AnimeList", userID, animeList)
 	return animeList, err
 }

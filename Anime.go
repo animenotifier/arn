@@ -84,7 +84,12 @@ func GetAnime(id string) (*Anime, error) {
 	return anime, err
 }
 
-// Save ...
+// Link returns the URI to the anime page.
+func (anime *Anime) Link() string {
+	return "/anime/" + anime.ID
+}
+
+// Save saves the anime in the database.
 func (anime *Anime) Save() error {
 	return SetObject("Anime", anime.ID, anime)
 }

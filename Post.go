@@ -8,6 +8,7 @@ type Post struct {
 	Text     string   `json:"text"`
 	AuthorID string   `json:"authorId"`
 	ThreadID string   `json:"threadId"`
+	Tags     []string `json:"tags"`
 	Likes    []string `json:"likes"`
 	Created  string   `json:"created"`
 	Edited   string   `json:"edited"`
