@@ -10,6 +10,11 @@ func (postable *ThreadPostable) ID() string {
 	return postable.thread.ID
 }
 
+// Title returns the thread title.
+func (postable *ThreadPostable) Title() string {
+	return postable.thread.Title
+}
+
 // Text returns the Markdown text.
 func (postable *ThreadPostable) Text() string {
 	return postable.thread.Text

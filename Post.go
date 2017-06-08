@@ -42,7 +42,7 @@ func (post *Post) Link() string {
 }
 
 // ToPostable converts a post into an object that implements the Postable interface.
-func (post *Post) ToPostable() *PostPostable {
+func (post *Post) ToPostable() Postable {
 	return &PostPostable{post}
 }
 

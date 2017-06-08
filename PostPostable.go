@@ -10,6 +10,11 @@ func (postable *PostPostable) ID() string {
 	return postable.post.ID
 }
 
+// Title returns the title of thread this post belongs to.
+func (postable *PostPostable) Title() string {
+	return postable.post.Thread().Title
+}
+
 // Text returns the Markdown text.
 func (postable *PostPostable) Text() string {
 	return postable.post.Text

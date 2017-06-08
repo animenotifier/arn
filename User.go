@@ -220,6 +220,12 @@ func (user *User) RegisteredTime() time.Time {
 	return reg
 }
 
+// Threads ...
+func (user *User) Threads() []*Thread {
+	threads, _ := GetThreadsByUser(user)
+	return threads
+}
+
 // NewUser creates a new user object with default values.
 func NewUser() *User {
 	return &User{

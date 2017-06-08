@@ -34,7 +34,7 @@ func (thread *Thread) Link() string {
 }
 
 // ToPostable converts a thread into an object that implements the Postable interface.
-func (thread *Thread) ToPostable() *ThreadPostable {
+func (thread *Thread) ToPostable() Postable {
 	return &ThreadPostable{thread}
 }
 
@@ -62,6 +62,22 @@ func GetThreadsByTag(tag string) ([]*Thread, error) {
 	return threads, err
 }
 
+// GetThreadsByUser ...
+func GetThreadsByUser(user *User) ([]*Thread, error) {
+	var threads []*Thread
+
+	scan := make(chan *Thread)
+	err := Scan("Thread", scan)
+
+	for thread := range scan {
+		if thread.AuthorID == user.ID {
+			threads = append(threads, thread)
+		}
+	}
+
+	return threads, err
+}
+
 // SortThreads sorts a slice of threads.
 func SortThreads(threads []*Thread) {
 	sort.Slice(threads, func(i, j int) bool {
@@ -79,5 +95,12 @@ func SortThreads(threads []*Thread) {
 		}
 
 		return a.Created > b.Created
+	})
+}
+
+// SortThreadsByDate sorts a slice of threads by creation date.
+func SortThreadsByDate(threads []*Thread) {
+	sort.Slice(threads, func(i, j int) bool {
+		return threads[i].Created > threads[j].Created
 	})
 }

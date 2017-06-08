@@ -26,6 +26,7 @@ type Anime struct {
 	EpisodeLength int             `json:"episodeLength"`
 	Status        string          `json:"status"`
 	NSFW          bool            `json:"nsfw"`
+	Rating        AnimeRating     `json:"rating"`
 	Summary       string          `json:"summary"`
 	Trailers      []AnimeTrailer  `json:"trailers"`
 
@@ -43,6 +44,14 @@ type Anime struct {
 	// Relations     []AnimeRelation `json:"relations"`
 	// Created       string          `json:"created"`
 	// CreatedBy     string          `json:"createdBy"`
+}
+
+// AnimeRating ...
+type AnimeRating struct {
+	Overall float64 `json:"overall"`
+	Story   float64 `json:"story"`
+	Visuals float64 `json:"visuals"`
+	Music   float64 `json:"music"`
 }
 
 // AnimeImageTypes ...
@@ -114,6 +123,6 @@ func FilterAnime(filter func(*Anime) bool) ([]*Anime, error) {
 // GetAiringAnime ...
 func GetAiringAnime() ([]*Anime, error) {
 	return FilterAnime(func(anime *Anime) bool {
-		return anime.Status == "current" && anime.Type == "tv" && !anime.NSFW
+		return anime.Status == "current" && anime.Type == "tv" && !anime.NSFW && anime.Rating.Overall > 50
 	})
 }

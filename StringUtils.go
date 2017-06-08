@@ -46,6 +46,12 @@ func Capitalize(s string) string {
 	return string(unicode.ToUpper(r)) + s[n:]
 }
 
+// AnimeRatingStars displays the rating in Unicode stars.
+func AnimeRatingStars(rating float64) string {
+	stars := int(rating/20 + 0.5)
+	return strings.Repeat("★", stars) + strings.Repeat("☆", 5-stars)
+}
+
 // ToString converts anything into a string.
 func ToString(v interface{}) string {
 	return fmt.Sprint(v)
