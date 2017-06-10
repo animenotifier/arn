@@ -9,7 +9,6 @@ type Genre struct {
 
 // GetGenre ...
 func GetGenre(id string) (*Genre, error) {
-	genre := new(Genre)
-	err := GetObject("Genres", id, genre)
-	return genre, err
+	obj, err := DB.Get("Genre", id)
+	return obj.(*Genre), err
 }

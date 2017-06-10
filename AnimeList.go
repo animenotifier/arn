@@ -1,5 +1,9 @@
 package arn
 
+import (
+	"errors"
+)
+
 // AnimeListStatus values for anime list items
 const (
 	AnimeListStatusWatching  = "watching"
@@ -11,8 +15,8 @@ const (
 
 // AnimeList ...
 type AnimeList struct {
-	UserID string          `json:"userId"`
-	Items  []AnimeListItem `json:"items"`
+	UserID string           `json:"userId"`
+	Items  []*AnimeListItem `json:"items"`
 }
 
 // AnimeListItem ...
@@ -26,6 +30,22 @@ type AnimeListItem struct {
 	Private      bool        `json:"private"`
 
 	anime *Anime
+}
+
+// Add adds an anime to the list if it hasn't been added yet.
+func (list *AnimeList) Add(animeID string) error {
+	if list.Contains(animeID) {
+		return errors.New("Anime " + animeID + " has already been added")
+	}
+
+	newItem := &AnimeListItem{
+		AnimeID: animeID,
+		Status:  AnimeListStatusPlanned,
+	}
+
+	list.Items = append(list.Items, newItem)
+
+	return nil
 }
 
 // Contains checks if the list contains the anime ID already.
@@ -50,14 +70,11 @@ func (item *AnimeListItem) Anime() *Anime {
 
 // Save saves the anime list in the database.
 func (list *AnimeList) Save() error {
-	return SetObject("AnimeList", list.UserID, list)
+	return DB.Set("AnimeList", list.UserID, list)
 }
 
 // GetAnimeList ...
 func GetAnimeList(userID string) (*AnimeList, error) {
-	animeList := &AnimeList{
-		UserID: userID,
-	}
-	err := GetObject("AnimeList", userID, animeList)
-	return animeList, err
+	obj, err := DB.Get("AnimeList", userID)
+	return obj.(*AnimeList), err
 }

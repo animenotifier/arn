@@ -21,8 +21,8 @@ func NewAerospikeStore(set string) *SessionStoreAerospike {
 
 // Get loads the initial session values from the database.
 func (store *SessionStoreAerospike) Get(sid string) *aero.Session {
-	key, _ := as.NewKey(namespace, store.set, sid)
-	record, err := client.Get(nil, key)
+	key, _ := as.NewKey(DB.namespace, store.set, sid)
+	record, err := DB.client.Get(nil, key)
 
 	if err != nil || record == nil {
 		fmt.Println(err)
@@ -35,11 +35,11 @@ func (store *SessionStoreAerospike) Get(sid string) *aero.Session {
 // Set updates the session values in the database.
 func (store *SessionStoreAerospike) Set(sid string, session *aero.Session) {
 	sessionData := session.Data()
-	key, _ := as.NewKey(namespace, store.set, sid)
+	key, _ := as.NewKey(DB.namespace, store.set, sid)
 
 	if sessionData == nil {
-		client.Delete(nil, key)
+		DB.client.Delete(nil, key)
 	} else {
-		client.Put(nil, key, sessionData)
+		DB.client.Put(nil, key, sessionData)
 	}
 }

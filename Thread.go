@@ -1,6 +1,8 @@
 package arn
 
-import "sort"
+import (
+	"sort"
+)
 
 // Thread represents a forum thread.
 type Thread struct {
@@ -40,9 +42,8 @@ func (thread *Thread) ToPostable() Postable {
 
 // GetThread ...
 func GetThread(id string) (*Thread, error) {
-	thread := new(Thread)
-	err := GetObject("Thread", id, thread)
-	return thread, err
+	obj, err := DB.Get("Thread", id)
+	return obj.(*Thread), err
 }
 
 // GetThreadsByTag ...
@@ -50,7 +51,7 @@ func GetThreadsByTag(tag string) ([]*Thread, error) {
 	var threads []*Thread
 
 	scan := make(chan *Thread)
-	err := Scan("Thread", scan)
+	err := DB.Scan("Thread", scan)
 	allTags := (tag == "" || tag == "<nil>")
 
 	for thread := range scan {
@@ -67,7 +68,7 @@ func GetThreadsByUser(user *User) ([]*Thread, error) {
 	var threads []*Thread
 
 	scan := make(chan *Thread)
-	err := Scan("Thread", scan)
+	err := DB.Scan("Thread", scan)
 
 	for thread := range scan {
 		if thread.AuthorID == user.ID {

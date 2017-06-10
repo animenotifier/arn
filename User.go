@@ -1,6 +1,7 @@
 package arn
 
 import (
+	"strings"
 	"time"
 )
 
@@ -170,9 +171,8 @@ func (user *User) CoverImageURL() string {
 
 // Settings ...
 func (user *User) Settings() *Settings {
-	settings := new(Settings)
-	GetObject("Settings", user.ID, settings)
-	return settings
+	obj, _ := DB.Get("Settings", user.ID)
+	return obj.(*Settings)
 }
 
 // AnimeList ...
@@ -182,14 +182,14 @@ func (user *User) AnimeList() *AnimeList {
 }
 
 // Save saves the user object in the database.
-func (user *User) Save() {
-	SetObject("User", user.ID, user)
+func (user *User) Save() error {
+	return DB.Set("User", user.ID, user)
 }
 
 // SetNick changes the user's nickname safely.
 func (user *User) SetNick(newName string) {
 	// Delete old nick reference
-	Delete("NickToUser", user.Nick)
+	DB.Delete("NickToUser", user.Nick)
 
 	// Set new nick
 	user.Nick = newName
@@ -200,13 +200,13 @@ func (user *User) SetNick(newName string) {
 		UserID: user.ID,
 	}
 
-	SetObject("NickToUser", record.Nick, record)
+	DB.Set("NickToUser", record.Nick, record)
 }
 
 // SetEmail changes the user's email safely.
 func (user *User) SetEmail(newName string) {
 	// Delete old email reference
-	Delete("EmailToUser", user.Email)
+	DB.Delete("EmailToUser", user.Email)
 
 	// Set new email
 	user.Email = newName
@@ -217,7 +217,7 @@ func (user *User) SetEmail(newName string) {
 		UserID: user.ID,
 	}
 
-	SetObject("EmailToUser", record.Email, record)
+	DB.Set("EmailToUser", record.Email, record)
 }
 
 // RegisteredTime ...
@@ -226,35 +226,31 @@ func (user *User) RegisteredTime() time.Time {
 	return reg
 }
 
+// IsActive ...
+func (user *User) IsActive() bool {
+	// Exclude people who didn't change their nickname.
+	if strings.HasPrefix(user.Nick, "g") || strings.HasPrefix(user.Nick, "fb") || strings.HasPrefix(user.Nick, "t") {
+		return false
+	}
+
+	return true
+}
+
 // Threads ...
 func (user *User) Threads() []*Thread {
 	threads, _ := GetThreadsByUser(user)
 	return threads
 }
 
-// NewUser creates a new user object with default values.
-func NewUser() *User {
-	return &User{
-	// CoverImage: UserCoverImage{
-	// 	URL: "",
-	// 	Position: CSSPosition{
-	// 		X: "50%",
-	// 		Y: "50%",
-	// 	},
-	// },
-	}
-}
-
 // GetUser ...
 func GetUser(id string) (*User, error) {
-	user := NewUser()
-	err := GetObject("User", id, user)
-	return user, err
+	obj, err := DB.Get("User", id)
+	return obj.(*User), err
 }
 
 // GetUserByNick ...
 func GetUserByNick(nick string) (*User, error) {
-	rec, err := Get("NickToUser", nick)
+	rec, err := DB.GetMap("NickToUser", nick)
 
 	if err != nil {
 		return nil, err
@@ -265,7 +261,7 @@ func GetUserByNick(nick string) (*User, error) {
 
 // GetUserByEmail ...
 func GetUserByEmail(email string) (*User, error) {
-	rec, err := Get("EmailToUser", email)
+	rec, err := DB.GetMap("EmailToUser", email)
 
 	if err != nil {
 		return nil, err
@@ -277,7 +273,26 @@ func GetUserByEmail(email string) (*User, error) {
 // AllUsers ...
 func AllUsers() (chan *User, error) {
 	channel := make(chan *User)
-	err := Scan("User", channel)
+	err := DB.Scan("User", channel)
 
 	return channel, err
+}
+
+// FilterUsers filters all users by a custom function.
+func FilterUsers(filter func(*User) bool) ([]*User, error) {
+	var filtered []*User
+
+	channel, err := AllUsers()
+
+	if err != nil {
+		return filtered, err
+	}
+
+	for obj := range channel {
+		if filter(obj) {
+			filtered = append(filtered, obj)
+		}
+	}
+
+	return filtered, nil
 }

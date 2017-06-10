@@ -79,9 +79,8 @@ type AnimeTrailer struct {
 
 // GetAnime ...
 func GetAnime(id string) (*Anime, error) {
-	anime := new(Anime)
-	err := GetObject("Anime", id, anime)
-	return anime, err
+	obj, err := DB.Get("Anime", id)
+	return obj.(*Anime), err
 }
 
 // Link returns the URI to the anime page.
@@ -91,7 +90,7 @@ func (anime *Anime) Link() string {
 
 // Save saves the anime in the database.
 func (anime *Anime) Save() error {
-	return SetObject("Anime", anime.ID, anime)
+	return DB.Set("Anime", anime.ID, anime)
 }
 
 // PrettyJSON ...
@@ -110,7 +109,7 @@ func FilterAnime(filter func(*Anime) bool) ([]*Anime, error) {
 	var filtered []*Anime
 
 	channel := make(chan *Anime)
-	err := Scan("Anime", channel)
+	err := DB.Scan("Anime", channel)
 
 	if err != nil {
 		return filtered, err

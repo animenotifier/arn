@@ -13,7 +13,7 @@ type ListOfIDs struct {
 func GetAiringAnimeCached() ([]*Anime, error) {
 	var cache ListOfIDs
 
-	err := GetObject("Cache", "airing anime", &cache)
+	err := DB.GetObject("Cache", "airing anime", &cache)
 
 	if err != nil {
 		return nil, err
