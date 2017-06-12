@@ -236,6 +236,11 @@ func (user *User) IsActive() bool {
 	return true
 }
 
+// WebsiteURL adds https:// to the URL.
+func (user *User) WebsiteURL() string {
+	return "https://" + user.Website
+}
+
 // Threads ...
 func (user *User) Threads() []*Thread {
 	threads, _ := GetThreadsByUser(user)
