@@ -7,6 +7,12 @@ import (
 	"github.com/chai2010/webp"
 )
 
+var OriginalImageExtensions = []string{
+	".jpg",
+	".png",
+	".gif",
+}
+
 const (
 	AvatarSmallSize = 100
 	AvatarMaxSize   = 560
@@ -48,7 +54,7 @@ func SaveWebP(img image.Image, out string, quality float32) error {
 func FindFileWithExtension(baseName string, dir string, extensions []string) string {
 	for _, ext := range extensions {
 		if _, err := os.Stat(dir + baseName + ext); !os.IsNotExist(err) {
-			return baseName + ext
+			return dir + baseName + ext
 		}
 	}
 
