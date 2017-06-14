@@ -3,6 +3,7 @@ package arn
 import (
 	"errors"
 	"reflect"
+	"sync"
 
 	as "github.com/aerospike/aerospike-client-go"
 )
@@ -93,7 +94,6 @@ func (db *Database) Set(table string, id string, obj interface{}) error {
 		return keyErr
 	}
 
-	// TODO: Implement write policy with as.REPLACE
 	return db.client.PutObject(nil, pk, obj)
 }
 
@@ -151,6 +151,39 @@ func (db *Database) GetMap(table string, id string) (as.BinMap, error) {
 	}
 
 	return rec.Bins, nil
+}
+
+// GetMany performs a Get request for every ID in the ID list and returns a slice of objects.
+func (db *Database) GetMany(table string, idList []string) (interface{}, error) {
+	// Get data type for that table
+	t, exists := db.types[table]
+
+	if !exists {
+		return nil, errors.New("Data type has not been defined for table " + table)
+	}
+
+	// Create a slice of pointers
+	objects := reflect.MakeSlice(reflect.SliceOf(reflect.PtrTo(t)), len(idList), len(idList))
+
+	// Start a goroutine for each Get request
+	wg := sync.WaitGroup{}
+	wg.Add(len(idList))
+
+	for index, id := range idList {
+		listIndex := index
+		objectID := id
+
+		go func() {
+			obj, _ := db.Get(table, objectID)
+			objects.Index(listIndex).Set(reflect.ValueOf(obj))
+
+			wg.Done()
+		}()
+	}
+
+	wg.Wait()
+
+	return objects.Interface(), nil
 }
 
 // DeleteTable deletes a table.
