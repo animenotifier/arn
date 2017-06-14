@@ -8,11 +8,11 @@ var DB = aerospike.NewDatabase(
 	3000,
 	"arn",
 	[]interface{}{
-		new(Anime),
-		new(AnimeList),
-		new(Post),
-		new(Settings),
-		new(Thread),
-		new(User),
+		(*Anime)(nil),
+		(*AnimeList)(nil),
+		(*Post)(nil),
+		(*Settings)(nil),
+		(*Thread)(nil),
+		(*User)(nil),
 	},
 )
