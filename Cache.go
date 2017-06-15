@@ -21,7 +21,12 @@ func GetAiringAnimeCached() ([]*Anime, error) {
 	}
 
 	list, err := DB.GetMany("Anime", cache.IDList)
-	return list.([]*Anime), err
+
+	if err != nil {
+		return nil, err
+	}
+
+	return list.([]*Anime), nil
 }
 
 // GetActiveUsersCached ...
@@ -33,5 +38,10 @@ func GetActiveUsersCached() ([]*User, error) {
 	}
 
 	list, err := DB.GetMany("User", cache.IDList)
-	return list.([]*User), err
+
+	if err != nil {
+		return nil, err
+	}
+
+	return list.([]*User), nil
 }
