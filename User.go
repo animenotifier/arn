@@ -149,6 +149,12 @@ type EmailToUser struct {
 	UserID string `json:"userId"`
 }
 
+// GoogleToUser ...
+type GoogleToUser struct {
+	ID     string `json:"id"`
+	UserID string `json:"userId"`
+}
+
 // CoverImageURL ...
 func (user *User) CoverImageURL() string {
 	return "/images/cover/default"
@@ -255,18 +261,17 @@ func GetUser(id string) (*User, error) {
 
 // GetUserByNick ...
 func GetUserByNick(nick string) (*User, error) {
-	rec, err := DB.GetMap("NickToUser", nick)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return GetUser(rec["userId"].(string))
+	return GetUserFromTable("NickToUser", nick)
 }
 
 // GetUserByEmail ...
 func GetUserByEmail(email string) (*User, error) {
-	rec, err := DB.GetMap("EmailToUser", email)
+	return GetUserFromTable("EmailToUser", email)
+}
+
+// GetUserFromTable ...
+func GetUserFromTable(table string, id string) (*User, error) {
+	rec, err := DB.GetMap(table, id)
 
 	if err != nil {
 		return nil, err

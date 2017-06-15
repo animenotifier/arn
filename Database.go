@@ -14,5 +14,8 @@ var DB = aerospike.NewDatabase(
 		(*Settings)(nil),
 		(*Thread)(nil),
 		(*User)(nil),
+		(*NickToUser)(nil),
+		(*EmailToUser)(nil),
+		(*GoogleToUser)(nil),
 	},
 )
