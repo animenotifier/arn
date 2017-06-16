@@ -3,7 +3,7 @@ package arn
 import (
 	"fmt"
 
-	"github.com/aerogo/aero"
+	"github.com/aerogo/session"
 	as "github.com/aerospike/aerospike-client-go"
 )
 
@@ -20,7 +20,7 @@ func NewAerospikeStore(set string) *SessionStoreAerospike {
 }
 
 // Get loads the initial session values from the database.
-func (store *SessionStoreAerospike) Get(sid string) *aero.Session {
+func (store *SessionStoreAerospike) Get(sid string) *session.Session {
 	key, _ := as.NewKey(DB.Namespace(), store.set, sid)
 	record, err := DB.Client.Get(nil, key)
 
@@ -29,11 +29,11 @@ func (store *SessionStoreAerospike) Get(sid string) *aero.Session {
 		return nil
 	}
 
-	return aero.NewSession(sid, record.Bins)
+	return session.New(sid, record.Bins)
 }
 
 // Set updates the session values in the database.
-func (store *SessionStoreAerospike) Set(sid string, session *aero.Session) {
+func (store *SessionStoreAerospike) Set(sid string, session *session.Session) {
 	sessionData := session.Data()
 	key, _ := as.NewKey(DB.Namespace(), store.set, sid)
 
