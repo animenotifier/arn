@@ -2,6 +2,7 @@ package arn
 
 import (
 	"errors"
+	"time"
 )
 
 // AnimeListStatus values for anime list items
@@ -28,6 +29,8 @@ type AnimeListItem struct {
 	Notes        string      `json:"notes"`
 	RewatchCount int         `json:"rewatchCount"`
 	Private      bool        `json:"private"`
+	Created      string      `json:"created"`
+	Edited       string      `json:"edited"`
 
 	anime *Anime
 }
@@ -40,9 +43,13 @@ func (list *AnimeList) Add(id interface{}) error {
 		return errors.New("Anime " + animeID + " has already been added")
 	}
 
+	creationDate := time.Now().UTC().Format(time.RFC3339)
+
 	newItem := &AnimeListItem{
 		AnimeID: animeID,
 		Status:  AnimeListStatusPlanned,
+		Created: creationDate,
+		Edited:  creationDate,
 	}
 
 	list.Items = append(list.Items, newItem)
