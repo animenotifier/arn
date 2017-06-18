@@ -175,6 +175,21 @@ func (user *User) CoverImageURL() string {
 	//  background-position: " + user.CoverImage.Position.X + " " + user.CoverImage.Position.Y + ";"
 }
 
+// HasAvatar ...
+func (user *User) HasAvatar() bool {
+	return user.Avatar != ""
+}
+
+// SmallAvatar ...
+func (user *User) SmallAvatar() string {
+	return "//media.notify.moe/images/avatars/small/" + user.ID + ".webp"
+}
+
+// LargeAvatar ...
+func (user *User) LargeAvatar() string {
+	return "//media.notify.moe/images/avatars/large/" + user.ID + ".webp"
+}
+
 // Settings ...
 func (user *User) Settings() *Settings {
 	obj, _ := DB.Get("Settings", user.ID)
