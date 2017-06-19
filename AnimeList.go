@@ -24,7 +24,7 @@ type AnimeList struct {
 type AnimeListItem struct {
 	AnimeID      string      `json:"animeId"`
 	Status       string      `json:"status"`
-	Episode      int         `json:"episode"`
+	Episodes     int         `json:"episodes"`
 	Rating       AnimeRating `json:"rating"`
 	Notes        string      `json:"notes"`
 	RewatchCount int         `json:"rewatchCount"`
@@ -82,6 +82,17 @@ func (list *AnimeList) Contains(id interface{}) bool {
 	}
 
 	return false
+}
+
+// Find returns the list item with the specified anime ID, if available.
+func (list *AnimeList) Find(animeID string) *AnimeListItem {
+	for _, item := range list.Items {
+		if item.AnimeID == animeID {
+			return item
+		}
+	}
+
+	return nil
 }
 
 // TransformBody returns an item that is passed to methods like Add, Remove, etc.
