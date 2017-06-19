@@ -5,34 +5,10 @@ import (
 	"time"
 )
 
-// AnimeListStatus values for anime list items
-const (
-	AnimeListStatusWatching  = "watching"
-	AnimeListStatusCompleted = "completed"
-	AnimeListStatusPlanned   = "planned"
-	AnimeListStatusDropped   = "dropped"
-	AnimeListStatusHold      = "hold"
-)
-
 // AnimeList ...
 type AnimeList struct {
 	UserID string           `json:"userId"`
 	Items  []*AnimeListItem `json:"items"`
-}
-
-// AnimeListItem ...
-type AnimeListItem struct {
-	AnimeID      string      `json:"animeId"`
-	Status       string      `json:"status"`
-	Episodes     int         `json:"episodes"`
-	Rating       AnimeRating `json:"rating"`
-	Notes        string      `json:"notes"`
-	RewatchCount int         `json:"rewatchCount"`
-	Private      bool        `json:"private"`
-	Created      string      `json:"created"`
-	Edited       string      `json:"edited"`
-
-	anime *Anime
 }
 
 // Add adds an anime to the list if it hasn't been added yet.
@@ -98,15 +74,6 @@ func (list *AnimeList) Find(animeID string) *AnimeListItem {
 // TransformBody returns an item that is passed to methods like Add, Remove, etc.
 func (list *AnimeList) TransformBody(body []byte) interface{} {
 	return string(body)
-}
-
-// Anime fetches the associated anime data.
-func (item *AnimeListItem) Anime() *Anime {
-	if item.anime == nil {
-		item.anime, _ = GetAnime(item.AnimeID)
-	}
-
-	return item.anime
 }
 
 // Save saves the anime list in the database.

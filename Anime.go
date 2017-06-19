@@ -1,6 +1,9 @@
 package arn
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"strconv"
+)
 
 // NotFoundAnime is the dummy object representing
 var NotFoundAnime = &Anime{
@@ -102,6 +105,15 @@ func (anime *Anime) PrettyJSON() (string, error) {
 // Watching ...
 func (anime *Anime) Watching() int {
 	return 0
+}
+
+// EpisodeCountString ...
+func (anime *Anime) EpisodeCountString() string {
+	if anime.EpisodeCount == 0 {
+		return "?"
+	}
+
+	return strconv.Itoa(anime.EpisodeCount)
 }
 
 // FilterAnime filters all anime by a custom function.
