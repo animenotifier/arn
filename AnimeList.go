@@ -3,6 +3,8 @@ package arn
 import (
 	"errors"
 	"time"
+
+	"github.com/aerogo/aero"
 )
 
 // AnimeList ...
@@ -68,6 +70,25 @@ func (list *AnimeList) Find(animeID string) *AnimeListItem {
 		if item.AnimeID == animeID {
 			return item
 		}
+	}
+
+	return nil
+}
+
+// Authorize returns an error if the given API request is not authorized.
+func (list *AnimeList) Authorize(ctx *aero.Context) error {
+	if !ctx.HasSession() {
+		return errors.New("Neither logged in nor in session")
+	}
+
+	userID, ok := ctx.Session().Get("userId").(string)
+
+	if !ok || userID == "" {
+		return errors.New("Not logged in")
+	}
+
+	if userID != ctx.Get("id") {
+		return errors.New("Can not modify data from other users")
 	}
 
 	return nil
