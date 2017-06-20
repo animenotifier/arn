@@ -28,6 +28,10 @@ func GetSearchIndex(id string) (*SearchIndex, error) {
 func Search(term string, maxUsers, maxAnime int) ([]*User, []*Anime) {
 	term = strings.ToLower(term)
 
+	if term == "" {
+		return nil, nil
+	}
+
 	var userResults []*User
 	var animeResults []*Anime
 
