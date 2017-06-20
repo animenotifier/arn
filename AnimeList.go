@@ -9,6 +9,8 @@ import (
 type AnimeList struct {
 	UserID string           `json:"userId"`
 	Items  []*AnimeListItem `json:"items"`
+
+	user *User
 }
 
 // Add adds an anime to the list if it hasn't been added yet.
@@ -69,6 +71,15 @@ func (list *AnimeList) Find(animeID string) *AnimeListItem {
 	}
 
 	return nil
+}
+
+// User returns the user this anime list belongs to.
+func (list *AnimeList) User() *User {
+	if list.user == nil {
+		list.user, _ = GetUser(list.UserID)
+	}
+
+	return list.user
 }
 
 // TransformBody returns an item that is passed to methods like Add, Remove, etc.
