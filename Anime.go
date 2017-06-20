@@ -116,6 +116,14 @@ func (anime *Anime) EpisodeCountString() string {
 	return strconv.Itoa(anime.EpisodeCount)
 }
 
+// AllAnime returns a stream of all anime.
+func AllAnime() (chan *Anime, error) {
+	channel := make(chan *Anime)
+	err := DB.Scan("Anime", channel)
+
+	return channel, err
+}
+
 // FilterAnime filters all anime by a custom function.
 func FilterAnime(filter func(*Anime) bool) ([]*Anime, error) {
 	var filtered []*Anime

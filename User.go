@@ -268,6 +268,11 @@ func (user *User) Threads() []*Thread {
 	return threads
 }
 
+// Link returns the URI to the user page.
+func (user *User) Link() string {
+	return "/+" + user.Nick
+}
+
 // GetUser ...
 func GetUser(id string) (*User, error) {
 	obj, err := DB.Get("User", id)
