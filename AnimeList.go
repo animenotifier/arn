@@ -1,6 +1,7 @@
 package arn
 
 import (
+	"encoding/json"
 	"errors"
 	"time"
 
@@ -13,6 +14,53 @@ type AnimeList struct {
 	Items  []*AnimeListItem `json:"items"`
 
 	user *User
+}
+
+// Find returns the list item with the specified anime ID, if available.
+func (list *AnimeList) Find(animeID string) *AnimeListItem {
+	for _, item := range list.Items {
+		if item.AnimeID == animeID {
+			return item
+		}
+	}
+
+	return nil
+}
+
+// Get ...
+func (list *AnimeList) Get(id interface{}) (interface{}, error) {
+	item := list.Find(id.(string))
+
+	if item == nil {
+		return nil, errors.New("Not found")
+	}
+
+	return item, nil
+}
+
+// Set ...
+func (list *AnimeList) Set(id interface{}, value interface{}) error {
+	animeID := id.(string)
+
+	for index, item := range list.Items {
+		if item.AnimeID == animeID {
+			item, ok := value.(*AnimeListItem)
+
+			if !ok {
+				return errors.New("Missing anime list item properties")
+			}
+
+			if item.AnimeID != animeID {
+				return errors.New("Incorrect animeId property")
+			}
+
+			list.Items[index] = item
+
+			return nil
+		}
+	}
+
+	return errors.New("Not found")
 }
 
 // Add adds an anime to the list if it hasn't been added yet.
@@ -64,17 +112,6 @@ func (list *AnimeList) Contains(id interface{}) bool {
 	return false
 }
 
-// Find returns the list item with the specified anime ID, if available.
-func (list *AnimeList) Find(animeID string) *AnimeListItem {
-	for _, item := range list.Items {
-		if item.AnimeID == animeID {
-			return item
-		}
-	}
-
-	return nil
-}
-
 // Authorize returns an error if the given API request is not authorized.
 func (list *AnimeList) Authorize(ctx *aero.Context) error {
 	if !ctx.HasSession() {
@@ -105,6 +142,17 @@ func (list *AnimeList) User() *User {
 
 // TransformBody returns an item that is passed to methods like Add, Remove, etc.
 func (list *AnimeList) TransformBody(body []byte) interface{} {
+	if len(body) > 0 && body[0] == '{' {
+		item := &AnimeListItem{}
+		err := json.Unmarshal(body, item)
+
+		if err != nil {
+			panic(err)
+		}
+
+		return item
+	}
+
 	return string(body)
 }
 
