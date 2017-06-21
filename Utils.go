@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 	"unicode"
 	"unicode/utf8"
 )
@@ -69,6 +70,11 @@ func EpisodeCountMax(episodes int) string {
 	}
 
 	return strconv.Itoa(episodes)
+}
+
+// DateTimeUTC returns the current UTC time in RFC3339 format.
+func DateTimeUTC() string {
+	return time.Now().UTC().Format(time.RFC3339)
 }
 
 // ToString converts anything into a string.

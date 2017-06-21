@@ -3,7 +3,7 @@ package arn
 import (
 	"encoding/json"
 	"errors"
-	"time"
+	"reflect"
 
 	"github.com/aerogo/aero"
 )
@@ -54,7 +54,48 @@ func (list *AnimeList) Set(id interface{}, value interface{}) error {
 				return errors.New("Incorrect animeId property")
 			}
 
+			item.Edited = DateTimeUTC()
 			list.Items[index] = item
+
+			return nil
+		}
+	}
+
+	return errors.New("Not found")
+}
+
+// Update ...
+func (list *AnimeList) Update(id interface{}, updatesObj interface{}) error {
+	updates := updatesObj.(map[string]interface{})
+	animeID := id.(string)
+
+	for _, item := range list.Items {
+		if item.AnimeID == animeID {
+			t := reflect.TypeOf(item).Elem()
+			v := reflect.ValueOf(item).Elem()
+
+			for key, value := range updates {
+				_, found := t.FieldByName(key)
+
+				if !found {
+					return errors.New("Field '" + key + "' does not exist in type " + t.Name())
+				}
+
+				valueInfo := reflect.ValueOf(value)
+				fieldValue := v.FieldByName(key)
+
+				if fieldValue.Kind() == reflect.Int {
+					x := int64(valueInfo.Float())
+
+					if !fieldValue.OverflowInt(x) {
+						fieldValue.SetInt(x)
+					}
+				} else {
+					fieldValue.Set(valueInfo)
+				}
+			}
+
+			item.Edited = DateTimeUTC()
 
 			return nil
 		}
@@ -71,7 +112,7 @@ func (list *AnimeList) Add(id interface{}) error {
 		return errors.New("Anime " + animeID + " has already been added")
 	}
 
-	creationDate := time.Now().UTC().Format(time.RFC3339)
+	creationDate := DateTimeUTC()
 
 	newItem := &AnimeListItem{
 		AnimeID: animeID,
@@ -143,14 +184,16 @@ func (list *AnimeList) User() *User {
 // TransformBody returns an item that is passed to methods like Add, Remove, etc.
 func (list *AnimeList) TransformBody(body []byte) interface{} {
 	if len(body) > 0 && body[0] == '{' {
-		item := &AnimeListItem{}
-		err := json.Unmarshal(body, item)
+		var updates interface{}
+		err := json.Unmarshal(body, &updates)
 
 		if err != nil {
 			panic(err)
 		}
 
-		return item
+		updatesMap := updates.(map[string]interface{})
+
+		return updatesMap
 	}
 
 	return string(body)
