@@ -3,6 +3,7 @@ package arn
 import (
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 	"unicode"
 	"unicode/utf8"
@@ -59,6 +60,15 @@ func EpisodesToString(episodes int) string {
 	}
 
 	return ToString(episodes)
+}
+
+// EpisodeCountMax is used for the max value of number input on episodes.
+func EpisodeCountMax(episodes int) string {
+	if episodes == 0 {
+		return ""
+	}
+
+	return strconv.Itoa(episodes)
 }
 
 // ToString converts anything into a string.
