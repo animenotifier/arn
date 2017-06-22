@@ -85,14 +85,14 @@ func SortPostsLatestLast(posts []*Post) {
 func GetPostsByUser(user *User) ([]*Post, error) {
 	var posts []*Post
 
-	scan := make(chan *Post)
-	err := DB.Scan("Post", scan)
+	stream := make(chan *Post)
+	err := DB.Scan("Post", stream)
 
 	if err != nil {
 		return nil, err
 	}
 
-	for post := range scan {
+	for post := range stream {
 		if post.AuthorID == user.ID {
 			posts = append(posts, post)
 		}
