@@ -18,6 +18,7 @@ type User struct {
 	Role       string       `json:"role"`
 	Registered string       `json:"registered"`
 	LastLogin  string       `json:"lastLogin"`
+	LastSeen   string       `json:"lastSeen"`
 	Gender     string       `json:"gender"`
 	Language   string       `json:"language"`
 	Avatar     string       `json:"avatar"`
@@ -122,6 +123,9 @@ type TwitterToUser GoogleToUser
 func NewUser() *User {
 	user := &User{
 		ID: GenerateUserID(),
+
+		// Avoid nil value fields
+		Following: make([]string, 0),
 	}
 
 	return user
@@ -131,64 +135,77 @@ func NewUser() *User {
 func RegisterUser(user *User) error {
 	var err error
 
-	// Save user object in DB
-	err = user.Save()
-
-	if err != nil {
-		return err
-	}
+	user.Registered = DateTimeUTC()
+	user.LastLogin = user.Registered
 
 	// Save nick in NickToUser table
-	err = user.SetNick(user.Nick)
+	err = DB.Set("NickToUser", user.Nick, &NickToUser{
+		Nick:   user.Nick,
+		UserID: user.ID,
+	})
 
 	if err != nil {
 		return err
 	}
 
 	// Save email in EmailToUser table
-	err = user.SetEmail(user.Email)
+	err = DB.Set("EmailToUser", user.Email, &EmailToUser{
+		Email:  user.Email,
+		UserID: user.ID,
+	})
 
 	if err != nil {
 		return err
 	}
 
-	// Assign the Google ID to that user
-	if user.Accounts.Google.ID != "" {
-		err = DB.Set("GoogleToUser", user.Accounts.Google.ID, &GoogleToUser{
-			ID:     user.Accounts.Google.ID,
-			UserID: user.ID,
-		})
+	// Create default settings
+	err = NewSettings(user.ID).Save()
 
-		if err != nil {
-			return err
-		}
+	if err != nil {
+		return err
 	}
 
-	// Assign the Facebook ID to that user
-	if user.Accounts.Facebook.ID != "" {
-		err = DB.Set("FacebookToUser", user.Accounts.Facebook.ID, &FacebookToUser{
-			ID:     user.Accounts.Facebook.ID,
-			UserID: user.ID,
-		})
+	// Add empty anime list
+	err = DB.Set("AnimeList", user.ID, &AnimeList{
+		UserID: user.ID,
+		Items:  make([]*AnimeListItem, 0),
+	})
 
-		if err != nil {
-			return err
-		}
-	}
-
-	// Assign the Twitter ID to that user
-	if user.Accounts.Twitter.ID != "" {
-		err = DB.Set("TwitterToUser", user.Accounts.Twitter.ID, &TwitterToUser{
-			ID:     user.Accounts.Twitter.ID,
-			UserID: user.ID,
-		})
-
-		if err != nil {
-			return err
-		}
+	if err != nil {
+		return err
 	}
 
 	return nil
+}
+
+// ConnectGoogle connects the user's account with a Google account.
+func (user *User) ConnectGoogle(googleID string) error {
+	user.Accounts.Google.ID = googleID
+
+	return DB.Set("GoogleToUser", googleID, &GoogleToUser{
+		ID:     googleID,
+		UserID: user.ID,
+	})
+}
+
+// ConnectFacebook connects the user's account with a Facebook account.
+func (user *User) ConnectFacebook(facebookID string) error {
+	user.Accounts.Facebook.ID = facebookID
+
+	return DB.Set("FacebookToUser", facebookID, &FacebookToUser{
+		ID:     facebookID,
+		UserID: user.ID,
+	})
+}
+
+// ConnectTwitter connects the user's account with a Twitter account.
+func (user *User) ConnectTwitter(twtterID string) error {
+	user.Accounts.Twitter.ID = twtterID
+
+	return DB.Set("TwitterToUser", twtterID, &TwitterToUser{
+		ID:     twtterID,
+		UserID: user.ID,
+	})
 }
 
 // GenerateUserID generates a unique user ID.
@@ -250,6 +267,19 @@ func (user *User) LargeAvatar() string {
 	return "//media.notify.moe/images/avatars/large/" + user.ID + ".webp"
 }
 
+// RealName returns the real name of the user.
+func (user *User) RealName() string {
+	if user.LastName == "" {
+		return user.FirstName
+	}
+
+	if user.FirstName == "" {
+		return user.LastName
+	}
+
+	return user.FirstName + " " + user.LastName
+}
+
 // Settings ...
 func (user *User) Settings() *Settings {
 	obj, _ := DB.Get("Settings", user.ID)
@@ -279,13 +309,10 @@ func (user *User) SetNick(newName string) error {
 	// Set new nick
 	user.Nick = newName
 
-	// New nick reference
-	record := &NickToUser{
+	return DB.Set("NickToUser", user.Nick, &NickToUser{
 		Nick:   user.Nick,
 		UserID: user.ID,
-	}
-
-	return DB.Set("NickToUser", record.Nick, record)
+	})
 }
 
 // SetEmail changes the user's email safely.
@@ -300,13 +327,10 @@ func (user *User) SetEmail(newName string) error {
 	// Set new email
 	user.Email = newName
 
-	// New email reference
-	record := &EmailToUser{
+	return DB.Set("EmailToUser", user.Email, &EmailToUser{
 		Email:  user.Email,
 		UserID: user.ID,
-	}
-
-	return DB.Set("EmailToUser", record.Email, record)
+	})
 }
 
 // RegisteredTime ...

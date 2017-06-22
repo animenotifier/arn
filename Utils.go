@@ -1,6 +1,7 @@
 package arn
 
 import (
+	"encoding/json"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -96,4 +97,10 @@ func PanicOnError(err error) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+// PrettyPrint prints the object as indented JSON data on the console.
+func PrettyPrint(obj interface{}) {
+	pretty, _ := json.MarshalIndent(obj, "", "\t")
+	fmt.Println(string(pretty))
 }
