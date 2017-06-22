@@ -7,6 +7,7 @@ import (
 	"github.com/chai2010/webp"
 )
 
+// OriginalImageExtensions includes all the formats that an avatar source could have sent to us.
 var OriginalImageExtensions = []string{
 	".jpg",
 	".png",
@@ -14,8 +15,11 @@ var OriginalImageExtensions = []string{
 }
 
 const (
+	// AvatarSmallSize is the minimum size in pixels of an avatar.
 	AvatarSmallSize = 100
-	AvatarMaxSize   = 560
+
+	// AvatarMaxSize is the maximum size in pixels of an avatar.
+	AvatarMaxSize = 560
 )
 
 // LoadImage loads an image from the given path.
