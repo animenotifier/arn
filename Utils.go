@@ -90,3 +90,10 @@ func Plural(count int, singular string) string {
 
 	return ToString(count) + " " + singular + "s"
 }
+
+// PanicOnError will panic if the error is not nil.
+func PanicOnError(err error) {
+	if err != nil {
+		panic(err)
+	}
+}

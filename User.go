@@ -169,9 +169,40 @@ func NewUser() *User {
 
 // RegisterUser registers a new user in the database and sets up all the required references.
 func RegisterUser(user *User) error {
-	user.SetNick(user.Nick)
-	user.SetEmail(user.Email)
-	user.Save()
+	var err error
+
+	// Set nickname
+	err = user.SetNick(user.Nick)
+
+	if err != nil {
+		return err
+	}
+
+	// Set email
+	err = user.SetEmail(user.Email)
+
+	if err != nil {
+		return err
+	}
+
+	// Save user object in DB
+	err = user.Save()
+
+	if err != nil {
+		return err
+	}
+
+	// Assign the
+	if user.Accounts.Google.ID != "" {
+		err = DB.Set("GoogleToUser", user.Accounts.Google.ID, &GoogleToUser{
+			ID:     user.Accounts.Google.ID,
+			UserID: user.ID,
+		})
+
+		if err != nil {
+			return err
+		}
+	}
 
 	return nil
 }
