@@ -1,8 +1,11 @@
 package arn
 
 import (
+	"errors"
 	"strings"
 	"time"
+
+	shortid "github.com/ventu-io/go-shortid"
 )
 
 // User ...
@@ -155,6 +158,30 @@ type GoogleToUser struct {
 	UserID string `json:"userId"`
 }
 
+// NewUser creates an empty user object with a unique ID.
+func NewUser() *User {
+	user := &User{
+		ID: GenerateUserID(),
+	}
+
+	return user
+}
+
+// RegisterUser registers a new user in the database and sets up all the required references.
+func RegisterUser(user *User) error {
+	user.SetNick(user.Nick)
+	user.SetEmail(user.Email)
+	user.Save()
+
+	return nil
+}
+
+// GenerateUserID generates a unique user ID.
+func GenerateUserID() string {
+	id, _ := shortid.Generate()
+	return id
+}
+
 // CoverImageURL ...
 func (user *User) CoverImageURL() string {
 	return "/images/cover/default"
@@ -208,7 +235,11 @@ func (user *User) Save() error {
 }
 
 // SetNick changes the user's nickname safely.
-func (user *User) SetNick(newName string) {
+func (user *User) SetNick(newName string) error {
+	if !IsValidNick(user.Nick) {
+		return errors.New("Invalid nickname")
+	}
+
 	// Delete old nick reference
 	DB.Delete("NickToUser", user.Nick)
 
@@ -221,11 +252,15 @@ func (user *User) SetNick(newName string) {
 		UserID: user.ID,
 	}
 
-	DB.Set("NickToUser", record.Nick, record)
+	return DB.Set("NickToUser", record.Nick, record)
 }
 
 // SetEmail changes the user's email safely.
-func (user *User) SetEmail(newName string) {
+func (user *User) SetEmail(newName string) error {
+	if !IsValidEmail(user.Email) {
+		return errors.New("Invalid email address")
+	}
+
 	// Delete old email reference
 	DB.Delete("EmailToUser", user.Email)
 
@@ -238,7 +273,7 @@ func (user *User) SetEmail(newName string) {
 		UserID: user.ID,
 	}
 
-	DB.Set("EmailToUser", record.Email, record)
+	return DB.Set("EmailToUser", record.Email, record)
 }
 
 // RegisteredTime ...
