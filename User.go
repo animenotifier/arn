@@ -306,6 +306,12 @@ func (user *User) Threads() []*Thread {
 	return threads
 }
 
+// Posts ...
+func (user *User) Posts() []*Post {
+	posts, _ := GetPostsByUser(user)
+	return posts
+}
+
 // Link returns the URI to the user page.
 func (user *User) Link() string {
 	return "/+" + user.Nick

@@ -81,6 +81,26 @@ func SortPostsLatestLast(posts []*Post) {
 	})
 }
 
+// GetPostsByUser ...
+func GetPostsByUser(user *User) ([]*Post, error) {
+	var posts []*Post
+
+	scan := make(chan *Post)
+	err := DB.Scan("Post", scan)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for post := range scan {
+		if post.AuthorID == user.ID {
+			posts = append(posts, post)
+		}
+	}
+
+	return posts, nil
+}
+
 // FilterPosts filters all forum posts by a custom function.
 func FilterPosts(filter func(*Post) bool) ([]*Post, error) {
 	var filtered []*Post
