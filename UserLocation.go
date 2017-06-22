@@ -11,3 +11,15 @@ type UserLocation struct {
 	TimeZone    string  `json:"timeZone"`
 	ZipCode     string  `json:"zipCode"`
 }
+
+// IPInfoDBLocation ...
+type IPInfoDBLocation struct {
+	CountryName string `json:"countryName"`
+	CountryCode string `json:"countryCode"`
+	Latitude    string `json:"latitude"`
+	Longitude   string `json:"longitude"`
+	CityName    string `json:"cityName"`
+	RegionName  string `json:"regionName"`
+	TimeZone    string `json:"timeZone"`
+	ZipCode     string `json:"zipCode"`
+}
