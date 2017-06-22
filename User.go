@@ -112,6 +112,12 @@ type GoogleToUser struct {
 	UserID string `json:"userId"`
 }
 
+// FacebookToUser is the same data structure as GoogleToUser
+type FacebookToUser GoogleToUser
+
+// TwitterToUser is the same data structure as GoogleToUser
+type TwitterToUser GoogleToUser
+
 // NewUser creates an empty user object with a unique ID.
 func NewUser() *User {
 	user := &User{
@@ -125,20 +131,6 @@ func NewUser() *User {
 func RegisterUser(user *User) error {
 	var err error
 
-	// Set nickname
-	err = user.SetNick(user.Nick)
-
-	if err != nil {
-		return err
-	}
-
-	// Set email
-	err = user.SetEmail(user.Email)
-
-	if err != nil {
-		return err
-	}
-
 	// Save user object in DB
 	err = user.Save()
 
@@ -146,10 +138,48 @@ func RegisterUser(user *User) error {
 		return err
 	}
 
-	// Assign the
+	// Save nick in NickToUser table
+	err = user.SetNick(user.Nick)
+
+	if err != nil {
+		return err
+	}
+
+	// Save email in EmailToUser table
+	err = user.SetEmail(user.Email)
+
+	if err != nil {
+		return err
+	}
+
+	// Assign the Google ID to that user
 	if user.Accounts.Google.ID != "" {
 		err = DB.Set("GoogleToUser", user.Accounts.Google.ID, &GoogleToUser{
 			ID:     user.Accounts.Google.ID,
+			UserID: user.ID,
+		})
+
+		if err != nil {
+			return err
+		}
+	}
+
+	// Assign the Facebook ID to that user
+	if user.Accounts.Facebook.ID != "" {
+		err = DB.Set("FacebookToUser", user.Accounts.Facebook.ID, &FacebookToUser{
+			ID:     user.Accounts.Facebook.ID,
+			UserID: user.ID,
+		})
+
+		if err != nil {
+			return err
+		}
+	}
+
+	// Assign the Twitter ID to that user
+	if user.Accounts.Twitter.ID != "" {
+		err = DB.Set("TwitterToUser", user.Accounts.Twitter.ID, &TwitterToUser{
+			ID:     user.Accounts.Twitter.ID,
 			UserID: user.ID,
 		})
 
