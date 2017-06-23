@@ -9,11 +9,34 @@ import (
 	"time"
 	"unicode"
 	"unicode/utf8"
+
+	"github.com/aerogo/aero"
 )
 
 var stripTagsRegex = regexp.MustCompile(`<[^>]*>`)
 var sourceRegex = regexp.MustCompile(`\(Source: (.*?)\)`)
 var writtenByRegex = regexp.MustCompile(`\[Written by (.*?)\]`)
+
+// GetUserFromContext returns the logged in user for the given context.
+func GetUserFromContext(ctx *aero.Context) *User {
+	if !ctx.HasSession() {
+		return nil
+	}
+
+	userID := ctx.Session().GetString("userId")
+
+	if userID == "" {
+		return nil
+	}
+
+	user, err := GetUser(userID)
+
+	if err != nil {
+		return nil
+	}
+
+	return user
+}
 
 // GetGenreIDByName ...
 func GetGenreIDByName(genre string) string {

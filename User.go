@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aerogo/aero"
 	shortid "github.com/ventu-io/go-shortid"
 )
 
@@ -179,36 +180,6 @@ func RegisterUser(user *User) error {
 	return nil
 }
 
-// ConnectGoogle connects the user's account with a Google account.
-func (user *User) ConnectGoogle(googleID string) error {
-	user.Accounts.Google.ID = googleID
-
-	return DB.Set("GoogleToUser", googleID, &GoogleToUser{
-		ID:     googleID,
-		UserID: user.ID,
-	})
-}
-
-// ConnectFacebook connects the user's account with a Facebook account.
-func (user *User) ConnectFacebook(facebookID string) error {
-	user.Accounts.Facebook.ID = facebookID
-
-	return DB.Set("FacebookToUser", facebookID, &FacebookToUser{
-		ID:     facebookID,
-		UserID: user.ID,
-	})
-}
-
-// ConnectTwitter connects the user's account with a Twitter account.
-func (user *User) ConnectTwitter(twtterID string) error {
-	user.Accounts.Twitter.ID = twtterID
-
-	return DB.Set("TwitterToUser", twtterID, &TwitterToUser{
-		ID:     twtterID,
-		UserID: user.ID,
-	})
-}
-
 // GenerateUserID generates a unique user ID.
 func GenerateUserID() string {
 	id, _ := shortid.Generate()
@@ -370,6 +341,31 @@ func (user *User) Posts() []*Post {
 // Link returns the URI to the user page.
 func (user *User) Link() string {
 	return "/+" + user.Nick
+}
+
+// Filter removes privacy critical fields from the user object.
+func (user *User) Filter() {
+	user.Email = ""
+	user.Gender = ""
+	user.FirstName = ""
+	user.LastName = ""
+	user.IP = ""
+	user.Accounts.Facebook.ID = ""
+	user.Accounts.Google.ID = ""
+	user.Accounts.Twitter.ID = ""
+	user.AgeRange = UserAgeRange{}
+	user.Location = UserLocation{}
+}
+
+// ShouldFilter tells whether data needs to be filtered in the given context.
+func (user *User) ShouldFilter(ctx *aero.Context) bool {
+	ctxUser := GetUserFromContext(ctx)
+
+	if ctxUser != nil && ctxUser.Role == "admin" {
+		return false
+	}
+
+	return true
 }
 
 // GetUser ...
