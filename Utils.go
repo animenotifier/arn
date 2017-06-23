@@ -1,6 +1,8 @@
 package arn
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -8,11 +10,59 @@ import (
 	"time"
 	"unicode"
 	"unicode/utf8"
+
+	"github.com/aerogo/aero"
+	shortid "github.com/ventu-io/go-shortid"
 )
 
 var stripTagsRegex = regexp.MustCompile(`<[^>]*>`)
 var sourceRegex = regexp.MustCompile(`\(Source: (.*?)\)`)
 var writtenByRegex = regexp.MustCompile(`\[Written by (.*?)\]`)
+
+// GenerateUserID generates a unique user ID.
+func GenerateUserID() string {
+	id, _ := shortid.Generate()
+
+	// Retry until we find an unused ID
+	retry := 0
+
+	for {
+		_, err := GetUser(id)
+
+		if err != nil && strings.Index(err.Error(), "not found") != -1 {
+			return id
+		}
+
+		retry++
+
+		if retry > 10 {
+			panic(errors.New("Can't generate unique user ID"))
+		}
+
+		id, _ = shortid.Generate()
+	}
+}
+
+// GetUserFromContext returns the logged in user for the given context.
+func GetUserFromContext(ctx *aero.Context) *User {
+	if !ctx.HasSession() {
+		return nil
+	}
+
+	userID := ctx.Session().GetString("userId")
+
+	if userID == "" {
+		return nil
+	}
+
+	user, err := GetUser(userID)
+
+	if err != nil {
+		return nil
+	}
+
+	return user
+}
 
 // GetGenreIDByName ...
 func GetGenreIDByName(genre string) string {
@@ -89,4 +139,17 @@ func Plural(count int, singular string) string {
 	}
 
 	return ToString(count) + " " + singular + "s"
+}
+
+// PanicOnError will panic if the error is not nil.
+func PanicOnError(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
+// PrettyPrint prints the object as indented JSON data on the console.
+func PrettyPrint(obj interface{}) {
+	pretty, _ := json.MarshalIndent(obj, "", "\t")
+	fmt.Println(string(pretty))
 }

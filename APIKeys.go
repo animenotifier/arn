@@ -17,4 +17,8 @@ type APIKeys struct {
 		Secret string `json:"secret"`
 		Token  string `json:"token"`
 	} `json:"discord"`
+
+	IPInfoDB struct {
+		ID string `json:"id"`
+	} `json:"ipInfoDB"`
 }

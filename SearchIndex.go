@@ -3,7 +3,7 @@ package arn
 import (
 	"strings"
 
-	"github.com/aerogo/aero"
+	"github.com/aerogo/flow"
 )
 
 // SearchIndex ...
@@ -36,7 +36,7 @@ func Search(term string, maxUsers, maxAnime int) ([]*User, []*Anime) {
 	var animeResults []*Anime
 
 	// Search everything in parallel
-	aero.Parallel(func() {
+	flow.Parallel(func() {
 		// Search userResults
 		var user *User
 
