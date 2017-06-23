@@ -29,6 +29,26 @@ func GetAiringAnimeCached() ([]*Anime, error) {
 	return list.([]*Anime), nil
 }
 
+
+// GetPopularAnimeCached ...
+func GetPopularAnimeCached() ([]*Anime, error) {
+	cache, err := GetListOfIDs("Cache", "popular anime")
+
+	if err != nil {
+		return nil, err
+	}
+
+	list, err := DB.GetMany("Anime", cache.IDList)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return list.([]*Anime), nil
+}
+
+
+
 // GetActiveUsersCached ...
 func GetActiveUsersCached() ([]*User, error) {
 	cache, err := GetListOfIDs("Cache", "active users")
