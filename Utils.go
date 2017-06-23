@@ -2,6 +2,7 @@ package arn
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -11,11 +12,36 @@ import (
 	"unicode/utf8"
 
 	"github.com/aerogo/aero"
+	shortid "github.com/ventu-io/go-shortid"
 )
 
 var stripTagsRegex = regexp.MustCompile(`<[^>]*>`)
 var sourceRegex = regexp.MustCompile(`\(Source: (.*?)\)`)
 var writtenByRegex = regexp.MustCompile(`\[Written by (.*?)\]`)
+
+// GenerateUserID generates a unique user ID.
+func GenerateUserID() string {
+	id, _ := shortid.Generate()
+
+	// Retry until we find an unused ID
+	retry := 0
+
+	for {
+		_, err := GetUser(id)
+
+		if err != nil && strings.Index(err.Error(), "not found") != -1 {
+			return id
+		}
+
+		retry++
+
+		if retry > 10 {
+			panic(errors.New("Can't generate unique user ID"))
+		}
+
+		id, _ = shortid.Generate()
+	}
+}
 
 // GetUserFromContext returns the logged in user for the given context.
 func GetUserFromContext(ctx *aero.Context) *User {

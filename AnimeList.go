@@ -181,8 +181,8 @@ func (list *AnimeList) User() *User {
 	return list.user
 }
 
-// TransformBody returns an item that is passed to methods like Add, Remove, etc.
-func (list *AnimeList) TransformBody(body []byte) interface{} {
+// PostBody returns an item that is passed to methods like Add, Remove, etc.
+func (list *AnimeList) PostBody(body []byte) interface{} {
 	if len(body) > 0 && body[0] == '{' {
 		var updates interface{}
 		PanicOnError(json.Unmarshal(body, &updates))
