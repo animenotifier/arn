@@ -137,6 +137,7 @@ func RegisterUser(user *User) error {
 
 	user.Registered = DateTimeUTC()
 	user.LastLogin = user.Registered
+	user.LastSeen = user.Registered
 
 	// Save nick in NickToUser table
 	err = DB.Set("NickToUser", user.Nick, &NickToUser{
