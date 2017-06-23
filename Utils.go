@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
@@ -62,6 +63,55 @@ func GetUserFromContext(ctx *aero.Context) *User {
 	}
 
 	return user
+}
+
+// SetObjectProperties updates the object with the given map[string]interface{}
+func SetObjectProperties(item interface{}, updates map[string]interface{}) error {
+	t := reflect.TypeOf(item).Elem()
+	v := reflect.ValueOf(item).Elem()
+
+	for key, value := range updates {
+		_, found := t.FieldByName(key)
+
+		if !found {
+			return errors.New("Field '" + key + "' does not exist in type " + t.Name())
+		}
+
+		valueInfo := reflect.ValueOf(value)
+		fieldValue := v.FieldByName(key)
+
+		if fieldValue.Kind() == reflect.Int {
+			x := int64(valueInfo.Float())
+
+			if !fieldValue.OverflowInt(x) {
+				fieldValue.SetInt(x)
+			}
+		} else {
+			fieldValue.Set(valueInfo)
+		}
+	}
+
+	return nil
+}
+
+// AuthorizeIfLoggedInAndOwnData authorizes the given request if a user is logged in
+// and the user ID matches the ID in the request.
+func AuthorizeIfLoggedInAndOwnData(ctx *aero.Context, userIDParameterName string) error {
+	if !ctx.HasSession() {
+		return errors.New("Neither logged in nor in session")
+	}
+
+	userID, ok := ctx.Session().Get("userId").(string)
+
+	if !ok || userID == "" {
+		return errors.New("Not logged in")
+	}
+
+	if userID != ctx.Get(userIDParameterName) {
+		return errors.New("Can not modify data from other users")
+	}
+
+	return nil
 }
 
 // GetGenreIDByName ...

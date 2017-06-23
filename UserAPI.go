@@ -1,21 +1,32 @@
 package arn
 
-import "github.com/aerogo/aero"
+import (
+	"encoding/json"
 
-// Authorize authorizes the given POST request.
-func (user *User) Authorize(*aero.Context) error {
-	return nil
+	"github.com/aerogo/aero"
+)
+
+// Authorize returns an error if the given API POST request is not authorized.
+func (user *User) Authorize(ctx *aero.Context) error {
+	return AuthorizeIfLoggedInAndOwnData(ctx, "id")
 }
 
 // PostBody reads the POST body and returns an object
 // that is passed to methods like Update, Add, Remove, etc.
 func (user *User) PostBody(body []byte) interface{} {
-	return nil
+	if len(body) > 0 && body[0] == '{' {
+		var updates interface{}
+		PanicOnError(json.Unmarshal(body, &updates))
+		return updates.(map[string]interface{})
+	}
+
+	return string(body)
 }
 
 // Update updates the user object with the data we received from the PostBody method.
 func (user *User) Update(data interface{}) error {
-	return nil
+	updates := data.(map[string]interface{})
+	return SetObjectProperties(user, updates)
 }
 
 // Save saves the user object in the database.
