@@ -66,7 +66,7 @@ func GetUserFromContext(ctx *aero.Context) *User {
 }
 
 // SetObjectProperties updates the object with the given map[string]interface{}
-func SetObjectProperties(item interface{}, updates map[string]interface{}) error {
+func SetObjectProperties(item interface{}, updates map[string]interface{}, skip func(key string, old reflect.Value, new reflect.Value) bool) error {
 	t := reflect.TypeOf(item).Elem()
 	v := reflect.ValueOf(item).Elem()
 
@@ -79,6 +79,10 @@ func SetObjectProperties(item interface{}, updates map[string]interface{}) error
 
 		valueInfo := reflect.ValueOf(value)
 		fieldValue := v.FieldByName(key)
+
+		if skip(key, fieldValue, valueInfo) {
+			continue
+		}
 
 		if fieldValue.Kind() == reflect.Int {
 			x := int64(valueInfo.Float())

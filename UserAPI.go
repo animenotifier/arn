@@ -2,8 +2,10 @@ package arn
 
 import (
 	"encoding/json"
+	"reflect"
 
 	"github.com/aerogo/aero"
+	"github.com/fatih/color"
 )
 
 // Authorize returns an error if the given API POST request is not authorized.
@@ -26,7 +28,22 @@ func (user *User) PostBody(body []byte) interface{} {
 // Update updates the user object with the data we received from the PostBody method.
 func (user *User) Update(data interface{}) error {
 	updates := data.(map[string]interface{})
-	return SetObjectProperties(user, updates)
+
+	return SetObjectProperties(user, updates, func(key string, oldValue reflect.Value, newValue reflect.Value) bool {
+		if key == "Nick" {
+			newNick := newValue.Interface().(string)
+			err := user.SetNick(newNick)
+
+			if err != nil {
+				color.Red(err.Error())
+			}
+
+			return true
+		}
+
+		field, _ := reflect.TypeOf(user).Elem().FieldByName(key)
+		return field.Tag.Get("editable") != "true"
+	})
 }
 
 // Save saves the user object in the database.

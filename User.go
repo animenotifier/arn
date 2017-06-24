@@ -3,13 +3,16 @@ package arn
 import (
 	"errors"
 	"strings"
+	"sync"
 	"time"
 )
+
+var setNickMutex sync.Mutex
 
 // User ...
 type User struct {
 	ID         string       `json:"id"`
-	Nick       string       `json:"nick"`
+	Nick       string       `json:"nick" editable:"true"`
 	FirstName  string       `json:"firstName"`
 	LastName   string       `json:"lastName"`
 	Email      string       `json:"email"`
@@ -20,8 +23,8 @@ type User struct {
 	Gender     string       `json:"gender"`
 	Language   string       `json:"language"`
 	Avatar     string       `json:"avatar"`
-	Tagline    string       `json:"tagline"`
-	Website    string       `json:"website"`
+	Tagline    string       `json:"tagline" editable:"true"`
+	Website    string       `json:"website" editable:"true"`
 	IP         string       `json:"ip"`
 	UserAgent  string       `json:"agent"`
 	AgeRange   UserAgeRange `json:"ageRange"`
@@ -153,10 +156,33 @@ func (user *User) LargeAvatar() string {
 
 // SetNick changes the user's nickname safely.
 func (user *User) SetNick(newName string) error {
-	if !IsValidNick(user.Nick) {
+	setNickMutex.Lock()
+	defer setNickMutex.Unlock()
+
+	newName = FixUserNick(newName)
+
+	if !IsValidNick(newName) {
 		return errors.New("Invalid nickname")
 	}
 
+	if newName == user.Nick {
+		return nil
+	}
+
+	// Make sure the nickname doesn't exist already
+	_, err := GetUserByNick(newName)
+
+	// If there was no error: the username exists.
+	// If "not found" is not included in the error message it's a different error type.
+	if err == nil || strings.Index(err.Error(), "not found") == -1 {
+		return errors.New("Username '" + newName + "' is taken already")
+	}
+
+	return user.ForceSetNick(newName)
+}
+
+// ForceSetNick forces a nickname overwrite.
+func (user *User) ForceSetNick(newName string) error {
 	// Delete old nick reference
 	DB.Delete("NickToUser", user.Nick)
 

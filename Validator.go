@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+const maxNickLength = 25
+
 var fixNickRegex = regexp.MustCompile(`[\W\s\d]`)
 
 // FixUserNick automatically corrects a username.
@@ -15,12 +17,14 @@ func FixUserNick(nick string) string {
 		return nick
 	}
 
-	for len(nick) > 1 && strings.HasPrefix(nick, "_") {
-		nick = nick[1:]
+	nick = strings.Trim(nick, "_")
+
+	if nick == "" {
+		return ""
 	}
 
-	if nick == "_" {
-		return ""
+	if len(nick) > maxNickLength {
+		nick = nick[:maxNickLength]
 	}
 
 	return strings.ToUpper(string(nick[0])) + nick[1:]
