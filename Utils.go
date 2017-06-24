@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"reflect"
 	"regexp"
-	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -67,20 +66,7 @@ func GetUserFromContext(ctx *aero.Context) *User {
 }
 
 // SetObjectProperties updates the object with the given map[string]interface{}
-func SetObjectProperties(rootObj interface{}, updates map[string]interface{}, skip func(fullKeyName string, field reflect.StructField, fieldValue reflect.Value, newValue reflect.Value) bool) (err error) {
-	// Recover from critical errors caused by panic()
-	defer func() {
-		if r := recover(); r != nil {
-			// Ignore runtime errors
-			if _, ok := r.(runtime.Error); ok {
-				panic(r)
-			}
-
-			// Set return value of this value to the recovered error
-			err = r.(error)
-		}
-	}()
-
+func SetObjectProperties(rootObj interface{}, updates map[string]interface{}, skip func(fullKeyName string, field reflect.StructField, property reflect.Value, newValue reflect.Value) bool) error {
 	var t reflect.Type
 	var v reflect.Value
 	var field reflect.StructField
@@ -106,9 +92,14 @@ func SetObjectProperties(rootObj interface{}, updates map[string]interface{}, sk
 
 		newValue := reflect.ValueOf(value)
 
+		// Is somebody attempting to edit fields that aren't editable?
+		if field.Tag.Get("editable") != "true" {
+			return errors.New("Field " + key + " is not editable")
+		}
+
 		// Is this manually handled by the class so we can skip it?
 		// Also make sure to pass full "key" value here instead of "fieldName".
-		if skip(key, field, v, newValue) {
+		if skip != nil && skip(key, field, v, newValue) {
 			continue
 		}
 

@@ -23,14 +23,3 @@ func TestIsValidNick(t *testing.T) {
 	assert.True(t, IsValidNick("Tsun_Dere"))
 	assert.True(t, IsValidNick("Akyoto"))
 }
-
-func TestFixUserNick(t *testing.T) {
-	// Nickname autocorrect
-	assert.True(t, FixUserNick("Akyoto") == "Akyoto")
-	assert.True(t, FixUserNick("Tsundere") == "Tsundere")
-	assert.True(t, FixUserNick("akyoto") == "Akyoto")
-	assert.True(t, FixUserNick("aky123oto") == "Akyoto")
-	assert.True(t, FixUserNick("__aky123oto%$§") == "Akyoto")
-	assert.True(t, FixUserNick("__aky123oto%$§__") == "Akyoto")
-	assert.True(t, FixUserNick("123%&/(__%") == "")
-}

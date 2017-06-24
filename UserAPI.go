@@ -2,8 +2,8 @@ package arn
 
 import (
 	"encoding/json"
-	"errors"
 	"reflect"
+	"strings"
 
 	"github.com/aerogo/aero"
 	"github.com/fatih/color"
@@ -30,9 +30,18 @@ func (user *User) PostBody(body []byte) interface{} {
 func (user *User) Update(data interface{}) error {
 	updates := data.(map[string]interface{})
 
-	return SetObjectProperties(user, updates, func(fullKeyName string, field reflect.StructField, fieldValue reflect.Value, newValue reflect.Value) bool {
-		if fullKeyName == "Nick" {
-			newNick := newValue.Interface().(string)
+	return SetObjectProperties(user, updates, func(fullKeyName string, field reflect.StructField, property reflect.Value, newValue reflect.Value) bool {
+		// Automatically correct account nicks
+		if strings.HasPrefix(fullKeyName, "Accounts.") && strings.HasSuffix(fullKeyName, ".Nick") {
+			newNick := newValue.String()
+			newNick = FixAccountNick(newNick)
+			property.SetString(newNick)
+			return true
+		}
+
+		switch fullKeyName {
+		case "Nick":
+			newNick := newValue.String()
 			err := user.SetNick(newNick)
 
 			if err != nil {
@@ -40,14 +49,10 @@ func (user *User) Update(data interface{}) error {
 			}
 
 			return true
-		}
 
-		// Is somebody attempting to edit fields that aren't editable?
-		if field.Tag.Get("editable") != "true" {
-			panic(errors.New("Field User." + fullKeyName + " is not editable"))
+		default:
+			return false
 		}
-
-		return false
 	})
 }
 
