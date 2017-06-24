@@ -2,6 +2,7 @@ package arn
 
 import (
 	"encoding/json"
+	"errors"
 	"reflect"
 
 	"github.com/aerogo/aero"
@@ -29,8 +30,8 @@ func (user *User) PostBody(body []byte) interface{} {
 func (user *User) Update(data interface{}) error {
 	updates := data.(map[string]interface{})
 
-	return SetObjectProperties(user, updates, func(key string, oldValue reflect.Value, newValue reflect.Value) bool {
-		if key == "Nick" {
+	return SetObjectProperties(user, updates, func(fullKeyName string, field reflect.StructField, fieldValue reflect.Value, newValue reflect.Value) bool {
+		if fullKeyName == "Nick" {
 			newNick := newValue.Interface().(string)
 			err := user.SetNick(newNick)
 
@@ -41,8 +42,12 @@ func (user *User) Update(data interface{}) error {
 			return true
 		}
 
-		field, _ := reflect.TypeOf(user).Elem().FieldByName(key)
-		return field.Tag.Get("editable") != "true"
+		// Is somebody attempting to edit fields that aren't editable?
+		if field.Tag.Get("editable") != "true" {
+			panic(errors.New("Field User." + fullKeyName + " is not editable"))
+		}
+
+		return false
 	})
 }
 

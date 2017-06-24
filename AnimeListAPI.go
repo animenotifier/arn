@@ -101,7 +101,7 @@ func (list *AnimeList) Update(id interface{}, updatesObj interface{}) error {
 
 	for _, item := range list.Items {
 		if item.AnimeID == animeID {
-			err := SetObjectProperties(item, updates, func(key string, oldValue reflect.Value, newValue reflect.Value) bool {
+			err := SetObjectProperties(item, updates, func(key string, field reflect.StructField, oldValue reflect.Value, newValue reflect.Value) bool {
 				switch key {
 				case "UserID", "Created", "Edited":
 					return true

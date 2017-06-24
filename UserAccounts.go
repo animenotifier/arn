@@ -18,18 +18,18 @@ type UserAccounts struct {
 	Osu UserOsuDetails `json:"osu"`
 
 	AniList struct {
-		Nick string `json:"nick"`
+		Nick string `json:"nick" editable:"true"`
 	} `json:"anilist"`
 
 	AnimePlanet struct {
-		Nick string `json:"nick"`
+		Nick string `json:"nick" editable:"true"`
 	} `json:"animeplanet"`
 
 	MyAnimeList struct {
-		Nick string `json:"nick"`
+		Nick string `json:"nick" editable:"true"`
 	} `json:"myanimelist"`
 
 	Kitsu struct {
-		Nick string `json:"nick"`
+		Nick string `json:"nick" editable:"true"`
 	} `json:"kitsu"`
 }
