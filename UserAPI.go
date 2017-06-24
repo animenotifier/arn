@@ -68,6 +68,8 @@ func (user *User) Filter() {
 	user.FirstName = ""
 	user.LastName = ""
 	user.IP = ""
+	user.LastLogin = ""
+	user.LastSeen = ""
 	user.Accounts.Facebook.ID = ""
 	user.Accounts.Google.ID = ""
 	user.Accounts.Twitter.ID = ""

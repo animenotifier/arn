@@ -29,7 +29,7 @@ const (
 type Settings struct {
 	UserID        string           `json:"userId"`
 	SortBy        string           `json:"sortBy"`
-	TitleLanguage string           `json:"titleLanguage"`
+	TitleLanguage string           `json:"titleLanguage" editable:"true"`
 	Providers     ServiceProviders `json:"providers"`
 
 	user *User
