@@ -33,6 +33,11 @@ func (item *AnimeListItem) Anime() *Anime {
 	return item.anime
 }
 
+// Link returns the URI for the given item.
+func (item *AnimeListItem) Link(userNick string) string {
+	return "/+" + userNick + "/animelist/" + item.AnimeID
+}
+
 // FinalRating returns the overall score for the anime.
 func (item *AnimeListItem) FinalRating() float64 {
 	return item.Rating.Overall
