@@ -1,5 +1,7 @@
 package arn
 
+import "sort"
+
 // GetUser ...
 func GetUser(id string) (*User, error) {
 	obj, err := DB.Get("User", id)
@@ -52,4 +54,14 @@ func FilterUsers(filter func(*User) bool) ([]*User, error) {
 	}
 
 	return filtered, nil
+}
+
+// SortUserByLastSeen sorts a list of users by their last seen date.
+func SortByLastSeen(users []*User) []*User {
+
+	sort.Slice(users, func(i, j int) bool {
+		return users[i].LastSeen > users[j].LastSeen
+	})
+
+	return users
 }
