@@ -38,7 +38,7 @@ type User struct {
 // NewUser creates an empty user object with a unique ID.
 func NewUser() *User {
 	user := &User{
-		ID: GenerateUserID(),
+		ID: GenerateID("User"),
 
 		// Avoid nil value fields
 		Following: make([]string, 0),

@@ -1,7 +1,6 @@
 package arn
 
 import (
-	"encoding/json"
 	"reflect"
 	"strings"
 
@@ -12,18 +11,6 @@ import (
 // Authorize returns an error if the given API POST request is not authorized.
 func (user *User) Authorize(ctx *aero.Context) error {
 	return AuthorizeIfLoggedInAndOwnData(ctx, "id")
-}
-
-// PostBody reads the POST body and returns an object
-// that is passed to methods like Update, Add, Remove, etc.
-func (user *User) PostBody(body []byte) interface{} {
-	if len(body) > 0 && body[0] == '{' {
-		var updates interface{}
-		PanicOnError(json.Unmarshal(body, &updates))
-		return updates.(map[string]interface{})
-	}
-
-	return string(body)
 }
 
 // Update updates the user object with the data we received from the PostBody method.

@@ -118,3 +118,8 @@ func SortThreadsByDate(threads []*Thread) {
 		return threads[i].Created > threads[j].Created
 	})
 }
+
+// Save saves the thread object in the database.
+func (thread *Thread) Save() error {
+	return DB.Set("Thread", thread.ID, thread)
+}

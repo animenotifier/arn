@@ -20,15 +20,15 @@ var stripTagsRegex = regexp.MustCompile(`<[^>]*>`)
 var sourceRegex = regexp.MustCompile(`\(Source: (.*?)\)`)
 var writtenByRegex = regexp.MustCompile(`\[Written by (.*?)\]`)
 
-// GenerateUserID generates a unique user ID.
-func GenerateUserID() string {
+// GenerateID generates a unique ID for a given table.
+func GenerateID(table string) string {
 	id, _ := shortid.Generate()
 
 	// Retry until we find an unused ID
 	retry := 0
 
 	for {
-		_, err := GetUser(id)
+		_, err := DB.Get(table, id)
 
 		if err != nil && strings.Index(err.Error(), "not found") != -1 {
 			return id
@@ -37,7 +37,7 @@ func GenerateUserID() string {
 		retry++
 
 		if retry > 10 {
-			panic(errors.New("Can't generate unique user ID"))
+			panic(errors.New("Can't generate unique ID"))
 		}
 
 		id, _ = shortid.Generate()
