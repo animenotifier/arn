@@ -1,6 +1,7 @@
 package arn
 
 import "sort"
+import "github.com/aerogo/aero"
 
 // Post represents a forum post.
 type Post struct {
@@ -15,6 +16,7 @@ type Post struct {
 
 	author *User
 	thread *Thread
+	html   string
 }
 
 // Author returns the post author.
@@ -42,6 +44,16 @@ func (post *Post) Link() string {
 	return "/posts/" + post.ID
 }
 
+// HTML returns the HTML representation of the post.
+func (post *Post) HTML() string {
+	if post.html != "" {
+		return post.html
+	}
+
+	post.html = aero.Markdown(post.Text)
+	return post.html
+}
+
 // ToPostable converts a post into an object that implements the Postable interface.
 func (post *Post) ToPostable() Postable {
 	return &PostPostable{post}
@@ -53,18 +65,28 @@ func GetPost(id string) (*Post, error) {
 	return obj.(*Post), err
 }
 
-// GetPosts ...
-func GetPosts() ([]*Post, error) {
-	var posts []*Post
-
+// AllPosts returns a stream of all posts.
+func AllPosts() (chan *Post, error) {
 	channel := make(chan *Post)
 	err := DB.Scan("Post", channel)
+	return channel, err
+}
 
-	for post := range channel {
-		posts = append(posts, post)
+// AllPostsSlice returns a slice of all posts.
+func AllPostsSlice() ([]*Post, error) {
+	var posts []*Post
+
+	stream, err := AllPosts()
+
+	if err != nil {
+		return nil, err
 	}
 
-	return posts, err
+	for obj := range stream {
+		posts = append(posts, obj)
+	}
+
+	return posts, nil
 }
 
 // SortPostsLatestFirst sorts the slice of posts.

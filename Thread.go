@@ -2,6 +2,8 @@ package arn
 
 import (
 	"sort"
+
+	"github.com/aerogo/aero"
 )
 
 // Thread represents a forum thread.
@@ -18,6 +20,7 @@ type Thread struct {
 	Edited   string   `json:"edited"`
 
 	author *User
+	html   string
 }
 
 // Author returns the thread author.
@@ -33,6 +36,16 @@ func (thread *Thread) Author() *User {
 // Link returns the relative URL of the thread.
 func (thread *Thread) Link() string {
 	return "/threads/" + thread.ID
+}
+
+// HTML returns the HTML representation of the thread.
+func (thread *Thread) HTML() string {
+	if thread.html != "" {
+		return thread.html
+	}
+
+	thread.html = aero.Markdown(thread.Text)
+	return thread.html
 }
 
 // ToPostable converts a thread into an object that implements the Postable interface.

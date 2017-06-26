@@ -51,10 +51,10 @@ type Anime struct {
 
 // AnimeRating ...
 type AnimeRating struct {
-	Overall float64 `json:"overall"`
-	Story   float64 `json:"story"`
-	Visuals float64 `json:"visuals"`
-	Music   float64 `json:"music"`
+	Overall    float64 `json:"overall" editable:"true"`
+	Story      float64 `json:"story" editable:"true"`
+	Visuals    float64 `json:"visuals" editable:"true"`
+	Soundtrack float64 `json:"soundtrack" editable:"true"`
 }
 
 // AnimeImageTypes ...
@@ -120,7 +120,6 @@ func (anime *Anime) EpisodeCountString() string {
 func AllAnime() (chan *Anime, error) {
 	channel := make(chan *Anime)
 	err := DB.Scan("Anime", channel)
-
 	return channel, err
 }
 

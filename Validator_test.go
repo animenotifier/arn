@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNick(t *testing.T) {
+func TestIsValidNick(t *testing.T) {
 	// Invalid nicknames
 	assert.False(t, IsValidNick(""))
 	assert.False(t, IsValidNick("A"))
@@ -21,4 +21,5 @@ func TestNick(t *testing.T) {
 	assert.True(t, IsValidNick("Tsundere"))
 	assert.True(t, IsValidNick("TsunDere"))
 	assert.True(t, IsValidNick("Tsun_Dere"))
+	assert.True(t, IsValidNick("Akyoto"))
 }

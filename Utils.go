@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
@@ -62,6 +63,79 @@ func GetUserFromContext(ctx *aero.Context) *User {
 	}
 
 	return user
+}
+
+// SetObjectProperties updates the object with the given map[string]interface{}
+func SetObjectProperties(rootObj interface{}, updates map[string]interface{}, skip func(fullKeyName string, field reflect.StructField, property reflect.Value, newValue reflect.Value) bool) error {
+	var t reflect.Type
+	var v reflect.Value
+	var field reflect.StructField
+	var found bool
+
+	for key, value := range updates {
+		t = reflect.TypeOf(rootObj).Elem()
+		v = reflect.ValueOf(rootObj).Elem()
+
+		// Nested properties
+		parts := strings.Split(key, ".")
+
+		for _, part := range parts {
+			field, found = t.FieldByName(part)
+
+			if !found {
+				return errors.New("Field '" + part + "' does not exist in type " + t.Name())
+			}
+
+			t = field.Type
+			v = reflect.Indirect(v.FieldByName(field.Name))
+		}
+
+		newValue := reflect.ValueOf(value)
+
+		// Is somebody attempting to edit fields that aren't editable?
+		if field.Tag.Get("editable") != "true" {
+			return errors.New("Field " + key + " is not editable")
+		}
+
+		// Is this manually handled by the class so we can skip it?
+		// Also make sure to pass full "key" value here instead of "fieldName".
+		if skip != nil && skip(key, field, v, newValue) {
+			continue
+		}
+
+		// Implement special data type cases here
+		if v.Kind() == reflect.Int {
+			x := int64(newValue.Float())
+
+			if !v.OverflowInt(x) {
+				v.SetInt(x)
+			}
+		} else {
+			v.Set(newValue)
+		}
+	}
+
+	return nil
+}
+
+// AuthorizeIfLoggedInAndOwnData authorizes the given request if a user is logged in
+// and the user ID matches the ID in the request.
+func AuthorizeIfLoggedInAndOwnData(ctx *aero.Context, userIDParameterName string) error {
+	if !ctx.HasSession() {
+		return errors.New("Neither logged in nor in session")
+	}
+
+	userID, ok := ctx.Session().Get("userId").(string)
+
+	if !ok || userID == "" {
+		return errors.New("Not logged in")
+	}
+
+	if userID != ctx.Get(userIDParameterName) {
+		return errors.New("Can not modify data from other users")
+	}
+
+	return nil
 }
 
 // GetGenreIDByName ...

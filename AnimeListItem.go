@@ -12,12 +12,12 @@ const (
 // AnimeListItem ...
 type AnimeListItem struct {
 	AnimeID      string      `json:"animeId"`
-	Status       string      `json:"status"`
-	Episodes     int         `json:"episodes"`
+	Status       string      `json:"status" editable:"true"`
+	Episodes     int         `json:"episodes" editable:"true"`
 	Rating       AnimeRating `json:"rating"`
-	Notes        string      `json:"notes"`
-	RewatchCount int         `json:"rewatchCount"`
-	Private      bool        `json:"private"`
+	Notes        string      `json:"notes" editable:"true"`
+	RewatchCount int         `json:"rewatchCount" editable:"true"`
+	Private      bool        `json:"private" editable:"true"`
 	Created      string      `json:"created"`
 	Edited       string      `json:"edited"`
 
@@ -31,6 +31,11 @@ func (item *AnimeListItem) Anime() *Anime {
 	}
 
 	return item.anime
+}
+
+// Link returns the URI for the given item.
+func (item *AnimeListItem) Link(userNick string) string {
+	return "/+" + userNick + "/animelist/" + item.AnimeID
 }
 
 // FinalRating returns the overall score for the anime.
