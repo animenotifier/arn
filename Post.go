@@ -103,6 +103,29 @@ func SortPostsLatestLast(posts []*Post) {
 	})
 }
 
+// FilterPostsWithUniqueThreads removes posts with the same thread until we have enough posts.
+func FilterPostsWithUniqueThreads(posts []*Post, limit int) []*Post {
+	filtered := []*Post{}
+	threadsProcessed := map[string]bool{}
+
+	for _, post := range posts {
+		if len(filtered) >= limit {
+			return filtered
+		}
+
+		_, found := threadsProcessed[post.ThreadID]
+
+		if found {
+			continue
+		}
+
+		threadsProcessed[post.ThreadID] = true
+		filtered = append(filtered, post)
+	}
+
+	return filtered
+}
+
 // GetPostsByUser ...
 func GetPostsByUser(user *User) ([]*Post, error) {
 	var posts []*Post
