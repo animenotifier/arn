@@ -65,18 +65,28 @@ func GetPost(id string) (*Post, error) {
 	return obj.(*Post), err
 }
 
-// GetPosts ...
-func GetPosts() ([]*Post, error) {
-	var posts []*Post
-
+// AllPosts returns a stream of all posts.
+func AllPosts() (chan *Post, error) {
 	channel := make(chan *Post)
 	err := DB.Scan("Post", channel)
+	return channel, err
+}
 
-	for post := range channel {
-		posts = append(posts, post)
+// AllPostsSlice returns a slice of all posts.
+func AllPostsSlice() ([]*Post, error) {
+	var posts []*Post
+
+	stream, err := AllPosts()
+
+	if err != nil {
+		return nil, err
 	}
 
-	return posts, err
+	for obj := range stream {
+		posts = append(posts, obj)
+	}
+
+	return posts, nil
 }
 
 // SortPostsLatestFirst sorts the slice of posts.

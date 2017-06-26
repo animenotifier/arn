@@ -120,7 +120,6 @@ func (anime *Anime) EpisodeCountString() string {
 func AllAnime() (chan *Anime, error) {
 	channel := make(chan *Anime)
 	err := DB.Scan("Anime", channel)
-
 	return channel, err
 }
 
