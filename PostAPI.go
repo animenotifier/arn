@@ -43,6 +43,9 @@ func (post *Post) Create(json interface{}, ctx *aero.Context) error {
 	post.Created = DateTimeUTC()
 	post.Edited = ""
 
+	// Post-process text
+	post.Text = FixPostText(post.Text)
+
 	// Tags
 	tags, _ := data["tags"].([]interface{})
 	post.Tags = make([]string, len(tags))
@@ -61,7 +64,7 @@ func (post *Post) Create(json interface{}, ctx *aero.Context) error {
 		return errors.New("Thread does not exist")
 	}
 
-	thread.Replies++
+	thread.Posts = append(thread.Posts, post.ID)
 	return thread.Save()
 }
 

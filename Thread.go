@@ -15,7 +15,7 @@ type Thread struct {
 	Tags     []string `json:"tags"`
 	Likes    []string `json:"likes"`
 	Sticky   bool     `json:"sticky"`
-	Replies  int      `json:"replies"`
+	Posts    []string `json:"posts"`
 	Created  string   `json:"created"`
 	Edited   string   `json:"edited"`
 

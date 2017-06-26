@@ -59,3 +59,10 @@ func FixAccountNick(nick string) string {
 
 	return nick
 }
+
+// FixPostText fixes common mistakes in post texts.
+func FixPostText(text string) string {
+	text = strings.Replace(text, "http://", "https://", -1)
+	text = strings.TrimSpace(text)
+	return text
+}
