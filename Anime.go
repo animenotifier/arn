@@ -51,10 +51,10 @@ type Anime struct {
 
 // AnimeRating ...
 type AnimeRating struct {
-	Overall float64 `json:"overall" editable:"true"`
-	Story   float64 `json:"story" editable:"true"`
-	Visuals float64 `json:"visuals" editable:"true"`
-	Music   float64 `json:"music" editable:"true"`
+	Overall    float64 `json:"overall" editable:"true"`
+	Story      float64 `json:"story" editable:"true"`
+	Visuals    float64 `json:"visuals" editable:"true"`
+	Soundtrack float64 `json:"soundtrack" editable:"true"`
 }
 
 // AnimeImageTypes ...
