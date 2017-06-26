@@ -58,7 +58,6 @@ func FilterUsers(filter func(*User) bool) ([]*User, error) {
 
 // SortUsersLastSeen sorts a list of users by their last seen date.
 func SortUsersLastSeen(users []*User) []*User {
-
 	sort.Slice(users, func(i, j int) bool {
 		return users[i].LastSeen > users[j].LastSeen
 	})
