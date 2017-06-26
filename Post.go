@@ -1,6 +1,7 @@
 package arn
 
 import "sort"
+import "github.com/aerogo/aero"
 
 // Post represents a forum post.
 type Post struct {
@@ -15,6 +16,7 @@ type Post struct {
 
 	author *User
 	thread *Thread
+	html   string
 }
 
 // Author returns the post author.
@@ -40,6 +42,16 @@ func (post *Post) Thread() *Thread {
 // Link returns the relative URL of the post.
 func (post *Post) Link() string {
 	return "/posts/" + post.ID
+}
+
+// HTML returns the HTML representation of the post.
+func (post *Post) HTML() string {
+	if post.html != "" {
+		return post.html
+	}
+
+	post.html = aero.Markdown(post.Text)
+	return post.html
 }
 
 // ToPostable converts a post into an object that implements the Postable interface.

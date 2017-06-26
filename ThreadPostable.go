@@ -20,6 +20,11 @@ func (postable *ThreadPostable) Text() string {
 	return postable.thread.Text
 }
 
+// HTML returns the Markdown text.
+func (postable *ThreadPostable) HTML() string {
+	return postable.thread.HTML()
+}
+
 // Author returns the user object representing the thread's author.
 func (postable *ThreadPostable) Author() *User {
 	return postable.thread.Author()

@@ -20,6 +20,11 @@ func (postable *PostPostable) Text() string {
 	return postable.post.Text
 }
 
+// HTML returns the Markdown text.
+func (postable *PostPostable) HTML() string {
+	return postable.post.HTML()
+}
+
 // Author returns the user object representing the post's author.
 func (postable *PostPostable) Author() *User {
 	return postable.post.Author()

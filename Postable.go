@@ -5,6 +5,7 @@ type Postable interface {
 	ID() string
 	Title() string
 	Text() string
+	HTML() string
 	Likes() []string
 	Author() *User
 	Link() string
