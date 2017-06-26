@@ -1,6 +1,7 @@
 package arn
 
 import (
+	"sort"
 	"strings"
 
 	"github.com/aerogo/flow"
@@ -46,20 +47,32 @@ func Search(term string, maxUsers, maxAnime int) ([]*User, []*Anime) {
 			return
 		}
 
-		for name, id := range userSearchIndex.TextToID {
-			if strings.Index(name, term) != -1 {
-				user, err = GetUser(id)
+		textToID := userSearchIndex.TextToID
 
-				if err != nil {
-					continue
-				}
+		// Keys
+		keys := make([]string, len(textToID))
+		count := 0
+		for name := range textToID {
+			keys[count] = name
+			count++
+		}
 
-				userResults = append(userResults, user)
+		sort.Slice(keys, func(i, j int) bool {
+			return StringSimilarity(term, keys[i]) > StringSimilarity(term, keys[j])
+		})
 
-				if len(userResults) >= maxUsers {
-					break
-				}
+		if len(keys) >= maxUsers {
+			keys = keys[:maxUsers]
+		}
+
+		for _, key := range keys {
+			user, err = GetUser(textToID[key])
+
+			if err != nil {
+				continue
 			}
+
+			userResults = append(userResults, user)
 		}
 	}, func() {
 		// Search anime
@@ -71,20 +84,32 @@ func Search(term string, maxUsers, maxAnime int) ([]*User, []*Anime) {
 			return
 		}
 
-		for title, id := range animeSearchIndex.TextToID {
-			if strings.Index(title, term) != -1 {
-				anime, err = GetAnime(id)
+		textToID := animeSearchIndex.TextToID
 
-				if err != nil {
-					continue
-				}
+		// Keys
+		keys := make([]string, len(textToID))
+		count := 0
+		for name := range textToID {
+			keys[count] = name
+			count++
+		}
 
-				animeResults = append(animeResults, anime)
+		sort.Slice(keys, func(i, j int) bool {
+			return StringSimilarity(term, keys[i]) > StringSimilarity(term, keys[j])
+		})
 
-				if len(animeResults) >= maxAnime {
-					break
-				}
+		if len(keys) >= maxAnime {
+			keys = keys[:maxAnime]
+		}
+
+		for _, key := range keys {
+			anime, err = GetAnime(textToID[key])
+
+			if err != nil {
+				continue
 			}
+
+			animeResults = append(animeResults, anime)
 		}
 	})
 

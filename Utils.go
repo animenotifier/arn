@@ -14,6 +14,7 @@ import (
 
 	"github.com/aerogo/aero"
 	shortid "github.com/ventu-io/go-shortid"
+	"github.com/xrash/smetrics"
 )
 
 var stripTagsRegex = regexp.MustCompile(`<[^>]*>`)
@@ -199,6 +200,11 @@ func EpisodeCountMax(episodes int) string {
 // DateTimeUTC returns the current UTC time in RFC3339 format.
 func DateTimeUTC() string {
 	return time.Now().UTC().Format(time.RFC3339)
+}
+
+// StringSimilarity returns 1.0 if the strings are equal and goes closer to 0 when they are different.
+func StringSimilarity(a string, b string) float64 {
+	return smetrics.JaroWinkler(a, b, 0.7, 4)
 }
 
 // ToString converts anything into a string.
