@@ -87,6 +87,17 @@ func SortSoundTracksLatestFirst(tracks []*SoundTrack) {
 	})
 }
 
+// GetSoundTrack ...
+func GetSoundTrack(id string) (*SoundTrack, error) {
+	track, err := DB.Get("SoundTrack", id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return track.(*SoundTrack), nil
+}
+
 // GetSoundTracksByUser ...
 func GetSoundTracksByUser(user *User) ([]*SoundTrack, error) {
 	var userTracks []*SoundTrack
