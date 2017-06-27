@@ -21,12 +21,6 @@ type SoundTrack struct {
 	createdByUser *User
 }
 
-// ExternalMedia ...
-type ExternalMedia struct {
-	Service   string `json:"service"`
-	ServiceID string `json:"serviceId"`
-}
-
 // Anime fetches all tagged anime of the sound track.
 func (track *SoundTrack) Anime() []*Anime {
 	var animeList []*Anime

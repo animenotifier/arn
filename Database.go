@@ -22,5 +22,6 @@ var DB = aerospike.NewDatabase(
 		(*SearchIndex)(nil),
 		(*SoundTrack)(nil),
 		(*SoundCloudToSoundTrack)(nil),
+		(*YoutubeToSoundTrack)(nil),
 	},
 )

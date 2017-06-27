@@ -58,6 +58,10 @@ type APIKeysData struct {
 		Secret string `json:"secret"`
 	} `json:"soundcloud"`
 
+	GoogleAPI struct {
+		Key string `json:"key"`
+	} `json:"googleAPI"`
+
 	IPInfoDB struct {
 		ID string `json:"id"`
 	} `json:"ipInfoDB"`
