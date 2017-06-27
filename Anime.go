@@ -19,19 +19,19 @@ var NotFoundAnime = &Anime{
 
 // Anime ...
 type Anime struct {
-	ID            string          `json:"id"`
-	Type          string          `json:"type"`
-	Title         AnimeTitle      `json:"title"`
-	Image         AnimeImageTypes `json:"image"`
-	StartDate     string          `json:"startDate"`
-	EndDate       string          `json:"endDate"`
-	EpisodeCount  int             `json:"episodeCount"`
-	EpisodeLength int             `json:"episodeLength"`
-	Status        string          `json:"status"`
-	NSFW          bool            `json:"nsfw"`
-	Rating        AnimeRating     `json:"rating"`
-	Summary       string          `json:"summary"`
-	Trailers      []AnimeTrailer  `json:"trailers"`
+	ID            string           `json:"id"`
+	Type          string           `json:"type"`
+	Title         AnimeTitle       `json:"title"`
+	Image         AnimeImageTypes  `json:"image"`
+	StartDate     string           `json:"startDate"`
+	EndDate       string           `json:"endDate"`
+	EpisodeCount  int              `json:"episodeCount"`
+	EpisodeLength int              `json:"episodeLength"`
+	Status        string           `json:"status"`
+	NSFW          int              `json:"nsfw"`
+	Rating        AnimeRating      `json:"rating"`
+	Summary       string           `json:"summary"`
+	Trailers      []*ExternalMedia `json:"trailers"`
 
 	// Adult         bool            `json:"adult"`
 
@@ -72,12 +72,6 @@ type AnimeTitle struct {
 	Japanese  string   `json:"japanese"`
 	Canonical string   `json:"canonical"`
 	Synonyms  []string `json:"synonyms"`
-}
-
-// AnimeTrailer ...
-type AnimeTrailer struct {
-	Service string `json:"service"`
-	VideoID string `json:"videoId"`
 }
 
 // GetAnime ...
@@ -162,6 +156,6 @@ func FilterAnime(filter func(*Anime) bool) ([]*Anime, error) {
 // GetAiringAnime ...
 func GetAiringAnime() ([]*Anime, error) {
 	return FilterAnime(func(anime *Anime) bool {
-		return anime.Status == "current" && anime.Type == "tv" && !anime.NSFW && anime.Rating.Overall > 50
+		return anime.Status == "current" && anime.Type == "tv" && anime.NSFW == 0 && anime.Rating.Overall > 50
 	})
 }
