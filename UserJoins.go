@@ -23,3 +23,9 @@ func (user *User) AnimeList() *AnimeList {
 	animeList, _ := GetAnimeList(user.ID)
 	return animeList
 }
+
+// SoundTracks returns the soundtracks posted by the user.
+func (user *User) SoundTracks() []*SoundTrack {
+	tracks, _ := GetSoundTracksByUser(user)
+	return tracks
+}

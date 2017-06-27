@@ -88,6 +88,24 @@ func SortSoundTracksLatestFirst(tracks []*SoundTrack) {
 	})
 }
 
+// GetSoundTracksByUser ...
+func GetSoundTracksByUser(user *User) ([]*SoundTrack, error) {
+	var userTracks []*SoundTrack
+	tracks, err := StreamSoundTracks()
+
+	if err != nil {
+		return nil, err
+	}
+
+	for track := range tracks {
+		if track.CreatedBy == user.ID {
+			userTracks = append(userTracks, track)
+		}
+	}
+
+	return userTracks, nil
+}
+
 // StreamSoundTracks ...
 func StreamSoundTracks() (chan *SoundTrack, error) {
 	tracks, err := DB.All("SoundTrack")
