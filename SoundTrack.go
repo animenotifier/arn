@@ -22,9 +22,8 @@ type SoundTrack struct {
 
 // ExternalMedia ...
 type ExternalMedia struct {
-	Service           string `json:"service"`
-	ServiceID         string `json:"serviceId"`
-	DeprecatedVideoID string `json:"videoId"`
+	Service   string `json:"service"`
+	ServiceID string `json:"serviceId"`
 }
 
 // Anime fetches all tagged anime of the sound track.
