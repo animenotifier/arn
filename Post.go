@@ -65,28 +65,27 @@ func GetPost(id string) (*Post, error) {
 	return obj.(*Post), err
 }
 
-// AllPosts returns a stream of all posts.
-func AllPosts() (chan *Post, error) {
-	channel := make(chan *Post)
-	err := DB.Scan("Post", channel)
-	return channel, err
+// StreamPosts returns a stream of all posts.
+func StreamPosts() (chan *Post, error) {
+	objects, err := DB.All("Post")
+	return objects.(chan *Post), err
 }
 
-// AllPostsSlice returns a slice of all posts.
-func AllPostsSlice() ([]*Post, error) {
-	var posts []*Post
+// AllPosts returns a slice of all posts.
+func AllPosts() ([]*Post, error) {
+	var all []*Post
 
-	stream, err := AllPosts()
+	stream, err := StreamPosts()
 
 	if err != nil {
 		return nil, err
 	}
 
 	for obj := range stream {
-		posts = append(posts, obj)
+		all = append(all, obj)
 	}
 
-	return posts, nil
+	return all, nil
 }
 
 // SortPostsLatestFirst sorts the slice of posts.

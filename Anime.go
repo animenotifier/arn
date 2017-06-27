@@ -116,11 +116,27 @@ func (anime *Anime) EpisodeCountString() string {
 	return strconv.Itoa(anime.EpisodeCount)
 }
 
-// AllAnime returns a stream of all anime.
-func AllAnime() (chan *Anime, error) {
-	channel := make(chan *Anime)
-	err := DB.Scan("Anime", channel)
-	return channel, err
+// StreamAnime returns a stream of all anime.
+func StreamAnime() (chan *Anime, error) {
+	objects, err := DB.All("Anime")
+	return objects.(chan *Anime), err
+}
+
+// AllAnime returns a slice of all anime.
+func AllAnime() ([]*Anime, error) {
+	var all []*Anime
+
+	stream, err := StreamAnime()
+
+	if err != nil {
+		return nil, err
+	}
+
+	for obj := range stream {
+		all = append(all, obj)
+	}
+
+	return all, nil
 }
 
 // FilterAnime filters all anime by a custom function.

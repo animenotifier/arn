@@ -15,9 +15,9 @@ type Thread struct {
 	Sticky   int      `json:"sticky"`
 	Tags     []string `json:"tags"`
 	Likes    []string `json:"likes"`
-	Posts   []string `json:"posts"`
-	Created string   `json:"created"`
-	Edited  string   `json:"edited"`
+	Posts    []string `json:"posts"`
+	Created  string   `json:"created"`
+	Edited   string   `json:"edited"`
 
 	author *User
 	html   string
@@ -90,6 +90,29 @@ func GetThreadsByUser(user *User) ([]*Thread, error) {
 	}
 
 	return threads, err
+}
+
+// StreamThreads ...
+func StreamThreads() (chan *Thread, error) {
+	threads, err := DB.All("Thread")
+	return threads.(chan *Thread), err
+}
+
+// AllThreads ...
+func AllThreads() ([]*Thread, error) {
+	var all []*Thread
+
+	stream, err := StreamThreads()
+
+	if err != nil {
+		return nil, err
+	}
+
+	for obj := range stream {
+		all = append(all, obj)
+	}
+
+	return all, nil
 }
 
 // SortThreads sorts a slice of threads.
