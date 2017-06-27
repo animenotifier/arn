@@ -12,12 +12,12 @@ type Thread struct {
 	Title    string   `json:"title"`
 	Text     string   `json:"text"`
 	AuthorID string   `json:"authorId"`
+	Sticky   int      `json:"sticky"`
 	Tags     []string `json:"tags"`
 	Likes    []string `json:"likes"`
-	Sticky   bool     `json:"sticky"`
-	Posts    []string `json:"posts"`
-	Created  string   `json:"created"`
-	Edited   string   `json:"edited"`
+	Posts   []string `json:"posts"`
+	Created string   `json:"created"`
+	Edited  string   `json:"edited"`
 
 	author *User
 	html   string
@@ -99,13 +99,7 @@ func SortThreads(threads []*Thread) {
 		b := threads[j]
 
 		if a.Sticky != b.Sticky {
-			if a.Sticky {
-				return true
-			}
-
-			if b.Sticky {
-				return false
-			}
+			return a.Sticky > b.Sticky
 		}
 
 		return a.Created > b.Created
@@ -117,9 +111,4 @@ func SortThreadsByDate(threads []*Thread) {
 	sort.Slice(threads, func(i, j int) bool {
 		return threads[i].Created > threads[j].Created
 	})
-}
-
-// Save saves the thread object in the database.
-func (thread *Thread) Save() error {
-	return DB.Set("Thread", thread.ID, thread)
 }
