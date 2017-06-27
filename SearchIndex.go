@@ -36,6 +36,11 @@ func Search(term string, maxUsers, maxAnime int) ([]*User, []*Anime) {
 	var userResults []*User
 	var animeResults []*Anime
 
+	type SearchItem struct {
+		text       string
+		similarity float64
+	}
+
 	// Search everything in parallel
 	flow.Parallel(func() {
 		// Search userResults
@@ -49,24 +54,35 @@ func Search(term string, maxUsers, maxAnime int) ([]*User, []*Anime) {
 
 		textToID := userSearchIndex.TextToID
 
-		// Keys
-		keys := make([]string, len(textToID))
-		count := 0
+		// Search items
+		items := make([]*SearchItem, 0)
+
 		for name := range textToID {
-			keys[count] = name
-			count++
+			s := StringSimilarity(term, name)
+
+			if s < MinimumStringSimilarity {
+				continue
+			}
+
+			items = append(items, &SearchItem{
+				text:       name,
+				similarity: s,
+			})
 		}
 
-		sort.Slice(keys, func(i, j int) bool {
-			return StringSimilarity(term, keys[i]) > StringSimilarity(term, keys[j])
+		// Sort
+		sort.Slice(items, func(i, j int) bool {
+			return items[i].similarity > items[j].similarity
 		})
 
-		if len(keys) >= maxUsers {
-			keys = keys[:maxUsers]
+		// Limit
+		if len(items) >= maxUsers {
+			items = items[:maxUsers]
 		}
 
-		for _, key := range keys {
-			user, err = GetUser(textToID[key])
+		// Fetch data
+		for _, item := range items {
+			user, err = GetUser(textToID[item.text])
 
 			if err != nil {
 				continue
@@ -86,24 +102,35 @@ func Search(term string, maxUsers, maxAnime int) ([]*User, []*Anime) {
 
 		textToID := animeSearchIndex.TextToID
 
-		// Keys
-		keys := make([]string, len(textToID))
-		count := 0
+		// Search items
+		items := make([]*SearchItem, 0)
+
 		for name := range textToID {
-			keys[count] = name
-			count++
+			s := StringSimilarity(term, name)
+
+			if s < MinimumStringSimilarity {
+				continue
+			}
+
+			items = append(items, &SearchItem{
+				text:       name,
+				similarity: s,
+			})
 		}
 
-		sort.Slice(keys, func(i, j int) bool {
-			return StringSimilarity(term, keys[i]) > StringSimilarity(term, keys[j])
+		// Sort
+		sort.Slice(items, func(i, j int) bool {
+			return items[i].similarity > items[j].similarity
 		})
 
-		if len(keys) >= maxAnime {
-			keys = keys[:maxAnime]
+		// Limit
+		if len(items) >= maxAnime {
+			items = items[:maxAnime]
 		}
 
-		for _, key := range keys {
-			anime, err = GetAnime(textToID[key])
+		// Fetch data
+		for _, item := range items {
+			anime, err = GetAnime(textToID[item.text])
 
 			if err != nil {
 				continue

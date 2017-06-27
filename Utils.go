@@ -17,6 +17,9 @@ import (
 	"github.com/xrash/smetrics"
 )
 
+// MinimumStringSimilarity is the minimum JaroWinkler distance we accept for search results.
+const MinimumStringSimilarity = 0.82
+
 var stripTagsRegex = regexp.MustCompile(`<[^>]*>`)
 var sourceRegex = regexp.MustCompile(`\(Source: (.*?)\)`)
 var writtenByRegex = regexp.MustCompile(`\[Written by (.*?)\]`)
