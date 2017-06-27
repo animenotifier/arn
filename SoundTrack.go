@@ -1,6 +1,7 @@
 package arn
 
 import (
+	"sort"
 	"strings"
 
 	"github.com/fatih/color"
@@ -78,6 +79,13 @@ func (track *SoundTrack) CreatedByUser() *User {
 
 	track.createdByUser = user
 	return track.createdByUser
+}
+
+// SortSoundTracksLatestFirst ...
+func SortSoundTracksLatestFirst(tracks []*SoundTrack) {
+	sort.Slice(tracks, func(i, j int) bool {
+		return tracks[i].Created > tracks[j].Created
+	})
 }
 
 // StreamSoundTracks ...
