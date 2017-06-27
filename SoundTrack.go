@@ -116,6 +116,27 @@ func GetSoundTracksByUser(user *User) ([]*SoundTrack, error) {
 	return userTracks, nil
 }
 
+// GetSoundTracksByTag ...
+func GetSoundTracksByTag(filterTag string) ([]*SoundTrack, error) {
+	var filteredTracks []*SoundTrack
+	tracks, err := StreamSoundTracks()
+
+	if err != nil {
+		return nil, err
+	}
+
+	for track := range tracks {
+		for _, tag := range track.Tags {
+			if tag == filterTag {
+				filteredTracks = append(filteredTracks, track)
+				break
+			}
+		}
+	}
+
+	return filteredTracks, nil
+}
+
 // StreamSoundTracks ...
 func StreamSoundTracks() (chan *SoundTrack, error) {
 	tracks, err := DB.All("SoundTrack")
