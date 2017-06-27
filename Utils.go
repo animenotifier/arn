@@ -167,6 +167,11 @@ func FixGender(gender string) string {
 	return gender
 }
 
+// FixThreadTitle ...
+func FixThreadTitle(title string) string {
+	return strings.TrimSpace(title)
+}
+
 // Capitalize returns the string with the first letter capitalized.
 func Capitalize(s string) string {
 	if s == "" {

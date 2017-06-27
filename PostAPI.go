@@ -65,7 +65,8 @@ func (post *Post) Create(json interface{}, ctx *aero.Context) error {
 	}
 
 	thread.Posts = append(thread.Posts, post.ID)
-	return thread.Save()
+
+	return nil
 }
 
 // Save saves the post object in the database.

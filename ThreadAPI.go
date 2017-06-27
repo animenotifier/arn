@@ -46,6 +46,7 @@ func (thread *Thread) Create(json interface{}, ctx *aero.Context) error {
 	thread.Edited = ""
 
 	// Post-process text
+	thread.Title = FixThreadTitle(thread.Title)
 	thread.Text = FixPostText(thread.Text)
 
 	// Tags
@@ -60,11 +61,15 @@ func (thread *Thread) Create(json interface{}, ctx *aero.Context) error {
 		return errors.New("Need to specify at least one tag")
 	}
 
-	if len(thread.Text) < 5 {
-		return errors.New("Text too short: Should be at least 5 characters")
+	if len(thread.Title) < 10 {
+		return errors.New("Title too short: Should be at least 10 characters")
 	}
 
-	return thread.Save()
+	if len(thread.Text) < 10 {
+		return errors.New("Text too short: Should be at least 10 characters")
+	}
+
+	return nil
 }
 
 // Save saves the thread object in the database.
