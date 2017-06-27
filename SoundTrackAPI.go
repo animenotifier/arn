@@ -7,8 +7,6 @@ import (
 	"strconv"
 	"strings"
 
-	youtube "google.golang.org/api/youtube/v3"
-
 	"github.com/aerogo/aero"
 	"github.com/parnurzeal/gorequest"
 )
@@ -42,7 +40,7 @@ func GetSoundCloudMedia(url string) (*ExternalMedia, error) {
 		return nil, errs[0]
 	}
 
-	var soundcloud SoundCloudResolveResponse
+	var soundcloud SoundCloudTrack
 	err = json.Unmarshal(body, &soundcloud)
 
 	if err != nil {
@@ -72,27 +70,15 @@ func GetYoutubeMedia(url string) (*ExternalMedia, error) {
 
 	videoID := matches[1]
 
-	// Get title
-	_, body, errs := gorequest.New().Get("https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + videoID + "&key=" + APIKeys.GoogleAPI.Key).EndBytes()
-
-	if len(errs) > 0 {
-		return nil, errs[0]
-	}
-
-	var response youtube.VideoListResponse
-	json.Unmarshal(body, &response)
-
-	if len(response.Items) == 0 {
-		return nil, errors.New("Error fetching Youtube title of the video")
-	}
-
-	title := response.Items[0].Snippet.Title
-
-	return &ExternalMedia{
+	media := &ExternalMedia{
 		Service:   "Youtube",
 		ServiceID: videoID,
-		Title:     title,
-	}, nil
+	}
+
+	// Fetch title
+	media.RefreshMetaData()
+
+	return media, nil
 }
 
 // Create sets the data for a new soundtrack with data we received from the API request.

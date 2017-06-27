@@ -21,6 +21,11 @@ type SoundTrack struct {
 	createdByUser *User
 }
 
+// Link returns the permalink for the track.
+func (track *SoundTrack) Link() string {
+	return "/tracks/" + track.ID
+}
+
 // Anime fetches all tagged anime of the sound track.
 func (track *SoundTrack) Anime() []*Anime {
 	var animeList []*Anime

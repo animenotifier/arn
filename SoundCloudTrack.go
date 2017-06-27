@@ -1,7 +1,7 @@
 package arn
 
-// SoundCloudResolveResponse ...
-type SoundCloudResolveResponse struct {
+// SoundCloudTrack ...
+type SoundCloudTrack struct {
 	Kind                string      `json:"kind"`
 	ID                  int         `json:"id"`
 	CreatedAt           string      `json:"created_at"`
