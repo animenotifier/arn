@@ -8,12 +8,13 @@ import (
 
 // SoundTrack ...
 type SoundTrack struct {
-	ID        string          `json:"id"`
-	Media     []ExternalMedia `json:"media"`
-	Tags      []string        `json:"tags"`
-	Likes     []string        `json:"likes"`
-	Created   string          `json:"created"`
-	CreatedBy string          `json:"createdBy"`
+	ID        string           `json:"id"`
+	Media     []*ExternalMedia `json:"media"`
+	Tags      []string         `json:"tags"`
+	Likes     []string         `json:"likes"`
+	Created   string           `json:"created"`
+	CreatedBy string           `json:"createdBy"`
+	Edited    string           `json:"edited"`
 
 	mainAnime     *Anime
 	createdByUser *User
@@ -78,4 +79,27 @@ func (track *SoundTrack) CreatedByUser() *User {
 
 	track.createdByUser = user
 	return track.createdByUser
+}
+
+// StreamSoundTracks ...
+func StreamSoundTracks() (chan *SoundTrack, error) {
+	tracks, err := DB.All("SoundTrack")
+	return tracks.(chan *SoundTrack), err
+}
+
+// AllSoundTracks ...
+func AllSoundTracks() ([]*SoundTrack, error) {
+	var all []*SoundTrack
+
+	stream, err := StreamSoundTracks()
+
+	if err != nil {
+		return nil, err
+	}
+
+	for obj := range stream {
+		all = append(all, obj)
+	}
+
+	return all, nil
 }

@@ -25,6 +25,31 @@ var accountNickRegexes = []*regexp.Regexp{
 	regexp.MustCompile(`osu.ppy.sh/u/(.*)`),
 }
 
+var animeLinkRegex = regexp.MustCompile(`notify.moe/anime/(\d+)`)
+var osuBeatmapRegex = regexp.MustCompile(`osu.ppy.sh/s/(\d+)`)
+
+// FixTag converts links to correct tags automatically.
+func FixTag(tag string) string {
+	tag = strings.TrimSpace(tag)
+	tag = strings.TrimSuffix(tag, "/")
+
+	// Anime
+	matches := animeLinkRegex.FindStringSubmatch(tag)
+
+	if len(matches) > 1 {
+		return "anime:" + matches[1]
+	}
+
+	// Osu beatmap
+	matches = osuBeatmapRegex.FindStringSubmatch(tag)
+
+	if len(matches) > 1 {
+		return "osu-beatmap:" + matches[1]
+	}
+
+	return tag
+}
+
 // FixUserNick automatically corrects a username.
 func FixUserNick(nick string) string {
 	nick = fixNickRegex.ReplaceAllString(nick, "")

@@ -20,5 +20,7 @@ var DB = aerospike.NewDatabase(
 		(*GoogleToUser)(nil),
 		(*TwitterToUser)(nil),
 		(*SearchIndex)(nil),
+		(*SoundTrack)(nil),
+		(*SoundCloudToSoundTrack)(nil),
 	},
 )

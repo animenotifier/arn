@@ -25,3 +25,11 @@ func TestFixAccountNick(t *testing.T) {
 	assert.True(t, FixAccountNick("osu.ppy.sh/u/UserName") == "UserName")
 	assert.True(t, FixAccountNick("kitsu.io/users/UserName/library") == "UserName")
 }
+
+func TestFixTag(t *testing.T) {
+	// Nickname autocorrect
+	assert.Equal(t, FixTag("general"), "general")
+	assert.Equal(t, FixTag("https://notify.moe/anime/244"), "anime:244")
+	assert.Equal(t, FixTag("https://notify.moe/anime/244/"), "anime:244")
+	assert.Equal(t, FixTag("https://osu.ppy.sh/s/320118"), "osu-beatmap:320118")
+}
