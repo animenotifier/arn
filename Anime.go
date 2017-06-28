@@ -3,6 +3,9 @@ package arn
 import (
 	"encoding/json"
 	"strconv"
+
+	"github.com/animenotifier/shoboi"
+	"github.com/fatih/color"
 )
 
 // Anime ...
@@ -21,6 +24,7 @@ type Anime struct {
 	Summary       string           `json:"summary"`
 	Trailers      []*ExternalMedia `json:"trailers"`
 	Mappings      []*Mapping       `json:"mappings"`
+	Episodes      []*AnimeEpisode  `json:"episodes"`
 
 	// Adult         bool            `json:"adult"`
 
@@ -105,6 +109,43 @@ func (anime *Anime) AddMapping(name string, id string, userID string) {
 		Created:   DateTimeUTC(),
 		CreatedBy: userID,
 	})
+
+	go anime.RefreshMapping(name, id)
+}
+
+// RefreshMapping will refresh all the data we can get from the external site for that anime.
+func (anime *Anime) RefreshMapping(serviceName string, serviceID string) {
+	switch serviceName {
+	case "shoboi/anime":
+		shoboiAnime, err := shoboi.GetAnime(serviceID)
+
+		if err != nil {
+			color.Red(err.Error())
+			return
+		}
+
+		anime.Episodes = []*AnimeEpisode{}
+
+		shoboiEpisodes := shoboiAnime.Episodes()
+		for _, shoboiEpisode := range shoboiEpisodes {
+			airingDate := shoboiEpisode.AiringDate()
+
+			episode := &AnimeEpisode{
+				Number: shoboiEpisode.Number,
+				Title: &EpisodeTitle{
+					Japanese: shoboiEpisode.TitleJapanese,
+				},
+				AiringDate: &AnimeAiringDate{
+					Start: airingDate.Start,
+					End:   airingDate.End,
+				},
+			}
+
+			anime.Episodes = append(anime.Episodes, episode)
+		}
+
+		anime.Save()
+	}
 }
 
 // GetMapping returns the external ID for the given service.
