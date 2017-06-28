@@ -94,7 +94,7 @@ func (list *AnimeList) Set(id interface{}, value interface{}) error {
 }
 
 // Update ...
-func (list *AnimeList) Update(id interface{}, updatesObj interface{}) error {
+func (list *AnimeList) Update(ctx *aero.Context, id interface{}, updatesObj interface{}) error {
 	updates := updatesObj.(map[string]interface{})
 	animeID := id.(string)
 

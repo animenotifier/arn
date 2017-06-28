@@ -70,7 +70,7 @@ func GetUserFromContext(ctx *aero.Context) *User {
 }
 
 // SetObjectProperties updates the object with the given map[string]interface{}
-func SetObjectProperties(rootObj interface{}, updates map[string]interface{}, skip func(fullKeyName string, field reflect.StructField, property reflect.Value, newValue reflect.Value) bool) error {
+func SetObjectProperties(rootObj interface{}, updates map[string]interface{}, skip func(fullKeyName string, field *reflect.StructField, property *reflect.Value, newValue reflect.Value) bool) error {
 	var t reflect.Type
 	var v reflect.Value
 	var field reflect.StructField
@@ -79,6 +79,11 @@ func SetObjectProperties(rootObj interface{}, updates map[string]interface{}, sk
 	for key, value := range updates {
 		t = reflect.TypeOf(rootObj).Elem()
 		v = reflect.ValueOf(rootObj).Elem()
+
+		if strings.HasPrefix(key, "Custom:") {
+			skip(key, nil, nil, reflect.ValueOf(value))
+			continue
+		}
 
 		// Nested properties
 		parts := strings.Split(key, ".")
@@ -103,7 +108,7 @@ func SetObjectProperties(rootObj interface{}, updates map[string]interface{}, sk
 
 		// Is this manually handled by the class so we can skip it?
 		// Also make sure to pass full "key" value here instead of "fieldName".
-		if skip != nil && skip(key, field, v, newValue) {
+		if skip != nil && skip(key, &field, &v, newValue) {
 			continue
 		}
 

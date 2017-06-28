@@ -5,24 +5,12 @@ import (
 	"strconv"
 )
 
-// NotFoundAnime is the dummy object representing
-var NotFoundAnime = &Anime{
-	ID:   "error",
-	Type: "error",
-	Title: AnimeTitle{
-		Canonical: "Error",
-		Romaji:    "Error",
-		Japanese:  "Error",
-	},
-	Summary: "Error fetching anime data",
-}
-
 // Anime ...
 type Anime struct {
 	ID            string           `json:"id"`
 	Type          string           `json:"type"`
-	Title         AnimeTitle       `json:"title"`
-	Image         AnimeImageTypes  `json:"image"`
+	Title         *AnimeTitle      `json:"title"`
+	Image         *AnimeImageTypes `json:"image"`
 	StartDate     string           `json:"startDate"`
 	EndDate       string           `json:"endDate"`
 	EpisodeCount  int              `json:"episodeCount"`
@@ -32,6 +20,7 @@ type Anime struct {
 	Rating        AnimeRating      `json:"rating"`
 	Summary       string           `json:"summary"`
 	Trailers      []*ExternalMedia `json:"trailers"`
+	Mappings      []*Mapping       `json:"mappings"`
 
 	// Adult         bool            `json:"adult"`
 
@@ -99,6 +88,46 @@ func (anime *Anime) PrettyJSON() (string, error) {
 // Watching ...
 func (anime *Anime) Watching() int {
 	return 0
+}
+
+// AddMapping adds the ID of an external site to the anime.
+func (anime *Anime) AddMapping(name string, id string, userID string) {
+	for _, external := range anime.Mappings {
+		// If it already exists we don't need to add it
+		if external.Service == name && external.ServiceID == id {
+			return
+		}
+	}
+
+	anime.Mappings = append(anime.Mappings, &Mapping{
+		Service:   name,
+		ServiceID: id,
+		Created:   DateTimeUTC(),
+		CreatedBy: userID,
+	})
+}
+
+// GetMapping returns the external ID for the given service.
+func (anime *Anime) GetMapping(name string) string {
+	for _, external := range anime.Mappings {
+		if external.Service == name {
+			return external.ServiceID
+		}
+	}
+
+	return ""
+}
+
+// RemoveMapping removes all mappings with the given service name and ID.
+func (anime *Anime) RemoveMapping(name string, id string) bool {
+	for index, external := range anime.Mappings {
+		if external.Service == name && external.ServiceID == id {
+			anime.Mappings = append(anime.Mappings[:index], anime.Mappings[index+1:]...)
+			return true
+		}
+	}
+
+	return false
 }
 
 // EpisodeCountString ...
