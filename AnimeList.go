@@ -29,7 +29,7 @@ func (list *AnimeList) User() *User {
 }
 
 // GetAnimeList ...
-func GetAnimeList(userID string) (*AnimeList, error) {
-	obj, err := DB.Get("AnimeList", userID)
+func GetAnimeList(user *User) (*AnimeList, error) {
+	obj, err := DB.Get("AnimeList", user.ID)
 	return obj.(*AnimeList), err
 }

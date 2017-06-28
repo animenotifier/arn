@@ -20,7 +20,7 @@ func (user *User) Settings() *Settings {
 
 // AnimeList ...
 func (user *User) AnimeList() *AnimeList {
-	animeList, _ := GetAnimeList(user.ID)
+	animeList, _ := GetAnimeList(user)
 	return animeList
 }
 
