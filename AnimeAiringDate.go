@@ -2,6 +2,9 @@ package arn
 
 import "time"
 
+// This date appears quite often and is invalid
+const invalidDate = "292277026596-12-04T15:30:07Z"
+
 // AnimeAiringDate ...
 type AnimeAiringDate struct {
 	Start string `json:"start"`
