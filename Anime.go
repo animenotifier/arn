@@ -14,6 +14,7 @@ type Anime struct {
 	Type          string           `json:"type"`
 	Title         *AnimeTitle      `json:"title"`
 	Image         *AnimeImageTypes `json:"image"`
+	FirstChannel  string           `json:"firstChannel"`
 	StartDate     string           `json:"startDate"`
 	EndDate       string           `json:"endDate"`
 	EpisodeCount  int              `json:"episodeCount"`
