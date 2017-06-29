@@ -1,5 +1,7 @@
 package arn
 
+import "reflect"
+
 // Postable is a generic interface for Threads, Posts and Messages.
 type Postable interface {
 	ID() string
@@ -8,8 +10,11 @@ type Postable interface {
 	HTML() string
 	Likes() []string
 	Author() *User
+	Thread() *Thread
+	ThreadID() string
 	Link() string
 	Type() string
+	Created() string
 }
 
 // CanBePostable is a type that defines the ToPostable() conversion.
@@ -22,13 +27,39 @@ func ToPostable(post CanBePostable) Postable {
 	return post.ToPostable()
 }
 
-// ThreadsToPostables converts a slice of specific types to a slice of generic postables.
-func ThreadsToPostables(threads []*Thread) []Postable {
+// ToPostables converts a slice of specific types to a slice of generic postables.
+func ToPostables(sliceOfPosts interface{}) []Postable {
 	var postables []Postable
 
-	for _, post := range threads {
-		postables = append(postables, post.ToPostable())
+	v := reflect.ValueOf(sliceOfPosts)
+
+	for i := 0; i < v.Len(); i++ {
+		canBePostable := v.Index(i).Interface().(CanBePostable)
+		postables = append(postables, canBePostable.ToPostable())
 	}
 
 	return postables
+}
+
+// FilterPostablesWithUniqueThreads removes posts with the same thread until we have enough posts.
+func FilterPostablesWithUniqueThreads(posts []Postable, limit int) []Postable {
+	filtered := []Postable{}
+	threadsProcessed := map[string]bool{}
+
+	for _, post := range posts {
+		if len(filtered) >= limit {
+			return filtered
+		}
+
+		_, found := threadsProcessed[post.ThreadID()]
+
+		if found {
+			continue
+		}
+
+		threadsProcessed[post.ThreadID()] = true
+		filtered = append(filtered, post)
+	}
+
+	return filtered
 }

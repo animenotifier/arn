@@ -40,6 +40,21 @@ func (postable *ThreadPostable) Link() string {
 	return postable.thread.Link()
 }
 
+// Thread returns the internal thread object.
+func (postable *ThreadPostable) Thread() *Thread {
+	return postable.thread
+}
+
+// ThreadID returns the thread ID.
+func (postable *ThreadPostable) ThreadID() string {
+	return postable.thread.ID
+}
+
+// Created returns the date the thread has been created.
+func (postable *ThreadPostable) Created() string {
+	return postable.thread.Created
+}
+
 // Type returns the name of the underlying type.
 func (postable *ThreadPostable) Type() string {
 	return "Thread"
