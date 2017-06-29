@@ -102,7 +102,6 @@ func (list *AnimeList) Update(id interface{}, updatesObj interface{}) error {
 		if item.AnimeID == animeID {
 			err := SetObjectProperties(item, updates, nil)
 			item.Edited = DateTimeUTC()
-
 			maxEpisodesKnown := item.Anime().EpisodeCount != 0
 
 			for key := range updates {
