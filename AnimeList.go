@@ -52,6 +52,29 @@ func (list *AnimeList) Sort() {
 	})
 }
 
+// StreamAnimeLists returns a stream of all anime.
+func StreamAnimeLists() (chan *AnimeList, error) {
+	objects, err := DB.All("AnimeList")
+	return objects.(chan *AnimeList), err
+}
+
+// AllAnimeLists returns a slice of all anime.
+func AllAnimeLists() ([]*AnimeList, error) {
+	var all []*AnimeList
+
+	stream, err := StreamAnimeLists()
+
+	if err != nil {
+		return nil, err
+	}
+
+	for obj := range stream {
+		all = append(all, obj)
+	}
+
+	return all, nil
+}
+
 // GetAnimeList ...
 func GetAnimeList(user *User) (*AnimeList, error) {
 	obj, err := DB.Get("AnimeList", user.ID)
