@@ -1,5 +1,7 @@
 package arn
 
+import "sort"
+
 // AnimeList ...
 type AnimeList struct {
 	UserID string           `json:"userId"`
@@ -26,6 +28,28 @@ func (list *AnimeList) User() *User {
 	}
 
 	return list.user
+}
+
+// Sort ...
+func (list *AnimeList) Sort() {
+	sort.Slice(list.Items, func(i, j int) bool {
+		a := list.Items[i].Anime().UpcomingEpisode()
+		b := list.Items[j].Anime().UpcomingEpisode()
+
+		if a == nil && b == nil {
+			return list.Items[i].FinalRating() > list.Items[j].FinalRating()
+		}
+
+		if a == nil {
+			return false
+		}
+
+		if b == nil {
+			return true
+		}
+
+		return a.Episode.AiringDate.Start < b.Episode.AiringDate.Start
+	})
 }
 
 // GetAnimeList ...

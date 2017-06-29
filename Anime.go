@@ -3,6 +3,7 @@ package arn
 import (
 	"encoding/json"
 	"strconv"
+	"time"
 
 	"github.com/animenotifier/shoboi"
 	"github.com/fatih/color"
@@ -41,6 +42,7 @@ type Anime struct {
 	// Relations     []AnimeRelation `json:"relations"`
 	// Created       string          `json:"created"`
 	// CreatedBy     string          `json:"createdBy"`
+	upcomingEpisode *UpcomingEpisode
 }
 
 // AnimeRating ...
@@ -171,6 +173,46 @@ func (anime *Anime) RemoveMapping(name string, id string) bool {
 	}
 
 	return false
+}
+
+// UpcomingEpisodes ...
+func (anime *Anime) UpcomingEpisodes() []*UpcomingEpisode {
+	var upcomingEpisodes []*UpcomingEpisode
+
+	now := time.Now().UTC().Format(time.RFC3339)
+
+	for _, episode := range anime.Episodes {
+		if episode.AiringDate.Start > now {
+			upcomingEpisodes = append(upcomingEpisodes, &UpcomingEpisode{
+				Anime:   anime,
+				Episode: episode,
+			})
+		}
+	}
+
+	return upcomingEpisodes
+}
+
+// UpcomingEpisode ...
+func (anime *Anime) UpcomingEpisode() *UpcomingEpisode {
+	if anime.upcomingEpisode != nil {
+		return anime.upcomingEpisode
+	}
+
+	now := time.Now().UTC().Format(time.RFC3339)
+
+	for _, episode := range anime.Episodes {
+		if episode.AiringDate.Start > now {
+			anime.upcomingEpisode = &UpcomingEpisode{
+				Anime:   anime,
+				Episode: episode,
+			}
+
+			return anime.upcomingEpisode
+		}
+	}
+
+	return nil
 }
 
 // EpisodeCountString ...
