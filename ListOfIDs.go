@@ -5,6 +5,11 @@ type ListOfIDs struct {
 	IDList []string `json:"idList"`
 }
 
+// Append appends the given ID to the end of the list.
+func (idList *ListOfIDs) Append(id string) {
+	idList.IDList = append(idList.IDList, id)
+}
+
 // GetListOfIDs ...
 func GetListOfIDs(table string, id string) (*ListOfIDs, error) {
 	cache := &ListOfIDs{}

@@ -115,7 +115,7 @@ func AllThreads() ([]*Thread, error) {
 	return all, nil
 }
 
-// SortThreads sorts a slice of threads.
+// SortThreads sorts a slice of threads for the forum view (stickies first).
 func SortThreads(threads []*Thread) {
 	sort.Slice(threads, func(i, j int) bool {
 		a := threads[i]
@@ -129,8 +129,8 @@ func SortThreads(threads []*Thread) {
 	})
 }
 
-// SortThreadsByDate sorts a slice of threads by creation date.
-func SortThreadsByDate(threads []*Thread) {
+// SortThreadsLatestFirst sorts a slice of threads by creation date.
+func SortThreadsLatestFirst(threads []*Thread) {
 	sort.Slice(threads, func(i, j int) bool {
 		return threads[i].Created > threads[j].Created
 	})

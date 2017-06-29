@@ -1,6 +1,9 @@
 package arn
 
-import "reflect"
+import (
+	"reflect"
+	"sort"
+)
 
 // Postable is a generic interface for Threads, Posts and Messages.
 type Postable interface {
@@ -39,6 +42,13 @@ func ToPostables(sliceOfPosts interface{}) []Postable {
 	}
 
 	return postables
+}
+
+// SortPostablesLatestFirst ...
+func SortPostablesLatestFirst(posts []Postable) {
+	sort.Slice(posts, func(i, j int) bool {
+		return posts[i].Created() > posts[j].Created()
+	})
 }
 
 // FilterPostablesWithUniqueThreads removes posts with the same thread until we have enough posts.
