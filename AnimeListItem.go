@@ -5,8 +5,8 @@ const (
 	AnimeListStatusWatching  = "watching"
 	AnimeListStatusCompleted = "completed"
 	AnimeListStatusPlanned   = "planned"
-	AnimeListStatusDropped   = "dropped"
 	AnimeListStatusHold      = "hold"
+	AnimeListStatusDropped   = "dropped"
 )
 
 // AnimeListItem ...

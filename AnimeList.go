@@ -52,6 +52,43 @@ func (list *AnimeList) Sort() {
 	})
 }
 
+// SplitByStatus splits the anime list into multiple ones by status.
+func (list *AnimeList) SplitByStatus() map[string]*AnimeList {
+	statusToList := map[string]*AnimeList{}
+
+	statusToList[AnimeListStatusWatching] = &AnimeList{
+		UserID: list.UserID,
+		Items:  []*AnimeListItem{},
+	}
+
+	statusToList[AnimeListStatusCompleted] = &AnimeList{
+		UserID: list.UserID,
+		Items:  []*AnimeListItem{},
+	}
+
+	statusToList[AnimeListStatusPlanned] = &AnimeList{
+		UserID: list.UserID,
+		Items:  []*AnimeListItem{},
+	}
+
+	statusToList[AnimeListStatusHold] = &AnimeList{
+		UserID: list.UserID,
+		Items:  []*AnimeListItem{},
+	}
+
+	statusToList[AnimeListStatusDropped] = &AnimeList{
+		UserID: list.UserID,
+		Items:  []*AnimeListItem{},
+	}
+
+	for _, item := range list.Items {
+		statusList := statusToList[item.Status]
+		statusList.Items = append(statusList.Items, item)
+	}
+
+	return statusToList
+}
+
 // StreamAnimeLists returns a stream of all anime.
 func StreamAnimeLists() (chan *AnimeList, error) {
 	objects, err := DB.All("AnimeList")
