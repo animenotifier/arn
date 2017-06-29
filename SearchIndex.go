@@ -7,6 +7,9 @@ import (
 	"github.com/aerogo/flow"
 )
 
+// MinimumStringSimilarity is the minimum JaroWinkler distance we accept for search results.
+const MinimumStringSimilarity = 0.9
+
 // SearchIndex ...
 type SearchIndex struct {
 	TextToID map[string]string `json:"textToId"`
@@ -59,6 +62,10 @@ func Search(term string, maxUsers, maxAnime int) ([]*User, []*Anime) {
 
 		for name := range textToID {
 			s := StringSimilarity(term, name)
+
+			if strings.Index(name, term) != -1 {
+				s += 0.5
+			}
 
 			if s < MinimumStringSimilarity {
 				continue
@@ -116,7 +123,11 @@ func Search(term string, maxUsers, maxAnime int) ([]*User, []*Anime) {
 
 			s := StringSimilarity(term, name)
 
-			if s < MinimumStringSimilarity && strings.Index(name, term) == -1 {
+			if strings.Index(name, term) != -1 {
+				s += 0.5
+			}
+
+			if s < MinimumStringSimilarity {
 				continue
 			}
 
