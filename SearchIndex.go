@@ -116,7 +116,7 @@ func Search(term string, maxUsers, maxAnime int) ([]*User, []*Anime) {
 
 			s := StringSimilarity(term, name)
 
-			if s < MinimumStringSimilarity {
+			if s < MinimumStringSimilarity && strings.Index(name, term) == -1 {
 				continue
 			}
 
