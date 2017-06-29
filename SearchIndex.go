@@ -111,16 +111,9 @@ func Search(term string, maxUsers, maxAnime int) ([]*User, []*Anime) {
 
 		// Search items
 		items := make([]*SearchItem, 0)
-		animeIDAdded := map[string]bool{}
+		animeIDAdded := map[string]*SearchItem{}
 
 		for name, id := range textToID {
-			_, found := animeIDAdded[id]
-
-			// Skip existing anime IDs
-			if found {
-				continue
-			}
-
 			s := StringSimilarity(term, name)
 
 			if strings.Index(name, term) != -1 {
@@ -131,12 +124,25 @@ func Search(term string, maxUsers, maxAnime int) ([]*User, []*Anime) {
 				continue
 			}
 
-			items = append(items, &SearchItem{
+			addedEntry, found := animeIDAdded[id]
+
+			// Skip existing anime IDs
+			if found {
+				// But update existing entry with new similarity if it's higher
+				if s > addedEntry.similarity {
+					addedEntry.similarity = s
+				}
+
+				continue
+			}
+
+			item := &SearchItem{
 				text:       name,
 				similarity: s,
-			})
+			}
+			items = append(items, item)
 
-			animeIDAdded[id] = true
+			animeIDAdded[id] = item
 		}
 
 		// Sort
