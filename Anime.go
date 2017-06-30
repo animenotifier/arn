@@ -264,7 +264,11 @@ func FilterAnime(filter func(*Anime) bool) ([]*Anime, error) {
 // GetAiringAnime ...
 func GetAiringAnime() ([]*Anime, error) {
 	return FilterAnime(func(anime *Anime) bool {
-		return anime.Status == "current" && anime.Type == "tv" && anime.NSFW == 0 && anime.Rating.Overall > 50
+		if anime.Type != "tv" || anime.NSFW == 1 {
+			return false
+		}
+
+		return anime.UpcomingEpisode() != nil
 	})
 }
 
