@@ -22,7 +22,7 @@ type Anime struct {
 	EpisodeLength int              `json:"episodeLength"`
 	Status        string           `json:"status"`
 	NSFW          int              `json:"nsfw"`
-	Rating        AnimeRating      `json:"rating"`
+	Rating        *AnimeRating     `json:"rating"`
 	Summary       string           `json:"summary"`
 	Trailers      []*ExternalMedia `json:"trailers"`
 	Mappings      []*Mapping       `json:"mappings"`
@@ -43,14 +43,6 @@ type Anime struct {
 	// Created       string          `json:"created"`
 	// CreatedBy     string          `json:"createdBy"`
 	upcomingEpisode *UpcomingEpisode
-}
-
-// AnimeRating ...
-type AnimeRating struct {
-	Overall    float64 `json:"overall" editable:"true"`
-	Story      float64 `json:"story" editable:"true"`
-	Visuals    float64 `json:"visuals" editable:"true"`
-	Soundtrack float64 `json:"soundtrack" editable:"true"`
 }
 
 // AnimeImageTypes ...
@@ -225,6 +217,13 @@ func StreamAnime() (chan *Anime, error) {
 	return objects.(chan *Anime), err
 }
 
+// MustStreamAnime returns a stream of all anime.
+func MustStreamAnime() chan *Anime {
+	stream, err := StreamAnime()
+	PanicOnError(err)
+	return stream
+}
+
 // AllAnime returns a slice of all anime.
 func AllAnime() ([]*Anime, error) {
 	var all []*Anime
@@ -267,4 +266,9 @@ func GetAiringAnime() ([]*Anime, error) {
 	return FilterAnime(func(anime *Anime) bool {
 		return anime.Status == "current" && anime.Type == "tv" && anime.NSFW == 0 && anime.Rating.Overall > 50
 	})
+}
+
+// MustSave saves the anime in the database.
+func (anime *Anime) MustSave() {
+	PanicOnError(anime.Save())
 }

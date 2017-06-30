@@ -94,6 +94,10 @@ func SetObjectProperties(rootObj interface{}, updates map[string]interface{}, sk
 
 			t = field.Type
 			v = reflect.Indirect(v.FieldByName(field.Name))
+
+			if t.Kind() == reflect.Ptr {
+				t = t.Elem()
+			}
 		}
 
 		newValue := reflect.ValueOf(value)

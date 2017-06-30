@@ -20,6 +20,7 @@ func (list *AnimeList) Add(id interface{}) error {
 	newItem := &AnimeListItem{
 		AnimeID: animeID,
 		Status:  AnimeListStatusPlanned,
+		Rating:  &AnimeRating{},
 		Created: creationDate,
 		Edited:  creationDate,
 	}
