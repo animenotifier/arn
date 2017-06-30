@@ -16,11 +16,11 @@ func (post *Post) Authorize(ctx *aero.Context) error {
 }
 
 // Create sets the data for a new post with data we received from the API request.
-func (post *Post) Create(json interface{}, ctx *aero.Context) error {
-	data, formatOK := json.(map[string]interface{})
+func (post *Post) Create(ctx *aero.Context) error {
+	data, err := ctx.RequestBodyJSONObject()
 
-	if !formatOK {
-		return errors.New("Invalid format (expected JSON)")
+	if err != nil {
+		return err
 	}
 
 	userID, ok := ctx.Session().Get("userId").(string)

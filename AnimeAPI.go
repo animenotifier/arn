@@ -42,3 +42,8 @@ func (anime *Anime) Update(ctx *aero.Context, data interface{}) error {
 		}
 	})
 }
+
+// Save saves the anime in the database.
+func (anime *Anime) Save() error {
+	return DB.Set("Anime", anime.ID, anime)
+}

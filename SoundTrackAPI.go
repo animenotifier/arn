@@ -82,11 +82,11 @@ func GetYoutubeMedia(url string) (*ExternalMedia, error) {
 }
 
 // Create sets the data for a new soundtrack with data we received from the API request.
-func (soundtrack *SoundTrack) Create(postBody interface{}, ctx *aero.Context) error {
-	data, formatOK := postBody.(map[string]interface{})
+func (soundtrack *SoundTrack) Create(ctx *aero.Context) error {
+	data, err := ctx.RequestBodyJSONObject()
 
-	if !formatOK {
-		return errors.New("Invalid format (expected JSON)")
+	if err != nil {
+		return err
 	}
 
 	userID, ok := ctx.Session().Get("userId").(string)

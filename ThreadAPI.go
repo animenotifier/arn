@@ -16,11 +16,11 @@ func (thread *Thread) Authorize(ctx *aero.Context) error {
 }
 
 // Create sets the data for a new thread with data we received from the API request.
-func (thread *Thread) Create(json interface{}, ctx *aero.Context) error {
-	data, formatOK := json.(map[string]interface{})
+func (thread *Thread) Create(ctx *aero.Context) error {
+	data, err := ctx.RequestBodyJSONObject()
 
-	if !formatOK {
-		return errors.New("Invalid format (expected JSON)")
+	if err != nil {
+		return err
 	}
 
 	userID, ok := ctx.Session().Get("userId").(string)

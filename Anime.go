@@ -82,11 +82,6 @@ func (anime *Anime) Link() string {
 	return "/anime/" + anime.ID
 }
 
-// Save saves the anime in the database.
-func (anime *Anime) Save() error {
-	return DB.Set("Anime", anime.ID, anime)
-}
-
 // PrettyJSON ...
 func (anime *Anime) PrettyJSON() (string, error) {
 	data, err := json.MarshalIndent(anime, "", "    ")
