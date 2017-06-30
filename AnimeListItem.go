@@ -38,7 +38,11 @@ func (item *AnimeListItem) Link(userNick string) string {
 	return "/+" + userNick + "/animelist/" + item.AnimeID
 }
 
-// FinalRating returns the overall score for the anime.
-func (item *AnimeListItem) FinalRating() float64 {
-	return item.Rating.Overall
+// OverallRatingName returns Overall in general, but Hype when episodes watched is zero.
+func (item *AnimeListItem) OverallRatingName() string {
+	if item.Episodes == 0 {
+		return "Hype"
+	}
+
+	return "Overall"
 }

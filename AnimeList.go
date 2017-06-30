@@ -37,7 +37,7 @@ func (list *AnimeList) Sort() {
 		b := list.Items[j].Anime().UpcomingEpisode()
 
 		if a == nil && b == nil {
-			return list.Items[i].FinalRating() > list.Items[j].FinalRating()
+			return list.Items[i].Rating.Overall > list.Items[j].Rating.Overall
 		}
 
 		if a == nil {

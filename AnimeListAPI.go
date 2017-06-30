@@ -105,6 +105,8 @@ func (list *AnimeList) Update(id interface{}, updatesObj interface{}) error {
 			item.Edited = DateTimeUTC()
 			maxEpisodesKnown := item.Anime().EpisodeCount != 0
 
+			item.Rating.Clamp()
+
 			for key := range updates {
 				switch key {
 				case "Episodes":
