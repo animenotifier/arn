@@ -13,19 +13,28 @@ import (
 var APIKeys APIKeysData
 
 func init() {
+	rootPath := ""
 	exe, err := os.Executable()
 
 	if err != nil {
 		panic(err)
 	}
 
-	notifyMoeIndex := strings.Index(exe, "notify.moe")
+	if strings.Index(exe, "/notify.moe") == -1 {
+		exe, err = os.Getwd()
 
-	if notifyMoeIndex == -1 {
-		panic(errors.New("Couldn't find notify.moe directory"))
+		if err != nil {
+			panic(err)
+		}
 	}
 
-	rootPath := exe[:notifyMoeIndex]
+	arnIndex := strings.Index(exe, "/animenotifier")
+
+	if arnIndex == -1 {
+		panic(errors.New("Couldn't find notify.moe directory"))
+	} else {
+		rootPath = path.Join(exe[:arnIndex], "animenotifier")
+	}
 
 	data, _ := ioutil.ReadFile(path.Join(rootPath, "notify.moe", "security", "api-keys.json"))
 	err = json.Unmarshal(data, &APIKeys)

@@ -4,7 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
+	"strings"
+	"time"
 
+	"github.com/fatih/color"
 	"github.com/parnurzeal/gorequest"
 )
 
@@ -63,4 +67,98 @@ func (anilist *anilistListProvider) GetAnimeList(user *User) (*AniListAnimeList,
 	}
 
 	return anilistAnimeList, nil
+}
+
+// StreamAnime
+func (anilist *anilistListProvider) StreamAnime() chan *AniListAnime {
+	channel := make(chan *AniListAnime)
+	page := 1
+	ticker := time.NewTicker(1100 * time.Millisecond)
+	rateLimit := ticker.C
+
+	go func() {
+		defer close(channel)
+		defer ticker.Stop()
+
+		for {
+			animePage := []*AniListAnime{}
+			request := gorequest.New().Get("https://anilist.co/api/browse/anime?page=" + strconv.Itoa(page) + "&access_token=" + anilist.AccessToken)
+			_, _, errs := request.EndStruct(&animePage)
+
+			if len(errs) > 0 {
+				color.Red(errs[0].Error())
+				page++
+				<-rateLimit
+				continue
+			}
+
+			// We have reached the end
+			if len(animePage) == 0 {
+				break
+			}
+
+			for _, anime := range animePage {
+				channel <- anime
+			}
+
+			page++
+			<-rateLimit
+		}
+	}()
+
+	return channel
+}
+
+// FindAniListAnime tries to find an AniListAnime in our Anime database.
+func FindAniListAnime(search *AniListAnime, allAnime []*Anime) *Anime {
+	match, err := GetAniListToAnime(strconv.Itoa(search.ID))
+
+	if err == nil {
+		anime, _ := GetAnime(match.AnimeID)
+		return anime
+	}
+
+	var mostSimilar *Anime
+	var similarity float64
+
+	for _, anime := range allAnime {
+		anime.Title.Japanese = strings.Replace(anime.Title.Japanese, "2ndシーズン", "2", 1)
+		anime.Title.Romaji = strings.Replace(anime.Title.Romaji, " 2nd Season", " 2", 1)
+		search.TitleJapanese = strings.TrimSpace(strings.Replace(search.TitleJapanese, "2ndシーズン", "2", 1))
+		search.TitleRomaji = strings.TrimSpace(strings.Replace(search.TitleRomaji, " 2nd Season", " 2", 1))
+
+		titleSimilarity := StringSimilarity(anime.Title.Romaji, search.TitleRomaji)
+
+		if strings.ToLower(anime.Title.Japanese) == strings.ToLower(search.TitleJapanese) {
+			titleSimilarity += 1.0
+		}
+
+		if strings.ToLower(anime.Title.Romaji) == strings.ToLower(search.TitleRomaji) {
+			titleSimilarity += 1.0
+		}
+
+		if strings.ToLower(anime.Title.English) == strings.ToLower(search.TitleEnglish) {
+			titleSimilarity += 1.0
+		}
+
+		if titleSimilarity > similarity {
+			mostSimilar = anime
+			similarity = titleSimilarity
+		}
+	}
+
+	if mostSimilar.EpisodeCount != search.TotalEpisodes {
+		similarity -= 0.02
+	}
+
+	if similarity >= 0.92 {
+		// fmt.Printf("MATCH:    %s => %s (%.2f)\n", search.TitleRomaji, mostSimilar.Title.Romaji, similarity)
+		mostSimilar.AddMapping("anilist/anime", strconv.Itoa(search.ID), "")
+		PanicOnError(mostSimilar.Save())
+		return mostSimilar
+	}
+
+	// color.Red("MISMATCH: %s => %s (%.2f)", search.TitleRomaji, mostSimilar.Title.Romaji, similarity)
+
+	return nil
 }
