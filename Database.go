@@ -11,6 +11,7 @@ var DB = aerospike.NewDatabase(
 		(*Analytics)(nil),
 		(*Anime)(nil),
 		(*AnimeList)(nil),
+		(*AniListToAnime)(nil),
 		(*EmailToUser)(nil),
 		(*FacebookToUser)(nil),
 		(*GoogleToUser)(nil),
