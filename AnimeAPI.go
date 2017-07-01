@@ -37,6 +37,19 @@ func (anime *Anime) Update(ctx *aero.Context, data interface{}) error {
 
 			return true
 
+		case "Custom:AniListID":
+			oldValue := anime.GetMapping("anilist/anime")
+			newValue := newValue.Interface().(string)
+
+			anime.RemoveMapping("anilist/anime", oldValue)
+
+			if newValue != "" {
+				user := GetUserFromContext(ctx)
+				anime.AddMapping("anilist/anime", newValue, user.ID)
+			}
+
+			return true
+
 		default:
 			return false
 		}
