@@ -1,6 +1,8 @@
 package arn
 
-import "sort"
+import (
+	"sort"
+)
 
 // AnimeList ...
 type AnimeList struct {
@@ -50,6 +52,22 @@ func (list *AnimeList) Sort() {
 
 		return a.Episode.AiringDate.Start < b.Episode.AiringDate.Start
 	})
+}
+
+// WatchingAndPlanned ...
+func (list *AnimeList) WatchingAndPlanned() *AnimeList {
+	newList := &AnimeList{
+		UserID: list.UserID,
+		Items:  []*AnimeListItem{},
+	}
+
+	for _, item := range list.Items {
+		if item.Status == AnimeListStatusWatching || item.Status == AnimeListStatusPlanned {
+			newList.Items = append(newList.Items, item)
+		}
+	}
+
+	return newList
 }
 
 // SplitByStatus splits the anime list into multiple ones by status.
