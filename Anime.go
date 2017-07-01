@@ -86,56 +86,32 @@ func (anime *Anime) Watching() int {
 }
 
 // AddMapping adds the ID of an external site to the anime.
-func (anime *Anime) AddMapping(name string, id string, userID string) {
+func (anime *Anime) AddMapping(serviceName string, serviceID string, userID string) {
 	for _, external := range anime.Mappings {
 		// If it already exists we don't need to add it
-		if external.Service == name && external.ServiceID == id {
+		if external.Service == serviceName && external.ServiceID == serviceID {
 			return
 		}
 	}
 
 	anime.Mappings = append(anime.Mappings, &Mapping{
-		Service:   name,
-		ServiceID: id,
+		Service:   serviceName,
+		ServiceID: serviceID,
 		Created:   DateTimeUTC(),
 		CreatedBy: userID,
 	})
 
-	go anime.RefreshMapping(name, id)
-}
-
-// RefreshMapping will refresh all the data we can get from the external site for that anime.
-func (anime *Anime) RefreshMapping(serviceName string, serviceID string) {
 	switch serviceName {
 	case "shoboi/anime":
-		shoboiAnime, err := shoboi.GetAnime(serviceID)
+		go anime.RefreshEpisodes(serviceID)
 
-		if err != nil {
-			color.Red(err.Error())
-			return
-		}
-
-		anime.Episodes = []*AnimeEpisode{}
-
-		shoboiEpisodes := shoboiAnime.Episodes()
-		for _, shoboiEpisode := range shoboiEpisodes {
-			airingDate := shoboiEpisode.AiringDate()
-
-			episode := &AnimeEpisode{
-				Number: shoboiEpisode.Number,
-				Title: &EpisodeTitle{
-					Japanese: shoboiEpisode.TitleJapanese,
-				},
-				AiringDate: &AnimeAiringDate{
-					Start: airingDate.Start,
-					End:   airingDate.End,
-				},
-			}
-
-			anime.Episodes = append(anime.Episodes, episode)
-		}
-
-		anime.Save()
+	case "anilist/anime":
+		DB.Set("AniListToAnime", serviceID, &AniListToAnime{
+			AnimeID:   anime.ID,
+			ServiceID: serviceID,
+			Edited:    DateTimeUTC(),
+			EditedBy:  userID,
+		})
 	}
 }
 
@@ -152,6 +128,13 @@ func (anime *Anime) GetMapping(name string) string {
 
 // RemoveMapping removes all mappings with the given service name and ID.
 func (anime *Anime) RemoveMapping(name string, id string) bool {
+	switch name {
+	case "shoboi/anime":
+		anime.Episodes = anime.Episodes[:0]
+	case "anilist/anime":
+		DB.Delete("AniListToAnime", id)
+	}
+
 	for index, external := range anime.Mappings {
 		if external.Service == name && external.ServiceID == id {
 			anime.Mappings = append(anime.Mappings[:index], anime.Mappings[index+1:]...)
@@ -160,6 +143,38 @@ func (anime *Anime) RemoveMapping(name string, id string) bool {
 	}
 
 	return false
+}
+
+// RefreshEpisodes will refresh the episode data.
+func (anime *Anime) RefreshEpisodes(shoboiID string) {
+	shoboiAnime, err := shoboi.GetAnime(shoboiID)
+
+	if err != nil {
+		color.Red(err.Error())
+		return
+	}
+
+	anime.Episodes = []*AnimeEpisode{}
+
+	shoboiEpisodes := shoboiAnime.Episodes()
+	for _, shoboiEpisode := range shoboiEpisodes {
+		airingDate := shoboiEpisode.AiringDate()
+
+		episode := &AnimeEpisode{
+			Number: shoboiEpisode.Number,
+			Title: &EpisodeTitle{
+				Japanese: shoboiEpisode.TitleJapanese,
+			},
+			AiringDate: &AnimeAiringDate{
+				Start: airingDate.Start,
+				End:   airingDate.End,
+			},
+		}
+
+		anime.Episodes = append(anime.Episodes, episode)
+	}
+
+	anime.Save()
 }
 
 // UpcomingEpisodes ...
