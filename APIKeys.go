@@ -65,4 +65,9 @@ type APIKeysData struct {
 	IPInfoDB struct {
 		ID string `json:"id"`
 	} `json:"ipInfoDB"`
+
+	AniList struct {
+		ID     string `json:"id"`
+		Secret string `json:"secret"`
+	} `json:"anilist"`
 }
