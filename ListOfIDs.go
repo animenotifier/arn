@@ -34,9 +34,9 @@ func GetAiringAnimeCached() ([]*Anime, error) {
 	return list.([]*Anime), nil
 }
 
-// GetPopularAnimeCached ...
-func GetPopularAnimeCached() ([]*Anime, error) {
-	cache, err := GetListOfIDs("Cache", "popular anime")
+// GetListOfAnimeCached ...
+func GetListOfAnimeCached(cacheKey string) ([]*Anime, error) {
+	cache, err := GetListOfIDs("Cache", cacheKey)
 
 	if err != nil {
 		return nil, err

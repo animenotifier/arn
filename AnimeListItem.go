@@ -37,12 +37,3 @@ func (item *AnimeListItem) Anime() *Anime {
 func (item *AnimeListItem) Link(userNick string) string {
 	return "/+" + userNick + "/animelist/" + item.AnimeID
 }
-
-// OverallRatingName returns Overall in general, but Hype when episodes watched is zero.
-func (item *AnimeListItem) OverallRatingName() string {
-	if item.Episodes == 0 {
-		return "Hype"
-	}
-
-	return "Overall"
-}

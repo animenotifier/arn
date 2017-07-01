@@ -263,12 +263,16 @@ func FilterAnime(filter func(*Anime) bool) ([]*Anime, error) {
 
 // GetAiringAnime ...
 func GetAiringAnime() ([]*Anime, error) {
+	beforeTime := time.Now().Add(-6 * 30 * 24 * time.Hour)
+	beforeTimeString := beforeTime.Format(time.RFC3339)
+
 	return FilterAnime(func(anime *Anime) bool {
-		if anime.Type != "tv" || anime.NSFW == 1 {
+		if (anime.Type != "tv" && anime.Type != "movie") || anime.NSFW == 1 || anime.StartDate < beforeTimeString {
 			return false
 		}
 
-		return anime.UpcomingEpisode() != nil
+		// return anime.UpcomingEpisode() != nil || anime.Status == "upcoming"
+		return anime.Status == "current" || anime.Status == "upcoming"
 	})
 }
 

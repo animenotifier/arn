@@ -215,6 +215,15 @@ func Plural(count int, singular string) string {
 	return ToString(count) + " " + singular + "s"
 }
 
+// OverallRatingName returns Overall in general, but Hype when episodes watched is zero.
+func OverallRatingName(episodes int) string {
+	if episodes == 0 {
+		return "Hype"
+	}
+
+	return "Overall"
+}
+
 // PanicOnError will panic if the error is not nil.
 func PanicOnError(err error) {
 	if err != nil {
