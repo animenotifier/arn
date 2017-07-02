@@ -6,14 +6,6 @@ type UserAgeRange struct {
 	Max int `json:"max"`
 }
 
-// UserOsuDetails ...
-type UserOsuDetails struct {
-	Nick     string  `json:"nick"`
-	PP       float64 `json:"pp"`
-	Accuracy float64 `json:"accuracy"`
-	Level    float64 `json:"level"`
-}
-
 // UserBrowser ...
 type UserBrowser struct {
 	Name     string `json:"name"`

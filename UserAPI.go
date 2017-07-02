@@ -23,6 +23,22 @@ func (user *User) Update(ctx *aero.Context, data interface{}) error {
 			newNick := newValue.String()
 			newNick = FixAccountNick(newNick)
 			property.SetString(newNick)
+
+			// Refresh osu info if the name changed
+			if fullKeyName == "Accounts.Osu.Nick" {
+				go func() {
+					err := user.RefreshOsuInfo()
+
+					if err != nil {
+						color.Red("Error refreshing osu info of user '%s' with osu nick '%s': %v", user.Nick, newNick, err)
+					} else {
+						color.Green("Refreshed osu info of user '%s' with osu nick '%s': %v", user.Nick, newNick, user.Accounts.Osu.PP)
+					}
+
+					user.Save()
+				}()
+			}
+
 			return true
 		}
 

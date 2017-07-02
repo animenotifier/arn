@@ -15,7 +15,12 @@ type UserAccounts struct {
 		Nick string `json:"nick"`
 	} `json:"twitter"`
 
-	Osu UserOsuDetails `json:"osu"`
+	Osu struct {
+		Nick     string  `json:"nick" editable:"true"`
+		PP       float64 `json:"pp"`
+		Accuracy float64 `json:"accuracy"`
+		Level    float64 `json:"level"`
+	} `json:"osu"`
 
 	AniList struct {
 		Nick string `json:"nick" editable:"true"`
