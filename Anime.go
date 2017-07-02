@@ -2,11 +2,11 @@ package arn
 
 import (
 	"encoding/json"
+	"errors"
 	"strconv"
 	"time"
 
 	"github.com/animenotifier/shoboi"
-	"github.com/fatih/color"
 )
 
 // Anime ...
@@ -103,7 +103,7 @@ func (anime *Anime) AddMapping(serviceName string, serviceID string, userID stri
 
 	switch serviceName {
 	case "shoboi/anime":
-		go anime.RefreshEpisodes(serviceID)
+		go anime.RefreshEpisodes()
 
 	case "anilist/anime":
 		DB.Set("AniListToAnime", serviceID, &AniListToAnime{
@@ -146,12 +146,17 @@ func (anime *Anime) RemoveMapping(name string, id string) bool {
 }
 
 // RefreshEpisodes will refresh the episode data.
-func (anime *Anime) RefreshEpisodes(shoboiID string) {
+func (anime *Anime) RefreshEpisodes() error {
+	shoboiID := anime.GetMapping("shoboi/anime")
+
+	if shoboiID == "" {
+		return errors.New("Anime is missing a Shoboi ID")
+	}
+
 	shoboiAnime, err := shoboi.GetAnime(shoboiID)
 
 	if err != nil {
-		color.Red(err.Error())
-		return
+		return err
 	}
 
 	anime.Episodes = []*AnimeEpisode{}
@@ -174,7 +179,7 @@ func (anime *Anime) RefreshEpisodes(shoboiID string) {
 		anime.Episodes = append(anime.Episodes, episode)
 	}
 
-	anime.Save()
+	return anime.Save()
 }
 
 // UpcomingEpisodes ...
