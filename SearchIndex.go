@@ -63,7 +63,7 @@ func Search(term string, maxUsers, maxAnime int) ([]*User, []*Anime) {
 		for name := range textToID {
 			s := StringSimilarity(term, name)
 
-			if strings.Index(name, term) != -1 {
+			if strings.Contains(name, term) {
 				s += 0.5
 			}
 
@@ -116,7 +116,7 @@ func Search(term string, maxUsers, maxAnime int) ([]*User, []*Anime) {
 		for name, id := range textToID {
 			s := StringSimilarity(term, name)
 
-			if strings.Index(name, term) != -1 {
+			if strings.Contains(name, term) {
 				s += 0.5
 			}
 

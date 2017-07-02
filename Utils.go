@@ -215,6 +215,11 @@ func Plural(count int, singular string) string {
 	return ToString(count) + " " + singular + "s"
 }
 
+// ContainsUnicodeLetters tells you if unicode characters are inside the string.
+func ContainsUnicodeLetters(s string) bool {
+	return len(s) != len([]rune(s))
+}
+
 // OverallRatingName returns Overall in general, but Hype when episodes watched is zero.
 func OverallRatingName(episodes int) string {
 	if episodes == 0 {
