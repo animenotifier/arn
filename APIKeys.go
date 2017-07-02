@@ -79,4 +79,8 @@ type APIKeysData struct {
 		ID     string `json:"id"`
 		Secret string `json:"secret"`
 	} `json:"anilist"`
+
+	Osu struct {
+		Secret string `json:"secret"`
+	} `json:"osu"`
 }
