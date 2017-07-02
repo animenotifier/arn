@@ -37,6 +37,13 @@ func StreamUsers() (chan *User, error) {
 	return channel, err
 }
 
+// MustStreamUsers returns a stream of all users.
+func MustStreamUsers() chan *User {
+	stream, err := StreamUsers()
+	PanicOnError(err)
+	return stream
+}
+
 // AllUsers returns a slice of all users.
 func AllUsers() ([]*User, error) {
 	var all []*User

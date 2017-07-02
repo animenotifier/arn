@@ -34,7 +34,7 @@ func GetOsuUser(nick string) (*OsuUser, error) {
 	users := []*OsuUser{}
 
 	request := gorequest.New().Get("https://osu.ppy.sh/api/get_user?u=" + nick + "&type=string&k=" + APIKeys.Osu.Secret)
-	request = request.Param("Accept", "application/json")
+	request.Header["Accept"] = "application/json"
 
 	_, _, errs := request.EndStruct(&users)
 
@@ -52,7 +52,7 @@ func GetOsuUser(nick string) (*OsuUser, error) {
 // RefreshOsuInfo refreshes a user's Osu information.
 func (user *User) RefreshOsuInfo() error {
 	if user.Accounts.Osu.Nick == "" {
-		return nil
+		return errors.New("User doesn't have an osu username")
 	}
 
 	osu, err := GetOsuUser(user.Accounts.Osu.Nick)
