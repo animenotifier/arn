@@ -2,7 +2,6 @@ package arn
 
 import (
 	"errors"
-	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -194,25 +193,6 @@ func (user *User) ForceSetNick(newName string) error {
 		Nick:   user.Nick,
 		UserID: user.ID,
 	})
-}
-
-// RefreshOsuInfo refreshes a user's Osu information.
-func (user *User) RefreshOsuInfo() error {
-	if user.Accounts.Osu.Nick == "" {
-		return nil
-	}
-
-	osu, err := GetOsuUser(user.Accounts.Osu.Nick)
-
-	if err != nil {
-		return err
-	}
-
-	user.Accounts.Osu.PP, _ = strconv.ParseFloat(osu.PPRaw, 64)
-	user.Accounts.Osu.Level, _ = strconv.ParseFloat(osu.Level, 64)
-	user.Accounts.Osu.Accuracy, _ = strconv.ParseFloat(osu.Accuracy, 64)
-
-	return nil
 }
 
 // SetEmail changes the user's email safely.
