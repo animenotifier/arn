@@ -8,6 +8,7 @@ import (
 )
 
 var setNickMutex sync.Mutex
+var setEmailMutex sync.Mutex
 
 // User ...
 type User struct {
@@ -197,6 +198,9 @@ func (user *User) ForceSetNick(newName string) error {
 
 // SetEmail changes the user's email safely.
 func (user *User) SetEmail(newName string) error {
+	setEmailMutex.Lock()
+	defer setEmailMutex.Unlock()
+	
 	if !IsValidEmail(user.Email) {
 		return errors.New("Invalid email address")
 	}
