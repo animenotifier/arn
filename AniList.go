@@ -109,6 +109,12 @@ func (anilist *anilistListProvider) StreamAnime() chan *AniListAnime {
 	return channel
 }
 
+// AniListMatch ...
+type AniListMatch struct {
+	AniListAnime *AniListAnime
+	ARNAnime     *Anime
+}
+
 // FindAniListAnime tries to find an AniListAnime in our Anime database.
 func FindAniListAnime(search *AniListAnime, allAnime []*Anime) *Anime {
 	match, err := GetAniListToAnime(strconv.Itoa(search.ID))

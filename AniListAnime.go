@@ -1,5 +1,7 @@
 package arn
 
+import "strconv"
+
 // AniListAnime ...
 type AniListAnime struct {
 	ID             int           `json:"id"`
@@ -24,4 +26,9 @@ type AniListAnime struct {
 	ImageURLBanner interface{}   `json:"image_url_banner"`
 	TotalEpisodes  int           `json:"total_episodes"`
 	AiringStatus   string        `json:"airing_status"`
+}
+
+// Link returns the permalink to that anime.
+func (anime *AniListAnime) Link() string {
+	return "https://anilist.co/anime/" + strconv.Itoa(anime.ID)
 }
