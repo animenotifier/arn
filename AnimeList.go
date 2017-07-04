@@ -23,6 +23,41 @@ func (list *AnimeList) Find(animeID string) *AnimeListItem {
 	return nil
 }
 
+// Import adds an anime to the list if it hasn't been added yet
+// and if it did exist it will update episode, rating and notes.
+func (list *AnimeList) Import(item *AnimeListItem) {
+	existing := list.Find(item.AnimeID)
+
+	// If it doesn't exist yet: Simply add it.
+	if existing == nil {
+		list.Items = append(list.Items, item)
+		return
+	}
+
+	// If it exists: Copy the attributes to the existing item.
+	existing.Status = item.Status
+	existing.OnStatusChange()
+
+	if item.Episodes > existing.Episodes {
+		existing.Episodes = item.Episodes
+		existing.OnEpisodesChange()
+	}
+
+	if existing.Rating.Overall == 0 {
+		existing.Rating.Overall = item.Rating.Overall
+	}
+
+	if existing.Notes == "" {
+		existing.Notes = item.Notes
+	}
+
+	if item.RewatchCount > existing.RewatchCount {
+		existing.RewatchCount = item.RewatchCount
+	}
+
+	existing.Edited = DateTimeUTC()
+}
+
 // User returns the user this anime list belongs to.
 func (list *AnimeList) User() *User {
 	if list.user == nil {

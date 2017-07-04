@@ -103,55 +103,16 @@ func (list *AnimeList) Update(id interface{}, updatesObj interface{}) error {
 		if item.AnimeID == animeID {
 			err := SetObjectProperties(item, updates, nil)
 			item.Edited = DateTimeUTC()
-			maxEpisodesKnown := item.Anime().EpisodeCount != 0
 
 			item.Rating.Clamp()
 
 			for key := range updates {
 				switch key {
 				case "Episodes":
-					// If we update episodes to the max, set status to completed automatically.
-					if item.Anime().Status == "finished" && maxEpisodesKnown && item.Episodes == item.Anime().EpisodeCount {
-						// Complete automatically.
-						item.Status = AnimeListStatusCompleted
-					}
-
-					// We set episodes lower than the max but the status is set as completed.
-					if item.Status == AnimeListStatusCompleted && maxEpisodesKnown && item.Episodes != item.Anime().EpisodeCount {
-						// Set status back to watching.
-						item.Status = AnimeListStatusWatching
-					}
-
-					// If we increase the episodes and status is planned, set it to watching.
-					if item.Status == AnimeListStatusPlanned && item.Episodes > 0 {
-						// Set status to watching.
-						item.Status = AnimeListStatusWatching
-					}
-
-					// If we set the episodes to 0 and status is not planned or dropped, set it to planned.
-					if item.Episodes == 0 && (item.Status != AnimeListStatusPlanned && item.Status != AnimeListStatusDropped) {
-						// Set status to planned.
-						item.Status = AnimeListStatusPlanned
-					}
+					item.OnEpisodesChange()
 
 				case "Status":
-					// We just switched to completed status but the episodes aren't max yet.
-					if item.Status == AnimeListStatusCompleted && maxEpisodesKnown && item.Episodes < item.Anime().EpisodeCount {
-						// Set episodes to max.
-						item.Episodes = item.Anime().EpisodeCount
-					}
-
-					// We just switched to plan to watch status but the episodes are greater than zero.
-					if item.Status == AnimeListStatusPlanned && item.Episodes > 0 {
-						// Set episodes back to zero.
-						item.Episodes = 0
-					}
-
-					// If we have an anime with max episodes watched and we change status to not completed, lower episode count by 1.
-					if maxEpisodesKnown && item.Status != AnimeListStatusCompleted && item.Episodes == item.Anime().EpisodeCount {
-						// Lower episodes by 1.
-						item.Episodes--
-					}
+					item.OnStatusChange()
 				}
 			}
 
