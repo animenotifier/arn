@@ -8,7 +8,7 @@ import (
 )
 
 // MinimumStringSimilarity is the minimum JaroWinkler distance we accept for search results.
-const MinimumStringSimilarity = 0.9
+const MinimumStringSimilarity = 0.89
 
 // SearchIndex ...
 type SearchIndex struct {
@@ -31,6 +31,7 @@ func GetSearchIndex(id string) (*SearchIndex, error) {
 // Search is a fuzzy search.
 func Search(term string, maxUsers, maxAnime int) ([]*User, []*Anime) {
 	term = strings.ToLower(term)
+	term = RemoveSpecialCharacters(term)
 
 	if term == "" {
 		return nil, nil
@@ -114,9 +115,10 @@ func Search(term string, maxUsers, maxAnime int) ([]*User, []*Anime) {
 		animeIDAdded := map[string]*SearchItem{}
 
 		for name, id := range textToID {
-			s := StringSimilarity(term, name)
+			cleanName := RemoveSpecialCharacters(name)
+			s := StringSimilarity(term, cleanName)
 
-			if strings.Contains(name, term) {
+			if strings.Contains(cleanName, term) {
 				s += 0.5
 			}
 
