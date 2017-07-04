@@ -25,3 +25,21 @@ type AniListAnimeListItem struct {
 	UpdatedTime          time.Time     `json:"updated_time"`
 	Anime                *AniListAnime `json:"anime"`
 }
+
+// AnimeListStatus returns the ARN version of the anime status.
+func (item *AniListAnimeListItem) AnimeListStatus() string {
+	switch item.ListStatus {
+	case "watching":
+		return AnimeListStatusWatching
+	case "completed":
+		return AnimeListStatusCompleted
+	case "plan to watch":
+		return AnimeListStatusPlanned
+	case "on-hold":
+		return AnimeListStatusHold
+	case "dropped":
+		return AnimeListStatusDropped
+	default:
+		return AnimeListStatusPlanned
+	}
+}
