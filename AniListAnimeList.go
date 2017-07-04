@@ -98,7 +98,7 @@ type AniListAnimeList struct {
 		Dropped     []*AniListAnimeListItem `json:"dropped"`
 		OnHold      []*AniListAnimeListItem `json:"on_hold"`
 	} `json:"lists"`
-	CustomLists [][]*AniListAnimeListItem `json:"custom_lists"`
+	CustomLists map[string][]*AniListAnimeListItem `json:"custom_lists"`
 	// CSS         struct {
 	// 	URL    string `json:"url"`
 	// 	Popup  bool   `json:"popup"`
