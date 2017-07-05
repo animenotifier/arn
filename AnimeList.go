@@ -167,6 +167,40 @@ func AllAnimeLists() ([]*AnimeList, error) {
 
 // GetAnimeList ...
 func GetAnimeList(user *User) (*AnimeList, error) {
-	obj, err := DB.Get("AnimeList", user.ID)
-	return obj.(*AnimeList), err
+	animeList := &AnimeList{
+		UserID: user.ID,
+		Items:  []*AnimeListItem{},
+	}
+
+	m, err := DB.GetMap("AnimeList", user.ID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	itemList := m["items"].([]interface{})
+
+	for _, itemMap := range itemList {
+		item := itemMap.(map[interface{}]interface{})
+		ratingMap := item["rating"].(map[interface{}]interface{})
+
+		animeList.Items = append(animeList.Items, &AnimeListItem{
+			AnimeID:      item["animeId"].(string),
+			Status:       item["status"].(string),
+			Episodes:     item["episodes"].(int),
+			Notes:        item["notes"].(string),
+			RewatchCount: item["rewatchCount"].(int),
+			Private:      item["private"].(int) != 0,
+			Edited:       item["edited"].(string),
+			Created:      item["created"].(string),
+			Rating: &AnimeRating{
+				Overall:    ratingMap["overall"].(float64),
+				Story:      ratingMap["story"].(float64),
+				Visuals:    ratingMap["visuals"].(float64),
+				Soundtrack: ratingMap["soundtrack"].(float64),
+			},
+		})
+	}
+
+	return animeList, nil
 }
