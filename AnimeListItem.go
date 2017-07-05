@@ -35,7 +35,7 @@ func (item *AnimeListItem) Anime() *Anime {
 
 // Link returns the URI for the given item.
 func (item *AnimeListItem) Link(userNick string) string {
-	return "/+" + userNick + "/animelist/" + item.AnimeID
+	return "/+" + userNick + "/animelist/anime/" + item.AnimeID
 }
 
 // OnEpisodesChange is called when the watched episode count changes.

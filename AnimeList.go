@@ -91,13 +91,18 @@ func (list *AnimeList) Sort() {
 
 // Watching ...
 func (list *AnimeList) Watching() *AnimeList {
+	return list.FilterStatus(AnimeListStatusWatching)
+}
+
+// FilterStatus ...
+func (list *AnimeList) FilterStatus(status string) *AnimeList {
 	newList := &AnimeList{
 		UserID: list.UserID,
 		Items:  []*AnimeListItem{},
 	}
 
 	for _, item := range list.Items {
-		if item.Status == AnimeListStatusWatching { // (item.Status == AnimeListStatusPlanned)
+		if item.Status == status { // (item.Status == AnimeListStatusPlanned)
 			newList.Items = append(newList.Items, item)
 		}
 	}
