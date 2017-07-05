@@ -142,6 +142,23 @@ func (list *AnimeList) SplitByStatus() map[string]*AnimeList {
 	return statusToList
 }
 
+// PrefetchAnime loads all the anime objects from the list into memory.
+func (list *AnimeList) PrefetchAnime() {
+	animeIDList := make([]string, len(list.Items), len(list.Items))
+
+	for i, item := range list.Items {
+		animeIDList[i] = item.AnimeID
+	}
+
+	// Prefetch anime objects
+	animeObjects, _ := DB.GetMany("Anime", animeIDList)
+	prefetchedAnime := animeObjects.([]*Anime)
+
+	for i, anime := range prefetchedAnime {
+		list.Items[i].anime = anime
+	}
+}
+
 // StreamAnimeLists returns a stream of all anime.
 func StreamAnimeLists() (chan *AnimeList, error) {
 	objects, err := DB.All("AnimeList")
@@ -179,9 +196,8 @@ func GetAnimeList(user *User) (*AnimeList, error) {
 	}
 
 	itemList := m["items"].([]interface{})
-	animeIDList := make([]string, len(itemList), len(itemList))
 
-	for i, itemMap := range itemList {
+	for _, itemMap := range itemList {
 		item := itemMap.(map[interface{}]interface{})
 		ratingMap := item["rating"].(map[interface{}]interface{})
 		newItem := &AnimeListItem{
@@ -202,15 +218,6 @@ func GetAnimeList(user *User) (*AnimeList, error) {
 		}
 
 		animeList.Items = append(animeList.Items, newItem)
-		animeIDList[i] = newItem.AnimeID
-	}
-
-	// Prefetch anime objects
-	animeObjects, _ := DB.GetMany("Anime", animeIDList)
-	prefetchedAnime := animeObjects.([]*Anime)
-
-	for i, anime := range prefetchedAnime {
-		animeList.Items[i].anime = anime
 	}
 
 	return animeList, nil
