@@ -36,7 +36,15 @@ func init() {
 		rootPath = path.Join(exe[:arnIndex], "animenotifier")
 	}
 
-	data, _ := ioutil.ReadFile(path.Join(rootPath, "notify.moe", "security", "api-keys.json"))
+	apiKeysPath := path.Join(rootPath, "notify.moe", "security", "api-keys.json")
+
+	if _, err = os.Stat(apiKeysPath); os.IsNotExist(err) {
+		// If everything else fails, use hard-coded path.
+		// This is needed for some benchmarks and tests.
+		apiKeysPath = "/home/eduard/workspace/src/github.com/animenotifier/notify.moe/security/api-keys.json"
+	}
+
+	data, _ := ioutil.ReadFile(apiKeysPath)
 	err = json.Unmarshal(data, &APIKeys)
 
 	if err != nil {
