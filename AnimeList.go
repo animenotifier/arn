@@ -179,12 +179,12 @@ func GetAnimeList(user *User) (*AnimeList, error) {
 	}
 
 	itemList := m["items"].([]interface{})
+	animeIDList := make([]string, len(itemList), len(itemList))
 
-	for _, itemMap := range itemList {
+	for i, itemMap := range itemList {
 		item := itemMap.(map[interface{}]interface{})
 		ratingMap := item["rating"].(map[interface{}]interface{})
-
-		animeList.Items = append(animeList.Items, &AnimeListItem{
+		newItem := &AnimeListItem{
 			AnimeID:      item["animeId"].(string),
 			Status:       item["status"].(string),
 			Episodes:     item["episodes"].(int),
@@ -199,7 +199,18 @@ func GetAnimeList(user *User) (*AnimeList, error) {
 				Visuals:    ratingMap["visuals"].(float64),
 				Soundtrack: ratingMap["soundtrack"].(float64),
 			},
-		})
+		}
+
+		animeList.Items = append(animeList.Items, newItem)
+		animeIDList[i] = newItem.AnimeID
+	}
+
+	// Prefetch anime objects
+	animeObjects, _ := DB.GetMany("Anime", animeIDList)
+	prefetchedAnime := animeObjects.([]*Anime)
+
+	for i, anime := range prefetchedAnime {
+		animeList.Items[i].anime = anime
 	}
 
 	return animeList, nil
