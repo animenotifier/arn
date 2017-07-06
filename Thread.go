@@ -9,8 +9,8 @@ import (
 // Thread represents a forum thread.
 type Thread struct {
 	ID       string   `json:"id"`
-	Title    string   `json:"title"`
-	Text     string   `json:"text"`
+	Title    string   `json:"title" editable:"true"`
+	Text     string   `json:"text" editable:"true"`
 	AuthorID string   `json:"authorId"`
 	Sticky   int      `json:"sticky"`
 	Tags     []string `json:"tags"`

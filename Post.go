@@ -6,7 +6,7 @@ import "github.com/aerogo/aero"
 // Post represents a forum post.
 type Post struct {
 	ID       string   `json:"id"`
-	Text     string   `json:"text"`
+	Text     string   `json:"text" editable:"true"`
 	AuthorID string   `json:"authorId"`
 	ThreadID string   `json:"threadId"`
 	Tags     []string `json:"tags"`

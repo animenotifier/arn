@@ -73,6 +73,20 @@ func (thread *Thread) Create(ctx *aero.Context) error {
 	return nil
 }
 
+// Update updates the thread object.
+func (thread *Thread) Update(ctx *aero.Context, data interface{}) error {
+	user := GetUserFromContext(ctx)
+
+	if thread.AuthorID != user.ID {
+		return errors.New("Can't edit the threads of other users")
+	}
+
+	thread.Edited = DateTimeUTC()
+
+	updates := data.(map[string]interface{})
+	return SetObjectProperties(thread, updates, nil)
+}
+
 // Save saves the thread object in the database.
 func (thread *Thread) Save() error {
 	return DB.Set("Thread", thread.ID, thread)
