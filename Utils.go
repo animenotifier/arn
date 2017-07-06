@@ -9,8 +9,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"unicode"
-	"unicode/utf8"
 
 	"github.com/aerogo/aero"
 	shortid "github.com/ventu-io/go-shortid"
@@ -158,15 +156,6 @@ func FixThreadTitle(title string) string {
 	return strings.TrimSpace(title)
 }
 
-// Capitalize returns the string with the first letter capitalized.
-func Capitalize(s string) string {
-	if s == "" {
-		return ""
-	}
-	r, n := utf8.DecodeRuneInString(s)
-	return string(unicode.ToUpper(r)) + s[n:]
-}
-
 // AnimeRatingStars displays the rating in Unicode stars.
 func AnimeRatingStars(rating float64) string {
 	stars := int(rating/20 + 0.5)
@@ -201,25 +190,6 @@ func StringSimilarity(a string, b string) float64 {
 	return smetrics.JaroWinkler(a, b, 0.7, 4)
 }
 
-// ToString converts anything into a string.
-func ToString(v interface{}) string {
-	return fmt.Sprint(v)
-}
-
-// Plural returns the number concatenated to the proper pluralization of the word.
-func Plural(count int, singular string) string {
-	if count == 1 || count == -1 {
-		return ToString(count) + " " + singular
-	}
-
-	return ToString(count) + " " + singular + "s"
-}
-
-// ContainsUnicodeLetters tells you if unicode characters are inside the string.
-func ContainsUnicodeLetters(s string) bool {
-	return len(s) != len([]rune(s))
-}
-
 // OverallRatingName returns Overall in general, but Hype when episodes watched is zero.
 func OverallRatingName(episodes int) string {
 	if episodes == 0 {
@@ -227,6 +197,24 @@ func OverallRatingName(episodes int) string {
 	}
 
 	return "Overall"
+}
+
+// ListItemStatusName ...
+func ListItemStatusName(status string) string {
+	switch status {
+	case AnimeListStatusWatching:
+		return "Watching"
+	case AnimeListStatusCompleted:
+		return "Completed"
+	case AnimeListStatusPlanned:
+		return "Planned"
+	case AnimeListStatusHold:
+		return "On hold"
+	case AnimeListStatusDropped:
+		return "Dropped"
+	default:
+		return ""
+	}
 }
 
 // PanicOnError will panic if the error is not nil.
