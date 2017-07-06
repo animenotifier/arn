@@ -1,4 +1,4 @@
-package arn
+package autocorrect
 
 import (
 	"regexp"
@@ -90,4 +90,9 @@ func FixPostText(text string) string {
 	text = strings.Replace(text, "http://", "https://", -1)
 	text = strings.TrimSpace(text)
 	return text
+}
+
+// FixThreadTitle ...
+func FixThreadTitle(title string) string {
+	return strings.TrimSpace(title)
 }

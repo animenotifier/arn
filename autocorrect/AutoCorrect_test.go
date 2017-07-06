@@ -1,4 +1,4 @@
-package arn
+package autocorrect
 
 import (
 	"testing"

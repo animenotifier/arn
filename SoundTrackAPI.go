@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/aerogo/aero"
+	"github.com/animenotifier/arn/autocorrect"
 	"github.com/parnurzeal/gorequest"
 )
 
@@ -158,7 +159,7 @@ func (soundtrack *SoundTrack) Create(ctx *aero.Context) error {
 	animeFound := false
 	for i := range tags {
 		tag := tags[i].(string)
-		tag = FixTag(tag)
+		tag = autocorrect.FixTag(tag)
 
 		if strings.HasPrefix(tag, "anime:") {
 			animeID := strings.TrimPrefix(tag, "anime:")

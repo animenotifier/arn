@@ -151,11 +151,6 @@ func FixGender(gender string) string {
 	return gender
 }
 
-// FixThreadTitle ...
-func FixThreadTitle(title string) string {
-	return strings.TrimSpace(title)
-}
-
 // AnimeRatingStars displays the rating in Unicode stars.
 func AnimeRatingStars(rating float64) string {
 	stars := int(rating/20 + 0.5)

@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/aerogo/aero"
+	"github.com/animenotifier/arn/autocorrect"
 )
 
 // Authorize returns an error if the given API POST request is not authorized.
@@ -46,8 +47,8 @@ func (thread *Thread) Create(ctx *aero.Context) error {
 	thread.Edited = ""
 
 	// Post-process text
-	thread.Title = FixThreadTitle(thread.Title)
-	thread.Text = FixPostText(thread.Text)
+	thread.Title = autocorrect.FixThreadTitle(thread.Title)
+	thread.Text = autocorrect.FixPostText(thread.Text)
 
 	// Tags
 	tags, _ := data["tags"].([]interface{})

@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/aerogo/aero"
+	"github.com/animenotifier/arn/autocorrect"
 	"github.com/fatih/color"
 )
 
@@ -21,7 +22,7 @@ func (user *User) Update(ctx *aero.Context, data interface{}) error {
 		// Automatically correct account nicks
 		if strings.HasPrefix(fullKeyName, "Accounts.") && strings.HasSuffix(fullKeyName, ".Nick") {
 			newNick := newValue.String()
-			newNick = FixAccountNick(newNick)
+			newNick = autocorrect.FixAccountNick(newNick)
 			property.SetString(newNick)
 
 			// Refresh osu info if the name changed

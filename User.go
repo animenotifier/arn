@@ -5,6 +5,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/animenotifier/arn/autocorrect"
 )
 
 var setNickMutex sync.Mutex
@@ -160,7 +162,7 @@ func (user *User) SetNick(newName string) error {
 	setNickMutex.Lock()
 	defer setNickMutex.Unlock()
 
-	newName = FixUserNick(newName)
+	newName = autocorrect.FixUserNick(newName)
 
 	if !IsValidNick(newName) {
 		return errors.New("Invalid nickname")
@@ -200,7 +202,7 @@ func (user *User) ForceSetNick(newName string) error {
 func (user *User) SetEmail(newName string) error {
 	setEmailMutex.Lock()
 	defer setEmailMutex.Unlock()
-	
+
 	if !IsValidEmail(user.Email) {
 		return errors.New("Invalid email address")
 	}
