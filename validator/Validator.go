@@ -1,4 +1,4 @@
-package arn
+package validator
 
 import "github.com/animenotifier/arn/autocorrect"
 

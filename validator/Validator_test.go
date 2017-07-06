@@ -1,4 +1,4 @@
-package arn
+package validator
 
 import (
 	"testing"
