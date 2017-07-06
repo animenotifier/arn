@@ -7,6 +7,8 @@ import (
 	"os"
 	"path"
 	"strings"
+
+	"github.com/animenotifier/osu"
 )
 
 // APIKeys are global API keys for several services
@@ -50,6 +52,9 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+
+	// Set Osu API key
+	osu.APIKey = APIKeys.Osu.Secret
 }
 
 // APIKeysData ...

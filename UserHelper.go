@@ -1,6 +1,12 @@
 package arn
 
-import "sort"
+import (
+	"errors"
+	"sort"
+	"strconv"
+
+	"github.com/animenotifier/osu"
+)
 
 // GetUser ...
 func GetUser(id string) (*User, error) {
@@ -87,4 +93,23 @@ func SortUsersLastSeen(users []*User) []*User {
 	})
 
 	return users
+}
+
+// RefreshOsuInfo refreshes a user's Osu information.
+func (user *User) RefreshOsuInfo() error {
+	if user.Accounts.Osu.Nick == "" {
+		return errors.New("User doesn't have an osu username")
+	}
+
+	osu, err := osu.GetUser(user.Accounts.Osu.Nick)
+
+	if err != nil {
+		return err
+	}
+
+	user.Accounts.Osu.PP, _ = strconv.ParseFloat(osu.PPRaw, 64)
+	user.Accounts.Osu.Level, _ = strconv.ParseFloat(osu.Level, 64)
+	user.Accounts.Osu.Accuracy, _ = strconv.ParseFloat(osu.Accuracy, 64)
+
+	return nil
 }
