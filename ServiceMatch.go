@@ -12,8 +12,17 @@ type ServiceMatch struct {
 // AniListToAnime ...
 type AniListToAnime ServiceMatch
 
+// MyAnimeListToAnime ...
+type MyAnimeListToAnime ServiceMatch
+
 // GetAniListToAnime ...
 func GetAniListToAnime(aniListID string) (*AniListToAnime, error) {
 	obj, err := DB.Get("AniListToAnime", aniListID)
 	return obj.(*AniListToAnime), err
+}
+
+// GetMyAnimeListToAnime ...
+func GetMyAnimeListToAnime(malID string) (*MyAnimeListToAnime, error) {
+	obj, err := DB.Get("MyAnimeListToAnime", malID)
+	return obj.(*MyAnimeListToAnime), err
 }
