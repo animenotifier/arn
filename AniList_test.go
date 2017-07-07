@@ -7,7 +7,7 @@ import (
 )
 
 func TestStreamAnime(t *testing.T) {
-	assert.Nil(t, AniList.Authorize())
+	assert.NoError(t, AniList.Authorize())
 
 	count := 0
 	stream := AniList.StreamAnime()
