@@ -39,15 +39,20 @@ func (list *AnimeList) Import(item *AnimeListItem) {
 	// This will prevent loss of "episodes watched" data.
 	existingEpisodes := existing.Episodes
 
-	// If it exists: Copy the attributes to the existing item.
+	// Status
 	existing.Status = item.Status
 	existing.OnStatusChange()
 
+	// Episodes
 	if item.Episodes > existingEpisodes {
 		existing.Episodes = item.Episodes
-		existing.OnEpisodesChange()
+	} else {
+		existing.Episodes = existingEpisodes
 	}
 
+	existing.OnEpisodesChange()
+
+	// Rating
 	if existing.Rating.Overall == 0 {
 		existing.Rating.Overall = item.Rating.Overall
 	}
@@ -60,6 +65,7 @@ func (list *AnimeList) Import(item *AnimeListItem) {
 		existing.RewatchCount = item.RewatchCount
 	}
 
+	// Edited
 	existing.Edited = DateTimeUTC()
 }
 
