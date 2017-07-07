@@ -25,7 +25,12 @@ func NewSearchIndex() *SearchIndex {
 // GetSearchIndex ...
 func GetSearchIndex(id string) (*SearchIndex, error) {
 	obj, err := DB.Get("SearchIndex", id)
-	return obj.(*SearchIndex), err
+
+	if err != nil {
+		return nil, err
+	}
+
+	return obj.(*SearchIndex), nil
 }
 
 // Search is a fuzzy search.

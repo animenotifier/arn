@@ -10,5 +10,10 @@ type Genre struct {
 // GetGenre ...
 func GetGenre(id string) (*Genre, error) {
 	obj, err := DB.Get("Genre", id)
-	return obj.(*Genre), err
+
+	if err != nil {
+		return nil, err
+	}
+
+	return obj.(*Genre), nil
 }

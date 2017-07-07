@@ -11,7 +11,12 @@ import (
 // GetUser ...
 func GetUser(id string) (*User, error) {
 	obj, err := DB.Get("User", id)
-	return obj.(*User), err
+
+	if err != nil {
+		return nil, err
+	}
+
+	return obj.(*User), nil
 }
 
 // GetUserByNick ...

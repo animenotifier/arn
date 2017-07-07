@@ -56,7 +56,12 @@ func (thread *Thread) ToPostable() Postable {
 // GetThread ...
 func GetThread(id string) (*Thread, error) {
 	obj, err := DB.Get("Thread", id)
-	return obj.(*Thread), err
+
+	if err != nil {
+		return nil, err
+	}
+
+	return obj.(*Thread), nil
 }
 
 // GetThreadsByTag ...

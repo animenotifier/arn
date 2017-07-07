@@ -66,7 +66,12 @@ type AnimeTitle struct {
 // GetAnime ...
 func GetAnime(id string) (*Anime, error) {
 	obj, err := DB.Get("Anime", id)
-	return obj.(*Anime), err
+
+	if err != nil {
+		return nil, err
+	}
+
+	return obj.(*Anime), nil
 }
 
 // Link returns the URI to the anime page.
