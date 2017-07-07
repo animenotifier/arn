@@ -34,11 +34,16 @@ func (list *AnimeList) Import(item *AnimeListItem) {
 		return
 	}
 
+	// Temporary save it before changing the status
+	// because status changes can modify the episode count.
+	// This will prevent loss of "episodes watched" data.
+	existingEpisodes := existing.Episodes
+
 	// If it exists: Copy the attributes to the existing item.
 	existing.Status = item.Status
 	existing.OnStatusChange()
 
-	if item.Episodes > existing.Episodes {
+	if item.Episodes > existingEpisodes {
 		existing.Episodes = item.Episodes
 		existing.OnEpisodesChange()
 	}
