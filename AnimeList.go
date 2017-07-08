@@ -55,6 +55,7 @@ func (list *AnimeList) Import(item *AnimeListItem) {
 	// Rating
 	if existing.Rating.Overall == 0 {
 		existing.Rating.Overall = item.Rating.Overall
+		existing.Rating.Clamp()
 	}
 
 	if existing.Notes == "" {

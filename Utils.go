@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/aerogo/aero"
+	"github.com/animenotifier/mal"
 	shortid "github.com/ventu-io/go-shortid"
 	"github.com/xrash/smetrics"
 )
@@ -192,6 +193,24 @@ func OverallRatingName(episodes int) string {
 	}
 
 	return "Overall"
+}
+
+// MyAnimeListStatusToARNStatus ...
+func MyAnimeListStatusToARNStatus(status string) string {
+	switch status {
+	case mal.AnimeListStatusCompleted:
+		return AnimeListStatusCompleted
+	case mal.AnimeListStatusWatching:
+		return AnimeListStatusWatching
+	case mal.AnimeListStatusPlanned:
+		return AnimeListStatusPlanned
+	case mal.AnimeListStatusHold:
+		return AnimeListStatusHold
+	case mal.AnimeListStatusDropped:
+		return AnimeListStatusDropped
+	default:
+		return ""
+	}
 }
 
 // ListItemStatusName ...

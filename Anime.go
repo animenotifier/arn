@@ -92,13 +92,19 @@ func (anime *Anime) Watching() int {
 
 // AddMapping adds the ID of an external site to the anime.
 func (anime *Anime) AddMapping(serviceName string, serviceID string, userID string) {
+	// Is the ID valid?
+	if serviceID == "" {
+		return
+	}
+
+	// If it already exists we don't need to add it
 	for _, external := range anime.Mappings {
-		// If it already exists we don't need to add it
 		if external.Service == serviceName && external.ServiceID == serviceID {
 			return
 		}
 	}
 
+	// Add the mapping
 	anime.Mappings = append(anime.Mappings, &Mapping{
 		Service:   serviceName,
 		ServiceID: serviceID,
@@ -106,12 +112,21 @@ func (anime *Anime) AddMapping(serviceName string, serviceID string, userID stri
 		CreatedBy: userID,
 	})
 
+	// Add the references
 	switch serviceName {
 	case "shoboi/anime":
 		go anime.RefreshEpisodes()
 
 	case "anilist/anime":
 		DB.Set("AniListToAnime", serviceID, &AniListToAnime{
+			AnimeID:   anime.ID,
+			ServiceID: serviceID,
+			Edited:    DateTimeUTC(),
+			EditedBy:  userID,
+		})
+
+	case "myanimelist/anime":
+		DB.Set("MyAnimeListToAnime", serviceID, &MyAnimeListToAnime{
 			AnimeID:   anime.ID,
 			ServiceID: serviceID,
 			Edited:    DateTimeUTC(),
@@ -138,6 +153,8 @@ func (anime *Anime) RemoveMapping(name string, id string) bool {
 		anime.Episodes = anime.Episodes[:0]
 	case "anilist/anime":
 		DB.Delete("AniListToAnime", id)
+	case "myanimelist/anime":
+		DB.Delete("MyAnimeListToAnime", id)
 	}
 
 	for index, external := range anime.Mappings {
