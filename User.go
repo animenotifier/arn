@@ -15,28 +15,28 @@ var setEmailMutex sync.Mutex
 
 // User ...
 type User struct {
-	ID         string       `json:"id"`
-	Nick       string       `json:"nick" editable:"true"`
-	FirstName  string       `json:"firstName"`
-	LastName   string       `json:"lastName"`
-	Email      string       `json:"email"`
-	Role       string       `json:"role"`
-	Registered string       `json:"registered"`
-	LastLogin  string       `json:"lastLogin"`
-	LastSeen   string       `json:"lastSeen"`
-	Gender     string       `json:"gender"`
-	Language   string       `json:"language"`
-	Avatar     string       `json:"avatar"`
-	Tagline    string       `json:"tagline" editable:"true"`
-	Website    string       `json:"website" editable:"true"`
-	IP         string       `json:"ip"`
-	UserAgent  string       `json:"agent"`
-	AgeRange   UserAgeRange `json:"ageRange"`
-	Location   UserLocation `json:"location"`
-	Accounts   UserAccounts `json:"accounts"`
-	Browser    UserBrowser  `json:"browser"`
-	OS         UserOS       `json:"os"`
-	Following  []string     `json:"following"`
+	ID              string       `json:"id"`
+	Nick            string       `json:"nick" editable:"true"`
+	FirstName       string       `json:"firstName"`
+	LastName        string       `json:"lastName"`
+	Email           string       `json:"email"`
+	Role            string       `json:"role"`
+	Registered      string       `json:"registered"`
+	LastLogin       string       `json:"lastLogin"`
+	LastSeen        string       `json:"lastSeen"`
+	Gender          string       `json:"gender"`
+	Language        string       `json:"language"`
+	AvatarExtension string       `json:"avatar"`
+	Tagline         string       `json:"tagline" editable:"true"`
+	Website         string       `json:"website" editable:"true"`
+	IP              string       `json:"ip"`
+	UserAgent       string       `json:"agent"`
+	AgeRange        UserAgeRange `json:"ageRange"`
+	Location        UserLocation `json:"location"`
+	Accounts        UserAccounts `json:"accounts"`
+	Browser         UserBrowser  `json:"browser"`
+	OS              UserOS       `json:"os"`
+	Following       []string     `json:"following"`
 }
 
 // NewUser creates an empty user object with a unique ID.
@@ -145,17 +145,17 @@ func (user *User) CoverImageURL() string {
 
 // HasAvatar ...
 func (user *User) HasAvatar() bool {
-	return user.Avatar != ""
+	return user.AvatarExtension != ""
 }
 
 // SmallAvatar ...
 func (user *User) SmallAvatar() string {
-	return "//media.notify.moe/images/avatars/small/" + user.ID + ".webp"
+	return "//media.notify.moe/images/avatars/small/" + user.ID + user.AvatarExtension
 }
 
 // LargeAvatar ...
 func (user *User) LargeAvatar() string {
-	return "//media.notify.moe/images/avatars/large/" + user.ID + ".webp"
+	return "//media.notify.moe/images/avatars/large/" + user.ID + user.AvatarExtension
 }
 
 // SetNick changes the user's nickname safely.
