@@ -85,6 +85,25 @@ func (post *Post) Update(ctx *aero.Context, data interface{}) error {
 	return SetObjectProperties(post, updates, nil)
 }
 
+// Action ...
+func (post *Post) Action(ctx *aero.Context, action string) error {
+	user := GetUserFromContext(ctx)
+
+	if user == nil {
+		return errors.New("Not logged in")
+	}
+
+	switch action {
+	case "like":
+		post.Like(user.ID)
+	case "unlike":
+		post.Unlike(user.ID)
+	default:
+		return errors.New("Unknown action: " + action)
+	}
+	return nil
+}
+
 // Save saves the post object in the database.
 func (post *Post) Save() error {
 	return DB.Set("Post", post.ID, post)

@@ -12,6 +12,7 @@ type Postable interface {
 	Text() string
 	HTML() string
 	Likes() []string
+	LikedBy(userID string) bool
 	Author() *User
 	Thread() *Thread
 	ThreadID() string

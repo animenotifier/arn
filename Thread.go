@@ -140,3 +140,24 @@ func SortThreadsLatestFirst(threads []*Thread) {
 		return threads[i].Created > threads[j].Created
 	})
 }
+
+// Like ...
+func (thread *Thread) Like(userID string) {
+	for _, id := range thread.Likes {
+		if id == userID {
+			return
+		}
+	}
+
+	thread.Likes = append(thread.Likes, userID)
+}
+
+// Unlike ...
+func (thread *Thread) Unlike(userID string) {
+	for index, id := range thread.Likes {
+		if id == userID {
+			thread.Likes = append(thread.Likes[:index], thread.Likes[index+1:]...)
+			return
+		}
+	}
+}

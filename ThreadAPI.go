@@ -87,6 +87,25 @@ func (thread *Thread) Update(ctx *aero.Context, data interface{}) error {
 	return SetObjectProperties(thread, updates, nil)
 }
 
+// Action ...
+func (thread *Thread) Action(ctx *aero.Context, action string) error {
+	user := GetUserFromContext(ctx)
+
+	if user == nil {
+		return errors.New("Not logged in")
+	}
+
+	switch action {
+	case "like":
+		thread.Like(user.ID)
+	case "unlike":
+		thread.Unlike(user.ID)
+	default:
+		return errors.New("Unknown action: " + action)
+	}
+	return nil
+}
+
 // Save saves the thread object in the database.
 func (thread *Thread) Save() error {
 	return DB.Set("Thread", thread.ID, thread)

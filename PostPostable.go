@@ -35,6 +35,17 @@ func (postable *PostPostable) Likes() []string {
 	return postable.post.Likes
 }
 
+// LikedBy tells you whether the given user has liked the post.
+func (postable *PostPostable) LikedBy(userID string) bool {
+	for _, id := range postable.post.Likes {
+		if id == userID {
+			return true
+		}
+	}
+
+	return false
+}
+
 // Link returns the relative URL of the post.
 func (postable *PostPostable) Link() string {
 	return postable.post.Link()

@@ -164,3 +164,24 @@ func FilterPosts(filter func(*Post) bool) ([]*Post, error) {
 
 	return filtered, nil
 }
+
+// Like ...
+func (post *Post) Like(userID string) {
+	for _, id := range post.Likes {
+		if id == userID {
+			return
+		}
+	}
+
+	post.Likes = append(post.Likes, userID)
+}
+
+// Unlike ...
+func (post *Post) Unlike(userID string) {
+	for index, id := range post.Likes {
+		if id == userID {
+			post.Likes = append(post.Likes[:index], post.Likes[index+1:]...)
+			return
+		}
+	}
+}
