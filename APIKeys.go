@@ -8,6 +8,7 @@ import (
 	"path"
 	"strings"
 
+	"github.com/animenotifier/anilist"
 	"github.com/animenotifier/osu"
 )
 
@@ -55,6 +56,10 @@ func init() {
 
 	// Set Osu API key
 	osu.APIKey = APIKeys.Osu.Secret
+
+	// Set Anilist API keys
+	anilist.APIKeyID = APIKeys.AniList.ID
+	anilist.APIKeySecret = APIKeys.AniList.Secret
 }
 
 // APIKeysData ...
