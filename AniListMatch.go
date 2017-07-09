@@ -1,11 +1,15 @@
 package arn
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	"github.com/animenotifier/anilist"
+)
 
 // AniListMatch ...
 type AniListMatch struct {
-	AniListItem *AniListAnimeListItem `json:"anilistItem"`
-	ARNAnime    *Anime                `json:"arnAnime"`
+	AniListItem *anilist.AnimeListItem `json:"anilistItem"`
+	ARNAnime    *Anime                 `json:"arnAnime"`
 }
 
 // JSON ...
