@@ -154,7 +154,12 @@ func (anime *Anime) GetMapping(name string) string {
 func (anime *Anime) RemoveMapping(name string, id string) bool {
 	switch name {
 	case "shoboi/anime":
-		//
+		eps := anime.Episodes()
+
+		if eps != nil {
+			eps.Items = eps.Items[:0]
+			eps.Save()
+		}
 	case "anilist/anime":
 		DB.Delete("AniListToAnime", id)
 	case "myanimelist/anime":
