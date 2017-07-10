@@ -202,6 +202,48 @@ func (anime *Anime) RefreshEpisodes() error {
 	// AnimeTwist
 	episodes.Merge(anime.TwistEpisodes())
 
+	// Number remaining episodes
+	startNumber := 0
+
+	for _, episode := range episodes.Items {
+		if episode.Number != -1 {
+			startNumber = episode.Number
+			continue
+		}
+
+		startNumber++
+		episode.Number = startNumber
+	}
+
+	// Guess airing dates
+	oneWeek := 7 * 24 * time.Hour
+	lastAiringDate := ""
+	timeDifference := oneWeek
+
+	for _, episode := range episodes.Items {
+		if episode.AiringDate.Start != "" {
+			if lastAiringDate != "" {
+				a, _ := time.Parse(time.RFC3339, lastAiringDate)
+				b, _ := time.Parse(time.RFC3339, episode.AiringDate.Start)
+				timeDifference = b.Sub(a)
+			}
+
+			lastAiringDate = episode.AiringDate.Start
+			continue
+		}
+
+		// Add 1 week to the last known airing date
+		nextAiringDate, _ := time.Parse(time.RFC3339, lastAiringDate)
+		nextAiringDate = nextAiringDate.Add(timeDifference)
+
+		// Guess start and end time
+		episode.AiringDate.Start = nextAiringDate.Format(time.RFC3339)
+		episode.AiringDate.End = nextAiringDate.Add(30 * time.Minute).Format(time.RFC3339)
+
+		// Set this date as the new last known airing date
+		lastAiringDate = episode.AiringDate.Start
+	}
+
 	return episodes.Save()
 }
 
