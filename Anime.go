@@ -2,11 +2,13 @@ package arn
 
 import (
 	"encoding/json"
-	"errors"
+	"sort"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/animenotifier/shoboi"
+	"github.com/animenotifier/twist"
 )
 
 // Anime ...
@@ -186,40 +188,88 @@ func (anime *Anime) Episodes() *AnimeEpisodes {
 
 // RefreshEpisodes will refresh the episode data.
 func (anime *Anime) RefreshEpisodes() error {
+	// Create blank episode templates
+	episodes := anime.Episodes()
+	episodes.Items = make([]*AnimeEpisode, anime.EpisodeCount, anime.EpisodeCount)
+
+	for i := 0; i < len(episodes.Items); i++ {
+		episodes.Items[i] = NewAnimeEpisode()
+	}
+
+	// Shoboi
+	episodes.Merge(anime.ShoboiEpisodes())
+
+	// AnimeTwist
+	episodes.Merge(anime.TwistEpisodes())
+
+	return episodes.Save()
+}
+
+// ShoboiEpisodes returns a slice of episode info from cal.syoboi.jp.
+func (anime *Anime) ShoboiEpisodes() []*AnimeEpisode {
 	shoboiID := anime.GetMapping("shoboi/anime")
 
 	if shoboiID == "" {
-		return errors.New("Anime is missing a Shoboi ID")
+		return nil
 	}
 
 	shoboiAnime, err := shoboi.GetAnime(shoboiID)
 
 	if err != nil {
-		return err
+		return nil
 	}
 
-	episodes := anime.Episodes()
-	episodes.Items = []*AnimeEpisode{}
-
+	arnEpisodes := []*AnimeEpisode{}
 	shoboiEpisodes := shoboiAnime.Episodes()
+
 	for _, shoboiEpisode := range shoboiEpisodes {
 		airingDate := shoboiEpisode.AiringDate()
 
-		episode := &AnimeEpisode{
-			Number: shoboiEpisode.Number,
-			Title: &EpisodeTitle{
-				Japanese: shoboiEpisode.TitleJapanese,
-			},
-			AiringDate: &AnimeAiringDate{
-				Start: airingDate.Start,
-				End:   airingDate.End,
-			},
+		episode := NewAnimeEpisode()
+		episode.Number = shoboiEpisode.Number
+		episode.Title = &EpisodeTitle{
+			Japanese: shoboiEpisode.TitleJapanese,
+		}
+		episode.AiringDate = &AnimeAiringDate{
+			Start: airingDate.Start,
+			End:   airingDate.End,
 		}
 
-		episodes.Items = append(episodes.Items, episode)
+		arnEpisodes = append(arnEpisodes, episode)
 	}
 
-	return episodes.Save()
+	return arnEpisodes
+}
+
+// TwistEpisodes returns a slice of episode info from twist.moe.
+func (anime *Anime) TwistEpisodes() []*AnimeEpisode {
+	// Get twist.moe feed
+	feed, err := twist.GetFeedByKitsuID(anime.ID)
+
+	if err != nil {
+		return nil
+	}
+
+	episodes := feed.Episodes
+
+	// Sort by episode number
+	sort.Slice(episodes, func(a, b int) bool {
+		return episodes[a].Number < episodes[b].Number
+	})
+
+	arnEpisodes := []*AnimeEpisode{}
+
+	for _, episode := range episodes {
+		arnEpisode := NewAnimeEpisode()
+		arnEpisode.Number = episode.Number
+		arnEpisode.Links = map[string]string{
+			"twist.moe": strings.Replace(episode.Link, "https://test.twist.moe/", "https://twist.moe/", 1),
+		}
+
+		arnEpisodes = append(arnEpisodes, arnEpisode)
+	}
+
+	return arnEpisodes
 }
 
 // UpcomingEpisodes ...
