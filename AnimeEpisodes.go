@@ -38,3 +38,14 @@ func (episodes *AnimeEpisodes) AvailableCount() int {
 func (episodes *AnimeEpisodes) Save() error {
 	return DB.Set("AnimeEpisodes", episodes.AnimeID, episodes)
 }
+
+// GetAnimeEpisodes ...
+func GetAnimeEpisodes(id string) (*AnimeEpisodes, error) {
+	obj, err := DB.Get("AnimeEpisodes", id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return obj.(*AnimeEpisodes), nil
+}
