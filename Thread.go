@@ -35,7 +35,7 @@ func (thread *Thread) Author() *User {
 
 // Link returns the relative URL of the thread.
 func (thread *Thread) Link() string {
-	return "/threads/" + thread.ID
+	return "/thread/" + thread.ID
 }
 
 // HTML returns the HTML representation of the thread.

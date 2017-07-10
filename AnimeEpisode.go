@@ -2,9 +2,10 @@ package arn
 
 // AnimeEpisode ...
 type AnimeEpisode struct {
-	Number     int              `json:"number"`
-	Title      *EpisodeTitle    `json:"title"`
-	AiringDate *AnimeAiringDate `json:"airingDate"`
+	Number     int               `json:"number"`
+	Title      *EpisodeTitle     `json:"title"`
+	AiringDate *AnimeAiringDate  `json:"airingDate"`
+	Links      map[string]string `json:"links"`
 }
 
 // EpisodeTitle ...

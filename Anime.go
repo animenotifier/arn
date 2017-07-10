@@ -26,7 +26,8 @@ type Anime struct {
 	Summary       string           `json:"summary"`
 	Trailers      []*ExternalMedia `json:"trailers"`
 	Mappings      []*Mapping       `json:"mappings"`
-	Episodes      []*AnimeEpisode  `json:"episodes"`
+
+	// Episodes      []*AnimeEpisode  `json:"episodes"`
 
 	// Adult         bool            `json:"adult"`
 
@@ -42,6 +43,7 @@ type Anime struct {
 	// Relations     []AnimeRelation `json:"relations"`
 	// Created       string          `json:"created"`
 	// CreatedBy     string          `json:"createdBy"`
+	episodes        *AnimeEpisodes
 	upcomingEpisode *UpcomingEpisode
 }
 
@@ -150,7 +152,7 @@ func (anime *Anime) GetMapping(name string) string {
 func (anime *Anime) RemoveMapping(name string, id string) bool {
 	switch name {
 	case "shoboi/anime":
-		anime.Episodes = anime.Episodes[:0]
+		//
 	case "anilist/anime":
 		DB.Delete("AniListToAnime", id)
 	case "myanimelist/anime":
@@ -167,6 +169,21 @@ func (anime *Anime) RemoveMapping(name string, id string) bool {
 	return false
 }
 
+// Episodes returns the anime episodes wrapper.
+func (anime *Anime) Episodes() *AnimeEpisodes {
+	if anime.episodes == nil {
+		record, err := DB.Get("AnimeEpisodes", anime.ID)
+
+		if err != nil {
+			return nil
+		}
+
+		anime.episodes = record.(*AnimeEpisodes)
+	}
+
+	return anime.episodes
+}
+
 // RefreshEpisodes will refresh the episode data.
 func (anime *Anime) RefreshEpisodes() error {
 	shoboiID := anime.GetMapping("shoboi/anime")
@@ -181,7 +198,8 @@ func (anime *Anime) RefreshEpisodes() error {
 		return err
 	}
 
-	anime.Episodes = []*AnimeEpisode{}
+	episodes := anime.Episodes()
+	episodes.Items = []*AnimeEpisode{}
 
 	shoboiEpisodes := shoboiAnime.Episodes()
 	for _, shoboiEpisode := range shoboiEpisodes {
@@ -198,10 +216,10 @@ func (anime *Anime) RefreshEpisodes() error {
 			},
 		}
 
-		anime.Episodes = append(anime.Episodes, episode)
+		episodes.Items = append(episodes.Items, episode)
 	}
 
-	return anime.Save()
+	return episodes.Save()
 }
 
 // UpcomingEpisodes ...
@@ -210,7 +228,7 @@ func (anime *Anime) UpcomingEpisodes() []*UpcomingEpisode {
 
 	now := time.Now().UTC().Format(time.RFC3339)
 
-	for _, episode := range anime.Episodes {
+	for _, episode := range anime.Episodes().Items {
 		if episode.AiringDate.Start > now && episode.AiringDate.Start != invalidDate {
 			upcomingEpisodes = append(upcomingEpisodes, &UpcomingEpisode{
 				Anime:   anime,
@@ -230,7 +248,7 @@ func (anime *Anime) UpcomingEpisode() *UpcomingEpisode {
 
 	now := time.Now().UTC().Format(time.RFC3339)
 
-	for _, episode := range anime.Episodes {
+	for _, episode := range anime.Episodes().Items {
 		if episode.AiringDate.Start > now && episode.AiringDate.Start != invalidDate {
 			anime.upcomingEpisode = &UpcomingEpisode{
 				Anime:   anime,
@@ -251,6 +269,17 @@ func (anime *Anime) EpisodeCountString() string {
 	}
 
 	return strconv.Itoa(anime.EpisodeCount)
+}
+
+// EpisodeByNumber returns the episode with the given number.
+func (anime *Anime) EpisodeByNumber(number int) *AnimeEpisode {
+	for _, episode := range anime.Episodes().Items {
+		if number == episode.Number {
+			return episode
+		}
+	}
+
+	return nil
 }
 
 // StreamAnime returns a stream of all anime.

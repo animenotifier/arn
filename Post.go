@@ -41,7 +41,7 @@ func (post *Post) Thread() *Thread {
 
 // Link returns the relative URL of the post.
 func (post *Post) Link() string {
-	return "/posts/" + post.ID
+	return "/post/" + post.ID
 }
 
 // HTML returns the HTML representation of the post.
