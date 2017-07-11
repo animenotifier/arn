@@ -57,16 +57,6 @@ type AnimeImageTypes struct {
 	Original string `json:"original"`
 }
 
-// AnimeTitle ...
-type AnimeTitle struct {
-	Romaji    string   `json:"romaji"`
-	English   string   `json:"english"`
-	Japanese  string   `json:"japanese"`
-	Hiragana  string   `json:"hiragana"`
-	Canonical string   `json:"canonical"`
-	Synonyms  []string `json:"synonyms"`
-}
-
 // GetAnime ...
 func GetAnime(id string) (*Anime, error) {
 	obj, err := DB.Get("Anime", id)
