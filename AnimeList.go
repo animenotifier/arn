@@ -202,7 +202,7 @@ func (list *AnimeList) NormalizeRatings() {
 	count := len(all)
 
 	// Prevent division by zero
-	if count == 1 {
+	if count <= 1 {
 		return
 	}
 
