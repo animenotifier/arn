@@ -18,7 +18,7 @@ func (user *User) Authorize(ctx *aero.Context) error {
 func (user *User) Update(ctx *aero.Context, data interface{}) error {
 	updates := data.(map[string]interface{})
 
-	return SetObjectProperties(user, updates, func(fullKeyName string, field *reflect.StructField, property *reflect.Value, newValue reflect.Value) bool {
+	return SetObjectProperties(user, updates, func(fullKeyName string, field *reflect.StructField, property *reflect.Value, newValue reflect.Value) (bool, error) {
 		// Automatically correct account nicks
 		if strings.HasPrefix(fullKeyName, "Accounts.") && strings.HasSuffix(fullKeyName, ".Nick") {
 			newNick := newValue.String()
@@ -40,22 +40,17 @@ func (user *User) Update(ctx *aero.Context, data interface{}) error {
 				}()
 			}
 
-			return true
+			return true, nil
 		}
 
 		switch fullKeyName {
 		case "Nick":
 			newNick := newValue.String()
 			err := user.SetNick(newNick)
-
-			if err != nil {
-				color.Red(err.Error())
-			}
-
-			return true
+			return true, err
 
 		default:
-			return false
+			return false, nil
 		}
 	})
 }

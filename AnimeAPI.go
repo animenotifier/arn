@@ -22,7 +22,7 @@ func (anime *Anime) Authorize(ctx *aero.Context) error {
 func (anime *Anime) Update(ctx *aero.Context, data interface{}) error {
 	updates := data.(map[string]interface{})
 
-	return SetObjectProperties(anime, updates, func(fullKeyName string, field *reflect.StructField, property *reflect.Value, newValue reflect.Value) bool {
+	return SetObjectProperties(anime, updates, func(fullKeyName string, field *reflect.StructField, property *reflect.Value, newValue reflect.Value) (bool, error) {
 		switch fullKeyName {
 		case "Custom:ShoboiID":
 			oldValue := anime.GetMapping("shoboi/anime")
@@ -35,7 +35,7 @@ func (anime *Anime) Update(ctx *aero.Context, data interface{}) error {
 				anime.AddMapping("shoboi/anime", newValue, user.ID)
 			}
 
-			return true
+			return true, nil
 
 		case "Custom:AniListID":
 			oldValue := anime.GetMapping("anilist/anime")
@@ -48,10 +48,10 @@ func (anime *Anime) Update(ctx *aero.Context, data interface{}) error {
 				anime.AddMapping("anilist/anime", newValue, user.ID)
 			}
 
-			return true
+			return true, nil
 
 		default:
-			return false
+			return false, nil
 		}
 	})
 }

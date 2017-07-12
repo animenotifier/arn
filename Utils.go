@@ -66,8 +66,12 @@ func GetUserFromContext(ctx *aero.Context) *User {
 	return user
 }
 
+// skipFunc is a function that tells SetObjectProperties whether a property assignment can be skipped
+// because it's manually handled inside the class itself. It can also return an error.
+type skipFunc func(fullKeyName string, field *reflect.StructField, property *reflect.Value, newValue reflect.Value) (bool, error)
+
 // SetObjectProperties updates the object with the given map[string]interface{}
-func SetObjectProperties(rootObj interface{}, updates map[string]interface{}, skip func(fullKeyName string, field *reflect.StructField, property *reflect.Value, newValue reflect.Value) bool) error {
+func SetObjectProperties(rootObj interface{}, updates map[string]interface{}, skip skipFunc) error {
 	var t reflect.Type
 	var v reflect.Value
 	var field reflect.StructField
@@ -109,8 +113,16 @@ func SetObjectProperties(rootObj interface{}, updates map[string]interface{}, sk
 
 		// Is this manually handled by the class so we can skip it?
 		// Also make sure to pass full "key" value here instead of "fieldName".
-		if skip != nil && skip(key, &field, &v, newValue) {
-			continue
+		if skip != nil {
+			canSkip, err := skip(key, &field, &v, newValue)
+
+			if err != nil {
+				return err
+			}
+
+			if canSkip {
+				continue
+			}
 		}
 
 		// Implement special data type cases here
