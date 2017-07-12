@@ -176,6 +176,50 @@ func (list *AnimeList) PrefetchAnime() {
 	}
 }
 
+// NormalizeRatings normalizes all ratings so that they are perfectly stretched among the full scale.
+func (list *AnimeList) NormalizeRatings() {
+	mapped := map[float64]float64{}
+	all := []float64{}
+
+	for _, item := range list.Items {
+		// Zero rating counts as not rated
+		if item.Rating.Overall == 0 {
+			continue
+		}
+
+		_, found := mapped[item.Rating.Overall]
+
+		if !found {
+			mapped[item.Rating.Overall] = item.Rating.Overall
+			all = append(all, item.Rating.Overall)
+		}
+	}
+
+	sort.Slice(all, func(i, j int) bool {
+		return all[i] < all[j]
+	})
+
+	count := len(all)
+
+	// Prevent division by zero
+	if count == 1 {
+		return
+	}
+
+	step := 9.9 / float64(count-1)
+	currentRating := 0.1
+
+	for _, rating := range all {
+		mapped[rating] = currentRating
+		currentRating += step
+	}
+
+	for _, item := range list.Items {
+		item.Rating.Overall = mapped[item.Rating.Overall]
+		item.Rating.Clamp()
+	}
+}
+
 // StreamAnimeLists returns a stream of all anime.
 func StreamAnimeLists() (chan *AnimeList, error) {
 	objects, err := DB.All("AnimeList")
