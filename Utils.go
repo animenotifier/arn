@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/aerogo/aero"
+	"github.com/animenotifier/kitsu"
 	"github.com/animenotifier/mal"
 	shortid "github.com/ventu-io/go-shortid"
 	"github.com/xrash/smetrics"
@@ -207,6 +208,24 @@ func MyAnimeListStatusToARNStatus(status string) string {
 	case mal.AnimeListStatusHold:
 		return AnimeListStatusHold
 	case mal.AnimeListStatusDropped:
+		return AnimeListStatusDropped
+	default:
+		return ""
+	}
+}
+
+// KitsuStatusToARNStatus ...
+func KitsuStatusToARNStatus(status string) string {
+	switch status {
+	case kitsu.AnimeListStatusCompleted:
+		return AnimeListStatusCompleted
+	case kitsu.AnimeListStatusWatching:
+		return AnimeListStatusWatching
+	case kitsu.AnimeListStatusPlanned:
+		return AnimeListStatusPlanned
+	case kitsu.AnimeListStatusHold:
+		return AnimeListStatusHold
+	case kitsu.AnimeListStatusDropped:
 		return AnimeListStatusDropped
 	default:
 		return ""

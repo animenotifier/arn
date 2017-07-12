@@ -15,6 +15,9 @@ type AniListToAnime ServiceMatch
 // MyAnimeListToAnime ...
 type MyAnimeListToAnime ServiceMatch
 
+// KitsuToAnime ...
+type KitsuToAnime ServiceMatch
+
 // GetAniListToAnime ...
 func GetAniListToAnime(aniListID string) (*AniListToAnime, error) {
 	obj, err := DB.Get("AniListToAnime", aniListID)
@@ -35,4 +38,12 @@ func GetMyAnimeListToAnime(malID string) (*MyAnimeListToAnime, error) {
 	}
 
 	return obj.(*MyAnimeListToAnime), nil
+}
+
+// GetKitsuToAnime ...
+func GetKitsuToAnime(kitsuID string) (*KitsuToAnime, error) {
+	return &KitsuToAnime{
+		AnimeID:   kitsuID,
+		ServiceID: kitsuID,
+	}, nil
 }
