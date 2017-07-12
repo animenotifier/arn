@@ -280,6 +280,28 @@ func (anime *Anime) ShoboiEpisodes() []*AnimeEpisode {
 
 // TwistEpisodes returns a slice of episode info from twist.moe.
 func (anime *Anime) TwistEpisodes() []*AnimeEpisode {
+	var cache ListOfIDs
+	err := DB.GetObject("Cache", "animetwist index", &cache)
+
+	if err != nil {
+		return nil
+	}
+
+	// Does the index contain the ID?
+	found := false
+
+	for _, id := range cache.IDList {
+		if id == anime.ID {
+			found = true
+			break
+		}
+	}
+
+	// If the ID is not the index we don't need to query the feed
+	if !found {
+		return nil
+	}
+
 	// Get twist.moe feed
 	feed, err := twist.GetFeedByKitsuID(anime.ID)
 
