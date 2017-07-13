@@ -2,7 +2,6 @@ package arn
 
 import (
 	"encoding/json"
-	"fmt"
 	"sort"
 	"strconv"
 	"strings"
@@ -78,6 +77,14 @@ func (anime *Anime) Characters() *AnimeCharacters {
 	}
 
 	anime.characters, _ = GetAnimeCharacters(anime.ID)
+
+	if anime.characters != nil {
+		// Sort by role
+		sort.Slice(anime.characters.Items, func(i, j int) bool {
+			// A little trick because "main" < "supporting"
+			return anime.characters.Items[i].Role < anime.characters.Items[j].Role
+		})
+	}
 
 	return anime.characters
 }
@@ -416,11 +423,11 @@ func (anime *Anime) EpisodeByNumber(number int) *AnimeEpisode {
 }
 
 // RefreshAnimeCharacters ...
-func (anime *Anime) RefreshAnimeCharacters() error {
+func (anime *Anime) RefreshAnimeCharacters() (*AnimeCharacters, error) {
 	resp, err := kitsu.GetAnimeCharactersForAnime(anime.ID)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	animeCharacters := &AnimeCharacters{
@@ -436,8 +443,6 @@ func (anime *Anime) RefreshAnimeCharacters() error {
 		role := incl.Attributes["role"].(string)
 		characterID := incl.Relationships.Character.Data.ID
 
-		fmt.Println(role, characterID)
-
 		animeCharacter := &AnimeCharacter{
 			CharacterID: characterID,
 			Role:        role,
@@ -446,9 +451,7 @@ func (anime *Anime) RefreshAnimeCharacters() error {
 		animeCharacters.Items = append(animeCharacters.Items, animeCharacter)
 	}
 
-	PrettyPrint(animeCharacters)
-
-	return animeCharacters.Save()
+	return animeCharacters, animeCharacters.Save()
 }
 
 // StreamAnime returns a stream of all anime.

@@ -23,7 +23,7 @@ type SoundTrack struct {
 
 // Link returns the permalink for the track.
 func (track *SoundTrack) Link() string {
-	return "/tracks/" + track.ID
+	return "/track/" + track.ID
 }
 
 // Anime fetches all tagged anime of the sound track.
