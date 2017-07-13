@@ -125,7 +125,14 @@ func (user *User) IsActive() bool {
 		return false
 	}
 
-	return true
+	lastSeen, _ := time.Parse(time.RFC3339, user.LastSeen)
+	oneWeekAgo := time.Now().Add(-7 * 24 * time.Hour)
+
+	if lastSeen.Unix() > oneWeekAgo.Unix() {
+		return true
+	}
+
+	return false
 }
 
 // WebsiteURL adds https:// to the URL.
