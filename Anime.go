@@ -2,11 +2,13 @@ package arn
 
 import (
 	"encoding/json"
+	"fmt"
 	"sort"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/animenotifier/kitsu"
 	"github.com/animenotifier/shoboi"
 	"github.com/animenotifier/twist"
 )
@@ -47,6 +49,7 @@ type Anime struct {
 	// CreatedBy     string          `json:"createdBy"`
 	episodes        *AnimeEpisodes
 	upcomingEpisode *UpcomingEpisode
+	characters      *AnimeCharacters
 }
 
 // AnimeImageTypes ...
@@ -66,6 +69,17 @@ func GetAnime(id string) (*Anime, error) {
 	}
 
 	return obj.(*Anime), nil
+}
+
+// Characters ...
+func (anime *Anime) Characters() *AnimeCharacters {
+	if anime.characters != nil {
+		return anime.characters
+	}
+
+	anime.characters, _ = GetAnimeCharacters(anime.ID)
+
+	return anime.characters
 }
 
 // Link returns the URI to the anime page.
@@ -399,6 +413,42 @@ func (anime *Anime) EpisodeByNumber(number int) *AnimeEpisode {
 	}
 
 	return nil
+}
+
+// RefreshAnimeCharacters ...
+func (anime *Anime) RefreshAnimeCharacters() error {
+	resp, err := kitsu.GetAnimeCharactersForAnime(anime.ID)
+
+	if err != nil {
+		return err
+	}
+
+	animeCharacters := &AnimeCharacters{
+		AnimeID: anime.ID,
+		Items:   []*AnimeCharacter{},
+	}
+
+	for _, incl := range resp.Included {
+		if incl.Type != "animeCharacters" {
+			continue
+		}
+
+		role := incl.Attributes["role"].(string)
+		characterID := incl.Relationships.Character.Data.ID
+
+		fmt.Println(role, characterID)
+
+		animeCharacter := &AnimeCharacter{
+			CharacterID: characterID,
+			Role:        role,
+		}
+
+		animeCharacters.Items = append(animeCharacters.Items, animeCharacter)
+	}
+
+	PrettyPrint(animeCharacters)
+
+	return animeCharacters.Save()
 }
 
 // StreamAnime returns a stream of all anime.
