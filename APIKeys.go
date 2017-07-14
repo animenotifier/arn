@@ -89,6 +89,11 @@ type APIKeysData struct {
 		Key string `json:"key"`
 	} `json:"googleAPI"`
 
+	// FCM struct {
+	// 	Key      string `json:"serverKey"`
+	// 	SenderID string `json:"senderId"`
+	// } `json:"fcm"`
+
 	IPInfoDB struct {
 		ID string `json:"id"`
 	} `json:"ipInfoDB"`
@@ -101,4 +106,10 @@ type APIKeysData struct {
 	Osu struct {
 		Secret string `json:"secret"`
 	} `json:"osu"`
+
+	VAPID struct {
+		Subject    string `json:"subject"`
+		PublicKey  string `json:"publicKey"`
+		PrivateKey string `json:"privateKey"`
+	} `json:"vapid"`
 }

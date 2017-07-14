@@ -62,7 +62,12 @@ func (post *Post) ToPostable() Postable {
 // GetPost ...
 func GetPost(id string) (*Post, error) {
 	obj, err := DB.Get("Post", id)
-	return obj.(*Post), err
+
+	if err != nil {
+		return nil, err
+	}
+
+	return obj.(*Post), nil
 }
 
 // StreamPosts returns a stream of all posts.

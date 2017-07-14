@@ -92,6 +92,12 @@ func RegisterUser(user *User) error {
 		Items:  make([]*AnimeListItem, 0),
 	})
 
+	// Add empty push subscriptions
+	DB.Set("PushSubscriptions", user.ID, &PushSubscriptions{
+		UserID: user.ID,
+		Items:  make([]*PushSubscription, 0),
+	})
+
 	if err != nil {
 		return err
 	}
@@ -167,6 +173,12 @@ func (user *User) SmallAvatar() string {
 // LargeAvatar ...
 func (user *User) LargeAvatar() string {
 	return "//media.notify.moe/images/avatars/large/" + user.ID + user.AvatarExtension
+}
+
+// PushSubscriptions ...
+func (user *User) PushSubscriptions() *PushSubscriptions {
+	subs, _ := GetPushSubscriptions(user.ID)
+	return subs
 }
 
 // SetNick changes the user's nickname safely.

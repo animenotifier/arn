@@ -21,6 +21,7 @@ var DB = aerospike.NewDatabase(
 		(*GoogleToUser)(nil),
 		(*NickToUser)(nil),
 		(*Post)(nil),
+		(*PushSubscriptions)(nil),
 		(*SearchIndex)(nil),
 		(*Settings)(nil),
 		(*SoundCloudToSoundTrack)(nil),
