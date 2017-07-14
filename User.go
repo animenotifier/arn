@@ -105,6 +105,31 @@ func RegisterUser(user *User) error {
 	return nil
 }
 
+// SendNotification ...
+func (user *User) SendNotification(notification *Notification) {
+	subs := user.PushSubscriptions()
+	expired := []*PushSubscription{}
+
+	for _, sub := range subs.Items {
+		err := sub.SendNotification(notification)
+
+		if err != nil {
+			if err.Error() == "Subscription expired" {
+				expired = append(expired, sub)
+			}
+		}
+	}
+
+	// Remove expired items
+	if len(expired) > 0 {
+		for _, sub := range expired {
+			subs.Remove(sub)
+		}
+
+		subs.Save()
+	}
+}
+
 // RealName returns the real name of the user.
 func (user *User) RealName() string {
 	if user.LastName == "" {

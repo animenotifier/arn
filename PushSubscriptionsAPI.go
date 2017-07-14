@@ -12,8 +12,7 @@ func (list *PushSubscriptions) Add(sub interface{}) error {
 	subscription := sub.(*PushSubscription)
 
 	if list.Contains(subscription) {
-		return nil
-		// return errors.New("PushSubscription " + subscription.ID() + " has already been added")
+		return errors.New("PushSubscription " + subscription.ID() + " has already been added")
 	}
 
 	subscription.Created = DateTimeUTC()
