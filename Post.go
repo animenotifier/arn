@@ -179,6 +179,22 @@ func (post *Post) Like(userID string) {
 	}
 
 	post.Likes = append(post.Likes, userID)
+
+	// Notify author of the post
+	go func() {
+		likedBy, err := GetUser(userID)
+
+		if err != nil {
+			return
+		}
+
+		post.Author().SendNotification(&Notification{
+			Title:   likedBy.Nick + " liked your post",
+			Message: likedBy.Nick + " liked your post in the thread \"" + post.Thread().Title + "\"",
+			Icon:    "https:" + post.Author().LargeAvatar(),
+			Link:    "https://notify.moe" + post.Author().Link(),
+		})
+	}()
 }
 
 // Unlike ...
