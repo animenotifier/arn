@@ -2,6 +2,7 @@ package arn
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/aerogo/aero"
 	"github.com/animenotifier/arn/autocorrect"
@@ -65,6 +66,46 @@ func (post *Post) Create(ctx *aero.Context) error {
 		return errors.New("Thread does not exist")
 	}
 
+	// Bind to local variable for the upcoming goroutine.
+	oldPosts := thread.Posts
+
+	// Notifications
+	go func() {
+		postsObj, err := DB.GetMany("Post", oldPosts)
+		posts := postsObj.([]*Post)
+
+		if err == nil {
+			notifyUsers := map[string]bool{}
+			notifyUsers[thread.AuthorID] = true
+
+			for _, post := range posts {
+				notifyUsers[post.AuthorID] = true
+			}
+
+			// Exclude author of the new post
+			delete(notifyUsers, post.AuthorID)
+
+			// Notify
+			notification := &Notification{
+				Title:   user.Nick + " replied",
+				Message: fmt.Sprintf("%s replied in the thread \"%s\".", user.Nick, thread.Title),
+				Icon:    "https://notify.moe/images/brand/300",
+				Link:    post.Link(),
+			}
+
+			for notifyUserID := range notifyUsers {
+				notifyUser, err := GetUser(notifyUserID)
+
+				if notifyUser == nil || err != nil {
+					continue
+				}
+
+				notifyUser.SendNotification(notification)
+			}
+		}
+	}()
+
+	// Append to posts
 	thread.Posts = append(thread.Posts, post.ID)
 
 	// Save the parent thread

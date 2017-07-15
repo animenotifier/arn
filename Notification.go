@@ -6,4 +6,5 @@ type Notification struct {
 	Message string `json:"message"`
 	Icon    string `json:"icon"`
 	Image   string `json:"image"`
+	Link    string `json:"link"`
 }
