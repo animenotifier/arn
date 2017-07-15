@@ -202,10 +202,35 @@ func (anime *Anime) Episodes() *AnimeEpisodes {
 	return anime.episodes
 }
 
+// UsersWatching returns a list of users who are watching the anime right now.
+func (anime *Anime) UsersWatching() []*User {
+	users, err := FilterUsers(func(user *User) bool {
+		obj, err := user.AnimeList().Get(anime.ID)
+
+		if err != nil || obj == nil {
+			return false
+		}
+
+		item := obj.(*AnimeListItem)
+		return item.Status == AnimeListStatusWatching
+	})
+
+	if err != nil {
+		return nil
+	}
+
+	return users
+}
+
 // RefreshEpisodes will refresh the episode data.
 func (anime *Anime) RefreshEpisodes() error {
-	// Create blank episode templates
+	// Fetch episodes
 	episodes := anime.Episodes()
+
+	// Save number of available episodes for comparison later
+	oldAvailableCount := episodes.AvailableCount()
+
+	// Create blank episode templates
 	episodes.Items = make([]*AnimeEpisode, anime.EpisodeCount, anime.EpisodeCount)
 
 	for i := 0; i < len(episodes.Items); i++ {
@@ -217,6 +242,26 @@ func (anime *Anime) RefreshEpisodes() error {
 
 	// AnimeTwist
 	episodes.Merge(anime.TwistEpisodes())
+
+	// Count number of available episodes
+	newAvailableCount := episodes.AvailableCount()
+
+	if newAvailableCount > oldAvailableCount {
+		notification := &Notification{
+			Title:   anime.Title.Canonical,
+			Message: "Episode " + strconv.Itoa(newAvailableCount) + " has been released!",
+			Icon:    anime.Image.Small,
+			Link:    anime.Link(),
+		}
+
+		// New episodes have been released.
+		// Notify all users who are watching the anime.
+		go func() {
+			for _, user := range anime.UsersWatching() {
+				user.SendNotification(notification)
+			}
+		}()
+	}
 
 	// Number remaining episodes
 	startNumber := 0
