@@ -251,7 +251,7 @@ func (anime *Anime) RefreshEpisodes() error {
 			Title:   anime.Title.Canonical,
 			Message: "Episode " + strconv.Itoa(newAvailableCount) + " has been released!",
 			Icon:    anime.Image.Small,
-			Link:    anime.Link(),
+			Link:    "https://notify.moe" + anime.Link(),
 		}
 
 		// New episodes have been released.
