@@ -107,6 +107,11 @@ func RegisterUser(user *User) error {
 
 // SendNotification ...
 func (user *User) SendNotification(notification *Notification) {
+	// Don't ever send notifications in development mode
+	if IsDevelopment() {
+		return
+	}
+
 	subs := user.PushSubscriptions()
 	expired := []*PushSubscription{}
 
