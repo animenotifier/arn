@@ -15,31 +15,58 @@ import (
 var setNickMutex sync.Mutex
 var setEmailMutex sync.Mutex
 
+// UserNew ...
+type UserNew struct {
+	ID         string       `json:"id"`
+	Nick       string       `json:"nick" editable:"true"`
+	FirstName  string       `json:"firstName"`
+	LastName   string       `json:"lastName"`
+	Email      string       `json:"email"`
+	Role       string       `json:"role"`
+	Registered string       `json:"registered"`
+	LastLogin  string       `json:"lastLogin"`
+	LastSeen   string       `json:"lastSeen"`
+	Gender     string       `json:"gender"`
+	Language   string       `json:"language"`
+	Tagline    string       `json:"tagline" editable:"true"`
+	Website    string       `json:"website" editable:"true"`
+	IP         string       `json:"ip"`
+	UserAgent  string       `json:"agent"`
+	Balance    int          `json:"balance"`
+	Avatar     UserAvatar   `json:"avatar"`
+	AgeRange   UserAgeRange `json:"ageRange"`
+	Location   UserLocation `json:"location"`
+	Accounts   UserAccounts `json:"accounts"`
+	Browser    UserBrowser  `json:"browser"`
+	OS         UserOS       `json:"os"`
+	Following  []string     `json:"following"`
+}
+
 // User ...
 type User struct {
-	ID              string       `json:"id"`
-	Nick            string       `json:"nick" editable:"true"`
-	FirstName       string       `json:"firstName"`
-	LastName        string       `json:"lastName"`
-	Email           string       `json:"email"`
-	Role            string       `json:"role"`
-	Registered      string       `json:"registered"`
-	LastLogin       string       `json:"lastLogin"`
-	LastSeen        string       `json:"lastSeen"`
-	Gender          string       `json:"gender"`
-	Language        string       `json:"language"`
-	AvatarExtension string       `json:"avatar"`
-	Tagline         string       `json:"tagline" editable:"true"`
-	Website         string       `json:"website" editable:"true"`
-	IP              string       `json:"ip"`
-	UserAgent       string       `json:"agent"`
-	Balance         int          `json:"balance"`
-	AgeRange        UserAgeRange `json:"ageRange"`
-	Location        UserLocation `json:"location"`
-	Accounts        UserAccounts `json:"accounts"`
-	Browser         UserBrowser  `json:"browser"`
-	OS              UserOS       `json:"os"`
-	Following       []string     `json:"following"`
+	ID         string       `json:"id"`
+	Nick       string       `json:"nick" editable:"true"`
+	FirstName  string       `json:"firstName"`
+	LastName   string       `json:"lastName"`
+	Email      string       `json:"email"`
+	Role       string       `json:"role"`
+	Registered string       `json:"registered"`
+	LastLogin  string       `json:"lastLogin"`
+	LastSeen   string       `json:"lastSeen"`
+	Gender     string       `json:"gender"`
+	Language   string       `json:"language"`
+	Tagline    string       `json:"tagline" editable:"true"`
+	Website    string       `json:"website" editable:"true"`
+	IP         string       `json:"ip"`
+	UserAgent  string       `json:"agent"`
+	Balance    int          `json:"balance"`
+	Avatar     string       `json:"avatar"`
+	AgeRange   UserAgeRange `json:"ageRange"`
+	Location   UserLocation `json:"location"`
+	Accounts   UserAccounts `json:"accounts"`
+	Browser    UserBrowser  `json:"browser"`
+	OS         UserOS       `json:"os"`
+	Following  []string     `json:"following"`
 }
 
 // NewUser creates an empty user object with a unique ID.
@@ -195,17 +222,17 @@ func (user *User) CoverImageURL() string {
 
 // HasAvatar ...
 func (user *User) HasAvatar() bool {
-	return user.AvatarExtension != ""
+	return user.Avatar != ""
 }
 
 // SmallAvatar ...
 func (user *User) SmallAvatar() string {
-	return "//media.notify.moe/images/avatars/small/" + user.ID + user.AvatarExtension
+	return "//media.notify.moe/images/avatars/small/" + user.ID + user.Avatar
 }
 
 // LargeAvatar ...
 func (user *User) LargeAvatar() string {
-	return "//media.notify.moe/images/avatars/large/" + user.ID + user.AvatarExtension
+	return "//media.notify.moe/images/avatars/large/" + user.ID + user.Avatar
 }
 
 // Gravatar ...
