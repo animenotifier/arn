@@ -52,6 +52,17 @@ func NewSettings(userID string) *Settings {
 	}
 }
 
+// GetSettings ...
+func GetSettings(userID string) (*Settings, error) {
+	obj, err := DB.Get("Settings", userID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return obj.(*Settings), nil
+}
+
 // User returns the user object for the settings.
 func (settings *Settings) User() *User {
 	if settings.user != nil {

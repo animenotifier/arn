@@ -14,13 +14,13 @@ func (user *User) Posts() []*Post {
 
 // Settings ...
 func (user *User) Settings() *Settings {
-	obj, _ := DB.Get("Settings", user.ID)
-	return obj.(*Settings)
+	obj, _ := GetSettings(user.ID)
+	return obj
 }
 
 // AnimeList ...
 func (user *User) AnimeList() *AnimeList {
-	animeList, _ := GetAnimeList(user)
+	animeList, _ := GetAnimeList(user.ID)
 	return animeList
 }
 

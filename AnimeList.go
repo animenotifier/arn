@@ -244,13 +244,13 @@ func AllAnimeLists() ([]*AnimeList, error) {
 }
 
 // GetAnimeList ...
-func GetAnimeList(user *User) (*AnimeList, error) {
+func GetAnimeList(userID string) (*AnimeList, error) {
 	animeList := &AnimeList{
-		UserID: user.ID,
+		UserID: userID,
 		Items:  []*AnimeListItem{},
 	}
 
-	m, err := DB.GetMap("AnimeList", user.ID)
+	m, err := DB.GetMap("AnimeList", userID)
 
 	if err != nil {
 		return nil, err
