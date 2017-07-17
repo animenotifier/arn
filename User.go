@@ -31,6 +31,7 @@ type User struct {
 	Website         string       `json:"website" editable:"true"`
 	IP              string       `json:"ip"`
 	UserAgent       string       `json:"agent"`
+	Balance         int          `json:"balance"`
 	AgeRange        UserAgeRange `json:"ageRange"`
 	Location        UserLocation `json:"location"`
 	Accounts        UserAccounts `json:"accounts"`
@@ -108,7 +109,7 @@ func RegisterUser(user *User) error {
 // SendNotification ...
 func (user *User) SendNotification(notification *Notification) {
 	// Don't ever send notifications in development mode
-	if IsDevelopment() {
+	if IsDevelopment() && user.ID != "4J6qpK1ve" {
 		return
 	}
 

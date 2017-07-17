@@ -20,6 +20,7 @@ var DB = aerospike.NewDatabase(
 		(*FacebookToUser)(nil),
 		(*GoogleToUser)(nil),
 		(*NickToUser)(nil),
+		(*PayPalPayment)(nil),
 		(*Post)(nil),
 		(*PushSubscriptions)(nil),
 		(*SearchIndex)(nil),
