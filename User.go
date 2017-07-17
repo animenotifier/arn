@@ -2,12 +2,14 @@ package arn
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 	"sync"
 	"time"
 
 	"github.com/animenotifier/arn/autocorrect"
 	"github.com/animenotifier/arn/validator"
+	gravatar "github.com/ungerik/go-gravatar"
 )
 
 var setNickMutex sync.Mutex
@@ -204,6 +206,15 @@ func (user *User) SmallAvatar() string {
 // LargeAvatar ...
 func (user *User) LargeAvatar() string {
 	return "//media.notify.moe/images/avatars/large/" + user.ID + user.AvatarExtension
+}
+
+// Gravatar ...
+func (user *User) Gravatar() string {
+	if user.Email == "" {
+		return ""
+	}
+
+	return gravatar.SecureUrl(user.Email) + "?s=" + fmt.Sprint(AvatarMaxSize)
 }
 
 // PushSubscriptions ...

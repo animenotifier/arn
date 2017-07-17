@@ -150,6 +150,22 @@ func (thread *Thread) Like(userID string) {
 	}
 
 	thread.Likes = append(thread.Likes, userID)
+
+	// Notify author of the thread
+	go func() {
+		likedBy, err := GetUser(userID)
+
+		if err != nil {
+			return
+		}
+
+		thread.Author().SendNotification(&Notification{
+			Title:   likedBy.Nick + " liked your thread",
+			Message: likedBy.Nick + " liked your thread \"" + thread.Title + "\"",
+			Icon:    "https:" + thread.Author().LargeAvatar(),
+			Link:    "https://notify.moe" + thread.Author().Link(),
+		})
+	}()
 }
 
 // Unlike ...
