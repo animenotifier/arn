@@ -227,6 +227,13 @@ func (anime *Anime) RefreshEpisodes() error {
 	// Fetch episodes
 	episodes := anime.Episodes()
 
+	if episodes == nil {
+		episodes = &AnimeEpisodes{
+			AnimeID: anime.ID,
+			Items:   []*AnimeEpisode{},
+		}
+	}
+
 	// Save number of available episodes for comparison later
 	oldAvailableCount := episodes.AvailableCount()
 

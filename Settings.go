@@ -31,6 +31,7 @@ type Settings struct {
 	SortBy        string           `json:"sortBy"`
 	TitleLanguage string           `json:"titleLanguage" editable:"true"`
 	Providers     ServiceProviders `json:"providers"`
+	Avatar        AvatarSettings   `json:"avatar"`
 
 	user *User
 }
@@ -38,6 +39,11 @@ type Settings struct {
 // ServiceProviders ...
 type ServiceProviders struct {
 	Anime string `json:"anime"`
+}
+
+// AvatarSettings ...
+type AvatarSettings struct {
+	Source string `json:"source"`
 }
 
 // NewSettings ...
@@ -48,6 +54,9 @@ func NewSettings(userID string) *Settings {
 		TitleLanguage: TitleLanguageCanonical,
 		Providers: ServiceProviders{
 			Anime: "",
+		},
+		Avatar: AvatarSettings{
+			Source: "",
 		},
 	}
 }
