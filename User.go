@@ -95,8 +95,12 @@ func RegisterUser(user *User) error {
 		Items:  make([]*AnimeListItem, 0),
 	})
 
+	if err != nil {
+		return err
+	}
+
 	// Add empty push subscriptions
-	DB.Set("PushSubscriptions", user.ID, &PushSubscriptions{
+	err = DB.Set("PushSubscriptions", user.ID, &PushSubscriptions{
 		UserID: user.ID,
 		Items:  make([]*PushSubscription, 0),
 	})
@@ -104,6 +108,9 @@ func RegisterUser(user *User) error {
 	if err != nil {
 		return err
 	}
+
+	// Refresh avatar async
+	go user.RefreshAvatar()
 
 	return nil
 }
