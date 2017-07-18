@@ -57,7 +57,8 @@ func NewSettings(userID string) *Settings {
 			Anime: "",
 		},
 		Avatar: AvatarSettings{
-			Source: "",
+			Source:    "",
+			SourceURL: "",
 		},
 	}
 }
