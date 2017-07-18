@@ -43,7 +43,8 @@ type ServiceProviders struct {
 
 // AvatarSettings ...
 type AvatarSettings struct {
-	Source string `json:"source"`
+	Source    string `json:"source" editable:"true"`
+	SourceURL string `json:"sourceUrl" editable:"true"`
 }
 
 // NewSettings ...
@@ -80,9 +81,4 @@ func (settings *Settings) User() *User {
 
 	settings.user, _ = GetUser(settings.UserID)
 	return settings.user
-}
-
-// Save saves the settings in the database.
-func (settings *Settings) Save() error {
-	return DB.Set("Settings", settings.UserID, settings)
 }
