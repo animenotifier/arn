@@ -51,9 +51,9 @@ func GetListOfAnimeCached(cacheKey string) ([]*Anime, error) {
 	return list.([]*Anime), nil
 }
 
-// GetActiveUsersCached ...
-func GetActiveUsersCached() ([]*User, error) {
-	cache, err := GetListOfIDs("Cache", "active users")
+// GetListOfUsersCached ...
+func GetListOfUsersCached(cacheKey string) ([]*User, error) {
+	cache, err := GetListOfIDs("Cache", cacheKey)
 
 	if err != nil {
 		return nil, err

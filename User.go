@@ -40,6 +40,9 @@ type User struct {
 	Browser    UserBrowser  `json:"browser"`
 	OS         UserOS       `json:"os"`
 	Following  []string     `json:"following"`
+
+	settings  *Settings
+	animeList *AnimeList
 }
 
 // NewUser creates an empty user object with a unique ID.
@@ -167,7 +170,7 @@ func (user *User) RegisteredTime() time.Time {
 // IsActive ...
 func (user *User) IsActive() bool {
 	// Exclude people who didn't change their nickname.
-	if user.HasNick() {
+	if !user.HasNick() {
 		return false
 	}
 

@@ -14,14 +14,20 @@ func (user *User) Posts() []*Post {
 
 // Settings ...
 func (user *User) Settings() *Settings {
-	obj, _ := GetSettings(user.ID)
-	return obj
+	if user.settings == nil {
+		user.settings, _ = GetSettings(user.ID)
+	}
+
+	return user.settings
 }
 
 // AnimeList ...
 func (user *User) AnimeList() *AnimeList {
-	animeList, _ := GetAnimeList(user.ID)
-	return animeList
+	if user.animeList == nil {
+		user.animeList, _ = GetAnimeList(user.ID)
+	}
+
+	return user.animeList
 }
 
 // SoundTracks returns the soundtracks posted by the user.
