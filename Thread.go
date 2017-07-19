@@ -73,7 +73,7 @@ func GetThreadsByTag(tag string) ([]*Thread, error) {
 	allTags := (tag == "" || tag == "<nil>")
 
 	for thread := range scan {
-		if allTags || Contains(thread.Tags, tag) {
+		if (allTags && !Contains(thread.Tags, "update")) || Contains(thread.Tags, tag) {
 			threads = append(threads, thread)
 		}
 	}
