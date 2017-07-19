@@ -192,7 +192,12 @@ func (user *User) HasNick() bool {
 
 // WebsiteURL adds https:// to the URL.
 func (user *User) WebsiteURL() string {
-	return "https://" + user.Website
+	return "https://" + user.WebsiteShortURL()
+}
+
+// WebsiteShortURL ...
+func (user *User) WebsiteShortURL() string {
+	return strings.Replace(strings.Replace(user.Website, "https://", "", 1), "http://", "", 1)
 }
 
 // Link returns the URI to the user page.
