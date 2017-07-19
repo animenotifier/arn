@@ -167,7 +167,7 @@ func (user *User) RegisteredTime() time.Time {
 // IsActive ...
 func (user *User) IsActive() bool {
 	// Exclude people who didn't change their nickname.
-	if strings.HasPrefix(user.Nick, "g") || strings.HasPrefix(user.Nick, "fb") || strings.HasPrefix(user.Nick, "t") {
+	if user.HasNick() {
 		return false
 	}
 
@@ -183,6 +183,11 @@ func (user *User) IsActive() bool {
 	}
 
 	return true
+}
+
+// HasNick returns whether the user has a custom nickname.
+func (user *User) HasNick() bool {
+	return !strings.HasPrefix(user.Nick, "g") && !strings.HasPrefix(user.Nick, "fb") && !strings.HasPrefix(user.Nick, "t") && user.Nick != ""
 }
 
 // WebsiteURL adds https:// to the URL.
