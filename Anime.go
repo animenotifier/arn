@@ -253,7 +253,7 @@ func (anime *Anime) RefreshEpisodes() error {
 	// Count number of available episodes
 	newAvailableCount := episodes.AvailableCount()
 
-	if newAvailableCount > oldAvailableCount {
+	if anime.Status != "completed" && newAvailableCount > oldAvailableCount {
 		notification := &Notification{
 			Title:   anime.Title.Canonical,
 			Message: "Episode " + strconv.Itoa(newAvailableCount) + " has been released!",
