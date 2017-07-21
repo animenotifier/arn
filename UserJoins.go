@@ -39,6 +39,25 @@ func (user *User) Follows() *UserFollows {
 	return user.follows
 }
 
+// Followers ...
+func (user *User) Followers() []*User {
+	var followerIDs []string
+
+	for list := range MustStreamUserFollows() {
+		if list.Contains(user.ID) {
+			followerIDs = append(followerIDs, list.UserID)
+		}
+	}
+
+	objects, err := DB.GetMany("User", followerIDs)
+
+	if err != nil {
+		return nil
+	}
+
+	return objects.([]*User)
+}
+
 // SoundTracks returns the soundtracks posted by the user.
 func (user *User) SoundTracks() []*SoundTrack {
 	tracks, _ := GetSoundTracksByUser(user)
