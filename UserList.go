@@ -1,14 +1,9 @@
 package arn
 
-// UserList ...
-type UserList struct {
+// UserFollows ...
+type UserFollows struct {
 	UserID string   `json:"userId"`
 	Items  []string `json:"items"`
-}
-
-// UserFollows is a generic UserList
-type UserFollows struct {
-	UserList
 }
 
 // Save saves the episodes in the database.

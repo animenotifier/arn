@@ -7,8 +7,12 @@ import (
 )
 
 // Add adds an user to the list if it hasn't been added yet.
-func (list *UserList) Add(id interface{}) error {
+func (list *UserFollows) Add(id interface{}) error {
 	userID := id.(string)
+
+	if userID == list.UserID {
+		return errors.New("You can't follow yourself")
+	}
 
 	if list.Contains(userID) {
 		return errors.New("User " + userID + " has already been added")
@@ -16,11 +20,27 @@ func (list *UserList) Add(id interface{}) error {
 
 	list.Items = append(list.Items, userID)
 
+	// Send notification
+	user, err := GetUser(userID)
+
+	if err == nil {
+		follower, err := GetUser(list.UserID)
+
+		if err == nil {
+			user.SendNotification(&Notification{
+				Title:   "You have a new follower!",
+				Message: follower.Nick + " started following you.",
+				Icon:    "https:" + follower.LargeAvatar(),
+				Link:    "https://notify.moe" + follower.Link(),
+			})
+		}
+	}
+
 	return nil
 }
 
 // Remove removes the user ID from the list.
-func (list *UserList) Remove(id interface{}) bool {
+func (list *UserFollows) Remove(id interface{}) bool {
 	userID := id.(string)
 
 	for index, item := range list.Items {
@@ -34,7 +54,7 @@ func (list *UserList) Remove(id interface{}) bool {
 }
 
 // Contains checks if the list contains the user ID already.
-func (list *UserList) Contains(id interface{}) bool {
+func (list *UserFollows) Contains(id interface{}) bool {
 	userID := id.(string)
 
 	for _, item := range list.Items {
@@ -47,7 +67,7 @@ func (list *UserList) Contains(id interface{}) bool {
 }
 
 // Get ...
-func (list *UserList) Get(id interface{}) (interface{}, error) {
+func (list *UserFollows) Get(id interface{}) (interface{}, error) {
 	userID := id.(string)
 
 	for _, item := range list.Items {
@@ -60,21 +80,21 @@ func (list *UserList) Get(id interface{}) (interface{}, error) {
 }
 
 // Set ...
-func (list *UserList) Set(id interface{}, value interface{}) error {
+func (list *UserFollows) Set(id interface{}, value interface{}) error {
 	return errors.New("Not applicable")
 }
 
 // Update ...
-func (list *UserList) Update(id interface{}, updatesObj interface{}) error {
+func (list *UserFollows) Update(id interface{}, updatesObj interface{}) error {
 	return errors.New("Not applicable")
 }
 
 // Authorize returns an error if the given API request is not authorized.
-func (list *UserList) Authorize(ctx *aero.Context) error {
+func (list *UserFollows) Authorize(ctx *aero.Context) error {
 	return AuthorizeIfLoggedInAndOwnData(ctx, "id")
 }
 
 // PostBody returns an item that is passed to methods like Add, Remove, etc.
-func (list *UserList) PostBody(body []byte) interface{} {
+func (list *UserFollows) PostBody(body []byte) interface{} {
 	return string(body)
 }
