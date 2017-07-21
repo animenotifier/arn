@@ -43,6 +43,7 @@ type User struct {
 
 	settings  *Settings
 	animeList *AnimeList
+	follows   *UserFollows
 }
 
 // NewUser creates an empty user object with a unique ID.
@@ -95,7 +96,7 @@ func RegisterUser(user *User) error {
 	// Add empty anime list
 	err = DB.Set("AnimeList", user.ID, &AnimeList{
 		UserID: user.ID,
-		Items:  make([]*AnimeListItem, 0),
+		Items:  []*AnimeListItem{},
 	})
 
 	if err != nil {
@@ -105,8 +106,19 @@ func RegisterUser(user *User) error {
 	// Add empty push subscriptions
 	err = DB.Set("PushSubscriptions", user.ID, &PushSubscriptions{
 		UserID: user.ID,
-		Items:  make([]*PushSubscription, 0),
+		Items:  []*PushSubscription{},
 	})
+
+	if err != nil {
+		return err
+	}
+
+	// Add empty follow list
+	follows := &UserFollows{}
+	follows.UserID = user.ID
+	follows.Items = []string{}
+
+	err = DB.Set("UserFollows", user.ID, follows)
 
 	if err != nil {
 		return err

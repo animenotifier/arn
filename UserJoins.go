@@ -30,6 +30,15 @@ func (user *User) AnimeList() *AnimeList {
 	return user.animeList
 }
 
+// Follows ...
+func (user *User) Follows() *UserFollows {
+	if user.follows == nil {
+		user.follows, _ = GetUserFollows(user.ID)
+	}
+
+	return user.follows
+}
+
 // SoundTracks returns the soundtracks posted by the user.
 func (user *User) SoundTracks() []*SoundTrack {
 	tracks, _ := GetSoundTracksByUser(user)

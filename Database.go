@@ -30,6 +30,7 @@ var DB = aerospike.NewDatabase(
 		(*Thread)(nil),
 		(*TwitterToUser)(nil),
 		(*User)(nil),
+		(*UserFollows)(nil),
 		(*YoutubeToSoundTrack)(nil),
 	},
 )
