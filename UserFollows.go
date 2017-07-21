@@ -11,6 +11,17 @@ func (list *UserFollows) Save() error {
 	return DB.Set("UserFollows", list.UserID, list)
 }
 
+// Users returns a slice of all the users you are following.
+func (list *UserFollows) Users() []*User {
+	objects, err := DB.GetMany("User", list.Items)
+
+	if err != nil {
+		return nil
+	}
+
+	return objects.([]*User)
+}
+
 // GetUserFollows ...
 func GetUserFollows(id string) (*UserFollows, error) {
 	obj, err := DB.Get("UserFollows", id)
