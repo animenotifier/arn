@@ -1,5 +1,11 @@
 package arn
 
+import (
+	"bytes"
+	"strconv"
+	"strings"
+)
+
 // AnimeEpisodes ...
 type AnimeEpisodes struct {
 	AnimeID string          `json:"animeId"`
@@ -32,6 +38,22 @@ func (episodes *AnimeEpisodes) AvailableCount() int {
 	}
 
 	return available
+}
+
+// String returns a text representation of the anime episodes.
+func (episodes *AnimeEpisodes) String() string {
+	b := bytes.Buffer{}
+
+	for _, episode := range episodes.Items {
+		b.WriteString(strconv.Itoa(episode.Number))
+		b.WriteString(" | ")
+		b.WriteString(episode.Title.Japanese)
+		b.WriteString(" | ")
+		b.WriteString(episode.AiringDate.StartDateHuman())
+		b.WriteByte('\n')
+	}
+
+	return strings.TrimRight(b.String(), "\n")
 }
 
 // Save saves the episodes in the database.

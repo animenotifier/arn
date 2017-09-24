@@ -2,6 +2,7 @@ package arn
 
 import (
 	"encoding/json"
+	"errors"
 	"sort"
 	"strconv"
 	"strings"
@@ -10,6 +11,7 @@ import (
 	"github.com/animenotifier/kitsu"
 	"github.com/animenotifier/shoboi"
 	"github.com/animenotifier/twist"
+	"github.com/fatih/color"
 )
 
 // Anime ...
@@ -245,10 +247,22 @@ func (anime *Anime) RefreshEpisodes() error {
 	}
 
 	// Shoboi
-	episodes.Merge(anime.ShoboiEpisodes())
+	shoboiEpisodes, err := anime.ShoboiEpisodes()
+
+	if err != nil {
+		color.Red(err.Error())
+	}
+
+	episodes.Merge(shoboiEpisodes)
 
 	// AnimeTwist
-	episodes.Merge(anime.TwistEpisodes())
+	twistEpisodes, err := anime.TwistEpisodes()
+
+	if err != nil {
+		color.Red(err.Error())
+	}
+
+	episodes.Merge(twistEpisodes)
 
 	// Count number of available episodes
 	newAvailableCount := episodes.AvailableCount()
@@ -316,17 +330,17 @@ func (anime *Anime) RefreshEpisodes() error {
 }
 
 // ShoboiEpisodes returns a slice of episode info from cal.syoboi.jp.
-func (anime *Anime) ShoboiEpisodes() []*AnimeEpisode {
+func (anime *Anime) ShoboiEpisodes() ([]*AnimeEpisode, error) {
 	shoboiID := anime.GetMapping("shoboi/anime")
 
 	if shoboiID == "" {
-		return nil
+		return nil, errors.New("Missing shoboi/anime mapping")
 	}
 
 	shoboiAnime, err := shoboi.GetAnime(shoboiID)
 
 	if err != nil {
-		return nil
+		return nil, err
 	}
 
 	arnEpisodes := []*AnimeEpisode{}
@@ -357,16 +371,16 @@ func (anime *Anime) ShoboiEpisodes() []*AnimeEpisode {
 		arnEpisodes = append(arnEpisodes, episode)
 	}
 
-	return arnEpisodes
+	return arnEpisodes, nil
 }
 
 // TwistEpisodes returns a slice of episode info from twist.moe.
-func (anime *Anime) TwistEpisodes() []*AnimeEpisode {
+func (anime *Anime) TwistEpisodes() ([]*AnimeEpisode, error) {
 	var cache ListOfIDs
 	err := DB.GetObject("Cache", "animetwist index", &cache)
 
 	if err != nil {
-		return nil
+		return nil, err
 	}
 
 	// Does the index contain the ID?
@@ -381,14 +395,14 @@ func (anime *Anime) TwistEpisodes() []*AnimeEpisode {
 
 	// If the ID is not the index we don't need to query the feed
 	if !found {
-		return nil
+		return nil, errors.New("Not available in twist.moe anime index")
 	}
 
 	// Get twist.moe feed
 	feed, err := twist.GetFeedByKitsuID(anime.ID)
 
 	if err != nil {
-		return nil
+		return nil, err
 	}
 
 	episodes := feed.Episodes
@@ -410,7 +424,7 @@ func (anime *Anime) TwistEpisodes() []*AnimeEpisode {
 		arnEpisodes = append(arnEpisodes, arnEpisode)
 	}
 
-	return arnEpisodes
+	return arnEpisodes, nil
 }
 
 // UpcomingEpisodes ...
