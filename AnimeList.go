@@ -82,6 +82,10 @@ func (list *AnimeList) User() *User {
 // Sort ...
 func (list *AnimeList) Sort() {
 	sort.Slice(list.Items, func(i, j int) bool {
+		if list.Items[i].Status != AnimeListStatusWatching && list.Items[j].Status != AnimeListStatusWatching {
+			return list.Items[i].Rating.Overall > list.Items[j].Rating.Overall
+		}
+
 		a := list.Items[i].Anime().UpcomingEpisode()
 		b := list.Items[j].Anime().UpcomingEpisode()
 
