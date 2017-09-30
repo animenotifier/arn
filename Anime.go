@@ -28,13 +28,10 @@ type Anime struct {
 	Status        string           `json:"status"`
 	NSFW          int              `json:"nsfw"`
 	Rating        *AnimeRating     `json:"rating"`
+	Popularity    *AnimePopularity `json:"popularity"`
 	Summary       string           `json:"summary"`
 	Trailers      []*ExternalMedia `json:"trailers"`
 	Mappings      []*Mapping       `json:"mappings"`
-
-	// Episodes      []*AnimeEpisode  `json:"episodes"`
-
-	// Adult         bool            `json:"adult"`
 
 	// Hashtag       string          `json:"hashtag"`
 	// Source        string          `json:"source"`
