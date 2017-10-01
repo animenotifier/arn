@@ -436,7 +436,7 @@ func (anime *Anime) UpcomingEpisodes() []*UpcomingEpisode {
 	now := time.Now().UTC().Format(time.RFC3339)
 
 	for _, episode := range anime.Episodes().Items {
-		if episode.AiringDate.Start > now && episode.AiringDate.Start != invalidDate {
+		if episode.AiringDate.Start > now && episode.AiringDate.IsValid() {
 			upcomingEpisodes = append(upcomingEpisodes, &UpcomingEpisode{
 				Anime:   anime,
 				Episode: episode,
@@ -461,7 +461,7 @@ func (anime *Anime) UpcomingEpisode() *UpcomingEpisode {
 	now := time.Now().UTC().Format(time.RFC3339)
 
 	for _, episode := range anime.Episodes().Items {
-		if episode.AiringDate.Start > now && episode.AiringDate.Start != invalidDate {
+		if episode.AiringDate.Start > now && episode.AiringDate.IsValid() {
 			anime.upcomingEpisode = &UpcomingEpisode{
 				Anime:   anime,
 				Episode: episode,
