@@ -1,5 +1,9 @@
 package arn
 
+import (
+	"github.com/animenotifier/arn/validator"
+)
+
 // AnimeEpisode ...
 type AnimeEpisode struct {
 	Number     int               `json:"number"`
@@ -42,11 +46,11 @@ func (a *AnimeEpisode) Merge(b *AnimeEpisode) {
 	}
 
 	if b.AiringDate != nil {
-		if b.AiringDate.Start != "" {
+		if validator.IsValidDate(b.AiringDate.Start) {
 			a.AiringDate.Start = b.AiringDate.Start
 		}
 
-		if b.AiringDate.End != "" {
+		if validator.IsValidDate(b.AiringDate.End) {
 			a.AiringDate.End = b.AiringDate.End
 		}
 	}

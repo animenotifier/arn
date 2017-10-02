@@ -1,12 +1,8 @@
 package arn
 
 import (
-	"strings"
 	"time"
 )
-
-// This date appears quite often and is invalid
-const invalidDate = "292277026596-12-04T15:30:07Z"
 
 // AnimeAiringDate ...
 type AnimeAiringDate struct {
@@ -15,11 +11,6 @@ type AnimeAiringDate struct {
 
 	startHumanReadable string
 	endHumanReadable   string
-}
-
-// IsValid tells you whether the start date is valid.
-func (airing *AnimeAiringDate) IsValid() bool {
-	return airing.Start != "" && airing.Start != invalidDate && !strings.HasPrefix(airing.Start, "0001")
 }
 
 // StartDateHuman ...
