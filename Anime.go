@@ -201,8 +201,8 @@ func (anime *Anime) Episodes() *AnimeEpisodes {
 	return anime.episodes
 }
 
-// UsersWatching returns a list of users who are watching the anime right now.
-func (anime *Anime) UsersWatching() []*User {
+// UsersWatchingOrPlanned returns a list of users who are watching the anime right now.
+func (anime *Anime) UsersWatchingOrPlanned() []*User {
 	users, err := FilterUsers(func(user *User) bool {
 		obj, err := user.AnimeList().Get(anime.ID)
 
@@ -211,7 +211,7 @@ func (anime *Anime) UsersWatching() []*User {
 		}
 
 		item := obj.(*AnimeListItem)
-		return item.Status == AnimeListStatusWatching
+		return item.Status == AnimeListStatusWatching || item.Status == AnimeListStatusPlanned
 	})
 
 	if err != nil {
@@ -275,7 +275,7 @@ func (anime *Anime) RefreshEpisodes() error {
 		// New episodes have been released.
 		// Notify all users who are watching the anime.
 		go func() {
-			for _, user := range anime.UsersWatching() {
+			for _, user := range anime.UsersWatchingOrPlanned() {
 				user.SendNotification(notification)
 			}
 		}()
