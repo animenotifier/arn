@@ -23,3 +23,8 @@ func TestIsValidNick(t *testing.T) {
 	assert.True(t, IsValidNick("Tsun_Dere"))
 	assert.True(t, IsValidNick("Akyoto"))
 }
+
+func TestIsValidEmail(t *testing.T) {
+	assert.False(t, IsValidEmail(""))
+	assert.True(t, IsValidEmail("support@notify.moe"))
+}
