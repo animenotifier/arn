@@ -23,5 +23,10 @@ func TestStreamAnime(t *testing.T) {
 	for anime := range allAnime {
 		assert.NotEmpty(t, anime.ID)
 		assert.Contains(t, validAnimeStatus, anime.Status)
+		assert.NotEmpty(t, anime.Link())
+
+		anime.Episodes()
+		anime.Characters()
+		anime.GetMapping("shoboi/anime")
 	}
 }
