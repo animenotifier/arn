@@ -87,7 +87,7 @@ func (list *AnimeList) Sort() {
 
 		if a.Status != AnimeListStatusWatching && b.Status != AnimeListStatusWatching {
 			if a.Rating.Overall == b.Rating.Overall {
-				return a.Anime().Title.Canonical > b.Anime().Title.Canonical
+				return a.Anime().Title.Canonical < b.Anime().Title.Canonical
 			}
 
 			return a.Rating.Overall > b.Rating.Overall
@@ -98,7 +98,7 @@ func (list *AnimeList) Sort() {
 
 		if epsA == nil && epsB == nil {
 			if a.Rating.Overall == b.Rating.Overall {
-				return a.Anime().Title.Canonical > b.Anime().Title.Canonical
+				return a.Anime().Title.Canonical < b.Anime().Title.Canonical
 			}
 
 			return a.Rating.Overall > b.Rating.Overall
