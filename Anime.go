@@ -358,7 +358,7 @@ func (anime *Anime) ShoboiEpisodes() ([]*AnimeEpisode, error) {
 		}
 
 		// Try to get airing date
-		airingDate := shoboiEpisode.AiringDate()
+		airingDate := shoboiEpisode.AiringDate
 
 		if airingDate != nil {
 			episode.AiringDate = &AnimeAiringDate{
