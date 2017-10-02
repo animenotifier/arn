@@ -82,26 +82,37 @@ func (list *AnimeList) User() *User {
 // Sort ...
 func (list *AnimeList) Sort() {
 	sort.Slice(list.Items, func(i, j int) bool {
-		if list.Items[i].Status != AnimeListStatusWatching && list.Items[j].Status != AnimeListStatusWatching {
-			return list.Items[i].Rating.Overall > list.Items[j].Rating.Overall
+		a := list.Items[i]
+		b := list.Items[j]
+
+		if a.Status != AnimeListStatusWatching && b.Status != AnimeListStatusWatching {
+			if a.Rating.Overall == b.Rating.Overall {
+				return a.Anime().Title.Canonical > b.Anime().Title.Canonical
+			}
+
+			return a.Rating.Overall > b.Rating.Overall
 		}
 
-		a := list.Items[i].Anime().UpcomingEpisode()
-		b := list.Items[j].Anime().UpcomingEpisode()
+		epsA := a.Anime().UpcomingEpisode()
+		epsB := b.Anime().UpcomingEpisode()
 
-		if a == nil && b == nil {
-			return list.Items[i].Rating.Overall > list.Items[j].Rating.Overall
+		if epsA == nil && epsB == nil {
+			if a.Rating.Overall == b.Rating.Overall {
+				return a.Anime().Title.Canonical > b.Anime().Title.Canonical
+			}
+
+			return a.Rating.Overall > b.Rating.Overall
 		}
 
-		if a == nil {
+		if epsA == nil {
 			return false
 		}
 
-		if b == nil {
+		if epsB == nil {
 			return true
 		}
 
-		return a.Episode.AiringDate.Start < b.Episode.AiringDate.Start
+		return epsA.Episode.AiringDate.Start < epsB.Episode.AiringDate.Start
 	})
 }
 
