@@ -32,7 +32,7 @@ func (episodes *AnimeEpisodes) AvailableCount() int {
 	available := 0
 
 	for _, episode := range episodes.Items {
-		if len(episode.Links) > 0 {
+		if episode.Links["twist.moe"] != "" {
 			available++
 		}
 	}
