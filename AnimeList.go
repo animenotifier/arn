@@ -85,7 +85,7 @@ func (list *AnimeList) Sort() {
 		a := list.Items[i]
 		b := list.Items[j]
 
-		if a.Status != AnimeListStatusWatching && b.Status != AnimeListStatusWatching {
+		if (a.Status != AnimeListStatusWatching && a.Status != AnimeListStatusPlanned) && (b.Status != AnimeListStatusWatching && b.Status != AnimeListStatusPlanned) {
 			if a.Rating.Overall == b.Rating.Overall {
 				return a.Anime().Title.Canonical < b.Anime().Title.Canonical
 			}
