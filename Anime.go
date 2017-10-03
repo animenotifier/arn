@@ -588,6 +588,10 @@ func GetAiringAnime() ([]*Anime, error) {
 			return false
 		}
 
+		if anime.Popularity.Total() == 0 {
+			return false
+		}
+
 		// return anime.UpcomingEpisode() != nil || anime.Status == "upcoming"
 		return anime.Status == "current" || anime.Status == "upcoming"
 	})
