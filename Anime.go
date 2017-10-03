@@ -456,11 +456,6 @@ func (anime *Anime) UpcomingEpisodes() []*UpcomingEpisode {
 
 // UpcomingEpisode ...
 func (anime *Anime) UpcomingEpisode() *UpcomingEpisode {
-	// Special hack for K-On with ID 4240 because the episodes are way too far in the future
-	if anime.ID == "4240" {
-		return nil
-	}
-
 	if anime.upcomingEpisode != nil {
 		return anime.upcomingEpisode
 	}
