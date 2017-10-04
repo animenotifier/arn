@@ -19,6 +19,8 @@ var DB = aerospike.NewDatabase(
 		(*EmailToUser)(nil),
 		(*FacebookToUser)(nil),
 		(*GoogleToUser)(nil),
+		(*Item)(nil),
+		(*Inventory)(nil),
 		(*NickToUser)(nil),
 		(*PayPalPayment)(nil),
 		(*Post)(nil),

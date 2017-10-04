@@ -103,6 +103,13 @@ func RegisterUser(user *User) error {
 		return err
 	}
 
+	// Add empty inventory
+	err = DB.Set("Inventory", user.ID, NewInventory(user.ID))
+
+	if err != nil {
+		return err
+	}
+
 	// Add empty push subscriptions
 	err = DB.Set("PushSubscriptions", user.ID, &PushSubscriptions{
 		UserID: user.ID,
