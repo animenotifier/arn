@@ -1,6 +1,8 @@
 package arn
 
-import "errors"
+import (
+	"errors"
+)
 
 // DefaultInventorySlotCount tells you how many slots are available by default in an inventory.
 const DefaultInventorySlotCount = 24
@@ -47,6 +49,17 @@ func (inventory *Inventory) ContainsItem(itemID string) bool {
 	}
 
 	return false
+}
+
+// SwapSlots swaps the slots with the given indices.
+func (inventory *Inventory) SwapSlots(a, b int) error {
+	if a < 0 || b < 0 || a >= len(inventory.Slots) || b >= len(inventory.Slots) {
+		return errors.New("Inventory slot index out of bounds")
+	}
+
+	// Swap
+	inventory.Slots[a], inventory.Slots[b] = inventory.Slots[b], inventory.Slots[a]
+	return nil
 }
 
 // NewInventory creates a new inventory with the default number of slots.

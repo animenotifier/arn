@@ -262,6 +262,18 @@ func (user *User) PushSubscriptions() *PushSubscriptions {
 	return subs
 }
 
+// Inventory ...
+func (user *User) Inventory() *Inventory {
+	inventory, _ := GetInventory(user.ID)
+	return inventory
+}
+
+// ActivateItemEffect ...
+func (user *User) ActivateItemEffect(itemID string) error {
+	fmt.Println(user.Nick, "uses item", itemID)
+	return nil
+}
+
 // SetNick changes the user's nickname safely.
 func (user *User) SetNick(newName string) error {
 	setNickMutex.Lock()

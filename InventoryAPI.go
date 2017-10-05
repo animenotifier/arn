@@ -2,7 +2,6 @@ package arn
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
@@ -11,7 +10,7 @@ import (
 // Actions
 func init() {
 	API.RegisterActions([]*api.Action{
-		// Use item
+		// Use slot
 		&api.Action{
 			Table: "Inventory",
 			Route: "/use/:slot",
@@ -29,10 +28,60 @@ func init() {
 					return errors.New("No item in this slot")
 				}
 
+				if !slot.Item().Consumable {
+					return errors.New("This item is not consumable")
+				}
+
+				// Save item ID in case it gets deleted by slot.Decrease()
+				itemID := slot.ItemID
+
+				// Decrease quantity
+				err = slot.Decrease(1)
+
+				if err != nil {
+					return err
+				}
+
+				// Save inventory
+				err = inventory.Save()
+
+				if err != nil {
+					return err
+				}
+
 				user := GetUserFromContext(ctx)
+				err = user.ActivateItemEffect(itemID)
 
-				fmt.Println("Use item", slot.Item().Name, "on", user.Nick)
+				if err != nil {
+					// Refund item
+					slot.ItemID = itemID
+					slot.Increase(1)
+					return inventory.Save()
+				}
 
+				return err
+			},
+		},
+
+		// Swap slots
+		&api.Action{
+			Table: "Inventory",
+			Route: "/swap/:slot1/:slot2",
+			Run: func(obj interface{}, ctx *aero.Context) error {
+				inventory := obj.(*Inventory)
+				a, err := ctx.GetInt("slot1")
+
+				if err != nil {
+					return err
+				}
+
+				b, err := ctx.GetInt("slot2")
+
+				if err != nil {
+					return err
+				}
+
+				inventory.SwapSlots(a, b)
 				return inventory.Save()
 			},
 		},

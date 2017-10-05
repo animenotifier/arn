@@ -1,5 +1,7 @@
 package arn
 
+import "errors"
+
 // InventorySlot ...
 type InventorySlot struct {
 	ItemID   string `json:"itemId"`
@@ -25,4 +27,24 @@ func (slot *InventorySlot) Item() *Item {
 
 	slot.item, _ = GetItem(slot.ItemID)
 	return slot.item
+}
+
+// Decrease reduces the quantity by the given number.
+func (slot *InventorySlot) Decrease(count uint) error {
+	if slot.Quantity < count {
+		return errors.New("Not enough items")
+	}
+
+	slot.Quantity -= count
+
+	if slot.Quantity == 0 {
+		slot.ItemID = ""
+	}
+
+	return nil
+}
+
+// Increase increases the quantity by the given number.
+func (slot *InventorySlot) Increase(count uint) {
+	slot.Quantity += count
 }
