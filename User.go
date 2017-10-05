@@ -207,6 +207,11 @@ func (user *User) IsActive() bool {
 	return true
 }
 
+// IsPro ...
+func (user *User) IsPro() bool {
+	return user.ID == "4J6qpK1ve"
+}
+
 // HasNick returns whether the user has a custom nickname.
 func (user *User) HasNick() bool {
 	return !strings.HasPrefix(user.Nick, "g") && !strings.HasPrefix(user.Nick, "fb") && !strings.HasPrefix(user.Nick, "t") && user.Nick != ""
