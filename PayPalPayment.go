@@ -13,8 +13,8 @@ type PayPalPayment struct {
 	Created  string `json:"created"`
 }
 
-// AnimeDollar returns the total amount of anime dollars.
-func (payment *PayPalPayment) AnimeDollar() int {
+// Gems returns the total amount of gems.
+func (payment *PayPalPayment) Gems() int {
 	amount, err := strconv.ParseFloat(payment.Amount, 64)
 
 	if err != nil {
