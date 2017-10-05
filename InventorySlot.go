@@ -8,6 +8,11 @@ type InventorySlot struct {
 	item *Item
 }
 
+// IsEmpty ...
+func (slot *InventorySlot) IsEmpty() bool {
+	return slot.ItemID == ""
+}
+
 // Item ...
 func (slot *InventorySlot) Item() *Item {
 	if slot.item != nil {
