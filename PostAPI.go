@@ -5,8 +5,20 @@ import (
 	"fmt"
 
 	"github.com/aerogo/aero"
+	"github.com/aerogo/api"
 	"github.com/animenotifier/arn/autocorrect"
 )
+
+// Actions
+func init() {
+	API.RegisterActions([]*api.Action{
+		// Like post
+		LikeAction("Post"),
+
+		// Unlike post
+		UnlikeAction("Post"),
+	})
+}
 
 // Authorize returns an error if the given API POST request is not authorized.
 func (post *Post) Authorize(ctx *aero.Context) error {
@@ -124,25 +136,6 @@ func (post *Post) Update(ctx *aero.Context, data interface{}) error {
 
 	updates := data.(map[string]interface{})
 	return SetObjectProperties(post, updates, nil)
-}
-
-// Action ...
-func (post *Post) Action(ctx *aero.Context, action string) error {
-	user := GetUserFromContext(ctx)
-
-	if user == nil {
-		return errors.New("Not logged in")
-	}
-
-	switch action {
-	case "like":
-		post.Like(user.ID)
-	case "unlike":
-		post.Unlike(user.ID)
-	default:
-		return errors.New("Unknown action: " + action)
-	}
-	return nil
 }
 
 // Save saves the post object in the database.

@@ -7,7 +7,7 @@ import (
 	"github.com/aerogo/aero"
 )
 
-// Add adds an anime to the list if it hasn't been added yet.
+// Add adds a subscription to the list if it hasn't been added yet.
 func (list *PushSubscriptions) Add(sub interface{}) error {
 	subscription := sub.(*PushSubscription)
 
@@ -22,7 +22,7 @@ func (list *PushSubscriptions) Add(sub interface{}) error {
 	return nil
 }
 
-// Remove removes the anime ID from the list.
+// Remove removes the subscription ID from the list.
 func (list *PushSubscriptions) Remove(id interface{}) bool {
 	subscription := id.(*PushSubscription)
 
@@ -36,7 +36,7 @@ func (list *PushSubscriptions) Remove(id interface{}) bool {
 	return false
 }
 
-// Contains checks if the list contains the anime ID already.
+// Contains checks if the list contains the subscription ID already.
 func (list *PushSubscriptions) Contains(id interface{}) bool {
 	subscription := id.(*PushSubscription)
 
@@ -72,8 +72,8 @@ func (list *PushSubscriptions) Set(id interface{}, value interface{}) error {
 	// 			return errors.New("Missing push subscription properties")
 	// 		}
 
-	// 		if item.ID() != animeID {
-	// 			return errors.New("Incorrect animeId property")
+	// 		if item.ID() != subscriptionID {
+	// 			return errors.New("Incorrect subscriptionId property")
 	// 		}
 
 	// 		item.Edited = DateTimeUTC()
@@ -92,7 +92,7 @@ func (list *PushSubscriptions) Update(id interface{}, updatesObj interface{}) er
 	// subscription := id.(*PushSubscription)
 
 	// for _, item := range list.Items {
-	// 	if item.PushSubscriptionID == animeID {
+	// 	if item.PushSubscriptionID == subscriptionID {
 	// 		err := SetObjectProperties(item, updates, nil)
 	// 		item.Edited = DateTimeUTC()
 

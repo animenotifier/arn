@@ -38,12 +38,29 @@ func (inventory *Inventory) AddItem(itemID string, quantity uint) error {
 	return errors.New("Inventory is full")
 }
 
+// ContainsItem checks if the inventory contains the item ID already.
+func (inventory *Inventory) ContainsItem(itemID string) bool {
+	for _, slot := range inventory.Slots {
+		if slot.ItemID == itemID {
+			return true
+		}
+	}
+
+	return false
+}
+
 // NewInventory creates a new inventory with the default number of slots.
 func NewInventory(userID string) *Inventory {
-	return &Inventory{
+	inventory := &Inventory{
 		UserID: userID,
 		Slots:  make([]*InventorySlot, DefaultInventorySlotCount, DefaultInventorySlotCount),
 	}
+
+	for i := 0; i < len(inventory.Slots); i++ {
+		inventory.Slots[i] = &InventorySlot{}
+	}
+
+	return inventory
 }
 
 // GetInventory ...

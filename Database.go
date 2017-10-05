@@ -1,6 +1,9 @@
 package arn
 
-import "github.com/aerogo/aerospike"
+import (
+	"github.com/aerogo/aerospike"
+	"github.com/aerogo/api"
+)
 
 // DB is the main database client.
 var DB = aerospike.NewDatabase(
@@ -36,3 +39,6 @@ var DB = aerospike.NewDatabase(
 		(*YoutubeToSoundTrack)(nil),
 	},
 )
+
+// API ...
+var API = api.New("/api/", DB)

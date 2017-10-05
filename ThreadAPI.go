@@ -4,8 +4,20 @@ import (
 	"errors"
 
 	"github.com/aerogo/aero"
+	"github.com/aerogo/api"
 	"github.com/animenotifier/arn/autocorrect"
 )
+
+// Actions
+func init() {
+	API.RegisterActions([]*api.Action{
+		// Like thread
+		LikeAction("Thread"),
+
+		// Unlike thread
+		UnlikeAction("Thread"),
+	})
+}
 
 // Authorize returns an error if the given API POST request is not authorized.
 func (thread *Thread) Authorize(ctx *aero.Context) error {
@@ -85,25 +97,6 @@ func (thread *Thread) Update(ctx *aero.Context, data interface{}) error {
 
 	updates := data.(map[string]interface{})
 	return SetObjectProperties(thread, updates, nil)
-}
-
-// Action ...
-func (thread *Thread) Action(ctx *aero.Context, action string) error {
-	user := GetUserFromContext(ctx)
-
-	if user == nil {
-		return errors.New("Not logged in")
-	}
-
-	switch action {
-	case "like":
-		thread.Like(user.ID)
-	case "unlike":
-		thread.Unlike(user.ID)
-	default:
-		return errors.New("Unknown action: " + action)
-	}
-	return nil
 }
 
 // Save saves the thread object in the database.
