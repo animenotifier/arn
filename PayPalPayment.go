@@ -21,7 +21,7 @@ func (payment *PayPalPayment) Gems() int {
 		return 0
 	}
 
-	return int(amount * 100)
+	return int(amount)
 }
 
 // Save saves the paypal payment in the database.
