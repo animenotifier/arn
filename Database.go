@@ -27,6 +27,7 @@ var DB = aerospike.NewDatabase(
 		(*NickToUser)(nil),
 		(*PayPalPayment)(nil),
 		(*Post)(nil),
+		(*Purchase)(nil),
 		(*PushSubscriptions)(nil),
 		(*SearchIndex)(nil),
 		(*Settings)(nil),
