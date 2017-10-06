@@ -26,6 +26,7 @@ type User struct {
 	Registered string       `json:"registered"`
 	LastLogin  string       `json:"lastLogin"`
 	LastSeen   string       `json:"lastSeen"`
+	ProExpires string       `json:"proExpires"`
 	Gender     string       `json:"gender"`
 	Language   string       `json:"language"`
 	Tagline    string       `json:"tagline" editable:"true"`
@@ -209,7 +210,24 @@ func (user *User) IsActive() bool {
 
 // IsPro ...
 func (user *User) IsPro() bool {
-	return user.ID == "4J6qpK1ve"
+	if user.ProExpires == "" {
+		return false
+	}
+
+	return DateTimeUTC() < user.ProExpires
+}
+
+// ExtendProDuration ...
+func (user *User) ExtendProDuration(duration time.Duration) {
+	var startDate time.Time
+
+	if user.ProExpires == "" {
+		startDate = time.Now().UTC()
+	} else {
+		startDate, _ = time.Parse(time.RFC3339, user.ProExpires)
+	}
+
+	user.ProExpires = startDate.Add(duration).Format(time.RFC3339)
 }
 
 // HasNick returns whether the user has a custom nickname.
@@ -275,8 +293,28 @@ func (user *User) Inventory() *Inventory {
 
 // ActivateItemEffect ...
 func (user *User) ActivateItemEffect(itemID string) error {
-	fmt.Println(user.Nick, "uses item", itemID)
-	return nil
+	month := 30 * 24 * time.Hour
+
+	switch itemID {
+	case "pro-account-3":
+		user.ExtendProDuration(3 * month)
+		return user.Save()
+
+	case "pro-account-6":
+		user.ExtendProDuration(6 * month)
+		return user.Save()
+
+	case "pro-account-12":
+		user.ExtendProDuration(12 * month)
+		return user.Save()
+
+	case "pro-account-24":
+		user.ExtendProDuration(24 * month)
+		return user.Save()
+
+	default:
+		return errors.New("Can't activate unknown item: " + itemID)
+	}
 }
 
 // SetNick changes the user's nickname safely.
