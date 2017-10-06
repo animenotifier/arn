@@ -59,3 +59,23 @@ func AllPurchases() ([]*Purchase, error) {
 
 	return all, nil
 }
+
+// FilterPurchases filters all purchases by a custom function.
+func FilterPurchases(filter func(*Purchase) bool) ([]*Purchase, error) {
+	var filtered []*Purchase
+
+	channel := make(chan *Purchase)
+	err := DB.Scan("Purchase", channel)
+
+	if err != nil {
+		return filtered, err
+	}
+
+	for obj := range channel {
+		if filter(obj) {
+			filtered = append(filtered, obj)
+		}
+	}
+
+	return filtered, nil
+}
