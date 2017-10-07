@@ -1,7 +1,10 @@
 package arn
 
-import "sort"
-import "github.com/aerogo/aero"
+import (
+	"sort"
+
+	"github.com/aerogo/markdown"
+)
 
 // Post represents a forum post.
 type Post struct {
@@ -50,7 +53,7 @@ func (post *Post) HTML() string {
 		return post.html
 	}
 
-	post.html = aero.Markdown(post.Text)
+	post.html = markdown.Render(post.Text)
 	return post.html
 }
 

@@ -3,7 +3,7 @@ package arn
 import (
 	"sort"
 
-	"github.com/aerogo/aero"
+	"github.com/aerogo/markdown"
 )
 
 // Thread represents a forum thread.
@@ -44,7 +44,7 @@ func (thread *Thread) HTML() string {
 		return thread.html
 	}
 
-	thread.html = aero.Markdown(thread.Text)
+	thread.html = markdown.Render(thread.Text)
 	return thread.html
 }
 
