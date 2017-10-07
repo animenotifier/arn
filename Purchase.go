@@ -17,6 +17,12 @@ func (purchase *Purchase) Item() *Item {
 	return item
 }
 
+// User returns the user who made the purchase.
+func (purchase *Purchase) User() *User {
+	user, _ := GetUser(purchase.UserID)
+	return user
+}
+
 // NewPurchase creates a new Purchase object with a generated ID.
 func NewPurchase(userID string, itemID string, quantity int, price int, currency string) *Purchase {
 	return &Purchase{
