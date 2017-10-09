@@ -230,6 +230,12 @@ func (user *User) ExtendProDuration(duration time.Duration) {
 	user.ProExpires = startDate.Add(duration).Format(time.RFC3339)
 }
 
+// TimeSinceRegistered ...
+func (user *User) TimeSinceRegistered() time.Duration {
+	registered, _ := time.Parse(time.RFC3339, user.Registered)
+	return time.Since(registered)
+}
+
 // HasNick returns whether the user has a custom nickname.
 func (user *User) HasNick() bool {
 	return !strings.HasPrefix(user.Nick, "g") && !strings.HasPrefix(user.Nick, "fb") && !strings.HasPrefix(user.Nick, "t") && user.Nick != ""
