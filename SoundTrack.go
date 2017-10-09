@@ -26,6 +26,17 @@ func (track *SoundTrack) Link() string {
 	return "/soundtrack/" + track.ID
 }
 
+// HasTag returns true if it contains the given tag.
+func (track *SoundTrack) HasTag(search string) bool {
+	for _, tag := range track.Tags {
+		if tag == search {
+			return true
+		}
+	}
+
+	return false
+}
+
 // Anime fetches all tagged anime of the sound track.
 func (track *SoundTrack) Anime() []*Anime {
 	var animeList []*Anime
