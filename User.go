@@ -105,7 +105,14 @@ func RegisterUser(user *User) error {
 	}
 
 	// Add empty inventory
-	err = DB.Set("Inventory", user.ID, NewInventory(user.ID))
+	err = NewInventory(user.ID).Save()
+
+	if err != nil {
+		return err
+	}
+
+	// Add draft index
+	err = NewDraftIndex(user.ID).Save()
 
 	if err != nil {
 		return err

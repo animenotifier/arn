@@ -32,6 +32,21 @@ func (soundtrack *SoundTrack) Authorize(ctx *aero.Context) error {
 	return nil
 }
 
+// Update updates the soundtrack object.
+func (soundtrack *SoundTrack) Update(ctx *aero.Context, data interface{}) error {
+	user := GetUserFromContext(ctx)
+
+	if user == nil {
+		return errors.New("Not logged in")
+	}
+
+	soundtrack.Edited = DateTimeUTC()
+	soundtrack.EditedBy = user.ID
+
+	updates := data.(map[string]interface{})
+	return SetObjectProperties(soundtrack, updates, nil)
+}
+
 // GetSoundCloudMedia returns an ExternalMedia object for the given Soundcloud link.
 func GetSoundCloudMedia(url string) (*ExternalMedia, error) {
 	var err error
@@ -57,7 +72,6 @@ func GetSoundCloudMedia(url string) (*ExternalMedia, error) {
 	return &ExternalMedia{
 		Service:   "SoundCloud",
 		ServiceID: soundCloudID,
-		Title:     soundcloud.Title,
 	}, nil
 }
 
@@ -75,9 +89,6 @@ func GetYoutubeMedia(url string) (*ExternalMedia, error) {
 		Service:   "Youtube",
 		ServiceID: videoID,
 	}
-
-	// Fetch title
-	media.RefreshMetaData()
 
 	return media, nil
 }

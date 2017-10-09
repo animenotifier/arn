@@ -10,12 +10,15 @@ import (
 // SoundTrack ...
 type SoundTrack struct {
 	ID        string           `json:"id"`
+	Title     string           `json:"title" editable:"true"`
 	Media     []*ExternalMedia `json:"media"`
-	Tags      []string         `json:"tags"`
+	Tags      []string         `json:"tags" editable:"true"`
 	Likes     []string         `json:"likes"`
+	IsDraft   bool             `json:"isDraft"`
 	Created   string           `json:"created"`
 	CreatedBy string           `json:"createdBy"`
 	Edited    string           `json:"edited"`
+	EditedBy  string           `json:"editedBy"`
 
 	mainAnime     *Anime
 	createdByUser *User
@@ -148,10 +151,17 @@ func GetSoundTracksByTag(filterTag string) ([]*SoundTrack, error) {
 	return filteredTracks, nil
 }
 
-// StreamSoundTracks ...
+// StreamSoundTracks returns a stream of all soundtracks.
 func StreamSoundTracks() (chan *SoundTrack, error) {
 	tracks, err := DB.All("SoundTrack")
 	return tracks.(chan *SoundTrack), err
+}
+
+// MustStreamSoundTracks returns a stream of all soundtracks.
+func MustStreamSoundTracks() chan *SoundTrack {
+	stream, err := StreamSoundTracks()
+	PanicOnError(err)
+	return stream
 }
 
 // AllSoundTracks ...
@@ -169,4 +179,23 @@ func AllSoundTracks() ([]*SoundTrack, error) {
 	}
 
 	return all, nil
+}
+
+// FilterSoundTracks filters all soundtracks by a custom function.
+func FilterSoundTracks(filter func(*SoundTrack) bool) ([]*SoundTrack, error) {
+	var filtered []*SoundTrack
+
+	channel, err := StreamSoundTracks()
+
+	if err != nil {
+		return filtered, err
+	}
+
+	for obj := range channel {
+		if filter(obj) {
+			filtered = append(filtered, obj)
+		}
+	}
+
+	return filtered, nil
 }
