@@ -11,7 +11,7 @@ import (
 type SoundTrack struct {
 	ID        string           `json:"id"`
 	Title     string           `json:"title" editable:"true"`
-	Media     []*ExternalMedia `json:"media"`
+	Media     []*ExternalMedia `json:"media" editable:"true"`
 	Tags      []string         `json:"tags" editable:"true"`
 	Likes     []string         `json:"likes"`
 	IsDraft   bool             `json:"isDraft"`

@@ -2,8 +2,8 @@ package arn
 
 // ExternalMedia ...
 type ExternalMedia struct {
-	Service   string `json:"service"`
-	ServiceID string `json:"serviceId"`
+	Service   string `json:"service" editable:"true"`
+	ServiceID string `json:"serviceId" editable:"true"`
 }
 
 // EmbedLink ...
