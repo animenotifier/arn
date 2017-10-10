@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/aerogo/aero"
+	"github.com/aerogo/mirror"
 	"github.com/animenotifier/kitsu"
 	"github.com/animenotifier/mal"
 	shortid "github.com/ventu-io/go-shortid"
@@ -72,62 +73,20 @@ type skipFunc func(fullKeyName string, field *reflect.StructField, property *ref
 
 // SetObjectProperties updates the object with the given map[string]interface{}
 func SetObjectProperties(rootObj interface{}, updates map[string]interface{}, skip skipFunc) error {
-	var t reflect.Type
-	var v reflect.Value
-	var field reflect.StructField
-	var found bool
+	var v *reflect.Value
+	var field *reflect.StructField
+	var err error
 
 	for key, value := range updates {
-		t = reflect.TypeOf(rootObj).Elem()
-		v = reflect.ValueOf(rootObj).Elem()
-
 		if strings.HasPrefix(key, "Custom:") {
 			skip(key, nil, nil, reflect.ValueOf(value))
 			continue
 		}
 
-		// Nested properties
-		parts := strings.Split(key, ".")
+		field, _, v, err = mirror.GetProperty(rootObj, key)
 
-		for _, part := range parts {
-			if strings.HasSuffix(part, "]") {
-				// Array reference
-				arrayStart := strings.Index(part, "[")
-				arrayIndexString := part[arrayStart+1 : len(part)-1]
-				arrayIndex, err := strconv.Atoi(arrayIndexString)
-				part = part[:arrayStart]
-
-				if err != nil {
-					return err
-				}
-
-				// Get the slice first
-				field, found = t.FieldByName(part)
-
-				if !found {
-					return errors.New("Field '" + part + "' does not exist in type " + t.Name())
-				}
-
-				v = reflect.Indirect(v.FieldByName(field.Name))
-
-				// Now get the object referenced at the given index
-				v = reflect.Indirect(v.Index(arrayIndex))
-				t = v.Type()
-			} else {
-				// Non-array reference
-				field, found = t.FieldByName(part)
-
-				if !found {
-					return errors.New("Field '" + part + "' does not exist in type " + t.Name())
-				}
-
-				t = field.Type
-				v = reflect.Indirect(v.FieldByName(field.Name))
-			}
-
-			if t.Kind() == reflect.Ptr {
-				t = t.Elem()
-			}
+		if err != nil {
+			return err
 		}
 
 		newValue := reflect.ValueOf(value)
@@ -140,7 +99,7 @@ func SetObjectProperties(rootObj interface{}, updates map[string]interface{}, sk
 		// Is this manually handled by the class so we can skip it?
 		// Also make sure to pass full "key" value here instead of "fieldName".
 		if skip != nil {
-			canSkip, err := skip(key, &field, &v, newValue)
+			canSkip, err := skip(key, field, v, newValue)
 
 			if err != nil {
 				return err
