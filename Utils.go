@@ -90,14 +90,40 @@ func SetObjectProperties(rootObj interface{}, updates map[string]interface{}, sk
 		parts := strings.Split(key, ".")
 
 		for _, part := range parts {
-			field, found = t.FieldByName(part)
+			if strings.HasSuffix(part, "]") {
+				// Array reference
+				arrayStart := strings.Index(part, "[")
+				arrayIndexString := part[arrayStart+1 : len(part)-1]
+				arrayIndex, err := strconv.Atoi(arrayIndexString)
+				part = part[:arrayStart]
 
-			if !found {
-				return errors.New("Field '" + part + "' does not exist in type " + t.Name())
+				if err != nil {
+					return err
+				}
+
+				// Get the slice first
+				field, found = t.FieldByName(part)
+
+				if !found {
+					return errors.New("Field '" + part + "' does not exist in type " + t.Name())
+				}
+
+				v = reflect.Indirect(v.FieldByName(field.Name))
+
+				// Now get the object referenced at the given index
+				v = reflect.Indirect(v.Index(arrayIndex))
+				t = v.Type()
+			} else {
+				// Non-array reference
+				field, found = t.FieldByName(part)
+
+				if !found {
+					return errors.New("Field '" + part + "' does not exist in type " + t.Name())
+				}
+
+				t = field.Type
+				v = reflect.Indirect(v.FieldByName(field.Name))
 			}
-
-			t = field.Type
-			v = reflect.Indirect(v.FieldByName(field.Name))
 
 			if t.Kind() == reflect.Ptr {
 				t = t.Elem()
