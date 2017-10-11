@@ -12,8 +12,7 @@ func (settings *Settings) Authorize(ctx *aero.Context) error {
 }
 
 // Update updates the settings object.
-func (settings *Settings) Update(ctx *aero.Context, data interface{}) error {
-	updates := data.(map[string]interface{})
+func (settings *Settings) Update(ctx *aero.Context, updates map[string]interface{}) error {
 	return SetObjectProperties(settings, updates, func(fullKeyName string, field *reflect.StructField, property *reflect.Value, newValue reflect.Value) (bool, error) {
 		switch fullKeyName {
 		case "Avatar.Source":

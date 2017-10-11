@@ -86,7 +86,7 @@ func (thread *Thread) Create(ctx *aero.Context) error {
 }
 
 // Update updates the thread object.
-func (thread *Thread) Update(ctx *aero.Context, data interface{}) error {
+func (thread *Thread) Update(ctx *aero.Context, updates map[string]interface{}) error {
 	user := GetUserFromContext(ctx)
 
 	if thread.AuthorID != user.ID {
@@ -94,8 +94,6 @@ func (thread *Thread) Update(ctx *aero.Context, data interface{}) error {
 	}
 
 	thread.Edited = DateTimeUTC()
-
-	updates := data.(map[string]interface{})
 	return SetObjectProperties(thread, updates, nil)
 }
 

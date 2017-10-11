@@ -33,7 +33,7 @@ func (soundtrack *SoundTrack) Authorize(ctx *aero.Context) error {
 }
 
 // Update updates the soundtrack object.
-func (soundtrack *SoundTrack) Update(ctx *aero.Context, data interface{}) error {
+func (soundtrack *SoundTrack) Update(ctx *aero.Context, updates map[string]interface{}) error {
 	user := GetUserFromContext(ctx)
 
 	if user == nil {
@@ -43,7 +43,6 @@ func (soundtrack *SoundTrack) Update(ctx *aero.Context, data interface{}) error 
 	soundtrack.Edited = DateTimeUTC()
 	soundtrack.EditedBy = user.ID
 
-	updates := data.(map[string]interface{})
 	return SetObjectProperties(soundtrack, updates, nil)
 }
 

@@ -85,7 +85,7 @@ func (list *UserFollows) Set(id interface{}, value interface{}) error {
 }
 
 // Update ...
-func (list *UserFollows) Update(id interface{}, updatesObj interface{}) error {
+func (list *UserFollows) Update(id interface{}, updates map[string]interface{}) error {
 	return errors.New("Not applicable")
 }
 

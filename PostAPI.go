@@ -125,7 +125,7 @@ func (post *Post) Create(ctx *aero.Context) error {
 }
 
 // Update updates the post object.
-func (post *Post) Update(ctx *aero.Context, data interface{}) error {
+func (post *Post) Update(ctx *aero.Context, updates map[string]interface{}) error {
 	user := GetUserFromContext(ctx)
 
 	if post.AuthorID != user.ID {
@@ -133,8 +133,6 @@ func (post *Post) Update(ctx *aero.Context, data interface{}) error {
 	}
 
 	post.Edited = DateTimeUTC()
-
-	updates := data.(map[string]interface{})
 	return SetObjectProperties(post, updates, nil)
 }
 

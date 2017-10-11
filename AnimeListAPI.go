@@ -95,8 +95,7 @@ func (list *AnimeList) Set(id interface{}, value interface{}) error {
 }
 
 // Update ...
-func (list *AnimeList) Update(id interface{}, updatesObj interface{}) error {
-	updates := updatesObj.(map[string]interface{})
+func (list *AnimeList) Update(id interface{}, updates map[string]interface{}) error {
 	animeID := id.(string)
 
 	for _, item := range list.Items {
