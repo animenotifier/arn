@@ -46,10 +46,9 @@ func (anime *Anime) VirtualEdit(ctx *aero.Context, key string, newValue reflect.
 		}
 
 		return true, nil
-
-	default:
-		return false, nil
 	}
+
+	return false, nil
 }
 
 // Save saves the anime in the database.
