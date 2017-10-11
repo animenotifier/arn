@@ -67,48 +67,21 @@ func GetUserFromContext(ctx *aero.Context) *User {
 	return user
 }
 
-// skipFunc is a function that tells SetObjectProperties whether a property assignment can be skipped
-// because it's manually handled inside the class itself. It can also return an error.
-type skipFunc func(fullKeyName string, field *reflect.StructField, property *reflect.Value, newValue reflect.Value) (bool, error)
-
 // SetObjectProperties updates the object with the given map[string]interface{}
-func SetObjectProperties(rootObj interface{}, updates map[string]interface{}, skip skipFunc) error {
-	var field *reflect.StructField
-	var v *reflect.Value
-	var err error
-
+func SetObjectProperties(rootObj interface{}, updates map[string]interface{}) error {
 	for key, value := range updates {
-		if strings.HasPrefix(key, "Custom:") {
-			skip(key, nil, nil, reflect.ValueOf(value))
-			continue
-		}
-
-		field, _, v, err = mirror.GetProperty(rootObj, key)
+		field, _, v, err := mirror.GetProperty(rootObj, key)
 
 		if err != nil {
 			return err
 		}
-
-		newValue := reflect.ValueOf(value)
 
 		// Is somebody attempting to edit fields that aren't editable?
 		if field.Tag.Get("editable") != "true" {
 			return errors.New("Field " + key + " is not editable")
 		}
 
-		// Is this manually handled by the class so we can skip it?
-		// Also make sure to pass full "key" value here instead of "fieldName".
-		if skip != nil {
-			canSkip, err := skip(key, field, v, newValue)
-
-			if err != nil {
-				return err
-			}
-
-			if canSkip {
-				continue
-			}
-		}
+		newValue := reflect.ValueOf(value)
 
 		// Implement special data type cases here
 		if v.Kind() == reflect.Int {

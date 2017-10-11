@@ -25,6 +25,12 @@ func (thread *Thread) Authorize(ctx *aero.Context) error {
 		return errors.New("Neither logged in nor in session")
 	}
 
+	user := GetUserFromContext(ctx)
+
+	if thread.AuthorID != user.ID {
+		return errors.New("Can't edit the threads of other users")
+	}
+
 	return nil
 }
 
@@ -85,16 +91,10 @@ func (thread *Thread) Create(ctx *aero.Context) error {
 	return nil
 }
 
-// Edit updates the thread object.
-func (thread *Thread) Edit(ctx *aero.Context, updates map[string]interface{}) error {
-	user := GetUserFromContext(ctx)
-
-	if thread.AuthorID != user.ID {
-		return errors.New("Can't edit the threads of other users")
-	}
-
+// AfterEdit sets the edited date on the thread object.
+func (thread *Thread) AfterEdit(ctx *aero.Context) error {
 	thread.Edited = DateTimeUTC()
-	return SetObjectProperties(thread, updates, nil)
+	return nil
 }
 
 // Save saves the thread object in the database.

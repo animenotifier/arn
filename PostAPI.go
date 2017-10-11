@@ -124,16 +124,10 @@ func (post *Post) Create(ctx *aero.Context) error {
 	return thread.Save()
 }
 
-// Edit updates the post object.
-func (post *Post) Edit(ctx *aero.Context, updates map[string]interface{}) error {
-	user := GetUserFromContext(ctx)
-
-	if post.AuthorID != user.ID {
-		return errors.New("Can't edit the posts of other users")
-	}
-
+// AfterEdit updates the date it has been edited.
+func (post *Post) AfterEdit(ctx *aero.Context) error {
 	post.Edited = DateTimeUTC()
-	return SetObjectProperties(post, updates, nil)
+	return nil
 }
 
 // Save saves the post object in the database.

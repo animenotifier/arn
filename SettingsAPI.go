@@ -12,25 +12,22 @@ func (settings *Settings) Authorize(ctx *aero.Context) error {
 }
 
 // Edit updates the settings object.
-func (settings *Settings) Edit(ctx *aero.Context, updates map[string]interface{}) error {
-	return SetObjectProperties(settings, updates, func(fullKeyName string, field *reflect.StructField, property *reflect.Value, newValue reflect.Value) (bool, error) {
-		switch fullKeyName {
-		case "Avatar.Source":
-			settings.Avatar.Source = newValue.String()
-			settings.Save() // Save needed here because RefreshAvatar fetches the settings on another server
-			settings.User().RefreshAvatar()
-			return true, nil
+func (settings *Settings) Edit(key string, value reflect.Value, newValue reflect.Value) (bool, error) {
+	switch key {
+	case "Avatar.Source":
+		settings.Avatar.Source = newValue.String()
+		settings.Save() // Save needed here because RefreshAvatar fetches the settings on a DIFFERENT server
+		settings.User().RefreshAvatar()
+		return true, nil
 
-		case "Avatar.SourceURL":
-			settings.Avatar.SourceURL = newValue.String()
-			settings.Save() // Save needed here because RefreshAvatar fetches the settings on another server
-			settings.User().RefreshAvatar()
-			return true, nil
+	case "Avatar.SourceURL":
+		settings.Avatar.SourceURL = newValue.String()
+		settings.Save() // Save needed here because RefreshAvatar fetches the settings on a DIFFERENT server
+		settings.User().RefreshAvatar()
+		return true, nil
+	}
 
-		default:
-			return false, nil
-		}
-	})
+	return false, nil
 }
 
 // Save saves the settings in the database.

@@ -94,13 +94,14 @@ func (list *AnimeList) Set(id interface{}, value interface{}) error {
 	return errors.New("Not found")
 }
 
-// Edit ...
-func (list *AnimeList) Edit(id interface{}, updates map[string]interface{}) error {
+// Update ...
+func (list *AnimeList) Update(id interface{}, data interface{}) error {
 	animeID := id.(string)
+	updates := data.(map[string]interface{})
 
 	for _, item := range list.Items {
 		if item.AnimeID == animeID {
-			err := SetObjectProperties(item, updates, nil)
+			err := SetObjectProperties(item, updates)
 			item.Edited = DateTimeUTC()
 
 			item.Rating.Clamp()

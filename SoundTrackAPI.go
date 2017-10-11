@@ -32,18 +32,11 @@ func (soundtrack *SoundTrack) Authorize(ctx *aero.Context) error {
 	return nil
 }
 
-// Edit updates the soundtrack object.
-func (soundtrack *SoundTrack) Edit(ctx *aero.Context, updates map[string]interface{}) error {
-	user := GetUserFromContext(ctx)
-
-	if user == nil {
-		return errors.New("Not logged in")
-	}
-
+// AfterEdit updates the metadata.
+func (soundtrack *SoundTrack) AfterEdit(ctx *aero.Context) error {
 	soundtrack.Edited = DateTimeUTC()
-	soundtrack.EditedBy = user.ID
-
-	return SetObjectProperties(soundtrack, updates, nil)
+	soundtrack.EditedBy = GetUserFromContext(ctx).ID
+	return nil
 }
 
 // GetSoundCloudMedia returns an ExternalMedia object for the given Soundcloud link.

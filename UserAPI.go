@@ -14,43 +14,40 @@ func (user *User) Authorize(ctx *aero.Context) error {
 	return AuthorizeIfLoggedInAndOwnData(ctx, "id")
 }
 
-// Edit updates the user object with the data we received from the PostBody method.
-func (user *User) Edit(ctx *aero.Context, updates map[string]interface{}) error {
-	return SetObjectProperties(user, updates, func(fullKeyName string, field *reflect.StructField, property *reflect.Value, newValue reflect.Value) (bool, error) {
-		// Automatically correct account nicks
-		if strings.HasPrefix(fullKeyName, "Accounts.") && strings.HasSuffix(fullKeyName, ".Nick") {
-			newNick := newValue.String()
-			newNick = autocorrect.FixAccountNick(newNick)
-			property.SetString(newNick)
+// Edit updates the user object.
+func (user *User) Edit(key string, value reflect.Value, newValue reflect.Value) (bool, error) {
+	// Automatically correct account nicks
+	if strings.HasPrefix(key, "Accounts.") && strings.HasSuffix(key, ".Nick") {
+		newNick := newValue.String()
+		newNick = autocorrect.FixAccountNick(newNick)
+		value.SetString(newNick)
 
-			// Refresh osu info if the name changed
-			if fullKeyName == "Accounts.Osu.Nick" {
-				go func() {
-					err := user.RefreshOsuInfo()
+		// Refresh osu info if the name changed
+		if key == "Accounts.Osu.Nick" {
+			go func() {
+				err := user.RefreshOsuInfo()
 
-					if err != nil {
-						color.Red("Error refreshing osu info of user '%s' with osu nick '%s': %v", user.Nick, newNick, err)
-					} else {
-						color.Green("Refreshed osu info of user '%s' with osu nick '%s': %v", user.Nick, newNick, user.Accounts.Osu.PP)
-					}
+				if err != nil {
+					color.Red("Error refreshing osu info of user '%s' with osu nick '%s': %v", user.Nick, newNick, err)
+				} else {
+					color.Green("Refreshed osu info of user '%s' with osu nick '%s': %v", user.Nick, newNick, user.Accounts.Osu.PP)
+				}
 
-					user.Save()
-				}()
-			}
-
-			return true, nil
+				user.Save()
+			}()
 		}
 
-		switch fullKeyName {
-		case "Nick":
-			newNick := newValue.String()
-			err := user.SetNick(newNick)
-			return true, err
+		return true, nil
+	}
 
-		default:
-			return false, nil
-		}
-	})
+	switch key {
+	case "Nick":
+		newNick := newValue.String()
+		err := user.SetNick(newNick)
+		return true, err
+	}
+
+	return false, nil
 }
 
 // Save saves the user object in the database.
