@@ -124,8 +124,8 @@ func (post *Post) Create(ctx *aero.Context) error {
 	return thread.Save()
 }
 
-// Update updates the post object.
-func (post *Post) Update(ctx *aero.Context, updates map[string]interface{}) error {
+// Edit updates the post object.
+func (post *Post) Edit(ctx *aero.Context, updates map[string]interface{}) error {
 	user := GetUserFromContext(ctx)
 
 	if post.AuthorID != user.ID {

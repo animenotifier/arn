@@ -94,8 +94,8 @@ func (list *AnimeList) Set(id interface{}, value interface{}) error {
 	return errors.New("Not found")
 }
 
-// Update ...
-func (list *AnimeList) Update(id interface{}, updates map[string]interface{}) error {
+// Edit ...
+func (list *AnimeList) Edit(id interface{}, updates map[string]interface{}) error {
 	animeID := id.(string)
 
 	for _, item := range list.Items {

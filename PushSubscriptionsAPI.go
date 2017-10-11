@@ -86,9 +86,8 @@ func (list *PushSubscriptions) Set(id interface{}, value interface{}) error {
 	return errors.New("Not implemented")
 }
 
-// Update ...
-func (list *PushSubscriptions) Update(id interface{}, updatesObj interface{}) error {
-	// updates := updatesObj.(map[string]interface{})
+// Edit ...
+func (list *PushSubscriptions) Edit(id interface{}, updates map[string]interface{}) error {
 	// subscription := id.(*PushSubscription)
 
 	// for _, item := range list.Items {

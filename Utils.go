@@ -73,8 +73,8 @@ type skipFunc func(fullKeyName string, field *reflect.StructField, property *ref
 
 // SetObjectProperties updates the object with the given map[string]interface{}
 func SetObjectProperties(rootObj interface{}, updates map[string]interface{}, skip skipFunc) error {
-	var v *reflect.Value
 	var field *reflect.StructField
+	var v *reflect.Value
 	var err error
 
 	for key, value := range updates {

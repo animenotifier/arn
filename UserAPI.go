@@ -14,8 +14,8 @@ func (user *User) Authorize(ctx *aero.Context) error {
 	return AuthorizeIfLoggedInAndOwnData(ctx, "id")
 }
 
-// Update updates the user object with the data we received from the PostBody method.
-func (user *User) Update(ctx *aero.Context, updates map[string]interface{}) error {
+// Edit updates the user object with the data we received from the PostBody method.
+func (user *User) Edit(ctx *aero.Context, updates map[string]interface{}) error {
 	return SetObjectProperties(user, updates, func(fullKeyName string, field *reflect.StructField, property *reflect.Value, newValue reflect.Value) (bool, error) {
 		// Automatically correct account nicks
 		if strings.HasPrefix(fullKeyName, "Accounts.") && strings.HasSuffix(fullKeyName, ".Nick") {

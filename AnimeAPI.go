@@ -18,8 +18,8 @@ func (anime *Anime) Authorize(ctx *aero.Context) error {
 	return nil
 }
 
-// Update updates the anime object with the data we received from the PostBody method.
-func (anime *Anime) Update(ctx *aero.Context, updates map[string]interface{}) error {
+// Edit updates the anime object with the data we received from the PostBody method.
+func (anime *Anime) Edit(ctx *aero.Context, updates map[string]interface{}) error {
 	return SetObjectProperties(anime, updates, func(fullKeyName string, field *reflect.StructField, property *reflect.Value, newValue reflect.Value) (bool, error) {
 		switch fullKeyName {
 		case "Custom:ShoboiID":

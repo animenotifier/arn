@@ -85,8 +85,8 @@ func (thread *Thread) Create(ctx *aero.Context) error {
 	return nil
 }
 
-// Update updates the thread object.
-func (thread *Thread) Update(ctx *aero.Context, updates map[string]interface{}) error {
+// Edit updates the thread object.
+func (thread *Thread) Edit(ctx *aero.Context, updates map[string]interface{}) error {
 	user := GetUserFromContext(ctx)
 
 	if thread.AuthorID != user.ID {

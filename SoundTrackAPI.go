@@ -32,8 +32,8 @@ func (soundtrack *SoundTrack) Authorize(ctx *aero.Context) error {
 	return nil
 }
 
-// Update updates the soundtrack object.
-func (soundtrack *SoundTrack) Update(ctx *aero.Context, updates map[string]interface{}) error {
+// Edit updates the soundtrack object.
+func (soundtrack *SoundTrack) Edit(ctx *aero.Context, updates map[string]interface{}) error {
 	user := GetUserFromContext(ctx)
 
 	if user == nil {
