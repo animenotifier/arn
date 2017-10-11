@@ -15,7 +15,7 @@ func (user *User) Authorize(ctx *aero.Context) error {
 }
 
 // Edit updates the user object.
-func (user *User) Edit(key string, value reflect.Value, newValue reflect.Value) (bool, error) {
+func (user *User) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
 	// Automatically correct account nicks
 	if strings.HasPrefix(key, "Accounts.") && strings.HasSuffix(key, ".Nick") {
 		newNick := newValue.String()

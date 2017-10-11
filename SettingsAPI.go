@@ -12,7 +12,7 @@ func (settings *Settings) Authorize(ctx *aero.Context) error {
 }
 
 // Edit updates the settings object.
-func (settings *Settings) Edit(key string, value reflect.Value, newValue reflect.Value) (bool, error) {
+func (settings *Settings) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
 	switch key {
 	case "Avatar.Source":
 		settings.Avatar.Source = newValue.String()
