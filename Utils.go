@@ -70,7 +70,7 @@ func GetUserFromContext(ctx *aero.Context) *User {
 // SetObjectProperties updates the object with the given map[string]interface{}
 func SetObjectProperties(rootObj interface{}, updates map[string]interface{}) error {
 	for key, value := range updates {
-		field, _, v, err := mirror.GetProperty(rootObj, key)
+		field, _, v, err := mirror.GetField(rootObj, key)
 
 		if err != nil {
 			return err
