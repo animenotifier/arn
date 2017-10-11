@@ -21,9 +21,17 @@ func init() {
 }
 
 // Authorize returns an error if the given API POST request is not authorized.
-func (post *Post) Authorize(ctx *aero.Context) error {
+func (post *Post) Authorize(ctx *aero.Context, action string) error {
 	if !ctx.HasSession() {
 		return errors.New("Neither logged in nor in session")
+	}
+
+	if action == "edit" {
+		user := GetUserFromContext(ctx)
+
+		if post.AuthorID != user.ID {
+			return errors.New("Can't edit the posts of other users")
+		}
 	}
 
 	return nil

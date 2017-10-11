@@ -8,7 +8,7 @@ import (
 )
 
 // Authorize returns an error if the given API POST request is not authorized.
-func (anime *Anime) Authorize(ctx *aero.Context) error {
+func (anime *Anime) Authorize(ctx *aero.Context, action string) error {
 	user := GetUserFromContext(ctx)
 
 	if user == nil || (user.Role != "editor" && user.Role != "admin") {

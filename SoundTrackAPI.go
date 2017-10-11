@@ -24,7 +24,7 @@ type SoundCloudToSoundTrack struct {
 type YoutubeToSoundTrack SoundCloudToSoundTrack
 
 // Authorize returns an error if the given API POST request is not authorized.
-func (soundtrack *SoundTrack) Authorize(ctx *aero.Context) error {
+func (soundtrack *SoundTrack) Authorize(ctx *aero.Context, action string) error {
 	if !ctx.HasSession() {
 		return errors.New("Neither logged in nor in session")
 	}

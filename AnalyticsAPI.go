@@ -7,7 +7,7 @@ import (
 )
 
 // Authorize returns an error if the given API POST request is not authorized.
-func (analytics *Analytics) Authorize(ctx *aero.Context) error {
+func (analytics *Analytics) Authorize(ctx *aero.Context, action string) error {
 	return AuthorizeIfLoggedIn(ctx)
 }
 

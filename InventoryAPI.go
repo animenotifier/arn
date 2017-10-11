@@ -89,7 +89,7 @@ func init() {
 }
 
 // Authorize returns an error if the given API request is not authorized.
-func (inventory *Inventory) Authorize(ctx *aero.Context) error {
+func (inventory *Inventory) Authorize(ctx *aero.Context, action string) error {
 	return AuthorizeIfLoggedInAndOwnData(ctx, "id")
 }
 

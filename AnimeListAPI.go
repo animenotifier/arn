@@ -124,7 +124,7 @@ func (list *AnimeList) Update(id interface{}, data interface{}) error {
 }
 
 // Authorize returns an error if the given API request is not authorized.
-func (list *AnimeList) Authorize(ctx *aero.Context) error {
+func (list *AnimeList) Authorize(ctx *aero.Context, action string) error {
 	return AuthorizeIfLoggedInAndOwnData(ctx, "id")
 }
 
