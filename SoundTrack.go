@@ -22,6 +22,7 @@ type SoundTrack struct {
 
 	mainAnime     *Anime
 	createdByUser *User
+	editedByUser  *User
 }
 
 // Link returns the permalink for the track.
@@ -92,6 +93,23 @@ func (track *SoundTrack) CreatedByUser() *User {
 
 	track.createdByUser = user
 	return track.createdByUser
+}
+
+// EditedByUser returns the user who edited this track last.
+func (track *SoundTrack) EditedByUser() *User {
+	if track.editedByUser != nil {
+		return track.editedByUser
+	}
+
+	user, err := GetUser(track.EditedBy)
+
+	if err != nil {
+		color.Red("Error fetching user: %v", err)
+		return nil
+	}
+
+	track.editedByUser = user
+	return track.editedByUser
 }
 
 // SortSoundTracksLatestFirst ...
