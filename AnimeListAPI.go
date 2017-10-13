@@ -1,8 +1,6 @@
 package arn
 
 import (
-	"encoding/json"
-
 	"github.com/aerogo/aero"
 )
 
@@ -55,17 +53,6 @@ func (list *AnimeList) Contains(animeID string) bool {
 // Authorize returns an error if the given API request is not authorized.
 func (list *AnimeList) Authorize(ctx *aero.Context, action string) error {
 	return AuthorizeIfLoggedInAndOwnData(ctx, "id")
-}
-
-// PostBody returns an item that is passed to methods like Add, Remove, etc.
-func (list *AnimeList) PostBody(body []byte) interface{} {
-	if len(body) > 0 && body[0] == '{' {
-		var updates interface{}
-		PanicOnError(json.Unmarshal(body, &updates))
-		return updates.(map[string]interface{})
-	}
-
-	return string(body)
 }
 
 // Save saves the anime list in the database.
