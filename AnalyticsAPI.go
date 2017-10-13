@@ -4,6 +4,12 @@ import (
 	"encoding/json"
 
 	"github.com/aerogo/aero"
+	"github.com/aerogo/api"
+)
+
+// Force interface implementations
+var (
+	_ api.Newable = (*Analytics)(nil)
 )
 
 // Authorize returns an error if the given API POST request is not authorized.

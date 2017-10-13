@@ -5,7 +5,14 @@ import (
 	"strings"
 
 	"github.com/aerogo/aero"
+	"github.com/aerogo/api"
 	"github.com/animenotifier/arn/autocorrect"
+)
+
+// Force interface implementations
+var (
+	_ api.Newable  = (*SoundTrack)(nil)
+	_ api.Editable = (*SoundTrack)(nil)
 )
 
 // Authorize returns an error if the given API POST request is not authorized.

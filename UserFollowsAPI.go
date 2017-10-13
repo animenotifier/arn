@@ -4,12 +4,49 @@ import (
 	"errors"
 
 	"github.com/aerogo/aero"
+	"github.com/aerogo/api"
 )
 
-// Add adds an user to the list if it hasn't been added yet.
-func (list *UserFollows) Add(id interface{}) error {
-	userID := id.(string)
+// Actions
+func init() {
+	API.RegisterActions([]*api.Action{
+		// Add follow
+		&api.Action{
+			Table: "UserFollows",
+			Route: "/add/:userId",
+			Run: func(obj interface{}, ctx *aero.Context) error {
+				userFollows := obj.(*UserFollows)
+				userID := ctx.Get("userId")
+				err := userFollows.Add(userID)
 
+				if err != nil {
+					return err
+				}
+
+				return userFollows.Save()
+			},
+		},
+
+		// Remove follow
+		&api.Action{
+			Table: "UserFollows",
+			Route: "/remove/:userId",
+			Run: func(obj interface{}, ctx *aero.Context) error {
+				userFollows := obj.(*UserFollows)
+				userID := ctx.Get("userId")
+
+				if !userFollows.Remove(userID) {
+					return errors.New("You are not following this user")
+				}
+
+				return userFollows.Save()
+			},
+		},
+	})
+}
+
+// Add adds an user to the list if it hasn't been added yet.
+func (list *UserFollows) Add(userID string) error {
 	if userID == list.UserID {
 		return errors.New("You can't follow yourself")
 	}
@@ -40,9 +77,7 @@ func (list *UserFollows) Add(id interface{}) error {
 }
 
 // Remove removes the user ID from the list.
-func (list *UserFollows) Remove(id interface{}) bool {
-	userID := id.(string)
-
+func (list *UserFollows) Remove(userID string) bool {
 	for index, item := range list.Items {
 		if item == userID {
 			list.Items = append(list.Items[:index], list.Items[index+1:]...)
@@ -54,9 +89,7 @@ func (list *UserFollows) Remove(id interface{}) bool {
 }
 
 // Contains checks if the list contains the user ID already.
-func (list *UserFollows) Contains(id interface{}) bool {
-	userID := id.(string)
-
+func (list *UserFollows) Contains(userID string) bool {
 	for _, item := range list.Items {
 		if item == userID {
 			return true
@@ -66,35 +99,7 @@ func (list *UserFollows) Contains(id interface{}) bool {
 	return false
 }
 
-// Get ...
-func (list *UserFollows) Get(id interface{}) (interface{}, error) {
-	userID := id.(string)
-
-	for _, item := range list.Items {
-		if item == userID {
-			return item, nil
-		}
-	}
-
-	return nil, errors.New("Not found")
-}
-
-// Set ...
-func (list *UserFollows) Set(id interface{}, value interface{}) error {
-	return errors.New("Not applicable")
-}
-
-// Update ...
-func (list *UserFollows) Update(id interface{}, value interface{}) error {
-	return errors.New("Not applicable")
-}
-
 // Authorize returns an error if the given API request is not authorized.
 func (list *UserFollows) Authorize(ctx *aero.Context, action string) error {
 	return AuthorizeIfLoggedInAndOwnData(ctx, "id")
-}
-
-// PostBody returns an item that is passed to methods like Add, Remove, etc.
-func (list *UserFollows) PostBody(body []byte) interface{} {
-	return string(body)
 }

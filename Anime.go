@@ -206,13 +206,12 @@ func (anime *Anime) Episodes() *AnimeEpisodes {
 // UsersWatchingOrPlanned returns a list of users who are watching the anime right now.
 func (anime *Anime) UsersWatchingOrPlanned() []*User {
 	users, err := FilterUsers(func(user *User) bool {
-		obj, err := user.AnimeList().Get(anime.ID)
+		item := user.AnimeList().Find(anime.ID)
 
-		if err != nil || obj == nil {
+		if item == nil {
 			return false
 		}
 
-		item := obj.(*AnimeListItem)
 		return item.Status == AnimeListStatusWatching || item.Status == AnimeListStatusPlanned
 	})
 

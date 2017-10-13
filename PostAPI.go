@@ -9,6 +9,13 @@ import (
 	"github.com/animenotifier/arn/autocorrect"
 )
 
+// Force interface implementations
+var (
+	_ api.Newable    = (*Post)(nil)
+	_ api.Editable   = (*Post)(nil)
+	_ api.Actionable = (*Post)(nil)
+)
+
 // Actions
 func init() {
 	API.RegisterActions([]*api.Action{

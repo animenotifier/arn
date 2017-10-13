@@ -5,13 +5,69 @@ import (
 	"errors"
 
 	"github.com/aerogo/aero"
+	"github.com/aerogo/api"
 )
 
-// Add adds a subscription to the list if it hasn't been added yet.
-func (list *PushSubscriptions) Add(sub interface{}) error {
-	subscription := sub.(*PushSubscription)
+// Actions
+func init() {
+	API.RegisterActions([]*api.Action{
+		// Add subscription
+		&api.Action{
+			Table: "PushSubscriptions",
+			Route: "/add",
+			Run: func(obj interface{}, ctx *aero.Context) error {
+				subscriptions := obj.(*PushSubscriptions)
 
-	if list.Contains(subscription) {
+				// Parse body
+				body := ctx.RequestBody()
+				var subscription *PushSubscription
+				err := json.Unmarshal(body, &subscription)
+
+				if err != nil {
+					return err
+				}
+
+				// Add subscription
+				err = subscriptions.Add(subscription)
+
+				if err != nil {
+					return err
+				}
+
+				return subscriptions.Save()
+			},
+		},
+
+		// Remove subscription
+		&api.Action{
+			Table: "PushSubscriptions",
+			Route: "/remove",
+			Run: func(obj interface{}, ctx *aero.Context) error {
+				subscriptions := obj.(*PushSubscriptions)
+
+				// Parse body
+				body := ctx.RequestBody()
+				var subscription *PushSubscription
+				err := json.Unmarshal(body, &subscription)
+
+				if err != nil {
+					return err
+				}
+
+				// Remove subscription
+				if !subscriptions.Remove(subscription.ID()) {
+					return errors.New("PushSubscription does not exist")
+				}
+
+				return subscriptions.Save()
+			},
+		},
+	})
+}
+
+// Add adds a subscription to the list if it hasn't been added yet.
+func (list *PushSubscriptions) Add(subscription *PushSubscription) error {
+	if list.Contains(subscription.ID()) {
 		return errors.New("PushSubscription " + subscription.ID() + " has already been added")
 	}
 
@@ -23,11 +79,9 @@ func (list *PushSubscriptions) Add(sub interface{}) error {
 }
 
 // Remove removes the subscription ID from the list.
-func (list *PushSubscriptions) Remove(id interface{}) bool {
-	subscription := id.(*PushSubscription)
-
+func (list *PushSubscriptions) Remove(subscriptionID string) bool {
 	for index, item := range list.Items {
-		if item.ID() == subscription.ID() {
+		if item.ID() == subscriptionID {
 			list.Items = append(list.Items[:index], list.Items[index+1:]...)
 			return true
 		}
@@ -37,11 +91,9 @@ func (list *PushSubscriptions) Remove(id interface{}) bool {
 }
 
 // Contains checks if the list contains the subscription ID already.
-func (list *PushSubscriptions) Contains(id interface{}) bool {
-	subscription := id.(*PushSubscription)
-
+func (list *PushSubscriptions) Contains(subscriptionID string) bool {
 	for _, item := range list.Items {
-		if item.ID() == subscription.ID() {
+		if item.ID() == subscriptionID {
 			return true
 		}
 	}
@@ -49,58 +101,9 @@ func (list *PushSubscriptions) Contains(id interface{}) bool {
 	return false
 }
 
-// Get ...
-func (list *PushSubscriptions) Get(sub interface{}) (interface{}, error) {
-	item := list.Find(sub.(*PushSubscription).ID())
-
-	if item == nil {
-		return nil, errors.New("Not found")
-	}
-
-	return item, nil
-}
-
-// Set ...
-func (list *PushSubscriptions) Set(id interface{}, value interface{}) error {
-	// subscription := id.(*PushSubscription)
-
-	// for index, item := range list.Items {
-	// 	if item.ID() == subscription.ID() {
-	// 		item, ok := value.(*PushSubscription)
-
-	// 		if !ok {
-	// 			return errors.New("Missing push subscription properties")
-	// 		}
-
-	// 		if item.ID() != subscriptionID {
-	// 			return errors.New("Incorrect subscriptionId property")
-	// 		}
-
-	// 		item.Edited = DateTimeUTC()
-	// 		list.Items[index] = item
-
-	// 		return nil
-	// 	}
-	// }
-
-	return errors.New("Not implemented")
-}
-
-// Update ...
-func (list *PushSubscriptions) Update(id interface{}, updates interface{}) error {
-	return errors.New("Not implemented")
-}
-
 // Authorize returns an error if the given API request is not authorized.
 func (list *PushSubscriptions) Authorize(ctx *aero.Context, action string) error {
 	return AuthorizeIfLoggedInAndOwnData(ctx, "id")
-}
-
-// PostBody returns an item that is passed to methods like Add, Remove, etc.
-func (list *PushSubscriptions) PostBody(body []byte) interface{} {
-	var sub *PushSubscription
-	PanicOnError(json.Unmarshal(body, &sub))
-	return sub
 }
 
 // Save saves the push subscriptions in the database.
