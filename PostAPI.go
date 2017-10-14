@@ -18,12 +18,12 @@ var (
 
 // Actions
 func init() {
-	API.RegisterActions([]*api.Action{
+	API.RegisterActions("Post", []*api.Action{
 		// Like post
-		LikeAction("Post"),
+		LikeAction(),
 
 		// Unlike post
-		UnlikeAction("Post"),
+		UnlikeAction(),
 	})
 }
 

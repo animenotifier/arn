@@ -1,14 +1,65 @@
 package arn
 
+import "errors"
+
 // UserFollows ...
 type UserFollows struct {
 	UserID string   `json:"userId"`
 	Items  []string `json:"items"`
 }
 
-// Save saves the episodes in the database.
-func (list *UserFollows) Save() error {
-	return DB.Set("UserFollows", list.UserID, list)
+// Add adds an user to the list if it hasn't been added yet.
+func (list *UserFollows) Add(userID string) error {
+	if userID == list.UserID {
+		return errors.New("You can't follow yourself")
+	}
+
+	if list.Contains(userID) {
+		return errors.New("User " + userID + " has already been added")
+	}
+
+	list.Items = append(list.Items, userID)
+
+	// Send notification
+	user, err := GetUser(userID)
+
+	if err == nil {
+		follower, err := GetUser(list.UserID)
+
+		if err == nil {
+			user.SendNotification(&Notification{
+				Title:   "You have a new follower!",
+				Message: follower.Nick + " started following you.",
+				Icon:    "https:" + follower.LargeAvatar(),
+				Link:    "https://notify.moe" + follower.Link(),
+			})
+		}
+	}
+
+	return nil
+}
+
+// Remove removes the user ID from the list.
+func (list *UserFollows) Remove(userID string) bool {
+	for index, item := range list.Items {
+		if item == userID {
+			list.Items = append(list.Items[:index], list.Items[index+1:]...)
+			return true
+		}
+	}
+
+	return false
+}
+
+// Contains checks if the list contains the user ID already.
+func (list *UserFollows) Contains(userID string) bool {
+	for _, item := range list.Items {
+		if item == userID {
+			return true
+		}
+	}
+
+	return false
 }
 
 // Users returns a slice of all the users you are following.

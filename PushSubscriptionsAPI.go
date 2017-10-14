@@ -10,10 +10,9 @@ import (
 
 // Actions
 func init() {
-	API.RegisterActions([]*api.Action{
+	API.RegisterActions("PushSubscriptions", []*api.Action{
 		// Add subscription
 		&api.Action{
-			Table: "PushSubscriptions",
 			Route: "/add",
 			Run: func(obj interface{}, ctx *aero.Context) error {
 				subscriptions := obj.(*PushSubscriptions)
@@ -40,7 +39,6 @@ func init() {
 
 		// Remove subscription
 		&api.Action{
-			Table: "PushSubscriptions",
 			Route: "/remove",
 			Run: func(obj interface{}, ctx *aero.Context) error {
 				subscriptions := obj.(*PushSubscriptions)

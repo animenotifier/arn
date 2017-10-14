@@ -1,6 +1,7 @@
 package arn
 
 import (
+	"errors"
 	"sort"
 )
 
@@ -10,6 +11,53 @@ type AnimeList struct {
 	Items  []*AnimeListItem `json:"items"`
 
 	user *User
+}
+
+// Add adds an anime to the list if it hasn't been added yet.
+func (list *AnimeList) Add(animeID string) error {
+	if list.Contains(animeID) {
+		return errors.New("Anime " + animeID + " has already been added")
+	}
+
+	creationDate := DateTimeUTC()
+
+	item := &AnimeListItem{
+		AnimeID: animeID,
+		Status:  AnimeListStatusPlanned,
+		Rating:  &AnimeRating{},
+		Created: creationDate,
+		Edited:  creationDate,
+	}
+
+	if item.Anime() == nil {
+		return errors.New("Invalid anime ID")
+	}
+
+	list.Items = append(list.Items, item)
+	return nil
+}
+
+// Remove removes the anime ID from the list.
+func (list *AnimeList) Remove(animeID string) bool {
+	for index, item := range list.Items {
+		if item.AnimeID == animeID {
+			list.Items = append(list.Items[:index], list.Items[index+1:]...)
+			return true
+		}
+	}
+
+	return false
+}
+
+// Contains checks if the list contains the anime ID already.
+func (list *AnimeList) Contains(animeID string) bool {
+	for _, item := range list.Items {
+		if item.AnimeID == animeID {
+			return true
+		}
+	}
+
+	return false
 }
 
 // Find returns the list item with the specified anime ID, if available.

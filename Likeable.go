@@ -15,9 +15,8 @@ type Likeable interface {
 }
 
 // LikeAction ...
-func LikeAction(table string) *api.Action {
+func LikeAction() *api.Action {
 	return &api.Action{
-		Table: table,
 		Route: "/like",
 		Run: func(obj interface{}, ctx *aero.Context) error {
 			likeable := obj.(Likeable)
@@ -34,9 +33,8 @@ func LikeAction(table string) *api.Action {
 }
 
 // UnlikeAction ...
-func UnlikeAction(table string) *api.Action {
+func UnlikeAction() *api.Action {
 	return &api.Action{
-		Table: table,
 		Route: "/unlike",
 		Run: func(obj interface{}, ctx *aero.Context) error {
 			likeable := obj.(Likeable)

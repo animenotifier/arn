@@ -9,10 +9,9 @@ import (
 
 // Actions
 func init() {
-	API.RegisterActions([]*api.Action{
+	API.RegisterActions("Inventory", []*api.Action{
 		// Use slot
 		&api.Action{
-			Table: "Inventory",
 			Route: "/use/:slot",
 			Run: func(obj interface{}, ctx *aero.Context) error {
 				inventory := obj.(*Inventory)
@@ -65,7 +64,6 @@ func init() {
 
 		// Swap slots
 		&api.Action{
-			Table: "Inventory",
 			Route: "/swap/:slot1/:slot2",
 			Run: func(obj interface{}, ctx *aero.Context) error {
 				inventory := obj.(*Inventory)
