@@ -15,15 +15,6 @@ var (
 	_ api.Editable = (*SoundTrack)(nil)
 )
 
-// Authorize returns an error if the given API POST request is not authorized.
-func (soundtrack *SoundTrack) Authorize(ctx *aero.Context, action string) error {
-	if !ctx.HasSession() {
-		return errors.New("Neither logged in nor in session")
-	}
-
-	return nil
-}
-
 // Create sets the data for a new soundtrack with data we received from the API request.
 func (soundtrack *SoundTrack) Create(ctx *aero.Context) error {
 	data, err := ctx.RequestBodyJSONObject()
@@ -165,6 +156,15 @@ func (soundtrack *SoundTrack) Create(ctx *aero.Context) error {
 func (soundtrack *SoundTrack) AfterEdit(ctx *aero.Context) error {
 	soundtrack.Edited = DateTimeUTC()
 	soundtrack.EditedBy = GetUserFromContext(ctx).ID
+	return nil
+}
+
+// Authorize returns an error if the given API POST request is not authorized.
+func (soundtrack *SoundTrack) Authorize(ctx *aero.Context, action string) error {
+	if !ctx.HasSession() {
+		return errors.New("Neither logged in nor in session")
+	}
+
 	return nil
 }
 
