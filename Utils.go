@@ -166,6 +166,17 @@ func OverallRatingName(episodes int) string {
 	return "Overall"
 }
 
+// IsIPv6 tells you whether the given address is IPv6 encoded.
+func IsIPv6(ip string) bool {
+	for i := 0; i < len(ip); i++ {
+		if ip[i] == ':' {
+			return true
+		}
+	}
+
+	return false
+}
+
 // MyAnimeListStatusToARNStatus ...
 func MyAnimeListStatusToARNStatus(status string) string {
 	switch status {
