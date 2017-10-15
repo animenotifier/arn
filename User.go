@@ -42,9 +42,10 @@ type User struct {
 	OS         UserOS       `json:"os"`
 	Following  []string     `json:"following"`
 
-	settings  *Settings
-	animeList *AnimeList
-	follows   *UserFollows
+	settings   *Settings
+	animeList  *AnimeList
+	follows    *UserFollows
+	draftIndex *DraftIndex
 }
 
 // NewUser creates an empty user object with a unique ID.

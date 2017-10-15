@@ -58,6 +58,15 @@ func (user *User) Followers() []*User {
 	return objects.([]*User)
 }
 
+// DraftIndex ...
+func (user *User) DraftIndex() *DraftIndex {
+	if user.draftIndex == nil {
+		user.draftIndex, _ = GetDraftIndex(user.ID)
+	}
+
+	return user.draftIndex
+}
+
 // SoundTracks returns the soundtracks posted by the user.
 func (user *User) SoundTracks() []*SoundTrack {
 	tracks, _ := FilterSoundTracks(func(track *SoundTrack) bool {

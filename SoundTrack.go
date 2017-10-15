@@ -1,9 +1,11 @@
 package arn
 
 import (
+	"errors"
 	"sort"
 	"strings"
 
+	"github.com/animenotifier/arn/autocorrect"
 	"github.com/fatih/color"
 )
 
@@ -114,14 +116,75 @@ func (track *SoundTrack) EditedByUser() *User {
 
 // Publish ...
 func (track *SoundTrack) Publish() error {
+	// No draft
+	if !track.IsDraft {
+		return errors.New("Not a draft")
+	}
+
+	// No media added
+	if len(track.Media) == 0 {
+		return errors.New("No media specified (at least 1 media source is required)")
+	}
+
+	animeFound := false
+
+	for _, tag := range track.Tags {
+		tag = autocorrect.FixTag(tag)
+
+		if strings.HasPrefix(tag, "anime:") {
+			animeID := strings.TrimPrefix(tag, "anime:")
+			_, err := GetAnime(animeID)
+
+			if err != nil {
+				return errors.New("Invalid anime ID")
+			}
+
+			animeFound = true
+		}
+	}
+
+	// No anime found
+	if !animeFound {
+		return errors.New("Need to specify at least one anime")
+	}
+
+	// No tags
+	if len(track.Tags) < 1 {
+		return errors.New("Need to specify at least one tag")
+	}
+
 	track.IsDraft = false
-	return nil
+	draftIndex, err := GetDraftIndex(track.CreatedBy)
+
+	if err != nil {
+		return err
+	}
+
+	if draftIndex.SoundTrackID == "" {
+		return errors.New("Soundtrack draft doesn't exist in the user draft index")
+	}
+
+	draftIndex.SoundTrackID = ""
+
+	return draftIndex.Save()
 }
 
 // Unpublish ...
 func (track *SoundTrack) Unpublish() error {
 	track.IsDraft = true
-	return nil
+	draftIndex, err := GetDraftIndex(track.CreatedBy)
+
+	if err != nil {
+		return err
+	}
+
+	if draftIndex.SoundTrackID != "" {
+		return errors.New("You still have an unfinished draft")
+	}
+
+	draftIndex.SoundTrackID = track.ID
+
+	return draftIndex.Save()
 }
 
 // SortSoundTracksLatestFirst ...

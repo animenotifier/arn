@@ -41,9 +41,8 @@ func (soundtrack *SoundTrack) Create(ctx *aero.Context) error {
 	soundtrack.CreatedBy = user.ID
 	soundtrack.Media = []*ExternalMedia{}
 	soundtrack.Tags = []string{}
-	soundtrack.IsDraft = true
 
-	return nil
+	return soundtrack.Unpublish()
 }
 
 // Edit updates the external media object.
