@@ -2,37 +2,37 @@ package arn
 
 import (
 	"errors"
+	"reflect"
 	"strings"
 
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
-	"github.com/animenotifier/arn/autocorrect"
 )
 
 // Force interface implementations
 var (
 	_ api.Newable  = (*SoundTrack)(nil)
 	_ api.Editable = (*SoundTrack)(nil)
+	_ Publishable  = (*SoundTrack)(nil)
 )
+
+// Actions
+func init() {
+	API.RegisterActions("SoundTrack", []*api.Action{
+		// Publish
+		PublishAction(),
+
+		// Unpublish
+		UnpublishAction(),
+	})
+}
 
 // Create sets the data for a new soundtrack with data we received from the API request.
 func (soundtrack *SoundTrack) Create(ctx *aero.Context) error {
-	data, err := ctx.RequestBodyJSONObject()
+	user := GetUserFromContext(ctx)
 
-	if err != nil {
-		return err
-	}
-
-	userID, ok := ctx.Session().Get("userId").(string)
-
-	if !ok || userID == "" {
+	if user == nil {
 		return errors.New("Not logged in")
-	}
-
-	user, err := GetUser(userID)
-
-	if err != nil {
-		return err
 	}
 
 	soundtrack.ID = GenerateID("SoundTrack")
@@ -40,116 +40,26 @@ func (soundtrack *SoundTrack) Create(ctx *aero.Context) error {
 	soundtrack.Created = DateTimeUTC()
 	soundtrack.CreatedBy = user.ID
 	soundtrack.Media = []*ExternalMedia{}
-
-	// Soundcloud
-	var soundcloud *ExternalMedia
-	url, _ := data["soundcloud"].(string)
-
-	if url != "" {
-		soundcloud, err = GetSoundCloudMedia(url)
-
-		if err != nil {
-			return err
-		}
-
-		// Check that the track hasn't been posted yet
-		_, err = DB.Get("SoundCloudToSoundTrack", soundcloud.ServiceID)
-
-		if err == nil {
-			return errors.New("This Soundcloud track has already been posted")
-		}
-
-		// Add to media
-		soundtrack.Media = append(soundtrack.Media, soundcloud)
-	}
-
-	// Youtube
-	var youtube *ExternalMedia
-	url, _ = data["youtube"].(string)
-
-	if url != "" {
-		youtube, err = GetYoutubeMedia(url)
-
-		if err != nil {
-			return err
-		}
-
-		// Check that the video hasn't been posted yet
-		_, err = DB.Get("YoutubeToSoundTrack", youtube.ServiceID)
-
-		if err == nil {
-			return errors.New("This Youtube video has already been posted")
-		}
-
-		// Add to media
-		soundtrack.Media = append(soundtrack.Media, youtube)
-	}
-
-	// Tags
-	tags, _ := data["tags"].([]interface{})
-	soundtrack.Tags = make([]string, 0)
-
-	animeFound := false
-	for i := range tags {
-		tag := tags[i].(string)
-		tag = autocorrect.FixTag(tag)
-
-		if strings.HasPrefix(tag, "anime:") {
-			animeID := strings.TrimPrefix(tag, "anime:")
-			_, err := GetAnime(animeID)
-
-			if err != nil {
-				return errors.New("Invalid anime ID")
-			}
-
-			animeFound = true
-		}
-
-		if tag != "" {
-			soundtrack.Tags = append(soundtrack.Tags, tag)
-		}
-	}
-
-	// No media added
-	if len(soundtrack.Media) == 0 {
-		return errors.New("No media specified (at least 1 media source is required)")
-	}
-
-	// No anime found
-	if !animeFound {
-		return errors.New("Need to specify at least one anime")
-	}
-
-	// No tags
-	if len(tags) < 1 {
-		return errors.New("Need to specify at least one tag")
-	}
-
-	// Save Soundcloud reference
-	if soundcloud != nil {
-		err = DB.Set("SoundCloudToSoundTrack", soundcloud.ServiceID, &SoundCloudToSoundTrack{
-			ID:           soundcloud.ServiceID,
-			SoundTrackID: soundtrack.ID,
-		})
-
-		if err != nil {
-			return err
-		}
-	}
-
-	// Save Youtube reference
-	if youtube != nil {
-		err = DB.Set("YoutubeToSoundTrack", youtube.ServiceID, &YoutubeToSoundTrack{
-			ID:           youtube.ServiceID,
-			SoundTrackID: soundtrack.ID,
-		})
-
-		if err != nil {
-			return err
-		}
-	}
+	soundtrack.Tags = []string{}
+	soundtrack.IsDraft = true
 
 	return nil
+}
+
+// Edit updates the external media object.
+func (soundtrack *SoundTrack) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
+	if strings.HasPrefix(key, "Media[") && strings.HasSuffix(key, ".Service") {
+		newService := newValue.String()
+
+		if !Contains(ExternalMediaServices, newService) {
+			return true, errors.New("Invalid service name")
+		}
+
+		value.SetString(newService)
+		return true, nil
+	}
+
+	return false, nil
 }
 
 // AfterEdit updates the metadata.

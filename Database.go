@@ -32,13 +32,11 @@ var DB = aerospike.NewDatabase(
 		(*PushSubscriptions)(nil),
 		(*SearchIndex)(nil),
 		(*Settings)(nil),
-		(*SoundCloudToSoundTrack)(nil),
 		(*SoundTrack)(nil),
 		(*Thread)(nil),
 		(*TwitterToUser)(nil),
 		(*User)(nil),
 		(*UserFollows)(nil),
-		(*YoutubeToSoundTrack)(nil),
 	},
 )
 

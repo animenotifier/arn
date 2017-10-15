@@ -1,5 +1,13 @@
 package arn
 
+// ExternalMediaServices is a list of supported media services.
+var ExternalMediaServices = []string{
+	"SoundCloud",
+	"Youtube",
+	"DailyMotion",
+	"NicoVideo",
+}
+
 // ExternalMedia ...
 type ExternalMedia struct {
 	Service   string `json:"service" editable:"true"`
@@ -10,9 +18,13 @@ type ExternalMedia struct {
 func (media *ExternalMedia) EmbedLink() string {
 	switch media.Service {
 	case "SoundCloud":
-		return "https://w.soundcloud.com/player/?url=https://api.soundcloud.com/tracks/" + media.ServiceID + "?auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=true"
+		return "//w.soundcloud.com/player/?url=https://api.soundcloud.com/tracks/" + media.ServiceID + "?auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=true"
 	case "Youtube":
-		return "https://www.youtube.com/embed/" + media.ServiceID
+		return "//www.youtube.com/embed/" + media.ServiceID
+	case "DailyMotion":
+		return "//www.dailymotion.com/embed/video/" + media.ServiceID
+	case "NicoVideo":
+		return "//ext.nicovideo.jp/thumb/" + media.ServiceID
 	default:
 		return ""
 	}

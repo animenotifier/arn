@@ -18,9 +18,14 @@ func init() {
 				subscriptions := obj.(*PushSubscriptions)
 
 				// Parse body
-				body := ctx.RequestBody()
+				body, err := ctx.Request().Body().Bytes()
+
+				if err != nil {
+					return err
+				}
+
 				var subscription *PushSubscription
-				err := json.Unmarshal(body, &subscription)
+				err = json.Unmarshal(body, &subscription)
 
 				if err != nil {
 					return err
@@ -44,9 +49,14 @@ func init() {
 				subscriptions := obj.(*PushSubscriptions)
 
 				// Parse body
-				body := ctx.RequestBody()
+				body, err := ctx.Request().Body().Bytes()
+
+				if err != nil {
+					return err
+				}
+
 				var subscription *PushSubscription
-				err := json.Unmarshal(body, &subscription)
+				err = json.Unmarshal(body, &subscription)
 
 				if err != nil {
 					return err

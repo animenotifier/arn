@@ -12,9 +12,9 @@ type SoundTrack struct {
 	ID        string           `json:"id"`
 	Title     string           `json:"title" editable:"true"`
 	Media     []*ExternalMedia `json:"media" editable:"true"`
-	Tags      []string         `json:"tags" editable:"true"`
+	Tags      []string         `json:"tags" editable:"true" tooltip:"<ul><li><strong>anime:ID</strong> to connect it with anime</li><li><strong>opening</strong> for openings</li><li><strong>ending</strong> for endings</li><li><strong>cover</strong> for covers</li><li><strong>remix</strong> for remixes</li></ul>"`
 	Likes     []string         `json:"likes"`
-	IsDraft   bool             `json:"isDraft"`
+	IsDraft   bool             `json:"isDraft" editable:"true"`
 	Created   string           `json:"created"`
 	CreatedBy string           `json:"createdBy"`
 	Edited    string           `json:"edited"`
@@ -112,6 +112,18 @@ func (track *SoundTrack) EditedByUser() *User {
 	return track.editedByUser
 }
 
+// Publish ...
+func (track *SoundTrack) Publish() error {
+	track.IsDraft = false
+	return nil
+}
+
+// Unpublish ...
+func (track *SoundTrack) Unpublish() error {
+	track.IsDraft = true
+	return nil
+}
+
 // SortSoundTracksLatestFirst ...
 func SortSoundTracksLatestFirst(tracks []*SoundTrack) {
 	sort.Slice(tracks, func(i, j int) bool {
@@ -128,45 +140,6 @@ func GetSoundTrack(id string) (*SoundTrack, error) {
 	}
 
 	return track.(*SoundTrack), nil
-}
-
-// GetSoundTracksByUser ...
-func GetSoundTracksByUser(user *User) ([]*SoundTrack, error) {
-	var userTracks []*SoundTrack
-	tracks, err := StreamSoundTracks()
-
-	if err != nil {
-		return nil, err
-	}
-
-	for track := range tracks {
-		if track.CreatedBy == user.ID {
-			userTracks = append(userTracks, track)
-		}
-	}
-
-	return userTracks, nil
-}
-
-// GetSoundTracksByTag ...
-func GetSoundTracksByTag(filterTag string) ([]*SoundTrack, error) {
-	var filteredTracks []*SoundTrack
-	tracks, err := StreamSoundTracks()
-
-	if err != nil {
-		return nil, err
-	}
-
-	for track := range tracks {
-		for _, tag := range track.Tags {
-			if tag == filterTag {
-				filteredTracks = append(filteredTracks, track)
-				break
-			}
-		}
-	}
-
-	return filteredTracks, nil
 }
 
 // StreamSoundTracks returns a stream of all soundtracks.

@@ -7,8 +7,8 @@ import (
 
 // Force interface implementations
 var (
-	_ IDCollection = (*AnimeList)(nil)
 	_ api.Editable = (*AnimeList)(nil)
+	_ IDCollection = (*AnimeList)(nil)
 )
 
 // Actions

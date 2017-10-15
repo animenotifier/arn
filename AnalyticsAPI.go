@@ -19,7 +19,13 @@ func (analytics *Analytics) Authorize(ctx *aero.Context, action string) error {
 
 // Create creates a new analytics object.
 func (analytics *Analytics) Create(ctx *aero.Context) error {
-	err := json.Unmarshal(ctx.RequestBody(), analytics)
+	body, err := ctx.Request().Body().Bytes()
+
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(body, analytics)
 
 	if err != nil {
 		return err

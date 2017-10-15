@@ -46,7 +46,7 @@ func (post *Post) Authorize(ctx *aero.Context, action string) error {
 
 // Create sets the data for a new post with data we received from the API request.
 func (post *Post) Create(ctx *aero.Context) error {
-	data, err := ctx.RequestBodyJSONObject()
+	data, err := ctx.Request().Body().JSONObject()
 
 	if err != nil {
 		return err
