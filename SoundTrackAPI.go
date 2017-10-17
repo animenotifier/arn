@@ -71,6 +71,16 @@ func (soundtrack *SoundTrack) AfterEdit(ctx *aero.Context) error {
 
 // Delete deletes the object from the database.
 func (soundtrack *SoundTrack) Delete() error {
+	if soundtrack.IsDraft {
+		draftIndex := soundtrack.CreatedByUser().DraftIndex()
+		draftIndex.SoundTrackID = ""
+		err := draftIndex.Save()
+
+		if err != nil {
+			return err
+		}
+	}
+
 	_, err := DB.Delete("SoundTrack", soundtrack.ID)
 	return err
 }
