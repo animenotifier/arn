@@ -11,7 +11,7 @@ type Post struct {
 	ID       PostID   `json:"id"`
 	Text     string   `json:"text" editable:"true"`
 	AuthorID UserID   `json:"authorId"`
-	ThreadID string   `json:"threadId"`
+	ThreadID ThreadID `json:"threadId"`
 	Tags     []string `json:"tags"`
 	Likes    []string `json:"likes"`
 	Created  UTCDate  `json:"created"`
