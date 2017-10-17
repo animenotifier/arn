@@ -48,8 +48,9 @@ type Anime struct {
 	// Created       string          `json:"created"`
 	// CreatedBy     string          `json:"createdBy"`
 	episodes        *AnimeEpisodes
-	upcomingEpisode *UpcomingEpisode
+	relations       *AnimeRelations
 	characters      *AnimeCharacters
+	upcomingEpisode *UpcomingEpisode
 }
 
 // AnimeImageTypes ...
@@ -90,6 +91,16 @@ func (anime *Anime) Characters() *AnimeCharacters {
 	return anime.characters
 }
 
+// Relations ...
+func (anime *Anime) Relations() *AnimeRelations {
+	if anime.relations != nil {
+		return anime.relations
+	}
+
+	anime.relations, _ = GetAnimeRelations(anime.ID)
+	return anime.relations
+}
+
 // Link returns the URI to the anime page.
 func (anime *Anime) Link() string {
 	return "/anime/" + anime.ID
@@ -99,11 +110,6 @@ func (anime *Anime) Link() string {
 func (anime *Anime) PrettyJSON() (string, error) {
 	data, err := json.MarshalIndent(anime, "", "    ")
 	return string(data), err
-}
-
-// Watching ...
-func (anime *Anime) Watching() int {
-	return 0
 }
 
 // AddMapping adds the ID of an external site to the anime.
