@@ -15,6 +15,7 @@ var DB = aerospike.NewDatabase(
 		(*Anime)(nil),
 		(*AnimeCharacters)(nil),
 		(*AnimeEpisodes)(nil),
+		(*AnimeRelations)(nil),
 		(*AnimeList)(nil),
 		(*AniListToAnime)(nil),
 		(*Character)(nil),
