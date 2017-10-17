@@ -2,6 +2,6 @@ package arn
 
 // AnimeRelations ...
 type AnimeRelations struct {
-	AnimeID string           `json:"animeId"`
+	AnimeID AnimeID          `json:"animeId"`
 	Items   []*AnimeRelation `json:"items"`
 }

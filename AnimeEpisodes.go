@@ -8,7 +8,7 @@ import (
 
 // AnimeEpisodes ...
 type AnimeEpisodes struct {
-	AnimeID string          `json:"animeId"`
+	AnimeID AnimeID         `json:"animeId"`
 	Items   []*AnimeEpisode `json:"items"`
 }
 

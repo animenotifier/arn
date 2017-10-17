@@ -4,7 +4,7 @@ import "errors"
 
 // UserFollows ...
 type UserFollows struct {
-	UserID string   `json:"userId"`
+	UserID UserID   `json:"userId"`
 	Items  []string `json:"items"`
 }
 

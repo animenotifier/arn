@@ -18,7 +18,7 @@ import (
 
 // Anime ...
 type Anime struct {
-	ID            string           `json:"id"`
+	ID            AnimeID          `json:"id"`
 	Type          string           `json:"type"`
 	Title         *AnimeTitle      `json:"title"`
 	Image         *AnimeImageTypes `json:"image"`

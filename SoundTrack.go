@@ -11,16 +11,16 @@ import (
 
 // SoundTrack ...
 type SoundTrack struct {
-	ID        string           `json:"id"`
+	ID        SoundTrackID     `json:"id"`
 	Title     string           `json:"title" editable:"true"`
 	Media     []*ExternalMedia `json:"media" editable:"true"`
 	Tags      []string         `json:"tags" editable:"true" tooltip:"<ul><li><strong>anime:ID</strong> to connect it with anime</li><li><strong>opening</strong> for openings</li><li><strong>ending</strong> for endings</li><li><strong>cover</strong> for covers</li><li><strong>remix</strong> for remixes</li></ul>"`
 	Likes     []string         `json:"likes"`
 	IsDraft   bool             `json:"isDraft" editable:"true"`
-	Created   string           `json:"created"`
-	CreatedBy string           `json:"createdBy"`
-	Edited    string           `json:"edited"`
-	EditedBy  string           `json:"editedBy"`
+	Created   UTCDate          `json:"created"`
+	CreatedBy UserID           `json:"createdBy"`
+	Edited    UTCDate          `json:"edited"`
+	EditedBy  UserID           `json:"editedBy"`
 
 	mainAnime     *Anime
 	createdByUser *User

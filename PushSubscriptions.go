@@ -2,7 +2,7 @@ package arn
 
 // PushSubscriptions ...
 type PushSubscriptions struct {
-	UserID string              `json:"userId"`
+	UserID UserID              `json:"userId"`
 	Items  []*PushSubscription `json:"items"`
 }
 

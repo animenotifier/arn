@@ -9,7 +9,7 @@ const DefaultInventorySlotCount = 24
 
 // Inventory ...
 type Inventory struct {
-	UserID string           `json:"userId"`
+	UserID UserID           `json:"userId"`
 	Slots  []*InventorySlot `json:"slots"`
 }
 

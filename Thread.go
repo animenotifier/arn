@@ -8,16 +8,16 @@ import (
 
 // Thread represents a forum thread.
 type Thread struct {
-	ID       string   `json:"id"`
+	ID       ThreadID `json:"id"`
 	Title    string   `json:"title" editable:"true"`
 	Text     string   `json:"text" editable:"true"`
-	AuthorID string   `json:"authorId"`
+	AuthorID UserID   `json:"authorId"`
 	Sticky   int      `json:"sticky"`
 	Tags     []string `json:"tags"`
 	Likes    []string `json:"likes"`
 	Posts    []string `json:"posts"`
-	Created  string   `json:"created"`
-	Edited   string   `json:"edited"`
+	Created  UTCDate  `json:"created"`
+	Edited   UTCDate  `json:"edited"`
 
 	author *User
 	html   string

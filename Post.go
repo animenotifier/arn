@@ -8,14 +8,14 @@ import (
 
 // Post represents a forum post.
 type Post struct {
-	ID       string   `json:"id"`
+	ID       PostID   `json:"id"`
 	Text     string   `json:"text" editable:"true"`
-	AuthorID string   `json:"authorId"`
+	AuthorID UserID   `json:"authorId"`
 	ThreadID string   `json:"threadId"`
 	Tags     []string `json:"tags"`
 	Likes    []string `json:"likes"`
-	Created  string   `json:"created"`
-	Edited   string   `json:"edited"`
+	Created  UTCDate  `json:"created"`
+	Edited   UTCDate  `json:"edited"`
 
 	author *User
 	thread *Thread

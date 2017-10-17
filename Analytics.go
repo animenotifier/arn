@@ -2,7 +2,7 @@ package arn
 
 // Analytics ...
 type Analytics struct {
-	UserID  string           `json:"userId"`
+	UserID  UserID           `json:"userId"`
 	General GeneralAnalytics `json:"general"`
 	Screen  ScreenAnalytics  `json:"screen"`
 	System  SystemAnalytics  `json:"system"`

@@ -7,7 +7,7 @@ import (
 
 // AnimeList ...
 type AnimeList struct {
-	UserID string           `json:"userId"`
+	UserID UserID           `json:"userId"`
 	Items  []*AnimeListItem `json:"items"`
 
 	user *User

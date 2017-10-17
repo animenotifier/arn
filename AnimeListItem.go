@@ -11,15 +11,15 @@ const (
 
 // AnimeListItem ...
 type AnimeListItem struct {
-	AnimeID      string       `json:"animeId"`
+	AnimeID      AnimeID      `json:"animeId"`
 	Status       string       `json:"status" editable:"true"`
 	Episodes     int          `json:"episodes" editable:"true"`
 	Rating       *AnimeRating `json:"rating"`
 	Notes        string       `json:"notes" editable:"true"`
 	RewatchCount int          `json:"rewatchCount" editable:"true"`
 	Private      bool         `json:"private" editable:"true"`
-	Created      string       `json:"created"`
-	Edited       string       `json:"edited"`
+	Created      UTCDate      `json:"created"`
+	Edited       UTCDate      `json:"edited"`
 
 	anime *Anime
 }

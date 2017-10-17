@@ -17,16 +17,16 @@ var setEmailMutex sync.Mutex
 
 // User ...
 type User struct {
-	ID         string       `json:"id"`
+	ID         UserID       `json:"id"`
 	Nick       string       `json:"nick" editable:"true"`
 	FirstName  string       `json:"firstName"`
 	LastName   string       `json:"lastName"`
 	Email      string       `json:"email"`
 	Role       string       `json:"role"`
-	Registered string       `json:"registered"`
-	LastLogin  string       `json:"lastLogin"`
-	LastSeen   string       `json:"lastSeen"`
-	ProExpires string       `json:"proExpires"`
+	Registered UTCDate      `json:"registered"`
+	LastLogin  UTCDate      `json:"lastLogin"`
+	LastSeen   UTCDate      `json:"lastSeen"`
+	ProExpires UTCDate      `json:"proExpires"`
 	Gender     string       `json:"gender"`
 	Language   string       `json:"language"`
 	Tagline    string       `json:"tagline" editable:"true"`
