@@ -11,9 +11,10 @@ import (
 
 // Force interface implementations
 var (
-	_ api.Newable  = (*SoundTrack)(nil)
-	_ api.Editable = (*SoundTrack)(nil)
-	_ Publishable  = (*SoundTrack)(nil)
+	_ api.Newable   = (*SoundTrack)(nil)
+	_ api.Editable  = (*SoundTrack)(nil)
+	_ api.Deletable = (*SoundTrack)(nil)
+	_ Publishable   = (*SoundTrack)(nil)
 )
 
 // Actions
@@ -66,6 +67,12 @@ func (soundtrack *SoundTrack) AfterEdit(ctx *aero.Context) error {
 	soundtrack.Edited = DateTimeUTC()
 	soundtrack.EditedBy = GetUserFromContext(ctx).ID
 	return nil
+}
+
+// Delete deletes the object from the database.
+func (soundtrack *SoundTrack) Delete() error {
+	_, err := DB.Delete("SoundTrack", soundtrack.ID)
+	return err
 }
 
 // Authorize returns an error if the given API POST request is not authorized.
