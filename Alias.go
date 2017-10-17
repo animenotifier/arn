@@ -26,3 +26,6 @@ type ItemID = string
 
 // PurchaseID ...
 type PurchaseID = string
+
+// GroupID ...
+type GroupID = string
