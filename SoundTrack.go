@@ -22,14 +22,27 @@ type SoundTrack struct {
 	Edited    UTCDate          `json:"edited"`
 	EditedBy  UserID           `json:"editedBy"`
 
-	mainAnime     *Anime
-	creator *User
-	editedByUser  *User
+	mainAnime    *Anime
+	creator      *User
+	editedByUser *User
 }
 
 // Link returns the permalink for the track.
 func (track *SoundTrack) Link() string {
 	return "/soundtrack/" + track.ID
+}
+
+// MediaByName ...
+func (track *SoundTrack) MediaByName(serviceID string) []*ExternalMedia {
+	filtered := []*ExternalMedia{}
+
+	for _, media := range track.Media {
+		if media.ServiceID == serviceID {
+			filtered = append(filtered, media)
+		}
+	}
+
+	return filtered
 }
 
 // HasTag returns true if it contains the given tag.
