@@ -63,7 +63,7 @@ func (group *Group) AfterEdit(ctx *aero.Context) error {
 // Delete deletes the object from the database.
 func (group *Group) Delete() error {
 	if group.IsDraft {
-		draftIndex := group.CreatedByUser().DraftIndex()
+		draftIndex := group.Creator().DraftIndex()
 		draftIndex.GroupID = ""
 		err := draftIndex.Save()
 

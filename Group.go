@@ -11,19 +11,19 @@ type Group struct {
 	ID          GroupID        `json:"id"`
 	Name        string         `json:"name" editable:"true"`
 	Tagline     string         `json:"tagline" editable:"true"`
-	Icon        string         `json:"icon" editable:"true"`
-	Description string         `json:"description" editable:"true"`
-	Rules       string         `json:"rules" editable:"true"`
+	Image       string         `json:"image" editable:"true"`
+	Description string         `json:"description" editable:"true" type:"textarea"`
+	Rules       string         `json:"rules" editable:"true" type:"textarea"`
 	Tags        []string       `json:"tags" editable:"true"`
 	Members     []*GroupMember `json:"members"`
-	Neighbors   []GroupID      `json:"neighbors" editable:"true"`
+	Neighbors   []GroupID      `json:"neighbors"`
 	IsDraft     bool           `json:"isDraft" editable:"true"`
 	Created     UTCDate        `json:"created"`
 	CreatedBy   UserID         `json:"createdBy"`
 	Edited      UTCDate        `json:"edited"`
 	EditedBy    UserID         `json:"editedBy"`
 
-	createdByUser *User
+	creator *User
 }
 
 // Link ...
@@ -31,10 +31,20 @@ func (group *Group) Link() string {
 	return "/group/" + group.ID
 }
 
-// CreatedByUser ...
-func (group *Group) CreatedByUser() *User {
-	if group.createdByUser != nil {
-		return group.createdByUser
+// ImageURL ...
+func (group *Group) ImageURL() string {
+	if group.Image != "" {
+		return group.Image
+	}
+
+	return "https://media.kitsu.io/groups/avatars/2138/medium.png"
+	// return "/images/brand/144.png"
+}
+
+// Creator ...
+func (group *Group) Creator() *User {
+	if group.creator != nil {
+		return group.creator
 	}
 
 	user, err := GetUser(group.CreatedBy)
@@ -44,8 +54,8 @@ func (group *Group) CreatedByUser() *User {
 		return nil
 	}
 
-	group.createdByUser = user
-	return group.createdByUser
+	group.creator = user
+	return group.creator
 }
 
 // Publish ...

@@ -23,7 +23,7 @@ type SoundTrack struct {
 	EditedBy  UserID           `json:"editedBy"`
 
 	mainAnime     *Anime
-	createdByUser *User
+	creator *User
 	editedByUser  *User
 }
 
@@ -80,10 +80,10 @@ func (track *SoundTrack) MainAnime() *Anime {
 	return track.mainAnime
 }
 
-// CreatedByUser ...
-func (track *SoundTrack) CreatedByUser() *User {
-	if track.createdByUser != nil {
-		return track.createdByUser
+// Creator ...
+func (track *SoundTrack) Creator() *User {
+	if track.creator != nil {
+		return track.creator
 	}
 
 	user, err := GetUser(track.CreatedBy)
@@ -93,8 +93,8 @@ func (track *SoundTrack) CreatedByUser() *User {
 		return nil
 	}
 
-	track.createdByUser = user
-	return track.createdByUser
+	track.creator = user
+	return track.creator
 }
 
 // EditedByUser returns the user who edited this track last.
