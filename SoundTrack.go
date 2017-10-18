@@ -32,12 +32,12 @@ func (track *SoundTrack) Link() string {
 	return "/soundtrack/" + track.ID
 }
 
-// MediaByName ...
-func (track *SoundTrack) MediaByName(serviceID string) []*ExternalMedia {
+// MediaByService ...
+func (track *SoundTrack) MediaByService(service string) []*ExternalMedia {
 	filtered := []*ExternalMedia{}
 
 	for _, media := range track.Media {
-		if media.ServiceID == serviceID {
+		if media.Service == service {
 			filtered = append(filtered, media)
 		}
 	}
