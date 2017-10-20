@@ -9,3 +9,23 @@ type AnimeTitle struct {
 	Canonical string   `json:"canonical"`
 	Synonyms  []string `json:"synonyms"`
 }
+
+// ByUser ...
+func (title *AnimeTitle) ByUser(user *User) string {
+	switch user.Settings().TitleLanguage {
+	case "canonical":
+		return title.Canonical
+	case "romaji":
+		return title.Romaji
+	case "english":
+		if title.English == "" {
+			return title.Canonical
+		}
+
+		return title.English
+	case "japanese":
+		return title.Japanese
+	default:
+		panic("Invalid title language")
+	}
+}
