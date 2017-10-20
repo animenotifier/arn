@@ -12,10 +12,18 @@ type AnimeTitle struct {
 
 // ByUser ...
 func (title *AnimeTitle) ByUser(user *User) string {
+	if user == nil {
+		return title.Canonical
+	}
+
 	switch user.Settings().TitleLanguage {
 	case "canonical":
 		return title.Canonical
 	case "romaji":
+		if title.Romaji == "" {
+			return title.Canonical
+		}
+
 		return title.Romaji
 	case "english":
 		if title.English == "" {
@@ -24,6 +32,10 @@ func (title *AnimeTitle) ByUser(user *User) string {
 
 		return title.English
 	case "japanese":
+		if title.Japanese == "" {
+			return title.Canonical
+		}
+
 		return title.Japanese
 	default:
 		panic("Invalid title language")
