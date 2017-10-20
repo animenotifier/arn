@@ -32,8 +32,14 @@ type Settings struct {
 	TitleLanguage string           `json:"titleLanguage" editable:"true"`
 	Providers     ServiceProviders `json:"providers"`
 	Avatar        AvatarSettings   `json:"avatar"`
+	Format        FormatSettings   `json:"format"`
 
 	user *User
+}
+
+// FormatSettings ...
+type FormatSettings struct {
+	RatingsPrecision int `json:"ratingsPrecision" editable:"true"`
 }
 
 // ServiceProviders ...
