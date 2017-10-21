@@ -19,7 +19,7 @@ const (
 
 // Item ...
 type Item struct {
-	ID          ItemID `json:"id"`
+	ID          string     `json:"id"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Price       uint   `json:"price"`

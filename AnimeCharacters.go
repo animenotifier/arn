@@ -2,7 +2,7 @@ package arn
 
 // AnimeCharacters ...
 type AnimeCharacters struct {
-	AnimeID AnimeID           `json:"animeId"`
+	AnimeID string               `json:"animeId"`
 	Items   []*AnimeCharacter `json:"items"`
 }
 

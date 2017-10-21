@@ -2,12 +2,12 @@ package arn
 
 // AnimeRelations ...
 type AnimeRelations struct {
-	AnimeID AnimeID          `json:"animeId"`
+	AnimeID string              `json:"animeId"`
 	Items   []*AnimeRelation `json:"items"`
 }
 
 // GetAnimeRelations ...
-func GetAnimeRelations(animeID AnimeID) (*AnimeRelations, error) {
+func GetAnimeRelations(animeID string) (*AnimeRelations, error) {
 	obj, err := DB.Get("AnimeRelations", animeID)
 
 	if err != nil {

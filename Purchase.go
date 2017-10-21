@@ -2,13 +2,13 @@ package arn
 
 // Purchase ...
 type Purchase struct {
-	ID       PurchaseID `json:"id"`
-	UserID   UserID     `json:"userId"`
-	ItemID   ItemID     `json:"itemId"`
-	Quantity int        `json:"quantity"`
-	Price    int        `json:"price"`
-	Currency string     `json:"currency"`
-	Date     UTCDate    `json:"date"`
+	ID       string `json:"id"`
+	UserID   string `json:"userId"`
+	ItemID   string `json:"itemId"`
+	Quantity int    `json:"quantity"`
+	Price    int    `json:"price"`
+	Currency string `json:"currency"`
+	Date     string     `json:"date"`
 }
 
 // Item returns the item the user bought.

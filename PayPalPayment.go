@@ -4,13 +4,13 @@ import "strconv"
 
 // PayPalPayment is an approved and exeucted PayPal payment.
 type PayPalPayment struct {
-	ID       string  `json:"id"`
-	UserID   UserID  `json:"userId"`
-	PayerID  string  `json:"payerId"`
-	Amount   string  `json:"amount"`
-	Currency string  `json:"currency"`
-	Method   string  `json:"method"`
-	Created  UTCDate `json:"created"`
+	ID       string `json:"id"`
+	UserID   string `json:"userId"`
+	PayerID  string `json:"payerId"`
+	Amount   string `json:"amount"`
+	Currency string `json:"currency"`
+	Method   string `json:"method"`
+	Created  string     `json:"created"`
 }
 
 // Gems returns the total amount of gems.

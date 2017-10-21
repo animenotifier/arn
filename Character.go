@@ -2,10 +2,10 @@ package arn
 
 // Character ...
 type Character struct {
-	ID          CharacterID `json:"id"`
-	Name        string      `json:"name"`
-	Image       string      `json:"image"`
-	Description string      `json:"description"`
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	Image       string `json:"image"`
+	Description string `json:"description"`
 }
 
 // GetCharacter ...

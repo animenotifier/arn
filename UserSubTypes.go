@@ -56,19 +56,19 @@ type CSSPosition struct {
 // NickToUser ...
 type NickToUser struct {
 	Nick   string `json:"nick"`
-	UserID UserID `json:"userId"`
+	UserID string     `json:"userId"`
 }
 
 // EmailToUser ...
 type EmailToUser struct {
 	Email  string `json:"email"`
-	UserID UserID `json:"userId"`
+	UserID string     `json:"userId"`
 }
 
 // GoogleToUser ...
 type GoogleToUser struct {
 	ID     string `json:"id"`
-	UserID UserID `json:"userId"`
+	UserID string     `json:"userId"`
 }
 
 // FacebookToUser is the same data structure as GoogleToUser

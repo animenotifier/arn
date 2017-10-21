@@ -10,13 +10,13 @@ import (
 type GroupPost struct {
 	ID       string   `json:"id"`
 	Text     string   `json:"text" editable:"true"`
-	AuthorID UserID   `json:"authorId"`
-	GroupID  GroupID  `json:"groupId"`
+	AuthorID string   `json:"authorId"`
+	GroupID  string   `json:"groupId"`
 	Tags     []string `json:"tags"`
 	Likes    []string `json:"likes"`
 	IsDraft  bool     `json:"isDraft" editable:"true"`
-	Created  UTCDate  `json:"created"`
-	Edited   UTCDate  `json:"edited"`
+	Created  string       `json:"created"`
+	Edited   string       `json:"edited"`
 
 	author *User
 	group  *Group

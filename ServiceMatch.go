@@ -2,11 +2,11 @@ package arn
 
 // ServiceMatch ...
 type ServiceMatch struct {
-	AnimeID    AnimeID `json:"animeId"`
+	AnimeID    string  `json:"animeId"`
 	ServiceID  string  `json:"serviceId"`
 	Similarity float64 `json:"similarity"`
-	Edited     UTCDate `json:"edited"`
-	EditedBy   UserID  `json:"editedBy"`
+	Edited     string      `json:"edited"`
+	EditedBy   string  `json:"editedBy"`
 }
 
 // AniListToAnime ...

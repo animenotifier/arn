@@ -8,7 +8,7 @@ import (
 
 // Group ...
 type Group struct {
-	ID          GroupID        `json:"id"`
+	ID          string         `json:"id"`
 	Name        string         `json:"name" editable:"true"`
 	Tagline     string         `json:"tagline" editable:"true"`
 	Image       string         `json:"image" editable:"true"`
@@ -16,12 +16,12 @@ type Group struct {
 	Rules       string         `json:"rules" editable:"true" type:"textarea"`
 	Tags        []string       `json:"tags" editable:"true"`
 	Members     []*GroupMember `json:"members"`
-	Neighbors   []GroupID      `json:"neighbors"`
+	Neighbors   []string       `json:"neighbors"`
 	IsDraft     bool           `json:"isDraft" editable:"true"`
-	Created     UTCDate        `json:"created"`
-	CreatedBy   UserID         `json:"createdBy"`
-	Edited      UTCDate        `json:"edited"`
-	EditedBy    UserID         `json:"editedBy"`
+	Created     string             `json:"created"`
+	CreatedBy   string         `json:"createdBy"`
+	Edited      string             `json:"edited"`
+	EditedBy    string         `json:"editedBy"`
 
 	creator *User
 	posts   []*GroupPost

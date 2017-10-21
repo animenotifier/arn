@@ -36,7 +36,7 @@ func (group *Group) Create(ctx *aero.Context) error {
 
 	group.ID = GenerateID("Group")
 	group.Tags = []string{}
-	group.Neighbors = []GroupID{}
+	group.Neighbors = []string{}
 	group.Created = DateTimeUTC()
 	group.CreatedBy = user.ID
 	group.Edited = group.Created
