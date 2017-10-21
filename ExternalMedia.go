@@ -1,16 +1,17 @@
 package arn
 
-// ExternalMediaServices is a list of supported media services.
-var ExternalMediaServices = []string{
-	"SoundCloud",
-	"Youtube",
-	"DailyMotion",
-	"NicoVideo",
+// Register a list of supported media services.
+func init() {
+	DataLists["media-services"] = []*Option{
+		&Option{"Youtube", "Youtube"},
+		&Option{"SoundCloud", "SoundCloud"},
+		&Option{"DailyMotion", "DailyMotion"},
+	}
 }
 
 // ExternalMedia ...
 type ExternalMedia struct {
-	Service   string `json:"service" editable:"true"`
+	Service   string `json:"service" editable:"true" datalist:"media-services"`
 	ServiceID string `json:"serviceId" editable:"true"`
 }
 

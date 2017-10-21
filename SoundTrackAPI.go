@@ -50,8 +50,16 @@ func (soundtrack *SoundTrack) Create(ctx *aero.Context) error {
 func (soundtrack *SoundTrack) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
 	if strings.HasPrefix(key, "Media[") && strings.HasSuffix(key, ".Service") {
 		newService := newValue.String()
+		found := false
 
-		if !Contains(ExternalMediaServices, newService) {
+		for _, option := range DataLists["media-services"] {
+			if option.Label == newService {
+				found = true
+				break
+			}
+		}
+
+		if !found {
 			return true, errors.New("Invalid service name")
 		}
 
