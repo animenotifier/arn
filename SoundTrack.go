@@ -17,14 +17,15 @@ type SoundTrack struct {
 	Tags      []string         `json:"tags" editable:"true" tooltip:"<ul><li><strong>anime:ID</strong> to connect it with anime</li><li><strong>opening</strong> for openings</li><li><strong>ending</strong> for endings</li><li><strong>cover</strong> for covers</li><li><strong>remix</strong> for remixes</li></ul>"`
 	Likes     []string         `json:"likes"`
 	IsDraft   bool             `json:"isDraft" editable:"true"`
-	Created   string               `json:"created"`
+	Created   string           `json:"created"`
 	CreatedBy string           `json:"createdBy"`
-	Edited    string               `json:"edited"`
+	Edited    string           `json:"edited"`
 	EditedBy  string           `json:"editedBy"`
 
 	mainAnime    *Anime
 	creator      *User
 	editedByUser *User
+	beatmaps     []string
 }
 
 // Link returns the permalink for the track.
@@ -75,6 +76,22 @@ func (track *SoundTrack) Anime() []*Anime {
 	}
 
 	return animeList
+}
+
+// Beatmaps returns all osu beatmap IDs of the sound track.
+func (track *SoundTrack) Beatmaps() []string {
+	if track.beatmaps != nil {
+		return track.beatmaps
+	}
+
+	for _, tag := range track.Tags {
+		if strings.HasPrefix(tag, "osu-beatmap:") {
+			osuID := strings.TrimPrefix(tag, "osu-beatmap:")
+			track.beatmaps = append(track.beatmaps, osuID)
+		}
+	}
+
+	return track.beatmaps
 }
 
 // MainAnime ...
