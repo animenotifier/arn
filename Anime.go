@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/aerogo/database"
+	"github.com/aerogo/nano"
 	"github.com/animenotifier/arn/validator"
 
 	"github.com/animenotifier/kitsu"
@@ -205,7 +205,7 @@ func (anime *Anime) Episodes() *AnimeEpisodes {
 
 // UsersWatchingOrPlanned returns a list of users who are watching the anime right now.
 func (anime *Anime) UsersWatchingOrPlanned() []*User {
-	users, err := FilterUsers(func(user *User) bool {
+	users := FilterUsers(func(user *User) bool {
 		item := user.AnimeList().Find(anime.ID)
 
 		if item == nil {
@@ -214,10 +214,6 @@ func (anime *Anime) UsersWatchingOrPlanned() []*User {
 
 		return item.Status == AnimeListStatusWatching || item.Status == AnimeListStatusPlanned
 	})
-
-	if err != nil {
-		return nil
-	}
 
 	return users
 }
@@ -536,7 +532,7 @@ func (anime *Anime) RefreshAnimeCharacters() (*AnimeCharacters, error) {
 
 // StreamAnime returns a stream of all anime.
 func StreamAnime() chan *Anime {
-	channel := make(chan *Anime, database.ChannelBufferSize)
+	channel := make(chan *Anime, nano.ChannelBufferSize)
 
 	go func() {
 		for obj := range DB.All("Anime") {

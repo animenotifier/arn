@@ -2,11 +2,11 @@ package arn
 
 import (
 	"github.com/aerogo/api"
-	"github.com/aerogo/database"
+	"github.com/aerogo/nano"
 )
 
 // DB is the main database client.
-var DB = database.New("arn", DBTypes)
+var DB = nano.New("arn", DBTypes)
 
 // DBTypes ...
 var DBTypes = []interface{}{

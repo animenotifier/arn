@@ -4,7 +4,7 @@ import (
 	"errors"
 	"sort"
 
-	"github.com/aerogo/database"
+	"github.com/aerogo/nano"
 )
 
 // AnimeList ...
@@ -286,7 +286,7 @@ func (list *AnimeList) NormalizeRatings() {
 
 // StreamAnimeLists returns a stream of all anime.
 func StreamAnimeLists() chan *AnimeList {
-	channel := make(chan *AnimeList, database.ChannelBufferSize)
+	channel := make(chan *AnimeList, nano.ChannelBufferSize)
 
 	go func() {
 		for obj := range DB.All("AnimeList") {

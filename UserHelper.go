@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strconv"
 
-	"github.com/aerogo/database"
+	"github.com/aerogo/nano"
 	"github.com/animenotifier/osu"
 )
 
@@ -22,30 +22,63 @@ func GetUser(id string) (*User, error) {
 
 // GetUserByNick ...
 func GetUserByNick(nick string) (*User, error) {
-	return GetUserFromTable("NickToUser", nick)
+	obj, err := DB.Get("NickToUser", nick)
+
+	if err != nil {
+		return nil, err
+	}
+
+	userID := obj.(*NickToUser).UserID
+	user, err := GetUser(userID)
+
+	return user, err
 }
 
 // GetUserByEmail ...
 func GetUserByEmail(email string) (*User, error) {
-	return GetUserFromTable("EmailToUser", email)
+	obj, err := DB.Get("EmailToUser", email)
+
+	if err != nil {
+		return nil, err
+	}
+
+	userID := obj.(*EmailToUser).UserID
+	user, err := GetUser(userID)
+
+	return user, err
 }
 
-// GetUserFromTable queries a table for the record with the given ID
-// and returns the user that is referenced by record["userId"].
-func GetUserFromTable(table string, id string) (*User, error) {
-	// rec, err := DB.GetMap(table, id)
+// GetUserByFacebookID ...
+func GetUserByFacebookID(facebookID string) (*User, error) {
+	obj, err := DB.Get("FacebookToUser", facebookID)
 
-	// if err != nil {
-	// 	return nil, err
-	// }
+	if err != nil {
+		return nil, err
+	}
 
-	// return GetUser(rec["userId"].(string))
-	return nil, errors.New("Not implemented")
+	userID := obj.(*FacebookToUser).UserID
+	user, err := GetUser(userID)
+
+	return user, err
+}
+
+// GetUserByGoogleID ...
+func GetUserByGoogleID(googleID string) (*User, error) {
+	obj, err := DB.Get("GoogleToUser", googleID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	userID := obj.(*GoogleToUser).UserID
+	user, err := GetUser(userID)
+
+	return user, err
 }
 
 // StreamUsers returns a stream of all users.
 func StreamUsers() chan *User {
-	channel := make(chan *User, database.ChannelBufferSize)
+	channel := make(chan *User, nano.ChannelBufferSize)
 
 	go func() {
 		for obj := range DB.All("User") {
@@ -70,7 +103,7 @@ func AllUsers() ([]*User, error) {
 }
 
 // FilterUsers filters all users by a custom function.
-func FilterUsers(filter func(*User) bool) ([]*User, error) {
+func FilterUsers(filter func(*User) bool) []*User {
 	var filtered []*User
 
 	for obj := range StreamUsers() {
@@ -79,7 +112,7 @@ func FilterUsers(filter func(*User) bool) ([]*User, error) {
 		}
 	}
 
-	return filtered, nil
+	return filtered
 }
 
 // SortUsersLastSeen sorts a list of users by their last seen date.

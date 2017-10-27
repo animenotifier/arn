@@ -3,7 +3,7 @@ package arn
 import (
 	"sort"
 
-	"github.com/aerogo/database"
+	"github.com/aerogo/nano"
 	"github.com/aerogo/markdown"
 )
 
@@ -72,7 +72,7 @@ func GetGroupPost(id string) (*GroupPost, error) {
 
 // StreamGroupPosts returns a stream of all posts.
 func StreamGroupPosts() chan *GroupPost {
-	channel := make(chan *GroupPost, database.ChannelBufferSize)
+	channel := make(chan *GroupPost, nano.ChannelBufferSize)
 
 	go func() {
 		for obj := range DB.All("GroupPost") {

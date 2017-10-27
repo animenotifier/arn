@@ -1,7 +1,7 @@
 package arn
 
 import (
-	"github.com/aerogo/database"
+	"github.com/aerogo/nano"
 )
 
 // Character ...
@@ -25,7 +25,7 @@ func GetCharacter(id string) (*Character, error) {
 
 // StreamCharacters returns a stream of all characters.
 func StreamCharacters() chan *Character {
-	channel := make(chan *Character, database.ChannelBufferSize)
+	channel := make(chan *Character, nano.ChannelBufferSize)
 
 	go func() {
 		for obj := range DB.All("Character") {

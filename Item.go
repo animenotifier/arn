@@ -1,6 +1,6 @@
 package arn
 
-import "github.com/aerogo/database"
+import "github.com/aerogo/nano"
 
 const (
 	// ItemRarityCommon ...
@@ -44,7 +44,7 @@ func GetItem(id string) (*Item, error) {
 
 // StreamItems returns a stream of all items.
 func StreamItems() chan *Item {
-	channel := make(chan *Item, database.ChannelBufferSize)
+	channel := make(chan *Item, nano.ChannelBufferSize)
 
 	go func() {
 		for obj := range DB.All("Item") {

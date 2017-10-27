@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/aerogo/database"
+	"github.com/aerogo/nano"
 	"github.com/animenotifier/arn/autocorrect"
 	"github.com/fatih/color"
 )
@@ -238,7 +238,7 @@ func GetSoundTrack(id string) (*SoundTrack, error) {
 
 // StreamSoundTracks returns a stream of all soundtracks.
 func StreamSoundTracks() chan *SoundTrack {
-	channel := make(chan *SoundTrack, database.ChannelBufferSize)
+	channel := make(chan *SoundTrack, nano.ChannelBufferSize)
 
 	go func() {
 		for obj := range DB.All("SoundTrack") {

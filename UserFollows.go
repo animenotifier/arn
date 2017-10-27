@@ -3,7 +3,7 @@ package arn
 import (
 	"errors"
 
-	"github.com/aerogo/database"
+	"github.com/aerogo/nano"
 )
 
 // UserFollows ...
@@ -91,7 +91,7 @@ func GetUserFollows(id string) (*UserFollows, error) {
 
 // StreamUserFollows returns a stream of all user follows.
 func StreamUserFollows() chan *UserFollows {
-	channel := make(chan *UserFollows, database.ChannelBufferSize)
+	channel := make(chan *UserFollows, nano.ChannelBufferSize)
 
 	go func() {
 		for obj := range DB.All("UserFollows") {

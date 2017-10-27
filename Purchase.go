@@ -1,6 +1,6 @@
 package arn
 
-import "github.com/aerogo/database"
+import "github.com/aerogo/nano"
 
 // Purchase ...
 type Purchase struct {
@@ -40,7 +40,7 @@ func NewPurchase(userID string, itemID string, quantity int, price int, currency
 
 // StreamPurchases returns a stream of all purchases.
 func StreamPurchases() chan *Purchase {
-	channel := make(chan *Purchase, database.ChannelBufferSize)
+	channel := make(chan *Purchase, nano.ChannelBufferSize)
 
 	go func() {
 		for obj := range DB.All("Purchase") {

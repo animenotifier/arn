@@ -3,7 +3,7 @@ package arn
 import (
 	"sort"
 
-	"github.com/aerogo/database"
+	"github.com/aerogo/nano"
 	"github.com/aerogo/markdown"
 )
 
@@ -94,7 +94,7 @@ func GetThreadsByUser(user *User) []*Thread {
 
 // StreamThreads ...
 func StreamThreads() chan *Thread {
-	channel := make(chan *Thread, database.ChannelBufferSize)
+	channel := make(chan *Thread, nano.ChannelBufferSize)
 
 	go func() {
 		for obj := range DB.All("Thread") {

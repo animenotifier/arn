@@ -1,6 +1,6 @@
 package arn
 
-import "github.com/aerogo/database"
+import "github.com/aerogo/nano"
 
 // Analytics ...
 type Analytics struct {
@@ -32,7 +32,7 @@ type SystemAnalytics struct {
 
 // StreamAnalytics returns a stream of all analytics.
 func StreamAnalytics() chan *Analytics {
-	channel := make(chan *Analytics, database.ChannelBufferSize)
+	channel := make(chan *Analytics, nano.ChannelBufferSize)
 
 	go func() {
 		for obj := range DB.All("Analytics") {
