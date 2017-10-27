@@ -58,7 +58,7 @@ func FindAniListAnime(search *anilist.Anime, allAnime []*Anime) *Anime {
 	if similarity >= 0.92 && mostSimilar.GetMapping("anilist/anime") == "" {
 		// fmt.Printf("MATCH:    %s => %s (%.2f)\n", search.TitleRomaji, mostSimilar.Title.Romaji, similarity)
 		mostSimilar.AddMapping("anilist/anime", strconv.Itoa(search.ID), "")
-		PanicOnError(mostSimilar.Save())
+		mostSimilar.Save()
 		return mostSimilar
 	}
 

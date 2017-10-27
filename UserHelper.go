@@ -5,6 +5,7 @@ import (
 	"sort"
 	"strconv"
 
+	"github.com/aerogo/database"
 	"github.com/animenotifier/osu"
 )
 
@@ -32,40 +33,36 @@ func GetUserByEmail(email string) (*User, error) {
 // GetUserFromTable queries a table for the record with the given ID
 // and returns the user that is referenced by record["userId"].
 func GetUserFromTable(table string, id string) (*User, error) {
-	rec, err := DB.GetMap(table, id)
+	// rec, err := DB.GetMap(table, id)
 
-	if err != nil {
-		return nil, err
-	}
+	// if err != nil {
+	// 	return nil, err
+	// }
 
-	return GetUser(rec["userId"].(string))
+	// return GetUser(rec["userId"].(string))
+	return nil, errors.New("Not implemented")
 }
 
 // StreamUsers returns a stream of all users.
-func StreamUsers() (chan *User, error) {
-	channel := make(chan *User)
-	err := DB.Scan("User", channel)
-	return channel, err
-}
+func StreamUsers() chan *User {
+	channel := make(chan *User, database.ChannelBufferSize)
 
-// MustStreamUsers returns a stream of all users.
-func MustStreamUsers() chan *User {
-	stream, err := StreamUsers()
-	PanicOnError(err)
-	return stream
+	go func() {
+		for obj := range DB.All("User") {
+			channel <- obj.(*User)
+		}
+
+		close(channel)
+	}()
+
+	return channel
 }
 
 // AllUsers returns a slice of all users.
 func AllUsers() ([]*User, error) {
 	var all []*User
 
-	stream, err := StreamUsers()
-
-	if err != nil {
-		return nil, err
-	}
-
-	for obj := range stream {
+	for obj := range StreamUsers() {
 		all = append(all, obj)
 	}
 
@@ -76,13 +73,7 @@ func AllUsers() ([]*User, error) {
 func FilterUsers(filter func(*User) bool) ([]*User, error) {
 	var filtered []*User
 
-	channel, err := StreamUsers()
-
-	if err != nil {
-		return filtered, err
-	}
-
-	for obj := range channel {
+	for obj := range StreamUsers() {
 		if filter(obj) {
 			filtered = append(filtered, obj)
 		}

@@ -42,11 +42,7 @@ func init() {
 				}
 
 				// Save inventory
-				err = inventory.Save()
-
-				if err != nil {
-					return err
-				}
+				inventory.Save()
 
 				user := GetUserFromContext(ctx)
 				err = user.ActivateItemEffect(itemID)
@@ -55,7 +51,8 @@ func init() {
 					// Refund item
 					slot.ItemID = itemID
 					slot.Increase(1)
-					return inventory.Save()
+					inventory.Save()
+					return nil
 				}
 
 				return err
@@ -80,7 +77,9 @@ func init() {
 				}
 
 				inventory.SwapSlots(a, b)
-				return inventory.Save()
+				inventory.Save()
+
+				return nil
 			},
 		},
 	})
@@ -92,6 +91,6 @@ func (inventory *Inventory) Authorize(ctx *aero.Context, action string) error {
 }
 
 // Save saves the push items in the database.
-func (inventory *Inventory) Save() error {
-	return DB.Set("Inventory", inventory.UserID, inventory)
+func (inventory *Inventory) Save() {
+	DB.Set("Inventory", inventory.UserID, inventory)
 }

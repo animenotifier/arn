@@ -2,7 +2,7 @@ package arn
 
 // AnimeCharacters ...
 type AnimeCharacters struct {
-	AnimeID string               `json:"animeId"`
+	AnimeID string            `json:"animeId"`
 	Items   []*AnimeCharacter `json:"items"`
 }
 
@@ -26,8 +26,8 @@ func (char *AnimeCharacter) Character() *Character {
 }
 
 // Save saves the character in the database.
-func (chars *AnimeCharacters) Save() error {
-	return DB.Set("AnimeCharacters", chars.AnimeID, chars)
+func (chars *AnimeCharacters) Save() {
+	DB.Set("AnimeCharacters", chars.AnimeID, chars)
 }
 
 // GetAnimeCharacters ...

@@ -9,7 +9,7 @@ import (
 type Publishable interface {
 	Publish() error
 	Unpublish() error
-	Save() error
+	Save()
 }
 
 // PublishAction returns an API action that publishes the object.
@@ -24,7 +24,8 @@ func PublishAction() *api.Action {
 				return err
 			}
 
-			return draft.Save()
+			draft.Save()
+			return nil
 		},
 	}
 }
@@ -41,7 +42,8 @@ func UnpublishAction() *api.Action {
 				return err
 			}
 
-			return draft.Save()
+			draft.Save()
+			return nil
 		},
 	}
 }

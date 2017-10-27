@@ -3,6 +3,7 @@ package arn
 import (
 	"sort"
 
+	"github.com/aerogo/database"
 	"github.com/aerogo/markdown"
 )
 
@@ -16,8 +17,8 @@ type Thread struct {
 	Tags     []string `json:"tags"`
 	Likes    []string `json:"likes"`
 	Posts    []string `json:"posts"`
-	Created  string       `json:"created"`
-	Edited   string       `json:"edited"`
+	Created  string   `json:"created"`
+	Edited   string   `json:"edited"`
 
 	author *User
 	html   string
@@ -65,55 +66,52 @@ func GetThread(id string) (*Thread, error) {
 }
 
 // GetThreadsByTag ...
-func GetThreadsByTag(tag string) ([]*Thread, error) {
+func GetThreadsByTag(tag string) []*Thread {
 	var threads []*Thread
-
-	scan := make(chan *Thread)
-	err := DB.Scan("Thread", scan)
 	allTags := (tag == "" || tag == "<nil>")
 
-	for thread := range scan {
+	for thread := range StreamThreads() {
 		if (allTags && !Contains(thread.Tags, "update")) || Contains(thread.Tags, tag) {
 			threads = append(threads, thread)
 		}
 	}
 
-	return threads, err
+	return threads
 }
 
 // GetThreadsByUser ...
-func GetThreadsByUser(user *User) ([]*Thread, error) {
+func GetThreadsByUser(user *User) []*Thread {
 	var threads []*Thread
 
-	scan := make(chan *Thread)
-	err := DB.Scan("Thread", scan)
-
-	for thread := range scan {
+	for thread := range StreamThreads() {
 		if thread.AuthorID == user.ID {
 			threads = append(threads, thread)
 		}
 	}
 
-	return threads, err
+	return threads
 }
 
 // StreamThreads ...
-func StreamThreads() (chan *Thread, error) {
-	threads, err := DB.All("Thread")
-	return threads.(chan *Thread), err
+func StreamThreads() chan *Thread {
+	channel := make(chan *Thread, database.ChannelBufferSize)
+
+	go func() {
+		for obj := range DB.All("Thread") {
+			channel <- obj.(*Thread)
+		}
+
+		close(channel)
+	}()
+
+	return channel
 }
 
 // AllThreads ...
 func AllThreads() ([]*Thread, error) {
 	var all []*Thread
 
-	stream, err := StreamThreads()
-
-	if err != nil {
-		return nil, err
-	}
-
-	for obj := range stream {
+	for obj := range StreamThreads() {
 		all = append(all, obj)
 	}
 

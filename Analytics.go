@@ -1,8 +1,10 @@
 package arn
 
+import "github.com/aerogo/database"
+
 // Analytics ...
 type Analytics struct {
-	UserID  string               `json:"userId"`
+	UserID  string           `json:"userId"`
 	General GeneralAnalytics `json:"general"`
 	Screen  ScreenAnalytics  `json:"screen"`
 	System  SystemAnalytics  `json:"system"`
@@ -29,31 +31,29 @@ type SystemAnalytics struct {
 }
 
 // StreamAnalytics returns a stream of all analytics.
-func StreamAnalytics() (chan *Analytics, error) {
-	objects, err := DB.All("Analytics")
-	return objects.(chan *Analytics), err
-}
+func StreamAnalytics() chan *Analytics {
+	channel := make(chan *Analytics, database.ChannelBufferSize)
 
-// MustStreamAnalytics returns a stream of all analytics.
-func MustStreamAnalytics() chan *Analytics {
-	stream, err := StreamAnalytics()
-	PanicOnError(err)
-	return stream
+	go func() {
+		for obj := range DB.All("Analytics") {
+			channel <- obj.(*Analytics)
+		}
+
+		close(channel)
+	}()
+
+	return channel
 }
 
 // AllAnalytics returns a slice of all analytics.
-func AllAnalytics() ([]*Analytics, error) {
+func AllAnalytics() []*Analytics {
 	var all []*Analytics
 
-	stream, err := StreamAnalytics()
-
-	if err != nil {
-		return nil, err
-	}
+	stream := StreamAnalytics()
 
 	for obj := range stream {
 		all = append(all, obj)
 	}
 
-	return all, nil
+	return all
 }

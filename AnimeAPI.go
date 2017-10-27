@@ -52,6 +52,6 @@ func (anime *Anime) VirtualEdit(ctx *aero.Context, key string, newValue reflect.
 }
 
 // Save saves the anime in the database.
-func (anime *Anime) Save() error {
-	return DB.Set("Anime", anime.ID, anime)
+func (anime *Anime) Save() {
+	DB.Set("Anime", anime.ID, anime)
 }

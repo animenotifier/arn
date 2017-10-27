@@ -2,7 +2,7 @@ package arn
 
 // Threads ...
 func (user *User) Threads() []*Thread {
-	threads, _ := GetThreadsByUser(user)
+	threads := GetThreadsByUser(user)
 	return threads
 }
 
@@ -43,19 +43,20 @@ func (user *User) Follows() *UserFollows {
 func (user *User) Followers() []*User {
 	var followerIDs []string
 
-	for list := range MustStreamUserFollows() {
+	for list := range StreamUserFollows() {
 		if list.Contains(user.ID) {
 			followerIDs = append(followerIDs, list.UserID)
 		}
 	}
 
-	objects, err := DB.GetMany("User", followerIDs)
+	usersObj := DB.GetMany("User", followerIDs)
+	users := make([]*User, len(usersObj), len(usersObj))
 
-	if err != nil {
-		return nil
+	for i, obj := range usersObj {
+		users[i] = obj.(*User)
 	}
 
-	return objects.([]*User)
+	return users
 }
 
 // DraftIndex ...

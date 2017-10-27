@@ -28,6 +28,6 @@ func (list *AnimeList) Authorize(ctx *aero.Context, action string) error {
 }
 
 // Save saves the anime list in the database.
-func (list *AnimeList) Save() error {
-	return DB.Set("AnimeList", list.UserID, list)
+func (list *AnimeList) Save() {
+	DB.Set("AnimeList", list.UserID, list)
 }

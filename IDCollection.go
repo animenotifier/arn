@@ -11,7 +11,7 @@ import (
 type IDCollection interface {
 	Add(id string) error
 	Remove(id string) bool
-	Save() error
+	Save()
 }
 
 // AddAction returns an API action that adds a new item to the IDCollection.
@@ -27,7 +27,8 @@ func AddAction() *api.Action {
 				return err
 			}
 
-			return list.Save()
+			list.Save()
+			return nil
 		},
 	}
 }
@@ -44,7 +45,8 @@ func RemoveAction() *api.Action {
 				return errors.New("This item does not exist in the list")
 			}
 
-			return list.Save()
+			list.Save()
+			return nil
 		},
 	}
 }

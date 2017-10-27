@@ -31,6 +31,6 @@ func (settings *Settings) Edit(ctx *aero.Context, key string, value reflect.Valu
 }
 
 // Save saves the settings in the database.
-func (settings *Settings) Save() error {
-	return DB.Set("Settings", settings.UserID, settings)
+func (settings *Settings) Save() {
+	DB.Set("Settings", settings.UserID, settings)
 }

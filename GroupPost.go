@@ -3,6 +3,7 @@ package arn
 import (
 	"sort"
 
+	"github.com/aerogo/database"
 	"github.com/aerogo/markdown"
 )
 
@@ -15,8 +16,8 @@ type GroupPost struct {
 	Tags     []string `json:"tags"`
 	Likes    []string `json:"likes"`
 	IsDraft  bool     `json:"isDraft" editable:"true"`
-	Created  string       `json:"created"`
-	Edited   string       `json:"edited"`
+	Created  string   `json:"created"`
+	Edited   string   `json:"edited"`
 
 	author *User
 	group  *Group
@@ -70,20 +71,25 @@ func GetGroupPost(id string) (*GroupPost, error) {
 }
 
 // StreamGroupPosts returns a stream of all posts.
-func StreamGroupPosts() (chan *GroupPost, error) {
-	objects, err := DB.All("GroupPost")
-	return objects.(chan *GroupPost), err
+func StreamGroupPosts() chan *GroupPost {
+	channel := make(chan *GroupPost, database.ChannelBufferSize)
+
+	go func() {
+		for obj := range DB.All("GroupPost") {
+			channel <- obj.(*GroupPost)
+		}
+
+		close(channel)
+	}()
+
+	return channel
 }
 
 // AllGroupPosts returns a slice of all posts.
 func AllGroupPosts() ([]*GroupPost, error) {
 	var all []*GroupPost
 
-	stream, err := StreamGroupPosts()
-
-	if err != nil {
-		return nil, err
-	}
+	stream := StreamGroupPosts()
 
 	for obj := range stream {
 		all = append(all, obj)
@@ -110,14 +116,7 @@ func SortGroupPostsLatestLast(posts []*GroupPost) {
 func GetGroupPostsByUser(user *User) ([]*GroupPost, error) {
 	var posts []*GroupPost
 
-	stream := make(chan *GroupPost)
-	err := DB.Scan("GroupPost", stream)
-
-	if err != nil {
-		return nil, err
-	}
-
-	for post := range stream {
+	for post := range StreamGroupPosts() {
 		if post.AuthorID == user.ID {
 			posts = append(posts, post)
 		}
@@ -130,14 +129,7 @@ func GetGroupPostsByUser(user *User) ([]*GroupPost, error) {
 func FilterGroupPosts(filter func(*GroupPost) bool) ([]*GroupPost, error) {
 	var filtered []*GroupPost
 
-	channel := make(chan *GroupPost)
-	err := DB.Scan("GroupPost", channel)
-
-	if err != nil {
-		return filtered, err
-	}
-
-	for post := range channel {
+	for post := range StreamGroupPosts() {
 		if filter(post) {
 			filtered = append(filtered, post)
 		}

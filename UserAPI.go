@@ -57,8 +57,8 @@ func (user *User) Edit(ctx *aero.Context, key string, value reflect.Value, newVa
 }
 
 // Save saves the user object in the database.
-func (user *User) Save() error {
-	return DB.Set("User", user.ID, user)
+func (user *User) Save() {
+	DB.Set("User", user.ID, user)
 }
 
 // Filter removes privacy critical fields from the user object.

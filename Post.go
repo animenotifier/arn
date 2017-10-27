@@ -3,6 +3,7 @@ package arn
 import (
 	"sort"
 
+	"github.com/aerogo/database"
 	"github.com/aerogo/markdown"
 )
 
@@ -14,8 +15,8 @@ type Post struct {
 	ThreadID string   `json:"threadId"`
 	Tags     []string `json:"tags"`
 	Likes    []string `json:"likes"`
-	Created  string       `json:"created"`
-	Edited   string       `json:"edited"`
+	Created  string   `json:"created"`
+	Edited   string   `json:"edited"`
 
 	author *User
 	thread *Thread
@@ -74,22 +75,25 @@ func GetPost(id string) (*Post, error) {
 }
 
 // StreamPosts returns a stream of all posts.
-func StreamPosts() (chan *Post, error) {
-	objects, err := DB.All("Post")
-	return objects.(chan *Post), err
+func StreamPosts() chan *Post {
+	channel := make(chan *Post, database.ChannelBufferSize)
+
+	go func() {
+		for obj := range DB.All("Post") {
+			channel <- obj.(*Post)
+		}
+
+		close(channel)
+	}()
+
+	return channel
 }
 
 // AllPosts returns a slice of all posts.
 func AllPosts() ([]*Post, error) {
 	var all []*Post
 
-	stream, err := StreamPosts()
-
-	if err != nil {
-		return nil, err
-	}
-
-	for obj := range stream {
+	for obj := range StreamPosts() {
 		all = append(all, obj)
 	}
 
@@ -137,14 +141,7 @@ func FilterPostsWithUniqueThreads(posts []*Post, limit int) []*Post {
 func GetPostsByUser(user *User) ([]*Post, error) {
 	var posts []*Post
 
-	stream := make(chan *Post)
-	err := DB.Scan("Post", stream)
-
-	if err != nil {
-		return nil, err
-	}
-
-	for post := range stream {
+	for post := range StreamPosts() {
 		if post.AuthorID == user.ID {
 			posts = append(posts, post)
 		}
@@ -157,14 +154,7 @@ func GetPostsByUser(user *User) ([]*Post, error) {
 func FilterPosts(filter func(*Post) bool) ([]*Post, error) {
 	var filtered []*Post
 
-	channel := make(chan *Post)
-	err := DB.Scan("Post", channel)
-
-	if err != nil {
-		return filtered, err
-	}
-
-	for post := range channel {
+	for post := range StreamPosts() {
 		if filter(post) {
 			filtered = append(filtered, post)
 		}

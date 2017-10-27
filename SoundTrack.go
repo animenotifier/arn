@@ -5,6 +5,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/aerogo/database"
 	"github.com/animenotifier/arn/autocorrect"
 	"github.com/fatih/color"
 )
@@ -195,8 +196,8 @@ func (track *SoundTrack) Publish() error {
 	}
 
 	draftIndex.SoundTrackID = ""
-
-	return draftIndex.Save()
+	draftIndex.Save()
+	return nil
 }
 
 // Unpublish ...
@@ -213,8 +214,8 @@ func (track *SoundTrack) Unpublish() error {
 	}
 
 	draftIndex.SoundTrackID = track.ID
-
-	return draftIndex.Save()
+	draftIndex.Save()
+	return nil
 }
 
 // SortSoundTracksLatestFirst ...
@@ -236,29 +237,25 @@ func GetSoundTrack(id string) (*SoundTrack, error) {
 }
 
 // StreamSoundTracks returns a stream of all soundtracks.
-func StreamSoundTracks() (chan *SoundTrack, error) {
-	tracks, err := DB.All("SoundTrack")
-	return tracks.(chan *SoundTrack), err
-}
+func StreamSoundTracks() chan *SoundTrack {
+	channel := make(chan *SoundTrack, database.ChannelBufferSize)
 
-// MustStreamSoundTracks returns a stream of all soundtracks.
-func MustStreamSoundTracks() chan *SoundTrack {
-	stream, err := StreamSoundTracks()
-	PanicOnError(err)
-	return stream
+	go func() {
+		for obj := range DB.All("SoundTrack") {
+			channel <- obj.(*SoundTrack)
+		}
+
+		close(channel)
+	}()
+
+	return channel
 }
 
 // AllSoundTracks ...
 func AllSoundTracks() ([]*SoundTrack, error) {
 	var all []*SoundTrack
 
-	stream, err := StreamSoundTracks()
-
-	if err != nil {
-		return nil, err
-	}
-
-	for obj := range stream {
+	for obj := range StreamSoundTracks() {
 		all = append(all, obj)
 	}
 
@@ -269,13 +266,7 @@ func AllSoundTracks() ([]*SoundTrack, error) {
 func FilterSoundTracks(filter func(*SoundTrack) bool) ([]*SoundTrack, error) {
 	var filtered []*SoundTrack
 
-	channel, err := StreamSoundTracks()
-
-	if err != nil {
-		return filtered, err
-	}
-
-	for obj := range channel {
+	for obj := range StreamSoundTracks() {
 		if filter(obj) {
 			filtered = append(filtered, obj)
 		}

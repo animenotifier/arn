@@ -1,5 +1,9 @@
 package arn
 
+import (
+	"github.com/aerogo/database"
+)
+
 // Character ...
 type Character struct {
 	ID          string `json:"id"`
@@ -20,31 +24,29 @@ func GetCharacter(id string) (*Character, error) {
 }
 
 // StreamCharacters returns a stream of all characters.
-func StreamCharacters() (chan *Character, error) {
-	objects, err := DB.All("Character")
-	return objects.(chan *Character), err
-}
+func StreamCharacters() chan *Character {
+	channel := make(chan *Character, database.ChannelBufferSize)
 
-// MustStreamCharacters returns a stream of all characters.
-func MustStreamCharacters() chan *Character {
-	stream, err := StreamCharacters()
-	PanicOnError(err)
-	return stream
+	go func() {
+		for obj := range DB.All("Character") {
+			channel <- obj.(*Character)
+		}
+
+		close(channel)
+	}()
+
+	return channel
 }
 
 // AllCharacters returns a slice of all characters.
-func AllCharacters() ([]*Character, error) {
+func AllCharacters() []*Character {
 	var all []*Character
 
-	stream, err := StreamCharacters()
-
-	if err != nil {
-		return nil, err
-	}
+	stream := StreamCharacters()
 
 	for obj := range stream {
 		all = append(all, obj)
 	}
 
-	return all, nil
+	return all
 }

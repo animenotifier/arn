@@ -38,7 +38,9 @@ func init() {
 					return err
 				}
 
-				return subscriptions.Save()
+				subscriptions.Save()
+
+				return nil
 			},
 		},
 
@@ -67,7 +69,9 @@ func init() {
 					return errors.New("PushSubscription does not exist")
 				}
 
-				return subscriptions.Save()
+				subscriptions.Save()
+
+				return nil
 			},
 		},
 	})
@@ -115,6 +119,6 @@ func (list *PushSubscriptions) Authorize(ctx *aero.Context, action string) error
 }
 
 // Save saves the push subscriptions in the database.
-func (list *PushSubscriptions) Save() error {
-	return DB.Set("PushSubscriptions", list.UserID, list)
+func (list *PushSubscriptions) Save() {
+	DB.Set("PushSubscriptions", list.UserID, list)
 }

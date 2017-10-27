@@ -1,17 +1,12 @@
 package arn
 
 import (
-	"github.com/aerogo/aerospike"
 	"github.com/aerogo/api"
+	"github.com/aerogo/database"
 )
 
 // DB is the main database client.
-var DB = aerospike.NewDatabase(
-	"arn-db",
-	3000,
-	"arn",
-	DBTypes,
-)
+var DB = database.New("arn", DBTypes)
 
 // DBTypes ...
 var DBTypes = []interface{}{

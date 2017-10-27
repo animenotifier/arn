@@ -1,6 +1,8 @@
 package arn
 
 import (
+	"errors"
+
 	"github.com/fatih/color"
 )
 
@@ -43,9 +45,10 @@ func (idList *ListOfMappedIDs) Resolve() []interface{} {
 
 // GetListOfMappedIDs ...
 func GetListOfMappedIDs(table string, id string) (*ListOfMappedIDs, error) {
-	cache := &ListOfMappedIDs{}
-	err := DB.GetObject(table, id, cache)
-	return cache, err
+	// cache := &ListOfMappedIDs{}
+	// err := DB.GetObject(table, id, cache)
+	// return cache, err
+	return nil, errors.New("Not implemented")
 }
 
 // GetForumActivityCached ...

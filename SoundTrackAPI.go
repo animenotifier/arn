@@ -82,15 +82,11 @@ func (soundtrack *SoundTrack) Delete() error {
 	if soundtrack.IsDraft {
 		draftIndex := soundtrack.Creator().DraftIndex()
 		draftIndex.SoundTrackID = ""
-		err := draftIndex.Save()
-
-		if err != nil {
-			return err
-		}
+		draftIndex.Save()
 	}
 
-	_, err := DB.Delete("SoundTrack", soundtrack.ID)
-	return err
+	DB.Delete("SoundTrack", soundtrack.ID)
+	return nil
 }
 
 // Authorize returns an error if the given API POST request is not authorized.
@@ -103,6 +99,6 @@ func (soundtrack *SoundTrack) Authorize(ctx *aero.Context, action string) error 
 }
 
 // Save saves the soundtrack object in the database.
-func (soundtrack *SoundTrack) Save() error {
-	return DB.Set("SoundTrack", soundtrack.ID, soundtrack)
+func (soundtrack *SoundTrack) Save() {
+	DB.Set("SoundTrack", soundtrack.ID, soundtrack)
 }

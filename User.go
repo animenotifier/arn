@@ -23,10 +23,10 @@ type User struct {
 	LastName   string       `json:"lastName"`
 	Email      string       `json:"email"`
 	Role       string       `json:"role"`
-	Registered string           `json:"registered"`
-	LastLogin  string           `json:"lastLogin"`
-	LastSeen   string           `json:"lastSeen"`
-	ProExpires string           `json:"proExpires"`
+	Registered string       `json:"registered"`
+	LastLogin  string       `json:"lastLogin"`
+	LastSeen   string       `json:"lastSeen"`
+	ProExpires string       `json:"proExpires"`
 	Gender     string       `json:"gender"`
 	Language   string       `json:"language"`
 	Tagline    string       `json:"tagline" editable:"true"`
@@ -61,89 +61,53 @@ func NewUser() *User {
 }
 
 // RegisterUser registers a new user in the database and sets up all the required references.
-func RegisterUser(user *User) error {
-	var err error
-
+func RegisterUser(user *User) {
 	user.Registered = DateTimeUTC()
 	user.LastLogin = user.Registered
 	user.LastSeen = user.Registered
 
 	// Save nick in NickToUser table
-	err = DB.Set("NickToUser", user.Nick, &NickToUser{
+	DB.Set("NickToUser", user.Nick, &NickToUser{
 		Nick:   user.Nick,
 		UserID: user.ID,
 	})
 
-	if err != nil {
-		return err
-	}
-
 	// Save email in EmailToUser table
-	err = DB.Set("EmailToUser", user.Email, &EmailToUser{
+	DB.Set("EmailToUser", user.Email, &EmailToUser{
 		Email:  user.Email,
 		UserID: user.ID,
 	})
 
-	if err != nil {
-		return err
-	}
-
 	// Create default settings
-	err = NewSettings(user.ID).Save()
-
-	if err != nil {
-		return err
-	}
+	NewSettings(user.ID).Save()
 
 	// Add empty anime list
-	err = DB.Set("AnimeList", user.ID, &AnimeList{
+	DB.Set("AnimeList", user.ID, &AnimeList{
 		UserID: user.ID,
 		Items:  []*AnimeListItem{},
 	})
 
-	if err != nil {
-		return err
-	}
-
 	// Add empty inventory
-	err = NewInventory(user.ID).Save()
-
-	if err != nil {
-		return err
-	}
+	NewInventory(user.ID).Save()
 
 	// Add draft index
-	err = NewDraftIndex(user.ID).Save()
-
-	if err != nil {
-		return err
-	}
+	NewDraftIndex(user.ID).Save()
 
 	// Add empty push subscriptions
-	err = DB.Set("PushSubscriptions", user.ID, &PushSubscriptions{
+	DB.Set("PushSubscriptions", user.ID, &PushSubscriptions{
 		UserID: user.ID,
 		Items:  []*PushSubscription{},
 	})
-
-	if err != nil {
-		return err
-	}
 
 	// Add empty follow list
 	follows := &UserFollows{}
 	follows.UserID = user.ID
 	follows.Items = []string{}
 
-	err = DB.Set("UserFollows", user.ID, follows)
-
-	if err != nil {
-		return err
-	}
+	DB.Set("UserFollows", user.ID, follows)
 
 	// Refresh avatar async
 	go user.RefreshAvatar()
-
-	return nil
 }
 
 // SendNotification ...
@@ -312,19 +276,23 @@ func (user *User) ActivateItemEffect(itemID string) error {
 	switch itemID {
 	case "pro-account-3":
 		user.ExtendProDuration(3 * month)
-		return user.Save()
+		user.Save()
+		return nil
 
 	case "pro-account-6":
 		user.ExtendProDuration(6 * month)
-		return user.Save()
+		user.Save()
+		return nil
 
 	case "pro-account-12":
 		user.ExtendProDuration(12 * month)
-		return user.Save()
+		user.Save()
+		return nil
 
 	case "pro-account-24":
 		user.ExtendProDuration(24 * month)
-		return user.Save()
+		user.Save()
+		return nil
 
 	default:
 		return errors.New("Can't activate unknown item: " + itemID)
@@ -355,18 +323,19 @@ func (user *User) SetNick(newName string) error {
 		return errors.New("Username '" + newName + "' is taken already")
 	}
 
-	return user.ForceSetNick(newName)
+	user.ForceSetNick(newName)
+	return nil
 }
 
 // ForceSetNick forces a nickname overwrite.
-func (user *User) ForceSetNick(newName string) error {
+func (user *User) ForceSetNick(newName string) {
 	// Delete old nick reference
 	DB.Delete("NickToUser", user.Nick)
 
 	// Set new nick
 	user.Nick = newName
 
-	return DB.Set("NickToUser", user.Nick, &NickToUser{
+	DB.Set("NickToUser", user.Nick, &NickToUser{
 		Nick:   user.Nick,
 		UserID: user.ID,
 	})
@@ -387,8 +356,10 @@ func (user *User) SetEmail(newName string) error {
 	// Set new email
 	user.Email = newName
 
-	return DB.Set("EmailToUser", user.Email, &EmailToUser{
+	DB.Set("EmailToUser", user.Email, &EmailToUser{
 		Email:  user.Email,
 		UserID: user.ID,
 	})
+
+	return nil
 }

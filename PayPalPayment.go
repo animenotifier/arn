@@ -25,6 +25,6 @@ func (payment *PayPalPayment) Gems() int {
 }
 
 // Save saves the paypal payment in the database.
-func (payment *PayPalPayment) Save() error {
-	return DB.Set("PayPalPayment", payment.ID, payment)
+func (payment *PayPalPayment) Save() {
+	DB.Set("PayPalPayment", payment.ID, payment)
 }

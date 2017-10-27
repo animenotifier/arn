@@ -98,8 +98,12 @@ func (post *Post) Create(ctx *aero.Context) error {
 
 	// Notifications
 	go func() {
-		postsObj, err := DB.GetMany("Post", oldPosts)
-		posts := postsObj.([]*Post)
+		postsObj := DB.GetMany("Post", oldPosts)
+		posts := make([]*Post, len(postsObj), len(postsObj))
+
+		for i, obj := range postsObj {
+			posts[i] = obj.(*Post)
+		}
 
 		if err == nil {
 			notifyUsers := map[string]bool{}
@@ -136,7 +140,9 @@ func (post *Post) Create(ctx *aero.Context) error {
 	thread.Posts = append(thread.Posts, post.ID)
 
 	// Save the parent thread
-	return thread.Save()
+	thread.Save()
+
+	return nil
 }
 
 // AfterEdit updates the date it has been edited.
@@ -146,6 +152,6 @@ func (post *Post) AfterEdit(ctx *aero.Context) error {
 }
 
 // Save saves the post object in the database.
-func (post *Post) Save() error {
-	return DB.Set("Post", post.ID, post)
+func (post *Post) Save() {
+	DB.Set("Post", post.ID, post)
 }

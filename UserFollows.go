@@ -1,10 +1,14 @@
 package arn
 
-import "errors"
+import (
+	"errors"
+
+	"github.com/aerogo/database"
+)
 
 // UserFollows ...
 type UserFollows struct {
-	UserID string       `json:"userId"`
+	UserID string   `json:"userId"`
 	Items  []string `json:"items"`
 }
 
@@ -64,13 +68,14 @@ func (list *UserFollows) Contains(userID string) bool {
 
 // Users returns a slice of all the users you are following.
 func (list *UserFollows) Users() []*User {
-	objects, err := DB.GetMany("User", list.Items)
+	followsObj := DB.GetMany("User", list.Items)
+	follows := make([]*User, len(followsObj), len(followsObj))
 
-	if err != nil {
-		return nil
+	for i, obj := range followsObj {
+		follows[i] = obj.(*User)
 	}
 
-	return objects.([]*User)
+	return follows
 }
 
 // GetUserFollows ...
@@ -85,30 +90,25 @@ func GetUserFollows(id string) (*UserFollows, error) {
 }
 
 // StreamUserFollows returns a stream of all user follows.
-func StreamUserFollows() (chan *UserFollows, error) {
-	channel := make(chan *UserFollows)
-	err := DB.Scan("UserFollows", channel)
-	return channel, err
-}
+func StreamUserFollows() chan *UserFollows {
+	channel := make(chan *UserFollows, database.ChannelBufferSize)
 
-// MustStreamUserFollows returns a stream of all user follows.
-func MustStreamUserFollows() chan *UserFollows {
-	stream, err := StreamUserFollows()
-	PanicOnError(err)
-	return stream
+	go func() {
+		for obj := range DB.All("UserFollows") {
+			channel <- obj.(*UserFollows)
+		}
+
+		close(channel)
+	}()
+
+	return channel
 }
 
 // AllUserFollows returns a slice of all user follows.
 func AllUserFollows() ([]*UserFollows, error) {
 	var all []*UserFollows
 
-	stream, err := StreamUserFollows()
-
-	if err != nil {
-		return nil, err
-	}
-
-	for obj := range stream {
+	for obj := range StreamUserFollows() {
 		all = append(all, obj)
 	}
 

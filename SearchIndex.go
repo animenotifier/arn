@@ -205,13 +205,12 @@ func Search(term string, maxUsers, maxAnime, maxPosts, maxThreads int) ([]*User,
 		}
 
 		// Fetch data
-		obj, err := DB.GetMany("Post", items)
+		objects := DB.GetMany("Post", items)
+		postResults = make([]*Post, len(objects), len(objects))
 
-		if err != nil {
-			return
+		for i, obj := range objects {
+			postResults[i] = obj.(*Post)
 		}
-
-		postResults = obj.([]*Post)
 	}
 
 	searchThreads := func() {
@@ -240,13 +239,12 @@ func Search(term string, maxUsers, maxAnime, maxPosts, maxThreads int) ([]*User,
 		}
 
 		// Fetch data
-		obj, err := DB.GetMany("Thread", items)
+		objects := DB.GetMany("Thread", items)
+		threadResults = make([]*Thread, len(objects), len(objects))
 
-		if err != nil {
-			return
+		for i, obj := range objects {
+			threadResults[i] = obj.(*Thread)
 		}
-
-		threadResults = obj.([]*Thread)
 	}
 
 	// Search everything in parallel

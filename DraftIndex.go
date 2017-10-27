@@ -2,7 +2,7 @@ package arn
 
 // DraftIndex has references to unpublished drafts a user created.
 type DraftIndex struct {
-	UserID       string     `json:"userId"`
+	UserID       string `json:"userId"`
 	GroupID      string `json:"groupId"`
 	SoundTrackID string `json:"soundTrackId"`
 }

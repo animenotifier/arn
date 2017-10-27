@@ -3,6 +3,7 @@ package arn
 import (
 	"errors"
 
+	"github.com/aerogo/database"
 	"github.com/fatih/color"
 )
 
@@ -18,9 +19,9 @@ type Group struct {
 	Members     []*GroupMember `json:"members"`
 	Neighbors   []string       `json:"neighbors"`
 	IsDraft     bool           `json:"isDraft" editable:"true"`
-	Created     string             `json:"created"`
+	Created     string         `json:"created"`
 	CreatedBy   string         `json:"createdBy"`
-	Edited      string             `json:"edited"`
+	Edited      string         `json:"edited"`
 	EditedBy    string         `json:"editedBy"`
 
 	creator *User
@@ -88,7 +89,9 @@ func (group *Group) Publish() error {
 	}
 
 	draftIndex.GroupID = ""
-	return draftIndex.Save()
+	draftIndex.Save()
+
+	return nil
 }
 
 // Unpublish ...
@@ -105,8 +108,9 @@ func (group *Group) Unpublish() error {
 	}
 
 	draftIndex.GroupID = group.ID
+	draftIndex.Save()
 
-	return draftIndex.Save()
+	return nil
 }
 
 // GetGroup ...
@@ -121,27 +125,25 @@ func GetGroup(id string) (*Group, error) {
 }
 
 // StreamGroups returns a stream of all groups.
-func StreamGroups() (chan *Group, error) {
-	objects, err := DB.All("Group")
-	return objects.(chan *Group), err
-}
+func StreamGroups() chan *Group {
+	channel := make(chan *Group, database.ChannelBufferSize)
 
-// MustStreamGroups returns a stream of all groups.
-func MustStreamGroups() chan *Group {
-	stream, err := StreamGroups()
-	PanicOnError(err)
-	return stream
+	go func() {
+		for obj := range DB.All("Group") {
+			channel <- obj.(*Group)
+		}
+
+		close(channel)
+	}()
+
+	return channel
 }
 
 // AllGroups returns a slice of all groups.
 func AllGroups() ([]*Group, error) {
 	var all []*Group
 
-	stream, err := StreamGroups()
-
-	if err != nil {
-		return nil, err
-	}
+	stream := StreamGroups()
 
 	for obj := range stream {
 		all = append(all, obj)
@@ -154,16 +156,11 @@ func AllGroups() ([]*Group, error) {
 func FilterGroups(filter func(*Group) bool) ([]*Group, error) {
 	var filtered []*Group
 
-	channel := make(chan *Group)
-	err := DB.Scan("Group", channel)
+	for obj := range DB.All("Group") {
+		realObject := obj.(*Group)
 
-	if err != nil {
-		return filtered, err
-	}
-
-	for obj := range channel {
-		if filter(obj) {
-			filtered = append(filtered, obj)
+		if filter(realObject) {
+			filtered = append(filtered, realObject)
 		}
 	}
 

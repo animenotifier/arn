@@ -37,6 +37,6 @@ func (analytics *Analytics) Create(ctx *aero.Context) error {
 }
 
 // Save saves the analytics in the database.
-func (analytics *Analytics) Save() error {
-	return DB.Set("Analytics", analytics.UserID, analytics)
+func (analytics *Analytics) Save() {
+	DB.Set("Analytics", analytics.UserID, analytics)
 }

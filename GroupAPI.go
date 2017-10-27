@@ -65,15 +65,11 @@ func (group *Group) Delete() error {
 	if group.IsDraft {
 		draftIndex := group.Creator().DraftIndex()
 		draftIndex.GroupID = ""
-		err := draftIndex.Save()
-
-		if err != nil {
-			return err
-		}
+		draftIndex.Save()
 	}
 
-	_, err := DB.Delete("Group", group.ID)
-	return err
+	DB.Delete("Group", group.ID)
+	return nil
 }
 
 // Authorize returns an error if the given API POST request is not authorized.
@@ -92,6 +88,6 @@ func (group *Group) Authorize(ctx *aero.Context, action string) error {
 }
 
 // Save saves the group in the database.
-func (group *Group) Save() error {
-	return DB.Set("Group", group.ID, group)
+func (group *Group) Save() {
+	DB.Set("Group", group.ID, group)
 }

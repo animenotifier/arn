@@ -1,5 +1,7 @@
 package arn
 
+import "github.com/aerogo/database"
+
 const (
 	// ItemRarityCommon ...
 	ItemRarityCommon = "common"
@@ -19,7 +21,7 @@ const (
 
 // Item ...
 type Item struct {
-	ID          string     `json:"id"`
+	ID          string `json:"id"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Price       uint   `json:"price"`
@@ -41,29 +43,25 @@ func GetItem(id string) (*Item, error) {
 }
 
 // StreamItems returns a stream of all items.
-func StreamItems() (chan *Item, error) {
-	objects, err := DB.All("Item")
-	return objects.(chan *Item), err
-}
+func StreamItems() chan *Item {
+	channel := make(chan *Item, database.ChannelBufferSize)
 
-// MustStreamItems returns a stream of all items.
-func MustStreamItems() chan *Item {
-	stream, err := StreamItems()
-	PanicOnError(err)
-	return stream
+	go func() {
+		for obj := range DB.All("Item") {
+			channel <- obj.(*Item)
+		}
+
+		close(channel)
+	}()
+
+	return channel
 }
 
 // AllItems returns a slice of all items.
 func AllItems() ([]*Item, error) {
 	var all []*Item
 
-	stream, err := StreamItems()
-
-	if err != nil {
-		return nil, err
-	}
-
-	for obj := range stream {
+	for obj := range StreamItems() {
 		all = append(all, obj)
 	}
 

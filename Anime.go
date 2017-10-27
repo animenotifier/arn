@@ -5,20 +5,19 @@ import (
 	"errors"
 	"sort"
 	"strconv"
-	"strings"
 	"time"
 
+	"github.com/aerogo/database"
 	"github.com/animenotifier/arn/validator"
 
 	"github.com/animenotifier/kitsu"
 	"github.com/animenotifier/shoboi"
-	"github.com/animenotifier/twist"
 	"github.com/fatih/color"
 )
 
 // Anime ...
 type Anime struct {
-	ID            string              `json:"id"`
+	ID            string           `json:"id"`
 	Type          string           `json:"type"`
 	Title         *AnimeTitle      `json:"title"`
 	Image         *AnimeImageTypes `json:"image"`
@@ -197,12 +196,7 @@ func (anime *Anime) RemoveMapping(name string, id string) bool {
 // Episodes returns the anime episodes wrapper.
 func (anime *Anime) Episodes() *AnimeEpisodes {
 	if anime.episodes == nil {
-		record, err := DB.Get("AnimeEpisodes", anime.ID)
-
-		if err != nil {
-			return nil
-		}
-
+		record, _ := DB.Get("AnimeEpisodes", anime.ID)
 		anime.episodes = record.(*AnimeEpisodes)
 	}
 
@@ -335,7 +329,9 @@ func (anime *Anime) RefreshEpisodes() error {
 		lastAiringDate = episode.AiringDate.Start
 	}
 
-	return episodes.Save()
+	episodes.Save()
+
+	return nil
 }
 
 // ShoboiEpisodes returns a slice of episode info from cal.syoboi.jp.
@@ -385,55 +381,58 @@ func (anime *Anime) ShoboiEpisodes() ([]*AnimeEpisode, error) {
 
 // TwistEpisodes returns a slice of episode info from twist.moe.
 func (anime *Anime) TwistEpisodes() ([]*AnimeEpisode, error) {
-	var cache ListOfIDs
-	err := DB.GetObject("Cache", "animetwist index", &cache)
+	// TODO: ...
+	return nil, errors.New("Not implemented")
 
-	if err != nil {
-		return nil, err
-	}
+	// var cache ListOfIDs
+	// err := DB.GetObject("Cache", "animetwist index", &cache)
 
-	// Does the index contain the ID?
-	found := false
+	// if err != nil {
+	// 	return nil, err
+	// }
 
-	for _, id := range cache.IDList {
-		if id == anime.ID {
-			found = true
-			break
-		}
-	}
+	// // Does the index contain the ID?
+	// found := false
 
-	// If the ID is not the index we don't need to query the feed
-	if !found {
-		return nil, errors.New("Not available in twist.moe anime index")
-	}
+	// for _, id := range cache.IDList {
+	// 	if id == anime.ID {
+	// 		found = true
+	// 		break
+	// 	}
+	// }
 
-	// Get twist.moe feed
-	feed, err := twist.GetFeedByKitsuID(anime.ID)
+	// // If the ID is not the index we don't need to query the feed
+	// if !found {
+	// 	return nil, errors.New("Not available in twist.moe anime index")
+	// }
 
-	if err != nil {
-		return nil, err
-	}
+	// // Get twist.moe feed
+	// feed, err := twist.GetFeedByKitsuID(anime.ID)
 
-	episodes := feed.Episodes
+	// if err != nil {
+	// 	return nil, err
+	// }
 
-	// Sort by episode number
-	sort.Slice(episodes, func(a, b int) bool {
-		return episodes[a].Number < episodes[b].Number
-	})
+	// episodes := feed.Episodes
 
-	arnEpisodes := []*AnimeEpisode{}
+	// // Sort by episode number
+	// sort.Slice(episodes, func(a, b int) bool {
+	// 	return episodes[a].Number < episodes[b].Number
+	// })
 
-	for _, episode := range episodes {
-		arnEpisode := NewAnimeEpisode()
-		arnEpisode.Number = episode.Number
-		arnEpisode.Links = map[string]string{
-			"twist.moe": strings.Replace(episode.Link, "https://test.twist.moe/", "https://twist.moe/", 1),
-		}
+	// arnEpisodes := []*AnimeEpisode{}
 
-		arnEpisodes = append(arnEpisodes, arnEpisode)
-	}
+	// for _, episode := range episodes {
+	// 	arnEpisode := NewAnimeEpisode()
+	// 	arnEpisode.Number = episode.Number
+	// 	arnEpisode.Links = map[string]string{
+	// 		"twist.moe": strings.Replace(episode.Link, "https://test.twist.moe/", "https://twist.moe/", 1),
+	// 	}
 
-	return arnEpisodes, nil
+	// 	arnEpisodes = append(arnEpisodes, arnEpisode)
+	// }
+
+	// return arnEpisodes, nil
 }
 
 // UpcomingEpisodes ...
@@ -530,31 +529,31 @@ func (anime *Anime) RefreshAnimeCharacters() (*AnimeCharacters, error) {
 		animeCharacters.Items = append(animeCharacters.Items, animeCharacter)
 	}
 
-	return animeCharacters, animeCharacters.Save()
+	animeCharacters.Save()
+
+	return animeCharacters, nil
 }
 
 // StreamAnime returns a stream of all anime.
-func StreamAnime() (chan *Anime, error) {
-	objects, err := DB.All("Anime")
-	return objects.(chan *Anime), err
-}
+func StreamAnime() chan *Anime {
+	channel := make(chan *Anime, database.ChannelBufferSize)
 
-// MustStreamAnime returns a stream of all anime.
-func MustStreamAnime() chan *Anime {
-	stream, err := StreamAnime()
-	PanicOnError(err)
-	return stream
+	go func() {
+		for obj := range DB.All("Anime") {
+			channel <- obj.(*Anime)
+		}
+
+		close(channel)
+	}()
+
+	return channel
 }
 
 // AllAnime returns a slice of all anime.
 func AllAnime() ([]*Anime, error) {
 	var all []*Anime
 
-	stream, err := StreamAnime()
-
-	if err != nil {
-		return nil, err
-	}
+	stream := StreamAnime()
 
 	for obj := range stream {
 		all = append(all, obj)
@@ -564,27 +563,24 @@ func AllAnime() ([]*Anime, error) {
 }
 
 // FilterAnime filters all anime by a custom function.
-func FilterAnime(filter func(*Anime) bool) ([]*Anime, error) {
+func FilterAnime(filter func(*Anime) bool) []*Anime {
 	var filtered []*Anime
 
-	channel := make(chan *Anime)
-	err := DB.Scan("Anime", channel)
-
-	if err != nil {
-		return filtered, err
-	}
+	channel := DB.All("Anime")
 
 	for obj := range channel {
-		if filter(obj) {
-			filtered = append(filtered, obj)
+		realObject := obj.(*Anime)
+
+		if filter(realObject) {
+			filtered = append(filtered, realObject)
 		}
 	}
 
-	return filtered, nil
+	return filtered
 }
 
 // GetAiringAnime ...
-func GetAiringAnime() ([]*Anime, error) {
+func GetAiringAnime() []*Anime {
 	beforeTime := time.Now().Add(-6 * 30 * 24 * time.Hour)
 	beforeTimeString := beforeTime.Format(time.RFC3339)
 
@@ -600,9 +596,4 @@ func GetAiringAnime() ([]*Anime, error) {
 		// return anime.UpcomingEpisode() != nil || anime.Status == "upcoming"
 		return anime.Status == "current" || anime.Status == "upcoming"
 	})
-}
-
-// MustSave saves the anime in the database.
-func (anime *Anime) MustSave() {
-	PanicOnError(anime.Save())
 }

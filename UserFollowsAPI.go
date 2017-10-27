@@ -28,6 +28,6 @@ func (list *UserFollows) Authorize(ctx *aero.Context, action string) error {
 }
 
 // Save saves the episodes in the database.
-func (list *UserFollows) Save() error {
-	return DB.Set("UserFollows", list.UserID, list)
+func (list *UserFollows) Save() {
+	DB.Set("UserFollows", list.UserID, list)
 }

@@ -3,11 +3,13 @@ package arn
 import (
 	"errors"
 	"sort"
+
+	"github.com/aerogo/database"
 )
 
 // AnimeList ...
 type AnimeList struct {
-	UserID string               `json:"userId"`
+	UserID string           `json:"userId"`
 	Items  []*AnimeListItem `json:"items"`
 
 	user *User
@@ -231,11 +233,10 @@ func (list *AnimeList) PrefetchAnime() {
 	}
 
 	// Prefetch anime objects
-	animeObjects, _ := DB.GetMany("Anime", animeIDList)
-	prefetchedAnime := animeObjects.([]*Anime)
+	animeObjects := DB.GetMany("Anime", animeIDList)
 
-	for i, anime := range prefetchedAnime {
-		list.Items[i].anime = anime
+	for i, obj := range animeObjects {
+		list.Items[i].anime = obj.(*Anime)
 	}
 }
 
@@ -284,20 +285,25 @@ func (list *AnimeList) NormalizeRatings() {
 }
 
 // StreamAnimeLists returns a stream of all anime.
-func StreamAnimeLists() (chan *AnimeList, error) {
-	objects, err := DB.All("AnimeList")
-	return objects.(chan *AnimeList), err
+func StreamAnimeLists() chan *AnimeList {
+	channel := make(chan *AnimeList, database.ChannelBufferSize)
+
+	go func() {
+		for obj := range DB.All("AnimeList") {
+			channel <- obj.(*AnimeList)
+		}
+
+		close(channel)
+	}()
+
+	return channel
 }
 
 // AllAnimeLists returns a slice of all anime.
 func AllAnimeLists() ([]*AnimeList, error) {
 	var all []*AnimeList
 
-	stream, err := StreamAnimeLists()
-
-	if err != nil {
-		return nil, err
-	}
+	stream := StreamAnimeLists()
 
 	for obj := range stream {
 		all = append(all, obj)
@@ -308,41 +314,11 @@ func AllAnimeLists() ([]*AnimeList, error) {
 
 // GetAnimeList ...
 func GetAnimeList(userID string) (*AnimeList, error) {
-	animeList := &AnimeList{
-		UserID: userID,
-		Items:  []*AnimeListItem{},
-	}
-
-	m, err := DB.GetMap("AnimeList", userID)
+	animeList, err := DB.Get("AnimeList", userID)
 
 	if err != nil {
 		return nil, err
 	}
 
-	itemList := m["items"].([]interface{})
-
-	for _, itemMap := range itemList {
-		item := itemMap.(map[interface{}]interface{})
-		ratingMap := item["rating"].(map[interface{}]interface{})
-		newItem := &AnimeListItem{
-			AnimeID:      item["animeId"].(string),
-			Status:       item["status"].(string),
-			Episodes:     item["episodes"].(int),
-			Notes:        item["notes"].(string),
-			RewatchCount: item["rewatchCount"].(int),
-			Private:      item["private"].(int) != 0,
-			Edited:       item["edited"].(string),
-			Created:      item["created"].(string),
-			Rating: &AnimeRating{
-				Overall:    ratingMap["overall"].(float64),
-				Story:      ratingMap["story"].(float64),
-				Visuals:    ratingMap["visuals"].(float64),
-				Soundtrack: ratingMap["soundtrack"].(float64),
-			},
-		}
-
-		animeList.Items = append(animeList.Items, newItem)
-	}
-
-	return animeList, nil
+	return animeList.(*AnimeList), nil
 }

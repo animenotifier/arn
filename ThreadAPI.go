@@ -107,6 +107,6 @@ func (thread *Thread) AfterEdit(ctx *aero.Context) error {
 }
 
 // Save saves the thread object in the database.
-func (thread *Thread) Save() error {
-	return DB.Set("Thread", thread.ID, thread)
+func (thread *Thread) Save() {
+	DB.Set("Thread", thread.ID, thread)
 }
