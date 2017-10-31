@@ -5,8 +5,14 @@ import (
 	"github.com/aerogo/nano"
 )
 
+// Session ...
+type Session map[string]interface{}
+
+// Node represents the database node.
+var Node = nano.New()
+
 // DB is the main database client.
-var DB = nano.New("arn", DBTypes)
+var DB = Node.Namespace("arn", DBTypes...)
 
 // DBTypes ...
 var DBTypes = []interface{}{
@@ -32,6 +38,7 @@ var DBTypes = []interface{}{
 	(*Purchase)(nil),
 	(*PushSubscriptions)(nil),
 	(*SearchIndex)(nil),
+	(*Session)(nil),
 	(*Settings)(nil),
 	(*SoundTrack)(nil),
 	(*Thread)(nil),
