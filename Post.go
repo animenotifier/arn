@@ -3,8 +3,8 @@ package arn
 import (
 	"sort"
 
-	"github.com/aerogo/nano"
 	"github.com/aerogo/markdown"
+	"github.com/aerogo/nano"
 )
 
 // Post represents a forum post.
@@ -90,14 +90,14 @@ func StreamPosts() chan *Post {
 }
 
 // AllPosts returns a slice of all posts.
-func AllPosts() ([]*Post, error) {
+func AllPosts() []*Post {
 	var all []*Post
 
 	for obj := range StreamPosts() {
 		all = append(all, obj)
 	}
 
-	return all, nil
+	return all
 }
 
 // SortPostsLatestFirst sorts the slice of posts.

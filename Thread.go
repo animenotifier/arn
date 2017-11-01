@@ -3,8 +3,8 @@ package arn
 import (
 	"sort"
 
-	"github.com/aerogo/nano"
 	"github.com/aerogo/markdown"
+	"github.com/aerogo/nano"
 )
 
 // Thread represents a forum thread.
@@ -108,14 +108,14 @@ func StreamThreads() chan *Thread {
 }
 
 // AllThreads ...
-func AllThreads() ([]*Thread, error) {
+func AllThreads() []*Thread {
 	var all []*Thread
 
 	for obj := range StreamThreads() {
 		all = append(all, obj)
 	}
 
-	return all, nil
+	return all
 }
 
 // SortThreads sorts a slice of threads for the forum view (stickies first).

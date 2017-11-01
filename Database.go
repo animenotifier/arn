@@ -9,7 +9,7 @@ import (
 type Session map[string]interface{}
 
 // Node represents the database node.
-var Node = nano.New()
+var Node = nano.New(5000)
 
 // DB is the main database client.
 var DB = Node.Namespace("arn", DBTypes...)
@@ -31,6 +31,7 @@ var DBTypes = []interface{}{
 	(*GoogleToUser)(nil),
 	(*Group)(nil),
 	(*Item)(nil),
+	(*IDList)(nil),
 	(*Inventory)(nil),
 	(*NickToUser)(nil),
 	(*PayPalPayment)(nil),

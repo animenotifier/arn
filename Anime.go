@@ -5,10 +5,12 @@ import (
 	"errors"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/aerogo/nano"
 	"github.com/animenotifier/arn/validator"
+	"github.com/animenotifier/twist"
 
 	"github.com/animenotifier/kitsu"
 	"github.com/animenotifier/shoboi"
@@ -377,58 +379,54 @@ func (anime *Anime) ShoboiEpisodes() ([]*AnimeEpisode, error) {
 
 // TwistEpisodes returns a slice of episode info from twist.moe.
 func (anime *Anime) TwistEpisodes() ([]*AnimeEpisode, error) {
-	// TODO: ...
-	return nil, errors.New("Not implemented")
+	idList, err := GetIDList("animetwist index")
 
-	// var cache ListOfIDs
-	// err := DB.GetObject("Cache", "animetwist index", &cache)
+	if err != nil {
+		return nil, err
+	}
 
-	// if err != nil {
-	// 	return nil, err
-	// }
+	// Does the index contain the ID?
+	found := false
 
-	// // Does the index contain the ID?
-	// found := false
+	for _, id := range idList {
+		if id == anime.ID {
+			found = true
+			break
+		}
+	}
 
-	// for _, id := range cache.IDList {
-	// 	if id == anime.ID {
-	// 		found = true
-	// 		break
-	// 	}
-	// }
+	// If the ID is not the index we don't need to query the feed
+	if !found {
+		return nil, errors.New("Not available in twist.moe anime index")
+	}
 
-	// // If the ID is not the index we don't need to query the feed
-	// if !found {
-	// 	return nil, errors.New("Not available in twist.moe anime index")
-	// }
+	// Get twist.moe feed
+	feed, err := twist.GetFeedByKitsuID(anime.ID)
 
-	// // Get twist.moe feed
-	// feed, err := twist.GetFeedByKitsuID(anime.ID)
+	if err != nil {
+		return nil, err
+	}
 
-	// if err != nil {
-	// 	return nil, err
-	// }
+	episodes := feed.Episodes
 
-	// episodes := feed.Episodes
+	// Sort by episode number
+	sort.Slice(episodes, func(a, b int) bool {
+		return episodes[a].Number < episodes[b].Number
+	})
 
-	// // Sort by episode number
-	// sort.Slice(episodes, func(a, b int) bool {
-	// 	return episodes[a].Number < episodes[b].Number
-	// })
+	arnEpisodes := []*AnimeEpisode{}
 
-	// arnEpisodes := []*AnimeEpisode{}
+	for _, episode := range episodes {
+		arnEpisode := NewAnimeEpisode()
+		arnEpisode.Number = episode.Number
+		arnEpisode.Links = map[string]string{
+			"twist.moe": strings.Replace(episode.Link, "https://test.twist.moe/", "https://twist.moe/", 1),
+		}
 
-	// for _, episode := range episodes {
-	// 	arnEpisode := NewAnimeEpisode()
-	// 	arnEpisode.Number = episode.Number
-	// 	arnEpisode.Links = map[string]string{
-	// 		"twist.moe": strings.Replace(episode.Link, "https://test.twist.moe/", "https://twist.moe/", 1),
-	// 	}
+		arnEpisodes = append(arnEpisodes, arnEpisode)
+	}
 
-	// 	arnEpisodes = append(arnEpisodes, arnEpisode)
-	// }
-
-	// return arnEpisodes, nil
+	return arnEpisodes, nil
 }
 
 // UpcomingEpisodes ...
