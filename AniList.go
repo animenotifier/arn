@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/animenotifier/anilist"
-	"github.com/fatih/color"
 )
 
 // FindAniListAnime tries to find an AniListAnime in our Anime database.
@@ -15,11 +14,6 @@ func FindAniListAnime(search *anilist.Anime, allAnime []*Anime) *Anime {
 	if err == nil {
 		anime, _ := GetAnime(match.AnimeID)
 		return anime
-	}
-
-	if err != nil && !strings.Contains(err.Error(), "not found") {
-		color.Red(err.Error())
-		return nil
 	}
 
 	var mostSimilar *Anime
