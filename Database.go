@@ -12,10 +12,7 @@ type Session map[string]interface{}
 var Node = nano.New(5000)
 
 // DB is the main database client.
-var DB = Node.Namespace("arn", DBTypes...)
-
-// DBTypes ...
-var DBTypes = []interface{}{
+var DB = Node.Namespace("arn").RegisterTypes(
 	(*Analytics)(nil),
 	(*Anime)(nil),
 	(*AnimeCharacters)(nil),
@@ -46,7 +43,7 @@ var DBTypes = []interface{}{
 	(*TwitterToUser)(nil),
 	(*User)(nil),
 	(*UserFollows)(nil),
-}
+)
 
 // API ...
 var API = api.New("/api/", DB)
