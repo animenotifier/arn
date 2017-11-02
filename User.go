@@ -230,7 +230,7 @@ func (user *User) Link() string {
 
 // CoverImageURL ...
 func (user *User) CoverImageURL() string {
-	return "/images/cover/default"
+	return "/images/cover/default.png"
 }
 
 // HasAvatar ...
