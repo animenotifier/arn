@@ -2,6 +2,10 @@ package arn
 
 // ConnectGoogle connects the user's account with a Google account.
 func (user *User) ConnectGoogle(googleID string) {
+	if googleID == "" {
+		return
+	}
+
 	user.Accounts.Google.ID = googleID
 
 	DB.Set("GoogleToUser", googleID, &GoogleToUser{
@@ -12,6 +16,10 @@ func (user *User) ConnectGoogle(googleID string) {
 
 // ConnectFacebook connects the user's account with a Facebook account.
 func (user *User) ConnectFacebook(facebookID string) {
+	if facebookID == "" {
+		return
+	}
+
 	user.Accounts.Facebook.ID = facebookID
 
 	DB.Set("FacebookToUser", facebookID, &FacebookToUser{
@@ -22,6 +30,10 @@ func (user *User) ConnectFacebook(facebookID string) {
 
 // ConnectTwitter connects the user's account with a Twitter account.
 func (user *User) ConnectTwitter(twtterID string) {
+	if twtterID == "" {
+		return
+	}
+
 	user.Accounts.Twitter.ID = twtterID
 
 	DB.Set("TwitterToUser", twtterID, &TwitterToUser{
