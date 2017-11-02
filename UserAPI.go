@@ -61,21 +61,21 @@ func (user *User) Save() {
 	DB.Set("User", user.ID, user)
 }
 
-// Filter removes privacy critical fields from the user object.
-func (user *User) Filter() {
-	user.Email = ""
-	user.Gender = ""
-	user.FirstName = ""
-	user.LastName = ""
-	user.IP = ""
-	user.LastLogin = ""
-	user.LastSeen = ""
-	user.Accounts.Facebook.ID = ""
-	user.Accounts.Google.ID = ""
-	user.Accounts.Twitter.ID = ""
-	user.AgeRange = UserAgeRange{}
-	user.Location = UserLocation{}
-}
+// // Filter removes privacy critical fields from the user object.
+// func (user *User) Filter() {
+// 	user.Email = ""
+// 	user.Gender = ""
+// 	user.FirstName = ""
+// 	user.LastName = ""
+// 	user.IP = ""
+// 	user.LastLogin = ""
+// 	user.LastSeen = ""
+// 	user.Accounts.Facebook.ID = ""
+// 	user.Accounts.Google.ID = ""
+// 	user.Accounts.Twitter.ID = ""
+// 	user.AgeRange = UserAgeRange{}
+// 	user.Location = UserLocation{}
+// }
 
 // ShouldFilter tells whether data needs to be filtered in the given context.
 func (user *User) ShouldFilter(ctx *aero.Context) bool {
