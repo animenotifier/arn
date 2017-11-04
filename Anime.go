@@ -483,6 +483,42 @@ func (anime *Anime) EpisodeCountString() string {
 	return strconv.Itoa(anime.EpisodeCount)
 }
 
+// TypeHumanReadable ...
+func (anime *Anime) TypeHumanReadable() string {
+	switch anime.Type {
+	case "tv":
+		return "TV"
+	case "movie":
+		return "Movie"
+	case "ova":
+		return "OVA"
+	case "ona":
+		return "ONA"
+	case "special":
+		return "Special"
+	default:
+		return anime.Type
+	}
+}
+
+// StatusHumanReadable ...
+func (anime *Anime) StatusHumanReadable() string {
+	switch anime.Status {
+	case "finished":
+		return "Finished"
+	case "current":
+		return "Airing"
+	case "upcoming":
+		return "Upcoming"
+	case "unannounced":
+		return "Unannounced"
+	case "tba":
+		return "To be announced"
+	default:
+		return anime.Status
+	}
+}
+
 // EpisodeByNumber returns the episode with the given number.
 func (anime *Anime) EpisodeByNumber(number int) *AnimeEpisode {
 	for _, episode := range anime.Episodes().Items {

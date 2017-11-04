@@ -1,7 +1,7 @@
 package arn
 
 // DefaultAverageRating is the average rating we're going to assume for an anime with 0 ratings.
-const DefaultAverageRating = 5.0
+const DefaultAverageRating = 0.0
 
 // MaxRating is the maximum rating users can give.
 const MaxRating = 10.0

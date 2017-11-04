@@ -6,14 +6,6 @@ type AnimeCharacters struct {
 	Items   []*AnimeCharacter `json:"items"`
 }
 
-// AnimeCharacter ...
-type AnimeCharacter struct {
-	CharacterID string `json:"characterId"`
-	Role        string `json:"role"`
-
-	character *Character
-}
-
 // Character ...
 func (char *AnimeCharacter) Character() *Character {
 	if char.character != nil {

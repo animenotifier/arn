@@ -21,7 +21,7 @@ func (media *ExternalMedia) EmbedLink() string {
 	case "SoundCloud":
 		return "//w.soundcloud.com/player/?url=https://api.soundcloud.com/tracks/" + media.ServiceID + "?auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=true"
 	case "Youtube":
-		return "//www.youtube.com/embed/" + media.ServiceID
+		return "//www.youtube.com/embed/" + media.ServiceID + "?showinfo=0"
 	case "DailyMotion":
 		return "//www.dailymotion.com/embed/video/" + media.ServiceID
 	case "NicoVideo":
