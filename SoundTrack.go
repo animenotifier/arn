@@ -22,11 +22,6 @@ type SoundTrack struct {
 	CreatedBy string           `json:"createdBy"`
 	Edited    string           `json:"edited"`
 	EditedBy  string           `json:"editedBy"`
-
-	mainAnime    *Anime
-	creator      *User
-	editedByUser *User
-	beatmaps     []string
 }
 
 // Link returns the permalink for the track.
@@ -81,68 +76,39 @@ func (track *SoundTrack) Anime() []*Anime {
 
 // Beatmaps returns all osu beatmap IDs of the sound track.
 func (track *SoundTrack) Beatmaps() []string {
-	if track.beatmaps != nil {
-		return track.beatmaps
-	}
+	var beatmaps []string
 
 	for _, tag := range track.Tags {
 		if strings.HasPrefix(tag, "osu-beatmap:") {
 			osuID := strings.TrimPrefix(tag, "osu-beatmap:")
-			track.beatmaps = append(track.beatmaps, osuID)
+			beatmaps = append(beatmaps, osuID)
 		}
 	}
 
-	return track.beatmaps
+	return beatmaps
 }
 
 // MainAnime ...
 func (track *SoundTrack) MainAnime() *Anime {
-	if track.mainAnime != nil {
-		return track.mainAnime
-	}
-
 	allAnime := track.Anime()
 
 	if len(allAnime) == 0 {
 		return nil
 	}
 
-	track.mainAnime = allAnime[0]
-	return track.mainAnime
+	return allAnime[0]
 }
 
 // Creator ...
 func (track *SoundTrack) Creator() *User {
-	if track.creator != nil {
-		return track.creator
-	}
-
-	user, err := GetUser(track.CreatedBy)
-
-	if err != nil {
-		color.Red("Error fetching user: %v", err)
-		return nil
-	}
-
-	track.creator = user
-	return track.creator
+	user, _ := GetUser(track.CreatedBy)
+	return user
 }
 
 // EditedByUser returns the user who edited this track last.
 func (track *SoundTrack) EditedByUser() *User {
-	if track.editedByUser != nil {
-		return track.editedByUser
-	}
-
-	user, err := GetUser(track.EditedBy)
-
-	if err != nil {
-		color.Red("Error fetching user: %v", err)
-		return nil
-	}
-
-	track.editedByUser = user
-	return track.editedByUser
+	user, _ := GetUser(track.EditedBy)
+	return user
 }
 
 // Publish ...

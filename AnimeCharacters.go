@@ -8,13 +8,8 @@ type AnimeCharacters struct {
 
 // Character ...
 func (char *AnimeCharacter) Character() *Character {
-	if char.character != nil {
-		return char.character
-	}
-
-	char.character, _ = GetCharacter(char.CharacterID)
-
-	return char.character
+	character, _ := GetCharacter(char.CharacterID)
+	return character
 }
 
 // Save saves the character in the database.

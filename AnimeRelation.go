@@ -4,17 +4,12 @@ package arn
 type AnimeRelation struct {
 	AnimeID string `json:"animeId"`
 	Type    string `json:"type"`
-
-	anime *Anime
 }
 
 // Anime ...
 func (relation *AnimeRelation) Anime() *Anime {
-	if relation.anime == nil {
-		relation.anime, _ = GetAnime(relation.AnimeID)
-	}
-
-	return relation.anime
+	anime, _ := GetAnime(relation.AnimeID)
+	return anime
 }
 
 // HumanReadableType ...

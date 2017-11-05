@@ -27,14 +27,12 @@ const (
 
 // Settings ...
 type Settings struct {
-	UserID        string               `json:"userId"`
+	UserID        string           `json:"userId"`
 	SortBy        string           `json:"sortBy"`
 	TitleLanguage string           `json:"titleLanguage" editable:"true"`
 	Providers     ServiceProviders `json:"providers"`
 	Avatar        AvatarSettings   `json:"avatar"`
 	Format        FormatSettings   `json:"format"`
-
-	user *User
 }
 
 // FormatSettings ...
@@ -82,10 +80,6 @@ func GetSettings(userID string) (*Settings, error) {
 
 // User returns the user object for the settings.
 func (settings *Settings) User() *User {
-	if settings.user != nil {
-		return settings.user
-	}
-
-	settings.user, _ = GetUser(settings.UserID)
-	return settings.user
+	user, _ := GetUser(settings.UserID)
+	return user
 }

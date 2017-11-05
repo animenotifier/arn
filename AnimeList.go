@@ -11,8 +11,6 @@ import (
 type AnimeList struct {
 	UserID string           `json:"userId"`
 	Items  []*AnimeListItem `json:"items"`
-
-	user *User
 }
 
 // Add adds an anime to the list if it hasn't been added yet.
@@ -122,11 +120,8 @@ func (list *AnimeList) Import(item *AnimeListItem) {
 
 // User returns the user this anime list belongs to.
 func (list *AnimeList) User() *User {
-	if list.user == nil {
-		list.user, _ = GetUser(list.UserID)
-	}
-
-	return list.user
+	user, _ := GetUser(list.UserID)
+	return user
 }
 
 // Sort ...
@@ -222,22 +217,6 @@ func (list *AnimeList) SplitByStatus() map[string]*AnimeList {
 	}
 
 	return statusToList
-}
-
-// PrefetchAnime loads all the anime objects from the list into memory.
-func (list *AnimeList) PrefetchAnime() {
-	animeIDList := make([]string, len(list.Items), len(list.Items))
-
-	for i, item := range list.Items {
-		animeIDList[i] = item.AnimeID
-	}
-
-	// Prefetch anime objects
-	animeObjects := DB.GetMany("Anime", animeIDList)
-
-	for i, obj := range animeObjects {
-		list.Items[i].anime = obj.(*Anime)
-	}
 }
 
 // NormalizeRatings normalizes all ratings so that they are perfectly stretched among the full scale.

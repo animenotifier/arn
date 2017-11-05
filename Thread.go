@@ -20,18 +20,13 @@ type Thread struct {
 	Created  string   `json:"created"`
 	Edited   string   `json:"edited"`
 
-	author *User
-	html   string
+	html string
 }
 
 // Author returns the thread author.
 func (thread *Thread) Author() *User {
-	if thread.author != nil {
-		return thread.author
-	}
-
-	thread.author, _ = GetUser(thread.AuthorID)
-	return thread.author
+	author, _ := GetUser(thread.AuthorID)
+	return author
 }
 
 // Link returns the relative URL of the thread.
