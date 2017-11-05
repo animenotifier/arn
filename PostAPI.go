@@ -6,6 +6,7 @@ import (
 
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
+	"github.com/aerogo/markdown"
 	"github.com/animenotifier/arn/autocorrect"
 )
 
@@ -149,6 +150,7 @@ func (post *Post) Create(ctx *aero.Context) error {
 // AfterEdit updates the date it has been edited.
 func (post *Post) AfterEdit(ctx *aero.Context) error {
 	post.Edited = DateTimeUTC()
+	post.html = markdown.Render(post.Text)
 	return nil
 }
 

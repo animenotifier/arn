@@ -5,6 +5,7 @@ import (
 
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
+	"github.com/aerogo/markdown"
 	"github.com/animenotifier/arn/autocorrect"
 )
 
@@ -104,6 +105,7 @@ func (thread *Thread) Create(ctx *aero.Context) error {
 // AfterEdit sets the edited date on the thread object.
 func (thread *Thread) AfterEdit(ctx *aero.Context) error {
 	thread.Edited = DateTimeUTC()
+	thread.html = markdown.Render(thread.Text)
 	return nil
 }
 
