@@ -11,6 +11,7 @@ import (
 
 // Force interface implementations
 var (
+	_ Likeable       = (*Post)(nil)
 	_ api.Newable    = (*Post)(nil)
 	_ api.Editable   = (*Post)(nil)
 	_ api.Actionable = (*Post)(nil)
@@ -120,7 +121,7 @@ func (post *Post) Create(ctx *aero.Context) error {
 			notification := &Notification{
 				Title:   user.Nick + " replied",
 				Message: fmt.Sprintf("%s replied in the thread \"%s\".", user.Nick, thread.Title),
-				Icon:    "https://notify.moe/images/brand/300",
+				Icon:    "https://notify.moe/images/brand/220.png",
 				Link:    post.Link(),
 			}
 

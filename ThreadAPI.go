@@ -10,6 +10,7 @@ import (
 
 // Force interface implementations
 var (
+	_ Likeable       = (*Thread)(nil)
 	_ api.Newable    = (*Thread)(nil)
 	_ api.Editable   = (*Thread)(nil)
 	_ api.Actionable = (*Thread)(nil)

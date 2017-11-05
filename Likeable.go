@@ -11,7 +11,7 @@ import (
 type Likeable interface {
 	Like(userID string)
 	Unlike(userID string)
-	Save() error
+	Save()
 }
 
 // LikeAction ...
@@ -27,7 +27,8 @@ func LikeAction() *api.Action {
 			}
 
 			likeable.Like(user.ID)
-			return likeable.Save()
+			likeable.Save()
+			return nil
 		},
 	}
 }
@@ -45,7 +46,8 @@ func UnlikeAction() *api.Action {
 			}
 
 			likeable.Unlike(user.ID)
-			return likeable.Save()
+			likeable.Save()
+			return nil
 		},
 	}
 }
