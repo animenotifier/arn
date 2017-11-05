@@ -1,64 +1,64 @@
 package arn
 
 import (
-	"encoding/json"
 	"reflect"
 	"strings"
 
 	"github.com/aerogo/aero"
+	"github.com/aerogo/api"
+	"github.com/animenotifier/arn/autocorrect"
 	"github.com/fatih/color"
 )
 
+// Force interface implementations
+var (
+	_ api.Editable = (*User)(nil)
+)
+
 // Authorize returns an error if the given API POST request is not authorized.
-func (user *User) Authorize(ctx *aero.Context) error {
+func (user *User) Authorize(ctx *aero.Context, action string) error {
 	return AuthorizeIfLoggedInAndOwnData(ctx, "id")
 }
 
-// PostBody reads the POST body and returns an object
-// that is passed to methods like Update, Add, Remove, etc.
-func (user *User) PostBody(body []byte) interface{} {
-	if len(body) > 0 && body[0] == '{' {
-		var updates interface{}
-		PanicOnError(json.Unmarshal(body, &updates))
-		return updates.(map[string]interface{})
+// Edit updates the user object.
+func (user *User) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
+	// Automatically correct account nicks
+	if strings.HasPrefix(key, "Accounts.") && strings.HasSuffix(key, ".Nick") {
+		newNick := newValue.String()
+		newNick = autocorrect.FixAccountNick(newNick)
+		value.SetString(newNick)
+
+		// Refresh osu info if the name changed
+		if key == "Accounts.Osu.Nick" {
+			go func() {
+				err := user.RefreshOsuInfo()
+
+				if err != nil {
+					color.Red("Error refreshing osu info of user '%s' with osu nick '%s': %v", user.Nick, newNick, err)
+				} else {
+					color.Green("Refreshed osu info of user '%s' with osu nick '%s': %v", user.Nick, newNick, user.Accounts.Osu.PP)
+				}
+
+				user.Save()
+			}()
+		}
+
+		return true, nil
 	}
 
-	return string(body)
-}
+	switch key {
+	case "Nick":
+		newNick := newValue.String()
+		err := user.SetNick(newNick)
+		return true, err
+	}
 
-// Update updates the user object with the data we received from the PostBody method.
-func (user *User) Update(data interface{}) error {
-	updates := data.(map[string]interface{})
-
-	return SetObjectProperties(user, updates, func(fullKeyName string, field reflect.StructField, property reflect.Value, newValue reflect.Value) bool {
-		// Automatically correct account nicks
-		if strings.HasPrefix(fullKeyName, "Accounts.") && strings.HasSuffix(fullKeyName, ".Nick") {
-			newNick := newValue.String()
-			newNick = FixAccountNick(newNick)
-			property.SetString(newNick)
-			return true
-		}
-
-		switch fullKeyName {
-		case "Nick":
-			newNick := newValue.String()
-			err := user.SetNick(newNick)
-
-			if err != nil {
-				color.Red(err.Error())
-			}
-
-			return true
-
-		default:
-			return false
-		}
-	})
+	return false, nil
 }
 
 // Save saves the user object in the database.
-func (user *User) Save() error {
-	return DB.Set("User", user.ID, user)
+func (user *User) Save() {
+	DB.Set("User", user.ID, user)
 }
 
 // Filter removes privacy critical fields from the user object.

@@ -27,17 +27,30 @@ const (
 
 // Settings ...
 type Settings struct {
-	UserID        string           `json:"userId"`
+	UserID        string               `json:"userId"`
 	SortBy        string           `json:"sortBy"`
 	TitleLanguage string           `json:"titleLanguage" editable:"true"`
 	Providers     ServiceProviders `json:"providers"`
+	Avatar        AvatarSettings   `json:"avatar"`
+	Format        FormatSettings   `json:"format"`
 
 	user *User
+}
+
+// FormatSettings ...
+type FormatSettings struct {
+	RatingsPrecision int `json:"ratingsPrecision" editable:"true"`
 }
 
 // ServiceProviders ...
 type ServiceProviders struct {
 	Anime string `json:"anime"`
+}
+
+// AvatarSettings ...
+type AvatarSettings struct {
+	Source    string `json:"source" editable:"true"`
+	SourceURL string `json:"sourceUrl" editable:"true"`
 }
 
 // NewSettings ...
@@ -49,7 +62,22 @@ func NewSettings(userID string) *Settings {
 		Providers: ServiceProviders{
 			Anime: "",
 		},
+		Avatar: AvatarSettings{
+			Source:    "",
+			SourceURL: "",
+		},
 	}
+}
+
+// GetSettings ...
+func GetSettings(userID string) (*Settings, error) {
+	obj, err := DB.Get("Settings", userID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return obj.(*Settings), nil
 }
 
 // User returns the user object for the settings.
@@ -60,9 +88,4 @@ func (settings *Settings) User() *User {
 
 	settings.user, _ = GetUser(settings.UserID)
 	return settings.user
-}
-
-// Save saves the settings in the database.
-func (settings *Settings) Save() error {
-	return DB.Set("Settings", settings.UserID, settings)
 }

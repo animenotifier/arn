@@ -6,14 +6,6 @@ type UserAgeRange struct {
 	Max int `json:"max"`
 }
 
-// UserOsuDetails ...
-type UserOsuDetails struct {
-	Nick     string  `json:"nick"`
-	PP       float64 `json:"pp"`
-	Accuracy float64 `json:"accuracy"`
-	Level    float64 `json:"level"`
-}
-
 // UserBrowser ...
 type UserBrowser struct {
 	Name     string `json:"name"`
@@ -64,19 +56,19 @@ type CSSPosition struct {
 // NickToUser ...
 type NickToUser struct {
 	Nick   string `json:"nick"`
-	UserID string `json:"userId"`
+	UserID string     `json:"userId"`
 }
 
 // EmailToUser ...
 type EmailToUser struct {
 	Email  string `json:"email"`
-	UserID string `json:"userId"`
+	UserID string     `json:"userId"`
 }
 
 // GoogleToUser ...
 type GoogleToUser struct {
 	ID     string `json:"id"`
-	UserID string `json:"userId"`
+	UserID string     `json:"userId"`
 }
 
 // FacebookToUser is the same data structure as GoogleToUser

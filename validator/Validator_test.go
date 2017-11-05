@@ -1,4 +1,4 @@
-package arn
+package validator
 
 import (
 	"testing"
@@ -22,4 +22,16 @@ func TestIsValidNick(t *testing.T) {
 	assert.True(t, IsValidNick("TsunDere"))
 	assert.True(t, IsValidNick("Tsun_Dere"))
 	assert.True(t, IsValidNick("Akyoto"))
+}
+
+func TestIsValidEmail(t *testing.T) {
+	assert.False(t, IsValidEmail(""))
+	assert.True(t, IsValidEmail("support@notify.moe"))
+}
+
+func TestIsValidDate(t *testing.T) {
+	assert.False(t, IsValidDate(""))
+	assert.False(t, IsValidDate("0001-01-01T01:01:00Z"))
+	assert.False(t, IsValidDate("292277026596-12-04T15:30:07Z"))
+	assert.True(t, IsValidDate("2017-03-09T10:25:00Z"))
 }

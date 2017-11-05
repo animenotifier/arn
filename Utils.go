@@ -9,26 +9,28 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"unicode"
-	"unicode/utf8"
 
 	"github.com/aerogo/aero"
+	"github.com/aerogo/mirror"
+	"github.com/animenotifier/kitsu"
+	"github.com/animenotifier/mal"
 	shortid "github.com/ventu-io/go-shortid"
+	"github.com/xrash/smetrics"
 )
 
 var stripTagsRegex = regexp.MustCompile(`<[^>]*>`)
 var sourceRegex = regexp.MustCompile(`\(Source: (.*?)\)`)
 var writtenByRegex = regexp.MustCompile(`\[Written by (.*?)\]`)
 
-// GenerateUserID generates a unique user ID.
-func GenerateUserID() string {
+// GenerateID generates a unique ID for a given table.
+func GenerateID(table string) string {
 	id, _ := shortid.Generate()
 
 	// Retry until we find an unused ID
 	retry := 0
 
 	for {
-		_, err := GetUser(id)
+		_, err := DB.Get(table, id)
 
 		if err != nil && strings.Index(err.Error(), "not found") != -1 {
 			return id
@@ -37,7 +39,7 @@ func GenerateUserID() string {
 		retry++
 
 		if retry > 10 {
-			panic(errors.New("Can't generate unique user ID"))
+			panic(errors.New("Can't generate unique ID"))
 		}
 
 		id, _ = shortid.Generate()
@@ -66,42 +68,20 @@ func GetUserFromContext(ctx *aero.Context) *User {
 }
 
 // SetObjectProperties updates the object with the given map[string]interface{}
-func SetObjectProperties(rootObj interface{}, updates map[string]interface{}, skip func(fullKeyName string, field reflect.StructField, property reflect.Value, newValue reflect.Value) bool) error {
-	var t reflect.Type
-	var v reflect.Value
-	var field reflect.StructField
-	var found bool
-
+func SetObjectProperties(rootObj interface{}, updates map[string]interface{}) error {
 	for key, value := range updates {
-		t = reflect.TypeOf(rootObj).Elem()
-		v = reflect.ValueOf(rootObj).Elem()
+		field, _, v, err := mirror.GetField(rootObj, key)
 
-		// Nested properties
-		parts := strings.Split(key, ".")
-
-		for _, part := range parts {
-			field, found = t.FieldByName(part)
-
-			if !found {
-				return errors.New("Field '" + part + "' does not exist in type " + t.Name())
-			}
-
-			t = field.Type
-			v = reflect.Indirect(v.FieldByName(field.Name))
+		if err != nil {
+			return err
 		}
-
-		newValue := reflect.ValueOf(value)
 
 		// Is somebody attempting to edit fields that aren't editable?
 		if field.Tag.Get("editable") != "true" {
 			return errors.New("Field " + key + " is not editable")
 		}
 
-		// Is this manually handled by the class so we can skip it?
-		// Also make sure to pass full "key" value here instead of "fieldName".
-		if skip != nil && skip(key, field, v, newValue) {
-			continue
-		}
+		newValue := reflect.ValueOf(value)
 
 		// Implement special data type cases here
 		if v.Kind() == reflect.Int {
@@ -113,26 +93,6 @@ func SetObjectProperties(rootObj interface{}, updates map[string]interface{}, sk
 		} else {
 			v.Set(newValue)
 		}
-	}
-
-	return nil
-}
-
-// AuthorizeIfLoggedInAndOwnData authorizes the given request if a user is logged in
-// and the user ID matches the ID in the request.
-func AuthorizeIfLoggedInAndOwnData(ctx *aero.Context, userIDParameterName string) error {
-	if !ctx.HasSession() {
-		return errors.New("Neither logged in nor in session")
-	}
-
-	userID, ok := ctx.Session().Get("userId").(string)
-
-	if !ok || userID == "" {
-		return errors.New("Not logged in")
-	}
-
-	if userID != ctx.Get(userIDParameterName) {
-		return errors.New("Can not modify data from other users")
 	}
 
 	return nil
@@ -161,15 +121,6 @@ func FixGender(gender string) string {
 	}
 
 	return gender
-}
-
-// Capitalize returns the string with the first letter capitalized.
-func Capitalize(s string) string {
-	if s == "" {
-		return ""
-	}
-	r, n := utf8.DecodeRuneInString(s)
-	return string(unicode.ToUpper(r)) + s[n:]
 }
 
 // AnimeRatingStars displays the rating in Unicode stars.
@@ -201,18 +152,83 @@ func DateTimeUTC() string {
 	return time.Now().UTC().Format(time.RFC3339)
 }
 
-// ToString converts anything into a string.
-func ToString(v interface{}) string {
-	return fmt.Sprint(v)
+// StringSimilarity returns 1.0 if the strings are equal and goes closer to 0 when they are different.
+func StringSimilarity(a string, b string) float64 {
+	return smetrics.JaroWinkler(a, b, 0.7, 4)
 }
 
-// Plural returns the number concatenated to the proper pluralization of the word.
-func Plural(count int, singular string) string {
-	if count == 1 || count == -1 {
-		return ToString(count) + " " + singular
+// OverallRatingName returns Overall in general, but Hype when episodes watched is zero.
+func OverallRatingName(episodes int) string {
+	if episodes == 0 {
+		return "Hype"
 	}
 
-	return ToString(count) + " " + singular + "s"
+	return "Overall"
+}
+
+// IsIPv6 tells you whether the given address is IPv6 encoded.
+func IsIPv6(ip string) bool {
+	for i := 0; i < len(ip); i++ {
+		if ip[i] == ':' {
+			return true
+		}
+	}
+
+	return false
+}
+
+// MyAnimeListStatusToARNStatus ...
+func MyAnimeListStatusToARNStatus(status string) string {
+	switch status {
+	case mal.AnimeListStatusCompleted:
+		return AnimeListStatusCompleted
+	case mal.AnimeListStatusWatching:
+		return AnimeListStatusWatching
+	case mal.AnimeListStatusPlanned:
+		return AnimeListStatusPlanned
+	case mal.AnimeListStatusHold:
+		return AnimeListStatusHold
+	case mal.AnimeListStatusDropped:
+		return AnimeListStatusDropped
+	default:
+		return ""
+	}
+}
+
+// KitsuStatusToARNStatus ...
+func KitsuStatusToARNStatus(status string) string {
+	switch status {
+	case kitsu.AnimeListStatusCompleted:
+		return AnimeListStatusCompleted
+	case kitsu.AnimeListStatusWatching:
+		return AnimeListStatusWatching
+	case kitsu.AnimeListStatusPlanned:
+		return AnimeListStatusPlanned
+	case kitsu.AnimeListStatusHold:
+		return AnimeListStatusHold
+	case kitsu.AnimeListStatusDropped:
+		return AnimeListStatusDropped
+	default:
+		return ""
+	}
+}
+
+// ListItemStatusName ...
+func ListItemStatusName(status string) string {
+	switch status {
+	case AnimeListStatusWatching:
+		return "Watching"
+	case AnimeListStatusCompleted:
+		return "Completed"
+	case AnimeListStatusPlanned:
+		return "Planned"
+	case AnimeListStatusHold:
+		return "On hold"
+	case AnimeListStatusDropped:
+		return "Dropped"
+	default:
+		return ""
+	}
 }
 
 // PanicOnError will panic if the error is not nil.

@@ -3,6 +3,7 @@ package arn
 import (
 	"image"
 	"os"
+	"path"
 
 	"github.com/chai2010/webp"
 )
@@ -57,7 +58,7 @@ func SaveWebP(img image.Image, out string, quality float32) error {
 // FindFileWithExtension tries to test different file extensions.
 func FindFileWithExtension(baseName string, dir string, extensions []string) string {
 	for _, ext := range extensions {
-		if _, err := os.Stat(dir + baseName + ext); !os.IsNotExist(err) {
+		if _, err := os.Stat(path.Join(dir, baseName+ext)); !os.IsNotExist(err) {
 			return dir + baseName + ext
 		}
 	}

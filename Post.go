@@ -1,12 +1,16 @@
 package arn
 
-import "sort"
-import "github.com/aerogo/aero"
+import (
+	"sort"
+
+	"github.com/aerogo/markdown"
+	"github.com/aerogo/nano"
+)
 
 // Post represents a forum post.
 type Post struct {
 	ID       string   `json:"id"`
-	Text     string   `json:"text"`
+	Text     string   `json:"text" editable:"true"`
 	AuthorID string   `json:"authorId"`
 	ThreadID string   `json:"threadId"`
 	Tags     []string `json:"tags"`
@@ -41,7 +45,7 @@ func (post *Post) Thread() *Thread {
 
 // Link returns the relative URL of the post.
 func (post *Post) Link() string {
-	return "/posts/" + post.ID
+	return "/post/" + post.ID
 }
 
 // HTML returns the HTML representation of the post.
@@ -50,7 +54,7 @@ func (post *Post) HTML() string {
 		return post.html
 	}
 
-	post.html = aero.Markdown(post.Text)
+	post.html = markdown.Render(post.Text)
 	return post.html
 }
 
@@ -62,31 +66,38 @@ func (post *Post) ToPostable() Postable {
 // GetPost ...
 func GetPost(id string) (*Post, error) {
 	obj, err := DB.Get("Post", id)
-	return obj.(*Post), err
-}
-
-// AllPosts returns a stream of all posts.
-func AllPosts() (chan *Post, error) {
-	channel := make(chan *Post)
-	err := DB.Scan("Post", channel)
-	return channel, err
-}
-
-// AllPostsSlice returns a slice of all posts.
-func AllPostsSlice() ([]*Post, error) {
-	var posts []*Post
-
-	stream, err := AllPosts()
 
 	if err != nil {
 		return nil, err
 	}
 
-	for obj := range stream {
-		posts = append(posts, obj)
+	return obj.(*Post), nil
+}
+
+// StreamPosts returns a stream of all posts.
+func StreamPosts() chan *Post {
+	channel := make(chan *Post, nano.ChannelBufferSize)
+
+	go func() {
+		for obj := range DB.All("Post") {
+			channel <- obj.(*Post)
+		}
+
+		close(channel)
+	}()
+
+	return channel
+}
+
+// AllPosts returns a slice of all posts.
+func AllPosts() []*Post {
+	var all []*Post
+
+	for obj := range StreamPosts() {
+		all = append(all, obj)
 	}
 
-	return posts, nil
+	return all
 }
 
 // SortPostsLatestFirst sorts the slice of posts.
@@ -103,18 +114,34 @@ func SortPostsLatestLast(posts []*Post) {
 	})
 }
 
+// FilterPostsWithUniqueThreads removes posts with the same thread until we have enough posts.
+func FilterPostsWithUniqueThreads(posts []*Post, limit int) []*Post {
+	filtered := []*Post{}
+	threadsProcessed := map[string]bool{}
+
+	for _, post := range posts {
+		if len(filtered) >= limit {
+			return filtered
+		}
+
+		_, found := threadsProcessed[post.ThreadID]
+
+		if found {
+			continue
+		}
+
+		threadsProcessed[post.ThreadID] = true
+		filtered = append(filtered, post)
+	}
+
+	return filtered
+}
+
 // GetPostsByUser ...
 func GetPostsByUser(user *User) ([]*Post, error) {
 	var posts []*Post
 
-	stream := make(chan *Post)
-	err := DB.Scan("Post", stream)
-
-	if err != nil {
-		return nil, err
-	}
-
-	for post := range stream {
+	for post := range StreamPosts() {
 		if post.AuthorID == user.ID {
 			posts = append(posts, post)
 		}
@@ -127,18 +154,48 @@ func GetPostsByUser(user *User) ([]*Post, error) {
 func FilterPosts(filter func(*Post) bool) ([]*Post, error) {
 	var filtered []*Post
 
-	channel := make(chan *Post)
-	err := DB.Scan("Post", channel)
-
-	if err != nil {
-		return filtered, err
-	}
-
-	for post := range channel {
+	for post := range StreamPosts() {
 		if filter(post) {
 			filtered = append(filtered, post)
 		}
 	}
 
 	return filtered, nil
+}
+
+// Like ...
+func (post *Post) Like(userID string) {
+	for _, id := range post.Likes {
+		if id == userID {
+			return
+		}
+	}
+
+	post.Likes = append(post.Likes, userID)
+
+	// Notify author of the post
+	go func() {
+		likedBy, err := GetUser(userID)
+
+		if err != nil {
+			return
+		}
+
+		post.Author().SendNotification(&Notification{
+			Title:   likedBy.Nick + " liked your post",
+			Message: likedBy.Nick + " liked your post in the thread \"" + post.Thread().Title + "\"",
+			Icon:    "https:" + likedBy.LargeAvatar(),
+			Link:    "https://notify.moe" + likedBy.Link(),
+		})
+	}()
+}
+
+// Unlike ...
+func (post *Post) Unlike(userID string) {
+	for index, id := range post.Likes {
+		if id == userID {
+			post.Likes = append(post.Likes[:index], post.Likes[index+1:]...)
+			return
+		}
+	}
 }

@@ -1,4 +1,4 @@
-package arn
+package autocorrect
 
 import (
 	"regexp"
@@ -23,6 +23,31 @@ var accountNickRegexes = []*regexp.Regexp{
 	regexp.MustCompile(`myanimelist.com/(.*)`),
 	regexp.MustCompile(`twitter.com/(.*)`),
 	regexp.MustCompile(`osu.ppy.sh/u/(.*)`),
+}
+
+var animeLinkRegex = regexp.MustCompile(`notify.moe/anime/(\d+)`)
+var osuBeatmapRegex = regexp.MustCompile(`osu.ppy.sh/s/(\d+)`)
+
+// FixTag converts links to correct tags automatically.
+func FixTag(tag string) string {
+	tag = strings.TrimSpace(tag)
+	tag = strings.TrimSuffix(tag, "/")
+
+	// Anime
+	matches := animeLinkRegex.FindStringSubmatch(tag)
+
+	if len(matches) > 1 {
+		return "anime:" + matches[1]
+	}
+
+	// Osu beatmap
+	matches = osuBeatmapRegex.FindStringSubmatch(tag)
+
+	if len(matches) > 1 {
+		return "osu-beatmap:" + matches[1]
+	}
+
+	return tag
 }
 
 // FixUserNick automatically corrects a username.
@@ -58,4 +83,16 @@ func FixAccountNick(nick string) string {
 	}
 
 	return nick
+}
+
+// FixPostText fixes common mistakes in post texts.
+func FixPostText(text string) string {
+	text = strings.Replace(text, "http://", "https://", -1)
+	text = strings.TrimSpace(text)
+	return text
+}
+
+// FixThreadTitle ...
+func FixThreadTitle(title string) string {
+	return strings.TrimSpace(title)
 }

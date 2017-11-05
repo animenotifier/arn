@@ -35,9 +35,35 @@ func (postable *PostPostable) Likes() []string {
 	return postable.post.Likes
 }
 
+// LikedBy tells you whether the given user has liked the post.
+func (postable *PostPostable) LikedBy(userID string) bool {
+	for _, id := range postable.post.Likes {
+		if id == userID {
+			return true
+		}
+	}
+
+	return false
+}
+
 // Link returns the relative URL of the post.
 func (postable *PostPostable) Link() string {
 	return postable.post.Link()
+}
+
+// Thread returns the thread the post belongs to.
+func (postable *PostPostable) Thread() *Thread {
+	return postable.post.Thread()
+}
+
+// ThreadID returns the thread the post belongs to.
+func (postable *PostPostable) ThreadID() string {
+	return postable.post.ThreadID
+}
+
+// Created returns the date the post has been created.
+func (postable *PostPostable) Created() string {
+	return postable.post.Created
 }
 
 // Type returns the name of the underlying type.

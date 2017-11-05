@@ -10,10 +10,7 @@ import (
 func TestNewUser(t *testing.T) {
 	user := NewUser()
 
-	if !assert.NotNil(t, user) {
-		return
-	}
-
+	assert.NotNil(t, user)
 	assert.NotEmpty(t, user.ID)
 }
 
