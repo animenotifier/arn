@@ -4,6 +4,4 @@ package arn
 type AnimeCharacter struct {
 	CharacterID string `json:"characterId"`
 	Role        string `json:"role"`
-
-	character *Character
 }

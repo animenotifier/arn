@@ -18,19 +18,14 @@ type AnimeListItem struct {
 	Notes        string       `json:"notes" editable:"true"`
 	RewatchCount int          `json:"rewatchCount" editable:"true"`
 	Private      bool         `json:"private" editable:"true"`
-	Created      string           `json:"created"`
-	Edited       string           `json:"edited"`
-
-	anime *Anime
+	Created      string       `json:"created"`
+	Edited       string       `json:"edited"`
 }
 
 // Anime fetches the associated anime data.
 func (item *AnimeListItem) Anime() *Anime {
-	if item.anime == nil {
-		item.anime, _ = GetAnime(item.AnimeID)
-	}
-
-	return item.anime
+	anime, _ := GetAnime(item.AnimeID)
+	return anime
 }
 
 // Link returns the URI for the given item.
