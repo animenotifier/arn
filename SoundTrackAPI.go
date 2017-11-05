@@ -11,10 +11,11 @@ import (
 
 // Force interface implementations
 var (
+	_ Publishable   = (*SoundTrack)(nil)
+	_ Likeable      = (*SoundTrack)(nil)
 	_ api.Newable   = (*SoundTrack)(nil)
 	_ api.Editable  = (*SoundTrack)(nil)
 	_ api.Deletable = (*SoundTrack)(nil)
-	_ Publishable   = (*SoundTrack)(nil)
 )
 
 // Actions
@@ -25,6 +26,12 @@ func init() {
 
 		// Unpublish
 		UnpublishAction(),
+
+		// Like
+		LikeAction(),
+
+		// Unlike
+		UnlikeAction(),
 	})
 }
 
