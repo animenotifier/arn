@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"github.com/aerogo/nano"
-	"github.com/fatih/color"
 )
 
 // Group ...
@@ -24,8 +23,7 @@ type Group struct {
 	Edited      string         `json:"edited"`
 	EditedBy    string         `json:"editedBy"`
 
-	creator *User
-	posts   []*GroupPost
+	posts []*GroupPost
 }
 
 // Link ...
@@ -56,19 +54,8 @@ func (group *Group) Posts() []*GroupPost {
 
 // Creator ...
 func (group *Group) Creator() *User {
-	if group.creator != nil {
-		return group.creator
-	}
-
-	user, err := GetUser(group.CreatedBy)
-
-	if err != nil {
-		color.Red("Error fetching user: %v", err)
-		return nil
-	}
-
-	group.creator = user
-	return group.creator
+	creator, _ := GetUser(group.CreatedBy)
+	return creator
 }
 
 // Publish ...

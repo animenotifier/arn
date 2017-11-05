@@ -48,9 +48,10 @@ type Anime struct {
 	// Relations     []AnimeRelation `json:"relations"`
 	// Created       string          `json:"created"`
 	// CreatedBy     string          `json:"createdBy"`
-	episodes   *AnimeEpisodes
-	relations  *AnimeRelations
-	characters *AnimeCharacters
+
+	// episodes   *AnimeEpisodes
+	// relations  *AnimeRelations
+	// characters *AnimeCharacters
 }
 
 // AnimeImageTypes ...
@@ -74,31 +75,24 @@ func GetAnime(id string) (*Anime, error) {
 
 // Characters ...
 func (anime *Anime) Characters() *AnimeCharacters {
-	if anime.characters != nil {
-		return anime.characters
-	}
+	characters, _ := GetAnimeCharacters(anime.ID)
 
-	anime.characters, _ = GetAnimeCharacters(anime.ID)
-
-	if anime.characters != nil {
+	if characters != nil {
+		// TODO: Sort by role in sync-characters job
 		// Sort by role
-		sort.Slice(anime.characters.Items, func(i, j int) bool {
+		sort.Slice(characters.Items, func(i, j int) bool {
 			// A little trick because "main" < "supporting"
-			return anime.characters.Items[i].Role < anime.characters.Items[j].Role
+			return characters.Items[i].Role < characters.Items[j].Role
 		})
 	}
 
-	return anime.characters
+	return characters
 }
 
 // Relations ...
 func (anime *Anime) Relations() *AnimeRelations {
-	if anime.relations != nil {
-		return anime.relations
-	}
-
-	anime.relations, _ = GetAnimeRelations(anime.ID)
-	return anime.relations
+	relations, _ := GetAnimeRelations(anime.ID)
+	return relations
 }
 
 // Link returns the URI to the anime page.
@@ -196,12 +190,8 @@ func (anime *Anime) RemoveMapping(name string, id string) bool {
 
 // Episodes returns the anime episodes wrapper.
 func (anime *Anime) Episodes() *AnimeEpisodes {
-	if anime.episodes == nil {
-		record, _ := DB.Get("AnimeEpisodes", anime.ID)
-		anime.episodes = record.(*AnimeEpisodes)
-	}
-
-	return anime.episodes
+	record, _ := DB.Get("AnimeEpisodes", anime.ID)
+	return record.(*AnimeEpisodes)
 }
 
 // UsersWatchingOrPlanned returns a list of users who are watching the anime right now.
@@ -430,11 +420,6 @@ func (anime *Anime) TwistEpisodes() ([]*AnimeEpisode, error) {
 
 // UpcomingEpisodes ...
 func (anime *Anime) UpcomingEpisodes() []*UpcomingEpisode {
-	// Special hack for K-On with ID 4240 because the episodes are way too far in the future
-	if anime.ID == "4240" {
-		return nil
-	}
-
 	var upcomingEpisodes []*UpcomingEpisode
 
 	now := time.Now().UTC().Format(time.RFC3339)

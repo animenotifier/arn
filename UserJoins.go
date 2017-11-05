@@ -14,29 +14,20 @@ func (user *User) Posts() []*Post {
 
 // Settings ...
 func (user *User) Settings() *Settings {
-	if user.settings == nil {
-		user.settings, _ = GetSettings(user.ID)
-	}
-
-	return user.settings
+	settings, _ := GetSettings(user.ID)
+	return settings
 }
 
 // AnimeList ...
 func (user *User) AnimeList() *AnimeList {
-	if user.animeList == nil {
-		user.animeList, _ = GetAnimeList(user.ID)
-	}
-
-	return user.animeList
+	animeList, _ := GetAnimeList(user.ID)
+	return animeList
 }
 
 // Follows ...
 func (user *User) Follows() *UserFollows {
-	if user.follows == nil {
-		user.follows, _ = GetUserFollows(user.ID)
-	}
-
-	return user.follows
+	follows, _ := GetUserFollows(user.ID)
+	return follows
 }
 
 // Followers ...
@@ -61,11 +52,8 @@ func (user *User) Followers() []*User {
 
 // DraftIndex ...
 func (user *User) DraftIndex() *DraftIndex {
-	if user.draftIndex == nil {
-		user.draftIndex, _ = GetDraftIndex(user.ID)
-	}
-
-	return user.draftIndex
+	draftIndex, _ := GetDraftIndex(user.ID)
+	return draftIndex
 }
 
 // SoundTracks returns the soundtracks posted by the user.

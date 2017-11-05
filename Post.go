@@ -18,29 +18,19 @@ type Post struct {
 	Created  string   `json:"created"`
 	Edited   string   `json:"edited"`
 
-	author *User
-	thread *Thread
-	html   string
+	html string
 }
 
 // Author returns the post author.
 func (post *Post) Author() *User {
-	if post.author != nil {
-		return post.author
-	}
-
-	post.author, _ = GetUser(post.AuthorID)
-	return post.author
+	author, _ := GetUser(post.AuthorID)
+	return author
 }
 
 // Thread returns the thread this post was posted in.
 func (post *Post) Thread() *Thread {
-	if post.thread != nil {
-		return post.thread
-	}
-
-	post.thread, _ = GetThread(post.ThreadID)
-	return post.thread
+	thread, _ := GetThread(post.ThreadID)
+	return thread
 }
 
 // Link returns the relative URL of the post.
