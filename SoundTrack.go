@@ -295,3 +295,13 @@ func (track *SoundTrack) Unlike(userID string) {
 		}
 	}
 }
+
+// LikedBy checks to see if the user has liked the track
+func (track *SoundTrack) LikedBy(userID string) bool {
+	for _, id := range track.Likes {
+		if id == userID {
+			return true
+		}
+	}
+	return false
+}
