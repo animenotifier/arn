@@ -48,10 +48,9 @@ type Anime struct {
 	// Relations     []AnimeRelation `json:"relations"`
 	// Created       string          `json:"created"`
 	// CreatedBy     string          `json:"createdBy"`
-	episodes        *AnimeEpisodes
-	relations       *AnimeRelations
-	characters      *AnimeCharacters
-	upcomingEpisode *UpcomingEpisode
+	episodes   *AnimeEpisodes
+	relations  *AnimeRelations
+	characters *AnimeCharacters
 }
 
 // AnimeImageTypes ...
@@ -454,20 +453,14 @@ func (anime *Anime) UpcomingEpisodes() []*UpcomingEpisode {
 
 // UpcomingEpisode ...
 func (anime *Anime) UpcomingEpisode() *UpcomingEpisode {
-	if anime.upcomingEpisode != nil {
-		return anime.upcomingEpisode
-	}
-
 	now := time.Now().UTC().Format(time.RFC3339)
 
 	for _, episode := range anime.Episodes().Items {
 		if episode.AiringDate.Start > now && validator.IsValidDate(episode.AiringDate.Start) {
-			anime.upcomingEpisode = &UpcomingEpisode{
+			return &UpcomingEpisode{
 				Anime:   anime,
 				Episode: episode,
 			}
-
-			return anime.upcomingEpisode
 		}
 	}
 
