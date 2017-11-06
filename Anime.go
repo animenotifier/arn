@@ -190,7 +190,12 @@ func (anime *Anime) RemoveMapping(name string, id string) bool {
 
 // Episodes returns the anime episodes wrapper.
 func (anime *Anime) Episodes() *AnimeEpisodes {
-	record, _ := DB.Get("AnimeEpisodes", anime.ID)
+	record, err := DB.Get("AnimeEpisodes", anime.ID)
+
+	if err != nil {
+		return nil
+	}
+
 	return record.(*AnimeEpisodes)
 }
 
