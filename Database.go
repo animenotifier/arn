@@ -35,7 +35,6 @@ var DB = Node.Namespace("arn").RegisterTypes(
 	(*Post)(nil),
 	(*Purchase)(nil),
 	(*PushSubscriptions)(nil),
-	(*SearchIndex)(nil),
 	(*Session)(nil),
 	(*Settings)(nil),
 	(*SoundTrack)(nil),

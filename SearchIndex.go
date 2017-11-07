@@ -1,259 +1,249 @@
 package arn
 
-import (
-	"sort"
-	"strings"
-
-	"github.com/aerogo/flow"
-)
-
-// MinimumStringSimilarity is the minimum JaroWinkler distance we accept for search results.
-const MinimumStringSimilarity = 0.89
-
-// SearchIndex ...
-type SearchIndex struct {
-	TextToID map[string]string `json:"textToId"`
-}
+// // SearchIndex ...
+// type SearchIndex struct {
+// 	TextToID map[string]string `json:"textToId"`
+// }
 
-// NewSearchIndex ...
-func NewSearchIndex() *SearchIndex {
-	return &SearchIndex{
-		TextToID: make(map[string]string),
-	}
-}
+// // NewSearchIndex ...
+// func NewSearchIndex() *SearchIndex {
+// 	return &SearchIndex{
+// 		TextToID: make(map[string]string),
+// 	}
+// }
 
-// GetSearchIndex ...
-func GetSearchIndex(id string) (*SearchIndex, error) {
-	obj, err := DB.Get("SearchIndex", id)
+// // GetSearchIndex ...
+// func GetSearchIndex(id string) (*SearchIndex, error) {
+// 	obj, err := DB.Get("SearchIndex", id)
 
-	if err != nil {
-		return nil, err
-	}
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	return obj.(*SearchIndex), nil
-}
+// 	return obj.(*SearchIndex), nil
+// }
 
-// Search2 is a fuzzy search.
-func Search2(term string, maxUsers, maxAnime, maxPosts, maxThreads int) ([]*User, []*Anime, []*Post, []*Thread) {
-	term = strings.ToLower(term)
+// // Search2 is a fuzzy search.
+// func Search2(term string, maxUsers, maxAnime, maxPosts, maxThreads int) ([]*User, []*Anime, []*Post, []*Thread) {
+// 	term = strings.ToLower(term)
 
-	if term == "" {
-		return nil, nil, nil, nil
-	}
+// 	if term == "" {
+// 		return nil, nil, nil, nil
+// 	}
 
-	var userResults []*User
-	var animeResults []*Anime
-	var postResults []*Post
-	var threadResults []*Thread
+// 	var userResults []*User
+// 	var animeResults []*Anime
+// 	var postResults []*Post
+// 	var threadResults []*Thread
 
-	type SearchItem struct {
-		text       string
-		similarity float64
-	}
+// 	type SearchItem struct {
+// 		text       string
+// 		similarity float64
+// 	}
 
-	searchUsers := func() {
-		// Search userResults
-		var user *User
+// 	searchUsers := func() {
+// 		// Search userResults
+// 		var user *User
 
-		userSearchIndex, err := GetSearchIndex("User")
+// 		userSearchIndex, err := GetSearchIndex("User")
+
+// 		if err != nil {
+// 			return
+// 		}
+
+// 		textToID := userSearchIndex.TextToID
 
-		if err != nil {
-			return
-		}
+// 		// Search items
+// 		items := make([]*SearchItem, 0)
+
+// 		for name := range textToID {
+// 			s := StringSimilarity(term, name)
+
+// 			if strings.Contains(name, term) {
+// 				s += 0.5
+// 			}
+
+// 			if s < MinimumStringSimilarity {
+// 				continue
+// 			}
+
+// 			items = append(items, &SearchItem{
+// 				text:       name,
+// 				similarity: s,
+// 			})
+// 		}
 
-		textToID := userSearchIndex.TextToID
+// 		// Sort
+// 		sort.Slice(items, func(i, j int) bool {
+// 			return items[i].similarity > items[j].similarity
+// 		})
+
+// 		// Limit
+// 		if len(items) >= maxUsers {
+// 			items = items[:maxUsers]
+// 		}
 
-		// Search items
-		items := make([]*SearchItem, 0)
-
-		for name := range textToID {
-			s := StringSimilarity(term, name)
+// 		// Fetch data
+// 		for _, item := range items {
+// 			user, err = GetUser(textToID[item.text])
 
-			if strings.Contains(name, term) {
-				s += 0.5
-			}
+// 			if err != nil {
+// 				continue
+// 			}
 
-			if s < MinimumStringSimilarity {
-				continue
-			}
+// 			userResults = append(userResults, user)
+// 		}
+// 	}
 
-			items = append(items, &SearchItem{
-				text:       name,
-				similarity: s,
-			})
-		}
+// 	searchAnime := func() {
+// 		// Remove special characters when searching anime titles
+// 		animeSearchTerm := RemoveSpecialCharacters(term)
 
-		// Sort
-		sort.Slice(items, func(i, j int) bool {
-			return items[i].similarity > items[j].similarity
-		})
+// 		// Search anime
+// 		var anime *Anime
 
-		// Limit
-		if len(items) >= maxUsers {
-			items = items[:maxUsers]
-		}
+// 		animeSearchIndex, err := GetSearchIndex("Anime")
 
-		// Fetch data
-		for _, item := range items {
-			user, err = GetUser(textToID[item.text])
+// 		if err != nil {
+// 			return
+// 		}
 
-			if err != nil {
-				continue
-			}
+// 		textToID := animeSearchIndex.TextToID
 
-			userResults = append(userResults, user)
-		}
-	}
+// 		// Search items
+// 		items := make([]*SearchItem, 0)
+// 		animeIDAdded := map[string]*SearchItem{}
 
-	searchAnime := func() {
-		// Remove special characters when searching anime titles
-		animeSearchTerm := RemoveSpecialCharacters(term)
+// 		for name, id := range textToID {
+// 			cleanName := RemoveSpecialCharacters(name)
+// 			s := StringSimilarity(animeSearchTerm, cleanName)
 
-		// Search anime
-		var anime *Anime
+// 			if strings.Contains(cleanName, animeSearchTerm) {
+// 				s += 0.5
+// 			}
 
-		animeSearchIndex, err := GetSearchIndex("Anime")
+// 			if s < MinimumStringSimilarity {
+// 				continue
+// 			}
 
-		if err != nil {
-			return
-		}
+// 			addedEntry, found := animeIDAdded[id]
 
-		textToID := animeSearchIndex.TextToID
+// 			// Skip existing anime IDs
+// 			if found {
+// 				// But update existing entry with new similarity if it's higher
+// 				if s > addedEntry.similarity {
+// 					addedEntry.similarity = s
+// 				}
 
-		// Search items
-		items := make([]*SearchItem, 0)
-		animeIDAdded := map[string]*SearchItem{}
+// 				continue
+// 			}
 
-		for name, id := range textToID {
-			cleanName := RemoveSpecialCharacters(name)
-			s := StringSimilarity(animeSearchTerm, cleanName)
+// 			item := &SearchItem{
+// 				text:       name,
+// 				similarity: s,
+// 			}
+// 			items = append(items, item)
 
-			if strings.Contains(cleanName, animeSearchTerm) {
-				s += 0.5
-			}
+// 			animeIDAdded[id] = item
+// 		}
 
-			if s < MinimumStringSimilarity {
-				continue
-			}
+// 		// Sort
+// 		sort.Slice(items, func(i, j int) bool {
+// 			return items[i].similarity > items[j].similarity
+// 		})
 
-			addedEntry, found := animeIDAdded[id]
+// 		// Limit
+// 		if len(items) >= maxAnime {
+// 			items = items[:maxAnime]
+// 		}
 
-			// Skip existing anime IDs
-			if found {
-				// But update existing entry with new similarity if it's higher
-				if s > addedEntry.similarity {
-					addedEntry.similarity = s
-				}
+// 		// Fetch data
+// 		for _, item := range items {
+// 			anime, err = GetAnime(textToID[item.text])
 
-				continue
-			}
+// 			if err != nil {
+// 				continue
+// 			}
 
-			item := &SearchItem{
-				text:       name,
-				similarity: s,
-			}
-			items = append(items, item)
+// 			animeResults = append(animeResults, anime)
+// 		}
+// 	}
 
-			animeIDAdded[id] = item
-		}
+// 	searchPosts := func() {
+// 		postSearchIndex, err := GetSearchIndex("Post")
 
-		// Sort
-		sort.Slice(items, func(i, j int) bool {
-			return items[i].similarity > items[j].similarity
-		})
+// 		if err != nil {
+// 			return
+// 		}
 
-		// Limit
-		if len(items) >= maxAnime {
-			items = items[:maxAnime]
-		}
+// 		textToID := postSearchIndex.TextToID
 
-		// Fetch data
-		for _, item := range items {
-			anime, err = GetAnime(textToID[item.text])
+// 		// Search items
+// 		items := make([]string, 0)
 
-			if err != nil {
-				continue
-			}
+// 		for text, postID := range textToID {
+// 			if !strings.Contains(text, term) {
+// 				continue
+// 			}
 
-			animeResults = append(animeResults, anime)
-		}
-	}
+// 			items = append(items, postID)
 
-	searchPosts := func() {
-		postSearchIndex, err := GetSearchIndex("Post")
+// 			// Limit
+// 			if len(items) >= maxPosts {
+// 				break
+// 			}
+// 		}
 
-		if err != nil {
-			return
-		}
+// 		// Fetch data
+// 		objects := DB.GetMany("Post", items)
+// 		postResults = make([]*Post, len(objects), len(objects))
 
-		textToID := postSearchIndex.TextToID
+// 		for i, obj := range objects {
+// 			postResults[i] = obj.(*Post)
+// 		}
+// 	}
 
-		// Search items
-		items := make([]string, 0)
+// 	searchThreads := func() {
+// 		threadSearchIndex, err := GetSearchIndex("Thread")
 
-		for text, postID := range textToID {
-			if !strings.Contains(text, term) {
-				continue
-			}
+// 		if err != nil {
+// 			return
+// 		}
 
-			items = append(items, postID)
+// 		textToID := threadSearchIndex.TextToID
 
-			// Limit
-			if len(items) >= maxPosts {
-				break
-			}
-		}
+// 		// Search items
+// 		items := make([]string, 0)
 
-		// Fetch data
-		objects := DB.GetMany("Post", items)
-		postResults = make([]*Post, len(objects), len(objects))
+// 		for text, threadID := range textToID {
+// 			if !strings.Contains(text, term) {
+// 				continue
+// 			}
 
-		for i, obj := range objects {
-			postResults[i] = obj.(*Post)
-		}
-	}
+// 			items = append(items, threadID)
 
-	searchThreads := func() {
-		threadSearchIndex, err := GetSearchIndex("Thread")
+// 			// Limit
+// 			if len(items) >= maxThreads {
+// 				break
+// 			}
+// 		}
 
-		if err != nil {
-			return
-		}
+// 		// Fetch data
+// 		objects := DB.GetMany("Thread", items)
+// 		threadResults = make([]*Thread, len(objects), len(objects))
 
-		textToID := threadSearchIndex.TextToID
+// 		for i, obj := range objects {
+// 			threadResults[i] = obj.(*Thread)
+// 		}
+// 	}
 
-		// Search items
-		items := make([]string, 0)
+// 	// Search everything in parallel
+// 	flow.Parallel(
+// 		searchUsers,
+// 		searchAnime,
+// 		searchPosts,
+// 		searchThreads,
+// 	)
 
-		for text, threadID := range textToID {
-			if !strings.Contains(text, term) {
-				continue
-			}
-
-			items = append(items, threadID)
-
-			// Limit
-			if len(items) >= maxThreads {
-				break
-			}
-		}
-
-		// Fetch data
-		objects := DB.GetMany("Thread", items)
-		threadResults = make([]*Thread, len(objects), len(objects))
-
-		for i, obj := range objects {
-			threadResults[i] = obj.(*Thread)
-		}
-	}
-
-	// Search everything in parallel
-	flow.Parallel(
-		searchUsers,
-		searchAnime,
-		searchPosts,
-		searchThreads,
-	)
-
-	return userResults, animeResults, postResults, threadResults
-}
+// 	return userResults, animeResults, postResults, threadResults
+// }

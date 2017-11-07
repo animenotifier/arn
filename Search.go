@@ -7,6 +7,12 @@ import (
 	"github.com/aerogo/flow"
 )
 
+// MinimumStringSimilarity is the minimum JaroWinkler distance we accept for search results.
+const MinimumStringSimilarity = 0.89
+
+// popularityDamping reduces the factor of popularity in search results.
+const popularityDamping = 0.048
+
 // SearchResult ...
 type SearchResult struct {
 	obj        interface{}
@@ -30,9 +36,73 @@ func Search(term string, maxUsers, maxAnime, maxPosts, maxThreads int) ([]*User,
 		userResults = SearchUsers(term, maxUsers)
 	}, func() {
 		animeResults = SearchAnime(term, maxAnime)
+	}, func() {
+		postResults = SearchPosts(term, maxPosts)
+	}, func() {
+		threadResults = SearchThreads(term, maxThreads)
 	})
 
 	return userResults, animeResults, postResults, threadResults
+}
+
+// SearchPosts searches all posts.
+func SearchPosts(term string, maxLength int) []*Post {
+	var results []*Post
+
+	for post := range StreamPosts() {
+		text := strings.ToLower(post.Text)
+
+		if !strings.Contains(text, term) {
+			continue
+		}
+
+		results = append(results, post)
+	}
+
+	// Sort
+	sort.Slice(results, func(i, j int) bool {
+		return results[i].Created > results[j].Created
+	})
+
+	// Limit
+	if len(results) >= maxLength {
+		results = results[:maxLength]
+	}
+
+	return results
+}
+
+// SearchThreads searches all threads.
+func SearchThreads(term string, maxLength int) []*Thread {
+	var results []*Thread
+
+	for thread := range StreamThreads() {
+		text := strings.ToLower(thread.Text)
+
+		if strings.Contains(text, term) {
+			results = append(results, thread)
+			continue
+		}
+
+		text = strings.ToLower(thread.Title)
+
+		if strings.Contains(text, term) {
+			results = append(results, thread)
+			continue
+		}
+	}
+
+	// Sort
+	sort.Slice(results, func(i, j int) bool {
+		return results[i].Created > results[j].Created
+	})
+
+	// Limit
+	if len(results) >= maxLength {
+		results = results[:maxLength]
+	}
+
+	return results
 }
 
 // SearchUsers searches all users.
@@ -84,7 +154,7 @@ func SearchAnime(term string, maxLength int) []*Anime {
 	}
 
 	add := func(anime *Anime, similarity float64) {
-		similarity += float64(anime.Popularity.Total()) / 50.0
+		similarity += float64(anime.Popularity.Total()) * popularityDamping
 
 		results = append(results, &SearchResult{
 			obj:        anime,
@@ -101,13 +171,21 @@ func SearchAnime(term string, maxLength int) []*Anime {
 			continue
 		}
 
+		// English
+		similarity = check(anime.Title.English)
+
+		if similarity >= MinimumStringSimilarity {
+			add(anime, similarity)
+			continue
+		}
+
 		// Synonyms
 		for _, synonym := range anime.Title.Synonyms {
 			similarity := check(synonym)
 
 			if similarity >= MinimumStringSimilarity {
 				add(anime, similarity)
-				continue
+				goto nextAnime
 			}
 		}
 
@@ -118,6 +196,8 @@ func SearchAnime(term string, maxLength int) []*Anime {
 			add(anime, similarity)
 			continue
 		}
+
+	nextAnime:
 	}
 
 	// Sort
