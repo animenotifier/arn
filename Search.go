@@ -20,17 +20,18 @@ type SearchResult struct {
 }
 
 // Search is a fuzzy search.
-func Search(term string, maxUsers, maxAnime, maxPosts, maxThreads int) ([]*User, []*Anime, []*Post, []*Thread) {
+func Search(term string, maxUsers, maxAnime, maxPosts, maxThreads, maxTracks int) ([]*User, []*Anime, []*Post, []*Thread, []*SoundTrack) {
 	term = strings.ToLower(term)
 
 	if term == "" {
-		return nil, nil, nil, nil
+		return nil, nil, nil, nil, nil
 	}
 
 	var userResults []*User
 	var animeResults []*Anime
 	var postResults []*Post
 	var threadResults []*Thread
+	var trackResults []*SoundTrack
 
 	flow.Parallel(func() {
 		userResults = SearchUsers(term, maxUsers)
@@ -40,9 +41,50 @@ func Search(term string, maxUsers, maxAnime, maxPosts, maxThreads int) ([]*User,
 		postResults = SearchPosts(term, maxPosts)
 	}, func() {
 		threadResults = SearchThreads(term, maxThreads)
+	}, func() {
+		trackResults = SearchSoundTracks(term, maxTracks)
 	})
 
-	return userResults, animeResults, postResults, threadResults
+	return userResults, animeResults, postResults, threadResults, trackResults
+}
+
+// SearchSoundTracks searches all soundtracks.
+func SearchSoundTracks(term string, maxLength int) []*SoundTrack {
+	var results []*SearchResult
+
+	for track := range StreamSoundTracks() {
+		text := strings.ToLower(track.Title)
+
+		// Similarity check
+		similarity := AdvancedStringSimilarity(term, text)
+
+		if similarity >= MinimumStringSimilarity {
+			results = append(results, &SearchResult{
+				obj:        track,
+				similarity: similarity,
+			})
+			continue
+		}
+	}
+
+	// Sort
+	sort.Slice(results, func(i, j int) bool {
+		return results[i].similarity > results[j].similarity
+	})
+
+	// Limit
+	if len(results) >= maxLength {
+		results = results[:maxLength]
+	}
+
+	// Final list
+	final := make([]*SoundTrack, len(results), len(results))
+
+	for i, result := range results {
+		final[i] = result.obj.(*SoundTrack)
+	}
+
+	return final
 }
 
 // SearchPosts searches all posts.
