@@ -157,6 +157,21 @@ func StringSimilarity(a string, b string) float64 {
 	return smetrics.JaroWinkler(a, b, 0.7, 4)
 }
 
+// AdvancedStringSimilarity is like StringSimilarity but boosts the value if a appears directly in b.
+func AdvancedStringSimilarity(a string, b string) float64 {
+	s := StringSimilarity(a, b)
+
+	if strings.Contains(b, a) {
+		s += 0.5
+
+		if strings.HasPrefix(b, a) {
+			s += 5.0
+		}
+	}
+
+	return s
+}
+
 // OverallRatingName returns Overall in general, but Hype when episodes watched is zero.
 func OverallRatingName(episodes int) string {
 	if episodes == 0 {

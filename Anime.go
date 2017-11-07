@@ -3,6 +3,7 @@ package arn
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"sort"
 	"strconv"
 	"strings"
@@ -104,6 +105,11 @@ func (anime *Anime) Link() string {
 func (anime *Anime) PrettyJSON() (string, error) {
 	data, err := json.MarshalIndent(anime, "", "    ")
 	return string(data), err
+}
+
+// String ...
+func (anime *Anime) String() string {
+	return fmt.Sprintf("%s %s", anime.ID, anime.Title.Canonical)
 }
 
 // AddMapping adds the ID of an external site to the anime.

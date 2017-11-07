@@ -33,8 +33,8 @@ func GetSearchIndex(id string) (*SearchIndex, error) {
 	return obj.(*SearchIndex), nil
 }
 
-// Search is a fuzzy search.
-func Search(term string, maxUsers, maxAnime, maxPosts, maxThreads int) ([]*User, []*Anime, []*Post, []*Thread) {
+// Search2 is a fuzzy search.
+func Search2(term string, maxUsers, maxAnime, maxPosts, maxThreads int) ([]*User, []*Anime, []*Post, []*Thread) {
 	term = strings.ToLower(term)
 
 	if term == "" {
