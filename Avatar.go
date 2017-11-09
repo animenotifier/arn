@@ -48,6 +48,8 @@ func SaveWebP(img image.Image, out string, quality float32) error {
 		return writeErr
 	}
 
+	defer file.Close()
+
 	encodeErr := webp.Encode(file, img, &webp.Options{
 		Quality: quality,
 	})
