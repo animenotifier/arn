@@ -569,7 +569,7 @@ func StreamAnime() chan *Anime {
 }
 
 // AllAnime returns a slice of all anime.
-func AllAnime() ([]*Anime, error) {
+func AllAnime() []*Anime {
 	var all []*Anime
 
 	stream := StreamAnime()
@@ -578,7 +578,7 @@ func AllAnime() ([]*Anime, error) {
 		all = append(all, obj)
 	}
 
-	return all, nil
+	return all
 }
 
 // FilterAnime filters all anime by a custom function.
