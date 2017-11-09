@@ -20,22 +20,22 @@ import (
 
 // Anime ...
 type Anime struct {
-	ID            string           `json:"id"`
-	Type          string           `json:"type"`
-	Title         *AnimeTitle      `json:"title"`
-	Image         *AnimeImageTypes `json:"image"`
-	FirstChannel  string           `json:"firstChannel"`
-	StartDate     string           `json:"startDate"`
-	EndDate       string           `json:"endDate"`
-	EpisodeCount  int              `json:"episodeCount"`
-	EpisodeLength int              `json:"episodeLength"`
-	Status        string           `json:"status"`
-	NSFW          int              `json:"nsfw"`
-	Rating        *AnimeRating     `json:"rating"`
-	Popularity    *AnimePopularity `json:"popularity"`
-	Summary       string           `json:"summary"`
-	Trailers      []*ExternalMedia `json:"trailers"`
-	Mappings      []*Mapping       `json:"mappings"`
+	ID             string           `json:"id"`
+	Type           string           `json:"type"`
+	Title          *AnimeTitle      `json:"title"`
+	ImageExtension string           `json:"imageExtension"`
+	FirstChannel   string           `json:"firstChannel"`
+	StartDate      string           `json:"startDate"`
+	EndDate        string           `json:"endDate"`
+	EpisodeCount   int              `json:"episodeCount"`
+	EpisodeLength  int              `json:"episodeLength"`
+	Status         string           `json:"status"`
+	NSFW           int              `json:"nsfw"`
+	Rating         *AnimeRating     `json:"rating"`
+	Popularity     *AnimePopularity `json:"popularity"`
+	Summary        string           `json:"summary"`
+	Trailers       []*ExternalMedia `json:"trailers"`
+	Mappings       []*Mapping       `json:"mappings"`
 
 	// Hashtag       string          `json:"hashtag"`
 	// Source        string          `json:"source"`
@@ -55,14 +55,6 @@ type Anime struct {
 	// characters *AnimeCharacters
 }
 
-// AnimeImageTypes ...
-type AnimeImageTypes struct {
-	Tiny     string `json:"tiny"`
-	Small    string `json:"small"`
-	Large    string `json:"large"`
-	Original string `json:"original"`
-}
-
 // GetAnime ...
 func GetAnime(id string) (*Anime, error) {
 	obj, err := DB.Get("Anime", id)
@@ -72,6 +64,11 @@ func GetAnime(id string) (*Anime, error) {
 	}
 
 	return obj.(*Anime), nil
+}
+
+// Image ...
+func (anime *Anime) Image(size string) string {
+	return fmt.Sprintf("//media.notify.moe/images/anime/%s/%s%s", size, anime.ID, anime.ImageExtension)
 }
 
 // Characters ...
@@ -267,7 +264,7 @@ func (anime *Anime) RefreshEpisodes() error {
 		notification := &Notification{
 			Title:   anime.Title.Canonical,
 			Message: "Episode " + strconv.Itoa(newAvailableCount) + " has been released!",
-			Icon:    anime.Image.Small,
+			Icon:    anime.Image("medium"),
 			Link:    "https://notify.moe" + anime.Link(),
 		}
 
