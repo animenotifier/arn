@@ -104,6 +104,12 @@ func (anime *Anime) PrettyJSON() (string, error) {
 	return string(data), err
 }
 
+// StartDateTime ...
+func (anime *Anime) StartDateTime() time.Time {
+	t, _ := time.Parse("2006-01-02", anime.StartDate)
+	return t
+}
+
 // String ...
 func (anime *Anime) String() string {
 	return fmt.Sprintf("%s %s", anime.ID, anime.Title.Canonical)
