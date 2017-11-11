@@ -7,20 +7,14 @@ import (
 )
 
 func TestStreamAnime(t *testing.T) {
-	allAnime, err := StreamAnime()
-
-	assert.NoError(t, err)
-	assert.NotNil(t, allAnime)
-
 	validAnimeStatus := []string{
 		"finished",
 		"current",
-		"tba",
 		"upcoming",
-		"unreleased",
+		"tba",
 	}
 
-	for anime := range allAnime {
+	for anime := range StreamAnime() {
 		assert.NotEmpty(t, anime.ID)
 		assert.Contains(t, validAnimeStatus, anime.Status)
 		assert.NotEmpty(t, anime.Link())

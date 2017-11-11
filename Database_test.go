@@ -1,9 +1,8 @@
 package arn
 
 import "testing"
+import "github.com/stretchr/testify/assert"
 
 func TestConnect(t *testing.T) {
-	if !DB.Client.IsConnected() {
-		t.Fail()
-	}
+	assert.NotEmpty(t, DB.Node().Address().String())
 }
