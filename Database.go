@@ -3,6 +3,7 @@ package arn
 import (
 	"github.com/aerogo/api"
 	"github.com/aerogo/nano"
+	"github.com/animenotifier/jikan"
 )
 
 // Session ...
@@ -46,3 +47,10 @@ var DB = Node.Namespace("arn").RegisterTypes(
 
 // API ...
 var API = api.New("/api/", DB)
+
+// init ...
+func init() {
+	Node.Namespace("jikan").RegisterTypes(
+		(*jikan.Anime)(nil),
+	)
+}
