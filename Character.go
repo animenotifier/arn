@@ -6,10 +6,11 @@ import (
 
 // Character ...
 type Character struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Image       string `json:"image"`
-	Description string `json:"description"`
+	ID          string                `json:"id"`
+	Name        string                `json:"name"`
+	Image       string                `json:"image"`
+	Description string                `json:"description"`
+	Attributes  []*CharacterAttribute `json:"attributes"`
 }
 
 // GetCharacter ...
