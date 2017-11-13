@@ -52,5 +52,6 @@ var API = api.New("/api/", DB)
 func init() {
 	Node.Namespace("jikan").RegisterTypes(
 		(*jikan.Anime)(nil),
+		(*jikan.Character)(nil),
 	)
 }
