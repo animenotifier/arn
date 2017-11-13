@@ -162,9 +162,9 @@ func (user *User) IsActive() bool {
 	}
 
 	lastSeen, _ := time.Parse(time.RFC3339, user.LastSeen)
-	oneWeekAgo := time.Now().Add(-7 * 24 * time.Hour)
+	twoWeeksAgo := time.Now().Add(-14 * 24 * time.Hour)
 
-	if lastSeen.Unix() < oneWeekAgo.Unix() {
+	if lastSeen.Unix() < twoWeeksAgo.Unix() {
 		return false
 	}
 
