@@ -90,14 +90,13 @@ func (list *AnimeList) Find(animeID string) *AnimeListItem {
 // Import adds an anime to the list if it hasn't been added yet
 // and if it did exist it will update episode, rating and notes.
 func (list *AnimeList) Import(item *AnimeListItem) {
-	list.itemsMutex.Lock()
-	defer list.itemsMutex.Unlock()
-
 	existing := list.Find(item.AnimeID)
 
 	// If it doesn't exist yet: Simply add it.
 	if existing == nil {
+		list.itemsMutex.Lock()
 		list.Items = append(list.Items, item)
+		list.itemsMutex.Unlock()
 		return
 	}
 
