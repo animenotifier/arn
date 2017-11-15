@@ -11,6 +11,8 @@ type Character struct {
 	Image       string                `json:"image"`
 	Description string                `json:"description"`
 	Attributes  []*CharacterAttribute `json:"attributes"`
+	// Name        *CharacterName        `json:"name"`
+	// Mappings    []*Mapping            `json:"mappings"`
 }
 
 // GetCharacter ...

@@ -3,6 +3,7 @@ package arn
 import (
 	"errors"
 	"sort"
+	"sync"
 
 	"github.com/aerogo/nano"
 )
@@ -11,6 +12,8 @@ import (
 type AnimeList struct {
 	UserID string           `json:"userId"`
 	Items  []*AnimeListItem `json:"items"`
+
+	itemsMutex sync.Mutex
 }
 
 // Add adds an anime to the list if it hasn't been added yet.
@@ -33,12 +36,18 @@ func (list *AnimeList) Add(animeID string) error {
 		return errors.New("Invalid anime ID")
 	}
 
+	list.itemsMutex.Lock()
 	list.Items = append(list.Items, item)
+	list.itemsMutex.Unlock()
+
 	return nil
 }
 
 // Remove removes the anime ID from the list.
 func (list *AnimeList) Remove(animeID string) bool {
+	list.itemsMutex.Lock()
+	defer list.itemsMutex.Unlock()
+
 	for index, item := range list.Items {
 		if item.AnimeID == animeID {
 			list.Items = append(list.Items[:index], list.Items[index+1:]...)
@@ -51,6 +60,9 @@ func (list *AnimeList) Remove(animeID string) bool {
 
 // Contains checks if the list contains the anime ID already.
 func (list *AnimeList) Contains(animeID string) bool {
+	list.itemsMutex.Lock()
+	defer list.itemsMutex.Unlock()
+
 	for _, item := range list.Items {
 		if item.AnimeID == animeID {
 			return true
@@ -62,6 +74,9 @@ func (list *AnimeList) Contains(animeID string) bool {
 
 // Find returns the list item with the specified anime ID, if available.
 func (list *AnimeList) Find(animeID string) *AnimeListItem {
+	list.itemsMutex.Lock()
+	defer list.itemsMutex.Unlock()
+
 	for _, item := range list.Items {
 		if item.AnimeID == animeID {
 			return item
@@ -74,6 +89,9 @@ func (list *AnimeList) Find(animeID string) *AnimeListItem {
 // Import adds an anime to the list if it hasn't been added yet
 // and if it did exist it will update episode, rating and notes.
 func (list *AnimeList) Import(item *AnimeListItem) {
+	list.itemsMutex.Lock()
+	defer list.itemsMutex.Unlock()
+
 	existing := list.Find(item.AnimeID)
 
 	// If it doesn't exist yet: Simply add it.
@@ -126,6 +144,9 @@ func (list *AnimeList) User() *User {
 
 // Sort ...
 func (list *AnimeList) Sort() {
+	list.itemsMutex.Lock()
+	defer list.itemsMutex.Unlock()
+
 	sort.Slice(list.Items, func(i, j int) bool {
 		a := list.Items[i]
 		b := list.Items[j]
@@ -173,6 +194,9 @@ func (list *AnimeList) FilterStatus(status string) *AnimeList {
 		Items:  []*AnimeListItem{},
 	}
 
+	list.itemsMutex.Lock()
+	defer list.itemsMutex.Unlock()
+
 	for _, item := range list.Items {
 		if item.Status == status { // (item.Status == AnimeListStatusPlanned)
 			newList.Items = append(newList.Items, item)
@@ -211,6 +235,9 @@ func (list *AnimeList) SplitByStatus() map[string]*AnimeList {
 		Items:  []*AnimeListItem{},
 	}
 
+	list.itemsMutex.Lock()
+	defer list.itemsMutex.Unlock()
+
 	for _, item := range list.Items {
 		statusList := statusToList[item.Status]
 		statusList.Items = append(statusList.Items, item)
@@ -221,6 +248,9 @@ func (list *AnimeList) SplitByStatus() map[string]*AnimeList {
 
 // NormalizeRatings normalizes all ratings so that they are perfectly stretched among the full scale.
 func (list *AnimeList) NormalizeRatings() {
+	list.itemsMutex.Lock()
+	defer list.itemsMutex.Unlock()
+
 	mapped := map[float64]float64{}
 	all := []float64{}
 
