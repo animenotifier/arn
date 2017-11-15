@@ -2,6 +2,7 @@ package arn
 
 import (
 	"errors"
+	"fmt"
 	"sort"
 	"sync"
 
@@ -291,6 +292,29 @@ func (list *AnimeList) NormalizeRatings() {
 		item.Rating.Overall = mapped[item.Rating.Overall]
 		item.Rating.Clamp()
 	}
+}
+
+// RemoveDuplicates removes duplicate entries.
+func (list *AnimeList) RemoveDuplicates() {
+	list.itemsMutex.Lock()
+	defer list.itemsMutex.Unlock()
+
+	existed := map[string]bool{}
+	newItems := make([]*AnimeListItem, 0, len(list.Items))
+
+	for _, item := range list.Items {
+		_, exists := existed[item.AnimeID]
+
+		if exists {
+			fmt.Println(list.User().Nick, "removed anime list item duplicate", item.AnimeID)
+			continue
+		}
+
+		newItems = append(newItems, item)
+		existed[item.AnimeID] = true
+	}
+
+	list.Items = newItems
 }
 
 // StreamAnimeLists returns a stream of all anime.
