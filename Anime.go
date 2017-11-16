@@ -601,21 +601,9 @@ func FilterAnime(filter func(*Anime) bool) []*Anime {
 	return filtered
 }
 
-// GetAiringAnime ...
-func GetAiringAnime() []*Anime {
-	beforeTime := time.Now().Add(-6 * 30 * 24 * time.Hour)
-	beforeTimeString := beforeTime.Format(time.RFC3339)
-
-	return FilterAnime(func(anime *Anime) bool {
-		if (anime.Type != "tv" && anime.Type != "movie") || anime.NSFW == 1 || anime.StartDate < beforeTimeString {
-			return false
-		}
-
-		if anime.Popularity.Total() == 0 {
-			return false
-		}
-
-		// return anime.UpcomingEpisode() != nil || anime.Status == "upcoming"
-		return anime.Status == "current" || anime.Status == "upcoming"
+// SortAnimeByPopularity sorts the given slice of anime by popularity.
+func SortAnimeByPopularity(animes []*Anime) {
+	sort.Slice(animes, func(i, j int) bool {
+		return animes[i].Popularity.Total() > animes[j].Popularity.Total()
 	})
 }
