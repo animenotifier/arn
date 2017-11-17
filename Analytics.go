@@ -4,10 +4,11 @@ import "github.com/aerogo/nano"
 
 // Analytics ...
 type Analytics struct {
-	UserID  string           `json:"userId"`
-	General GeneralAnalytics `json:"general"`
-	Screen  ScreenAnalytics  `json:"screen"`
-	System  SystemAnalytics  `json:"system"`
+	UserID     string              `json:"userId"`
+	General    GeneralAnalytics    `json:"general"`
+	Screen     ScreenAnalytics     `json:"screen"`
+	System     SystemAnalytics     `json:"system"`
+	Connection ConnectionAnalytics `json:"connection"`
 }
 
 // GeneralAnalytics ...
@@ -28,6 +29,13 @@ type ScreenAnalytics struct {
 type SystemAnalytics struct {
 	CPUCount int    `json:"cpuCount"`
 	Platform string `json:"platform"`
+}
+
+// ConnectionAnalytics ...
+type ConnectionAnalytics struct {
+	DownLink      float64 `json:"downLink"`
+	RoundTripTime float64 `json:"roundTripTime"`
+	EffectiveType string  `json:"effectiveType"`
 }
 
 // StreamAnalytics returns a stream of all analytics.
