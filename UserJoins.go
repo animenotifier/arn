@@ -50,6 +50,19 @@ func (user *User) Followers() []*User {
 	return users
 }
 
+// FollowersCount ...
+func (user *User) FollowersCount() int {
+	count := 0
+
+	for list := range StreamUserFollows() {
+		if list.Contains(user.ID) {
+			count++
+		}
+	}
+
+	return count
+}
+
 // DraftIndex ...
 func (user *User) DraftIndex() *DraftIndex {
 	draftIndex, _ := GetDraftIndex(user.ID)
