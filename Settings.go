@@ -33,6 +33,7 @@ type Settings struct {
 	Providers     ServiceProviders `json:"providers"`
 	Avatar        AvatarSettings   `json:"avatar"`
 	Format        FormatSettings   `json:"format"`
+	Theme         string           `json:"theme" editable:"true"`
 }
 
 // FormatSettings ...
@@ -64,6 +65,7 @@ func NewSettings(userID string) *Settings {
 			Source:    "",
 			SourceURL: "",
 		},
+		Theme: "light",
 	}
 }
 

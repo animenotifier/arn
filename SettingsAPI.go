@@ -1,6 +1,7 @@
 package arn
 
 import (
+	"errors"
 	"reflect"
 
 	"github.com/aerogo/aero"
@@ -24,6 +25,15 @@ func (settings *Settings) Edit(ctx *aero.Context, key string, value reflect.Valu
 		settings.Avatar.SourceURL = newValue.String()
 		settings.Save() // Save needed here because RefreshAvatar fetches the settings on a DIFFERENT server
 		settings.User().RefreshAvatar()
+		return true, nil
+
+	case "Theme":
+		if settings.User().IsPro() {
+			settings.Theme = newValue.String()
+		} else {
+			return true, errors.New("PRO accounts only")
+		}
+
 		return true, nil
 	}
 
