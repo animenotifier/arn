@@ -7,7 +7,7 @@ type Company struct {
 	ID          string      `json:"id"`
 	Name        CompanyName `json:"name"`
 	Image       string      `json:"image"`
-	Description string      `json:"description"`
+	Description string      `json:"description" editable:"true"`
 	Location    Location    `json:"location"`
 	Mappings    []*Mapping  `json:"mappings"`
 	IsDraft     bool        `json:"isDraft"`
