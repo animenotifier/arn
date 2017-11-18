@@ -74,7 +74,7 @@ func (user *User) Filter() {
 	user.Accounts.Google.ID = ""
 	user.Accounts.Twitter.ID = ""
 	user.AgeRange = UserAgeRange{}
-	user.Location = UserLocation{}
+	user.Location = Location{}
 }
 
 // ShouldFilter tells whether data needs to be filtered in the given context.

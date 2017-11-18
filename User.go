@@ -36,7 +36,7 @@ type User struct {
 	Balance    int          `json:"balance"`
 	Avatar     UserAvatar   `json:"avatar"`
 	AgeRange   UserAgeRange `json:"ageRange"`
-	Location   UserLocation `json:"location"`
+	Location   Location     `json:"location"`
 	Accounts   UserAccounts `json:"accounts"`
 	Browser    UserBrowser  `json:"browser"`
 	OS         UserOS       `json:"os"`

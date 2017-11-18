@@ -1,7 +1,7 @@
 package arn
 
-// UserLocation ...
-type UserLocation struct {
+// Location ...
+type Location struct {
 	CountryName string  `json:"countryName"`
 	CountryCode string  `json:"countryCode"`
 	Latitude    float64 `json:"latitude"`
