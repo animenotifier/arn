@@ -17,6 +17,11 @@ type Company struct {
 	EditedBy    string      `json:"editedBy"`
 }
 
+// Link returns a single company.
+func (company *Company) Link() string {
+	return "/company/" + company.ID
+}
+
 // GetCompany returns a single company.
 func GetCompany(id string) (*Company, error) {
 	obj, err := DB.Get("Company", id)
