@@ -15,6 +15,11 @@ type Character struct {
 	// Mappings    []*Mapping            `json:"mappings"`
 }
 
+// Link ...
+func (character *Character) Link() string {
+	return "/character/" + character.ID
+}
+
 // GetCharacter ...
 func GetCharacter(id string) (*Character, error) {
 	obj, err := DB.Get("Character", id)
