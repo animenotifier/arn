@@ -229,7 +229,7 @@ func AllSoundTracks() ([]*SoundTrack, error) {
 }
 
 // FilterSoundTracks filters all soundtracks by a custom function.
-func FilterSoundTracks(filter func(*SoundTrack) bool) ([]*SoundTrack, error) {
+func FilterSoundTracks(filter func(*SoundTrack) bool) []*SoundTrack {
 	var filtered []*SoundTrack
 
 	for obj := range StreamSoundTracks() {
@@ -238,7 +238,7 @@ func FilterSoundTracks(filter func(*SoundTrack) bool) ([]*SoundTrack, error) {
 		}
 	}
 
-	return filtered, nil
+	return filtered
 }
 
 // Like adds an user to the track's Like array if they aren't already in it.

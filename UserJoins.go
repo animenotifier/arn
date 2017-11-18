@@ -71,7 +71,7 @@ func (user *User) DraftIndex() *DraftIndex {
 
 // SoundTracks returns the soundtracks posted by the user.
 func (user *User) SoundTracks() []*SoundTrack {
-	tracks, _ := FilterSoundTracks(func(track *SoundTrack) bool {
+	tracks := FilterSoundTracks(func(track *SoundTrack) bool {
 		return !track.IsDraft && len(track.Media) > 0 && track.CreatedBy == user.ID
 	})
 	return tracks

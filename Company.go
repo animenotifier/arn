@@ -10,6 +10,7 @@ type Company struct {
 	Description string      `json:"description"`
 	Location    Location    `json:"location"`
 	Mappings    []*Mapping  `json:"mappings"`
+	IsDraft     bool        `json:"isDraft"`
 	Created     string      `json:"created"`
 	CreatedBy   string      `json:"createdBy"`
 	Edited      string      `json:"edited"`
@@ -40,6 +41,23 @@ func StreamCompanies() chan *Company {
 	}()
 
 	return channel
+}
+
+// FilterCompanies filters all companies by a custom function.
+func FilterCompanies(filter func(*Company) bool) []*Company {
+	var filtered []*Company
+
+	channel := DB.All("Company")
+
+	for obj := range channel {
+		realObject := obj.(*Company)
+
+		if filter(realObject) {
+			filtered = append(filtered, realObject)
+		}
+	}
+
+	return filtered
 }
 
 // AllCompanies returns a slice of all companies.
