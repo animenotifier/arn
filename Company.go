@@ -16,6 +16,7 @@ type Company struct {
 	Mappings    []*Mapping  `json:"mappings"`
 	Tags        []string    `json:"tags" editable:"true"`
 	Likes       []string    `json:"likes"`
+	Links       []*Link     `json:"links"`
 	IsDraft     bool        `json:"isDraft"`
 	Created     string      `json:"created"`
 	CreatedBy   string      `json:"createdBy"`
