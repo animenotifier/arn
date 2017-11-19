@@ -41,7 +41,11 @@ func (company *Company) Publish() error {
 		return errors.New("Not a draft")
 	}
 
-	company.IsDraft = false
+	// No title
+	if company.Name.English == "" {
+		return errors.New("No English company name")
+	}
+
 	draftIndex, err := GetDraftIndex(company.CreatedBy)
 
 	if err != nil {
@@ -52,6 +56,7 @@ func (company *Company) Publish() error {
 		return errors.New("Company draft doesn't exist in the user draft index")
 	}
 
+	company.IsDraft = false
 	draftIndex.CompanyID = ""
 	draftIndex.Save()
 	return nil
@@ -59,7 +64,6 @@ func (company *Company) Publish() error {
 
 // Unpublish ...
 func (company *Company) Unpublish() error {
-	company.IsDraft = true
 	draftIndex, err := GetDraftIndex(company.CreatedBy)
 
 	if err != nil {
@@ -70,6 +74,7 @@ func (company *Company) Unpublish() error {
 		return errors.New("You still have an unfinished draft")
 	}
 
+	company.IsDraft = true
 	draftIndex.CompanyID = company.ID
 	draftIndex.Save()
 	return nil

@@ -150,7 +150,6 @@ func (track *SoundTrack) Publish() error {
 		return errors.New("Need to specify at least one tag")
 	}
 
-	track.IsDraft = false
 	draftIndex, err := GetDraftIndex(track.CreatedBy)
 
 	if err != nil {
@@ -161,6 +160,7 @@ func (track *SoundTrack) Publish() error {
 		return errors.New("Soundtrack draft doesn't exist in the user draft index")
 	}
 
+	track.IsDraft = false
 	draftIndex.SoundTrackID = ""
 	draftIndex.Save()
 	return nil
@@ -168,7 +168,6 @@ func (track *SoundTrack) Publish() error {
 
 // Unpublish ...
 func (track *SoundTrack) Unpublish() error {
-	track.IsDraft = true
 	draftIndex, err := GetDraftIndex(track.CreatedBy)
 
 	if err != nil {
@@ -179,6 +178,7 @@ func (track *SoundTrack) Unpublish() error {
 		return errors.New("You still have an unfinished draft")
 	}
 
+	track.IsDraft = true
 	draftIndex.SoundTrackID = track.ID
 	draftIndex.Save()
 	return nil
