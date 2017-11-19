@@ -14,6 +14,23 @@ var (
 	_ api.Editable = (*Company)(nil)
 )
 
+// Actions
+func init() {
+	API.RegisterActions("Company", []*api.Action{
+		// Publish
+		PublishAction(),
+
+		// Unpublish
+		UnpublishAction(),
+
+		// Like
+		LikeAction(),
+
+		// Unlike
+		UnlikeAction(),
+	})
+}
+
 // Create sets the data for a new company with data we received from the API request.
 func (company *Company) Create(ctx *aero.Context) error {
 	user := GetUserFromContext(ctx)

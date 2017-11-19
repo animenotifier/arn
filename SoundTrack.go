@@ -241,7 +241,7 @@ func FilterSoundTracks(filter func(*SoundTrack) bool) []*SoundTrack {
 	return filtered
 }
 
-// Like adds an user to the track's Like array if they aren't already in it.
+// Like adds an user to the track's Likes array if they aren't already in it.
 func (track *SoundTrack) Like(userID string) {
 	for _, id := range track.Likes {
 		if id == userID {
@@ -262,7 +262,7 @@ func (track *SoundTrack) Unlike(userID string) {
 	}
 }
 
-// LikedBy checks to see if the user has liked the track
+// LikedBy checks to see if the user has liked the track.
 func (track *SoundTrack) LikedBy(userID string) bool {
 	for _, id := range track.Likes {
 		if id == userID {

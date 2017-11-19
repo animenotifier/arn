@@ -9,9 +9,9 @@ import (
 // Company ...
 type Company struct {
 	ID          string      `json:"id"`
-	Name        CompanyName `json:"name"`
+	Name        CompanyName `json:"name" editable:"true"`
 	Image       string      `json:"image"`
-	Description string      `json:"description" editable:"true"`
+	Description string      `json:"description" editable:"true" type:"textarea"`
 	Location    Location    `json:"location"`
 	Mappings    []*Mapping  `json:"mappings"`
 	Tags        []string    `json:"tags" editable:"true"`
@@ -73,6 +73,38 @@ func (company *Company) Unpublish() error {
 	draftIndex.CompanyID = company.ID
 	draftIndex.Save()
 	return nil
+}
+
+// Like adds an user to the company's Likes array if they aren't already in it.
+func (company *Company) Like(userID string) {
+	for _, id := range company.Likes {
+		if id == userID {
+			return
+		}
+	}
+
+	company.Likes = append(company.Likes, userID)
+}
+
+// Unlike removes the user from the company's Likes array if they are in it.
+func (company *Company) Unlike(userID string) {
+	for index, id := range company.Likes {
+		if id == userID {
+			company.Likes = append(company.Likes[:index], company.Likes[index+1:]...)
+			return
+		}
+	}
+}
+
+// LikedBy checks to see if the user has liked the company.
+func (company *Company) LikedBy(userID string) bool {
+	for _, id := range company.Likes {
+		if id == userID {
+			return true
+		}
+	}
+
+	return false
 }
 
 // GetCompany returns a single company.
