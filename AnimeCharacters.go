@@ -1,20 +1,22 @@
 package arn
 
+import "github.com/aerogo/nano"
+
 // AnimeCharacters ...
 type AnimeCharacters struct {
 	AnimeID string            `json:"animeId"`
 	Items   []*AnimeCharacter `json:"items"`
 }
 
-// Character ...
-func (char *AnimeCharacter) Character() *Character {
-	character, _ := GetCharacter(char.CharacterID)
-	return character
-}
+// Contains tells you whether the given character ID exists.
+func (characters *AnimeCharacters) Contains(characterID string) bool {
+	for _, item := range characters.Items {
+		if item.CharacterID == characterID {
+			return true
+		}
+	}
 
-// Save saves the character in the database.
-func (chars *AnimeCharacters) Save() {
-	DB.Set("AnimeCharacters", chars.AnimeID, chars)
+	return false
 }
 
 // GetAnimeCharacters ...
@@ -26,4 +28,19 @@ func GetAnimeCharacters(animeID string) (*AnimeCharacters, error) {
 	}
 
 	return obj.(*AnimeCharacters), nil
+}
+
+// StreamAnimeCharacters returns a stream of all anime characters.
+func StreamAnimeCharacters() chan *AnimeCharacters {
+	channel := make(chan *AnimeCharacters, nano.ChannelBufferSize)
+
+	go func() {
+		for obj := range DB.All("AnimeCharacters") {
+			channel <- obj.(*AnimeCharacters)
+		}
+
+		close(channel)
+	}()
+
+	return channel
 }

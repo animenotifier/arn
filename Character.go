@@ -20,6 +20,25 @@ func (character *Character) Link() string {
 	return "/character/" + character.ID
 }
 
+// Anime returns a list of all anime the character appears in.
+func (character *Character) Anime() []*Anime {
+	var results []*Anime
+
+	for animeCharacters := range StreamAnimeCharacters() {
+		if animeCharacters.Contains(character.ID) {
+			anime, err := GetAnime(animeCharacters.AnimeID)
+
+			if err != nil {
+				continue
+			}
+
+			results = append(results, anime)
+		}
+	}
+
+	return results
+}
+
 // GetCharacter ...
 func GetCharacter(id string) (*Character, error) {
 	obj, err := DB.Get("Character", id)
