@@ -191,6 +191,20 @@ func SortSoundTracksLatestFirst(tracks []*SoundTrack) {
 	})
 }
 
+// SortSoundTracksPopularFirst ...
+func SortSoundTracksPopularFirst(tracks []*SoundTrack) {
+	sort.Slice(tracks, func(i, j int) bool {
+		aLikes := len(tracks[i].Likes)
+		bLikes := len(tracks[j].Likes)
+
+		if aLikes == bLikes {
+			return tracks[i].Created > tracks[j].Created
+		}
+
+		return aLikes > bLikes
+	})
+}
+
 // GetSoundTrack ...
 func GetSoundTrack(id string) (*SoundTrack, error) {
 	track, err := DB.Get("SoundTrack", id)
