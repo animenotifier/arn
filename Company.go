@@ -1,6 +1,10 @@
 package arn
 
-import "github.com/aerogo/nano"
+import (
+	"errors"
+
+	"github.com/aerogo/nano"
+)
 
 // Company ...
 type Company struct {
@@ -10,6 +14,8 @@ type Company struct {
 	Description string      `json:"description" editable:"true"`
 	Location    Location    `json:"location"`
 	Mappings    []*Mapping  `json:"mappings"`
+	Tags        []string    `json:"tags" editable:"true"`
+	Likes       []string    `json:"likes"`
 	IsDraft     bool        `json:"isDraft"`
 	Created     string      `json:"created"`
 	CreatedBy   string      `json:"createdBy"`
@@ -20,6 +26,53 @@ type Company struct {
 // Link returns a single company.
 func (company *Company) Link() string {
 	return "/company/" + company.ID
+}
+
+// Creator returns the user who created this company.
+func (company *Company) Creator() *User {
+	user, _ := GetUser(company.CreatedBy)
+	return user
+}
+
+// Publish ...
+func (company *Company) Publish() error {
+	// No draft
+	if !company.IsDraft {
+		return errors.New("Not a draft")
+	}
+
+	company.IsDraft = false
+	draftIndex, err := GetDraftIndex(company.CreatedBy)
+
+	if err != nil {
+		return err
+	}
+
+	if draftIndex.CompanyID == "" {
+		return errors.New("Company draft doesn't exist in the user draft index")
+	}
+
+	draftIndex.CompanyID = ""
+	draftIndex.Save()
+	return nil
+}
+
+// Unpublish ...
+func (company *Company) Unpublish() error {
+	company.IsDraft = true
+	draftIndex, err := GetDraftIndex(company.CreatedBy)
+
+	if err != nil {
+		return err
+	}
+
+	if draftIndex.CompanyID != "" {
+		return errors.New("You still have an unfinished draft")
+	}
+
+	draftIndex.CompanyID = company.ID
+	draftIndex.Save()
+	return nil
 }
 
 // GetCompany returns a single company.

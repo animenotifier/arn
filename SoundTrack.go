@@ -99,7 +99,7 @@ func (track *SoundTrack) MainAnime() *Anime {
 	return allAnime[0]
 }
 
-// Creator ...
+// Creator returns the user who created this track.
 func (track *SoundTrack) Creator() *User {
 	user, _ := GetUser(track.CreatedBy)
 	return user
