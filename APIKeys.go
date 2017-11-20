@@ -68,6 +68,12 @@ type APIKeysData struct {
 		PublicKey  string `json:"publicKey"`
 		PrivateKey string `json:"privateKey"`
 	} `json:"vapid"`
+
+	SMTP struct {
+		Server   string `json:"server"`
+		Address  string `json:"address"`
+		Password string `json:"password"`
+	} `json:"smtp"`
 }
 
 func init() {
