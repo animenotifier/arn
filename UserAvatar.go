@@ -1,6 +1,8 @@
 package arn
 
-import "github.com/parnurzeal/gorequest"
+import (
+	"github.com/aerogo/http/client"
+)
 
 // UserAvatar ...
 type UserAvatar struct {
@@ -9,6 +11,6 @@ type UserAvatar struct {
 }
 
 // RefreshAvatar ...
-func (user *User) RefreshAvatar() (gorequest.Response, string, []error) {
-	return gorequest.New().Get("http://media.notify.moe:8001/" + user.ID).End()
+func (user *User) RefreshAvatar() (client.Response, error) {
+	return client.Get("http://127.0.0.1:8001/" + user.ID).End()
 }
