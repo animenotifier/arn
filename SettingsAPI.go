@@ -40,6 +40,22 @@ func (settings *Settings) Edit(ctx *aero.Context, key string, value reflect.Valu
 	return false, nil
 }
 
+// Filter removes privacy critical fields from the settings object.
+func (settings *Settings) Filter() {
+	settings.NotificationEmail = ""
+}
+
+// ShouldFilter tells whether data needs to be filtered in the given context.
+func (settings *Settings) ShouldFilter(ctx *aero.Context) bool {
+	ctxUser := GetUserFromContext(ctx)
+
+	if ctxUser != nil && ctxUser.Role == "admin" {
+		return false
+	}
+
+	return true
+}
+
 // Save saves the settings in the database.
 func (settings *Settings) Save() {
 	DB.Set("Settings", settings.UserID, settings)

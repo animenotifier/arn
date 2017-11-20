@@ -74,7 +74,7 @@ func RegisterUser(user *User) {
 	})
 
 	// Create default settings
-	NewSettings(user.ID).Save()
+	NewSettings(user).Save()
 
 	// Add empty anime list
 	DB.Set("AnimeList", user.ID, &AnimeList{

@@ -27,13 +27,14 @@ const (
 
 // Settings ...
 type Settings struct {
-	UserID        string           `json:"userId"`
-	SortBy        string           `json:"sortBy"`
-	TitleLanguage string           `json:"titleLanguage" editable:"true"`
-	Providers     ServiceProviders `json:"providers"`
-	Avatar        AvatarSettings   `json:"avatar"`
-	Format        FormatSettings   `json:"format"`
-	Theme         string           `json:"theme" editable:"true"`
+	UserID            string           `json:"userId"`
+	SortBy            string           `json:"sortBy"`
+	TitleLanguage     string           `json:"titleLanguage" editable:"true"`
+	Providers         ServiceProviders `json:"providers"`
+	Avatar            AvatarSettings   `json:"avatar"`
+	Format            FormatSettings   `json:"format"`
+	Theme             string           `json:"theme" editable:"true"`
+	NotificationEmail string           `json:"notificationEmail"`
 }
 
 // FormatSettings ...
@@ -53,9 +54,9 @@ type AvatarSettings struct {
 }
 
 // NewSettings ...
-func NewSettings(userID string) *Settings {
+func NewSettings(user *User) *Settings {
 	return &Settings{
-		UserID:        userID,
+		UserID:        user.ID,
 		SortBy:        SortByAiringDate,
 		TitleLanguage: TitleLanguageCanonical,
 		Providers: ServiceProviders{
@@ -65,7 +66,8 @@ func NewSettings(userID string) *Settings {
 			Source:    "",
 			SourceURL: "",
 		},
-		Theme: "light",
+		Theme:             "light",
+		NotificationEmail: user.Email,
 	}
 }
 
