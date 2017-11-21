@@ -22,6 +22,12 @@ type UserAccounts struct {
 		Level    float64 `json:"level"`
 	} `json:"osu"`
 
+	Overwatch struct {
+		BattleTag   string `json:"battleTag" editable:"true"`
+		SkillRating int    `json:"skillRating"`
+		Tier        string `json:"tier"`
+	} `json:"overwatch"`
+
 	AniList struct {
 		Nick string `json:"nick" editable:"true"`
 	} `json:"anilist"`
