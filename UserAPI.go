@@ -36,10 +36,10 @@ func (user *User) Edit(ctx *aero.Context, key string, value reflect.Value, newVa
 
 				if err != nil {
 					color.Red("Error refreshing osu info of user '%s' with osu nick '%s': %v", user.Nick, newNick, err)
-				} else {
-					color.Green("Refreshed osu info of user '%s' with osu nick '%s': %v", user.Nick, newNick, user.Accounts.Osu.PP)
+					return
 				}
 
+				color.Green("Refreshed osu info of user '%s' with osu nick '%s': %v", user.Nick, newNick, user.Accounts.Osu.PP)
 				user.Save()
 			}()
 		}
