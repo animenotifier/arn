@@ -7,6 +7,7 @@ import (
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
 	"github.com/animenotifier/arn/autocorrect"
+	"github.com/animenotifier/overwatch"
 	"github.com/fatih/color"
 )
 
@@ -39,6 +40,33 @@ func (user *User) Edit(ctx *aero.Context, key string, value reflect.Value, newVa
 					color.Green("Refreshed osu info of user '%s' with osu nick '%s': %v", user.Nick, newNick, user.Accounts.Osu.PP)
 				}
 
+				user.Save()
+			}()
+		}
+
+		return true, nil
+	}
+
+	// Refresh Overwatch info if the battletag changed
+	if key == "Accounts.Overwatch.BattleTag" {
+		newBattleTag := newValue.String()
+		value.SetString(newBattleTag)
+
+		if newBattleTag == "" {
+			user.Accounts.Overwatch.SkillRating = 0
+			user.Accounts.Overwatch.Tier = ""
+		} else {
+			go func() {
+				stats, err := overwatch.GetPlayerStats(newBattleTag)
+
+				if err != nil {
+					color.Red("Error refreshing Overwatch info of user '%s' with battletag '%s': %v", user.Nick, newBattleTag, err)
+					return
+				}
+
+				skillRating, tier := stats.HighestSkillRating()
+				user.Accounts.Overwatch.SkillRating = skillRating
+				user.Accounts.Overwatch.Tier = tier
 				user.Save()
 			}()
 		}
