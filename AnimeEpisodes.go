@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"strconv"
 	"strings"
+
+	"github.com/aerogo/nano"
 )
 
 // AnimeEpisodes ...
@@ -40,6 +42,12 @@ func (episodes *AnimeEpisodes) AvailableCount() int {
 	return available
 }
 
+// Anime returns the anime.
+func (episodes *AnimeEpisodes) Anime() *Anime {
+	anime, _ := GetAnime(episodes.AnimeID)
+	return anime
+}
+
 // String returns a text representation of the anime episodes.
 func (episodes *AnimeEpisodes) String() string {
 	b := bytes.Buffer{}
@@ -59,6 +67,21 @@ func (episodes *AnimeEpisodes) String() string {
 // Save saves the episodes in the database.
 func (episodes *AnimeEpisodes) Save() {
 	DB.Set("AnimeEpisodes", episodes.AnimeID, episodes)
+}
+
+// StreamAnimeEpisodes returns a stream of all anime episodes.
+func StreamAnimeEpisodes() chan *AnimeEpisodes {
+	channel := make(chan *AnimeEpisodes, nano.ChannelBufferSize)
+
+	go func() {
+		for obj := range DB.All("AnimeEpisodes") {
+			channel <- obj.(*AnimeEpisodes)
+		}
+
+		close(channel)
+	}()
+
+	return channel
 }
 
 // GetAnimeEpisodes ...
