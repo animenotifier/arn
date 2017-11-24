@@ -170,3 +170,15 @@ func (thread *Thread) Unlike(userID string) {
 		}
 	}
 }
+
+// Remove post from the post list.
+func (thread *Thread) Remove(postID string) bool {
+	for index, item := range thread.Posts {
+		if item == postID {
+			thread.Posts = append(thread.Posts[:index], thread.Posts[index+1:]...)
+			return true
+		}
+	}
+
+	return false
+}
