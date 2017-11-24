@@ -149,19 +149,18 @@ func (post *Post) Create(ctx *aero.Context) error {
 
 // Delete deletes the post from the database.
 func (post *Post) Delete() error {
-	thread, threadErr := GetThread(post.ThreadID)
+	thread, err := GetThread(post.ThreadID)
 
-	if threadErr != nil {
+	if err != nil {
 		return errors.New("Thread does not exist")
 	}
 
-	// Remove the reference of the post in the thread tha contain it
+	// Remove the reference of the post in the thread that contains it
 	if !thread.Remove(post.ID) {
 		return errors.New("This post does not exist in the thread")
 	}
 
 	thread.Save()
-
 	DB.Delete("Post", post.ID)
 	return nil
 }
