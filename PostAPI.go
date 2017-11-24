@@ -159,6 +159,7 @@ func (post *Post) Delete() error {
 	if !thread.Remove(post.ID) {
 		return errors.New("This post does not exist in the thread")
 	}
+
 	thread.Save()
 
 	DB.Delete("Post", post.ID)
