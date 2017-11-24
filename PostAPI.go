@@ -152,7 +152,7 @@ func (post *Post) Delete() error {
 	thread, err := GetThread(post.ThreadID)
 
 	if err != nil {
-		return errors.New("Thread does not exist")
+		return err
 	}
 
 	// Remove the reference of the post in the thread that contains it
