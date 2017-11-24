@@ -147,6 +147,24 @@ func (post *Post) Create(ctx *aero.Context) error {
 	return nil
 }
 
+// Delete deletes the post from the database.
+func (post *Post) Delete() error {
+	thread, threadErr := GetThread(post.ThreadID)
+
+	if threadErr != nil {
+		return errors.New("Thread does not exist")
+	}
+
+	// Remove the reference of the post in the thread tha contain it
+	if !thread.Remove(post.ID) {
+		return errors.New("This post does not exist in the thread")
+	}
+	thread.Save()
+
+	DB.Delete("Post", post.ID)
+	return nil
+}
+
 // AfterEdit updates the date it has been edited.
 func (post *Post) AfterEdit(ctx *aero.Context) error {
 	post.Edited = DateTimeUTC()
