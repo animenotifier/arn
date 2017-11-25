@@ -113,3 +113,16 @@ func (thread *Thread) AfterEdit(ctx *aero.Context) error {
 func (thread *Thread) Save() {
 	DB.Set("Thread", thread.ID, thread)
 }
+
+// Delete deletes the thread and its posts from the database.
+func (thread *Thread) Delete() error {
+	// Delete all the posts contained in the thread
+	for _, postID := range thread.Posts {
+		// We don't use the Post.Delete function since it would
+		// call unnecessary code for the thread deletion
+		DB.Delete("Post", postID)
+	}
+
+	DB.Delete("Thread", thread.ID)
+	return nil
+}
