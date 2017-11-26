@@ -57,21 +57,64 @@ func SearchCharacters(term string, maxLength int) []*Character {
 		return nil
 	}
 
-	var results []*Character
+	var results []*SearchResult
 
 	for character := range StreamCharacters() {
-		text := strings.ToLower(character.Name)
-
-		if !strings.Contains(text, term) {
+		if character.Image == "" {
 			continue
 		}
 
-		results = append(results, character)
+		text := strings.ToLower(character.Name)
+
+		if text == term {
+			results = append(results, &SearchResult{
+				obj:        character,
+				similarity: 1000,
+			})
+			continue
+		}
+
+		for index, char := range text {
+			if char == ' ' {
+				firstName := text[:index]
+				lastName := text[index+1:]
+
+				if firstName == term {
+					results = append(results, &SearchResult{
+						obj:        character,
+						similarity: 10.0,
+					})
+					break
+				}
+
+				if lastName == term {
+					results = append(results, &SearchResult{
+						obj:        character,
+						similarity: 1,
+					})
+					break
+				}
+			}
+		}
 	}
 
 	// Sort
 	sort.Slice(results, func(i, j int) bool {
-		return results[i].Name > results[j].Name
+		similarityA := results[i].similarity
+		similarityB := results[j].similarity
+
+		if similarityA == similarityB {
+			characterA := results[i].obj.(*Character)
+			characterB := results[j].obj.(*Character)
+
+			if characterA.Name == characterB.Name {
+				return characterA.ID < characterB.ID
+			}
+
+			return characterA.Name < characterB.Name
+		}
+
+		return similarityA > similarityB
 	})
 
 	// Limit
@@ -79,7 +122,14 @@ func SearchCharacters(term string, maxLength int) []*Character {
 		results = results[:maxLength]
 	}
 
-	return results
+	// Final list
+	final := make([]*Character, len(results), len(results))
+
+	for i, result := range results {
+		final[i] = result.obj.(*Character)
+	}
+
+	return final
 }
 
 // SearchSoundTracks searches all soundtracks.
