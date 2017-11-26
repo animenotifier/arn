@@ -53,6 +53,10 @@ func Search(term string, maxUsers, maxAnime, maxPosts, maxThreads, maxTracks int
 
 // SearchCharacters searches all characters.
 func SearchCharacters(term string, maxLength int) []*Character {
+	if maxLength == 0 {
+		return nil
+	}
+
 	var results []*Character
 
 	for character := range StreamCharacters() {
