@@ -20,11 +20,11 @@ type SearchResult struct {
 }
 
 // Search is a fuzzy search.
-func Search(term string, maxUsers, maxAnime, maxPosts, maxThreads, maxTracks int) ([]*User, []*Anime, []*Post, []*Thread, []*SoundTrack) {
+func Search(term string, maxUsers, maxAnime, maxPosts, maxThreads, maxTracks int, maxCharacters int) ([]*User, []*Anime, []*Post, []*Thread, []*SoundTrack, []*Character) {
 	term = strings.ToLower(term)
 
 	if term == "" {
-		return nil, nil, nil, nil, nil
+		return nil, nil, nil, nil, nil, nil
 	}
 
 	var userResults []*User
@@ -32,6 +32,7 @@ func Search(term string, maxUsers, maxAnime, maxPosts, maxThreads, maxTracks int
 	var postResults []*Post
 	var threadResults []*Thread
 	var trackResults []*SoundTrack
+	var characterResults []*Character
 
 	flow.Parallel(func() {
 		userResults = SearchUsers(term, maxUsers)
@@ -43,9 +44,38 @@ func Search(term string, maxUsers, maxAnime, maxPosts, maxThreads, maxTracks int
 		threadResults = SearchThreads(term, maxThreads)
 	}, func() {
 		trackResults = SearchSoundTracks(term, maxTracks)
+	}, func() {
+		characterResults = SearchCharacters(term, maxCharacters)
 	})
 
-	return userResults, animeResults, postResults, threadResults, trackResults
+	return userResults, animeResults, postResults, threadResults, trackResults, characterResults
+}
+
+// SearchCharacters searches all characters.
+func SearchCharacters(term string, maxLength int) []*Character {
+	var results []*Character
+
+	for character := range StreamCharacters() {
+		text := strings.ToLower(character.Name)
+
+		if !strings.Contains(text, term) {
+			continue
+		}
+
+		results = append(results, character)
+	}
+
+	// Sort
+	sort.Slice(results, func(i, j int) bool {
+		return results[i].Name > results[j].Name
+	})
+
+	// Limit
+	if len(results) >= maxLength {
+		results = results[:maxLength]
+	}
+
+	return results
 }
 
 // SearchSoundTracks searches all soundtracks.
