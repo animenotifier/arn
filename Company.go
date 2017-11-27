@@ -2,6 +2,7 @@ package arn
 
 import (
 	"errors"
+	"sort"
 
 	"github.com/aerogo/nano"
 )
@@ -33,6 +34,30 @@ func (company *Company) Link() string {
 func (company *Company) Creator() *User {
 	user, _ := GetUser(company.CreatedBy)
 	return user
+}
+
+// Anime returns the anime connected with this company.
+func (company *Company) Anime() []*Anime {
+	animes := []*Anime{}
+
+	for anime := range StreamAnime() {
+		if Contains(anime.StudioIDs, company.ID) || Contains(anime.ProducerIDs, company.ID) || Contains(anime.LicensorIDs, company.ID) {
+			animes = append(animes, anime)
+		}
+	}
+
+	sort.Slice(animes, func(i, j int) bool {
+		popularityA := animes[i].Popularity.Total()
+		popularityB := animes[j].Popularity.Total()
+
+		if popularityA == popularityB {
+			return animes[i].Title.Canonical < animes[j].Title.Canonical
+		}
+
+		return popularityA > popularityB
+	})
+
+	return animes
 }
 
 // Publish ...

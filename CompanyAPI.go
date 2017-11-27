@@ -9,9 +9,10 @@ import (
 
 // Force interface implementations
 var (
-	_ Publishable  = (*Company)(nil)
-	_ api.Newable  = (*Company)(nil)
-	_ api.Editable = (*Company)(nil)
+	_ Publishable   = (*Company)(nil)
+	_ api.Newable   = (*Company)(nil)
+	_ api.Editable  = (*Company)(nil)
+	_ api.Deletable = (*Company)(nil)
 )
 
 // Actions
@@ -68,6 +69,30 @@ func (company *Company) Delete() error {
 		draftIndex := company.Creator().DraftIndex()
 		draftIndex.CompanyID = ""
 		draftIndex.Save()
+	}
+
+	// Remove company ID from all anime
+	for anime := range StreamAnime() {
+		for index, id := range anime.StudioIDs {
+			if id == company.ID {
+				anime.StudioIDs = append(anime.StudioIDs[:index], anime.StudioIDs[index+1:]...)
+				break
+			}
+		}
+
+		for index, id := range anime.ProducerIDs {
+			if id == company.ID {
+				anime.ProducerIDs = append(anime.ProducerIDs[:index], anime.ProducerIDs[index+1:]...)
+				break
+			}
+		}
+
+		for index, id := range anime.LicensorIDs {
+			if id == company.ID {
+				anime.LicensorIDs = append(anime.LicensorIDs[:index], anime.LicensorIDs[index+1:]...)
+				break
+			}
+		}
 	}
 
 	DB.Delete("Company", company.ID)
