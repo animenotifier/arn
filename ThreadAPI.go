@@ -15,6 +15,7 @@ var (
 	_ api.Newable    = (*Thread)(nil)
 	_ api.Editable   = (*Thread)(nil)
 	_ api.Actionable = (*Thread)(nil)
+	_ api.Deletable  = (*Thread)(nil)
 )
 
 // Actions

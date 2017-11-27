@@ -16,6 +16,7 @@ var (
 	_ api.Newable    = (*Post)(nil)
 	_ api.Editable   = (*Post)(nil)
 	_ api.Actionable = (*Post)(nil)
+	_ api.Deletable  = (*Post)(nil)
 )
 
 // Actions
