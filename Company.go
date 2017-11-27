@@ -12,11 +12,11 @@ type Company struct {
 	Name        CompanyName `json:"name" editable:"true"`
 	Image       string      `json:"image"`
 	Description string      `json:"description" editable:"true" type:"textarea"`
-	Location    Location    `json:"location"`
-	Mappings    []*Mapping  `json:"mappings"`
+	Mappings    []*Mapping  `json:"mappings" editable:"true"`
+	Links       []*Link     `json:"links" editable:"true"`
+	Location    Location    `json:"location" editable:"true"`
 	Tags        []string    `json:"tags" editable:"true"`
 	Likes       []string    `json:"likes"`
-	Links       []*Link     `json:"links" editable:"true"`
 	IsDraft     bool        `json:"isDraft"`
 	Created     string      `json:"created"`
 	CreatedBy   string      `json:"createdBy"`
