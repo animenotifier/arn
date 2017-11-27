@@ -35,7 +35,10 @@ type Anime struct {
 	Popularity     *AnimePopularity `json:"popularity"`
 	Summary        string           `json:"summary"`
 	Trailers       []*ExternalMedia `json:"trailers"`
-	Mappings       []*Mapping       `json:"mappings"`
+	Mappings       []*Mapping       `json:"mappings" editable:"true"`
+	StudioIDs      []string         `json:"studios" editable:"true"`
+	ProducerIDs    []string         `json:"producers" editable:"true"`
+	LicensorIDs    []string         `json:"licensors" editable:"true"`
 
 	// Hashtag       string          `json:"hashtag"`
 	// Source        string          `json:"source"`
@@ -64,6 +67,17 @@ func GetAnime(id string) (*Anime, error) {
 	}
 
 	return obj.(*Anime), nil
+}
+
+// Studios ...
+func (anime *Anime) Studios() []*Company {
+	companies := make([]*Company, len(anime.StudioIDs), len(anime.StudioIDs))
+
+	for i, obj := range DB.GetMany("Company", anime.StudioIDs) {
+		companies[i] = obj.(*Company)
+	}
+
+	return companies
 }
 
 // Image ...
