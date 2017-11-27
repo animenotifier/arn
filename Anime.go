@@ -69,11 +69,33 @@ func GetAnime(id string) (*Anime, error) {
 	return obj.(*Anime), nil
 }
 
-// Studios ...
+// Studios returns the list of studios for this anime.
 func (anime *Anime) Studios() []*Company {
 	companies := make([]*Company, len(anime.StudioIDs), len(anime.StudioIDs))
 
 	for i, obj := range DB.GetMany("Company", anime.StudioIDs) {
+		companies[i] = obj.(*Company)
+	}
+
+	return companies
+}
+
+// Producers returns the list of producers for this anime.
+func (anime *Anime) Producers() []*Company {
+	companies := make([]*Company, len(anime.ProducerIDs), len(anime.ProducerIDs))
+
+	for i, obj := range DB.GetMany("Company", anime.ProducerIDs) {
+		companies[i] = obj.(*Company)
+	}
+
+	return companies
+}
+
+// Licensors returns the list of licensors for this anime.
+func (anime *Anime) Licensors() []*Company {
+	companies := make([]*Company, len(anime.LicensorIDs), len(anime.LicensorIDs))
+
+	for i, obj := range DB.GetMany("Company", anime.LicensorIDs) {
 		companies[i] = obj.(*Company)
 	}
 
