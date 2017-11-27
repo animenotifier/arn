@@ -2,6 +2,6 @@ package arn
 
 // Link describes a single link to an external website.
 type Link struct {
-	Title string
-	URL   string
+	Title string `json:"title" editable:"true"`
+	URL   string `json:"url" editable:"true"`
 }
