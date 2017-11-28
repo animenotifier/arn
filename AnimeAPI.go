@@ -2,7 +2,6 @@ package arn
 
 import (
 	"errors"
-	"reflect"
 
 	"github.com/aerogo/aero"
 )
@@ -16,39 +15,6 @@ func (anime *Anime) Authorize(ctx *aero.Context, action string) error {
 	}
 
 	return nil
-}
-
-// VirtualEdit updates virtual properties.
-func (anime *Anime) VirtualEdit(ctx *aero.Context, key string, newValue reflect.Value) (bool, error) {
-	switch key {
-	case "Virtual:ShoboiID":
-		oldValue := anime.GetMapping("shoboi/anime")
-		newValue := newValue.Interface().(string)
-
-		anime.RemoveMapping("shoboi/anime", oldValue)
-
-		if newValue != "" {
-			user := GetUserFromContext(ctx)
-			anime.AddMapping("shoboi/anime", newValue, user.ID)
-		}
-
-		return true, nil
-
-	case "Virtual:AniListID":
-		oldValue := anime.GetMapping("anilist/anime")
-		newValue := newValue.Interface().(string)
-
-		anime.RemoveMapping("anilist/anime", oldValue)
-
-		if newValue != "" {
-			user := GetUserFromContext(ctx)
-			anime.AddMapping("anilist/anime", newValue, user.ID)
-		}
-
-		return true, nil
-	}
-
-	return false, nil
 }
 
 // Save saves the anime in the database.

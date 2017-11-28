@@ -21,20 +21,20 @@ import (
 // Anime ...
 type Anime struct {
 	ID             string           `json:"id"`
-	Type           string           `json:"type"`
-	Title          *AnimeTitle      `json:"title"`
+	Type           string           `json:"type" editable:"true"`
+	Title          *AnimeTitle      `json:"title" editable:"true"`
 	ImageExtension string           `json:"imageExtension"`
 	FirstChannel   string           `json:"firstChannel"`
-	StartDate      string           `json:"startDate"`
-	EndDate        string           `json:"endDate"`
-	EpisodeCount   int              `json:"episodeCount"`
-	EpisodeLength  int              `json:"episodeLength"`
-	Status         string           `json:"status"`
+	StartDate      string           `json:"startDate" editable:"true"`
+	EndDate        string           `json:"endDate" editable:"true"`
+	EpisodeCount   int              `json:"episodeCount" editable:"true"`
+	EpisodeLength  int              `json:"episodeLength" editable:"true"`
+	Status         string           `json:"status" editable:"true"`
 	NSFW           int              `json:"nsfw"`
 	Rating         *AnimeRating     `json:"rating"`
 	Popularity     *AnimePopularity `json:"popularity"`
-	Summary        string           `json:"summary"`
-	Trailers       []*ExternalMedia `json:"trailers"`
+	Summary        string           `json:"summary" editable:"true" type:"textarea"`
+	Trailers       []*ExternalMedia `json:"trailers" editable:"true"`
 	Mappings       []*Mapping       `json:"mappings" editable:"true"`
 	StudioIDs      []string         `json:"studios" editable:"true"`
 	ProducerIDs    []string         `json:"producers" editable:"true"`
