@@ -182,6 +182,23 @@ func (list *AnimeList) Sort() {
 	})
 }
 
+// SortByRating sorts the anime list by overall rating.
+func (list *AnimeList) SortByRating() {
+	list.Lock()
+	defer list.Unlock()
+
+	sort.Slice(list.Items, func(i, j int) bool {
+		a := list.Items[i]
+		b := list.Items[j]
+
+		if a.Rating.Overall == b.Rating.Overall {
+			return a.Anime().Title.Canonical < b.Anime().Title.Canonical
+		}
+
+		return a.Rating.Overall > b.Rating.Overall
+	})
+}
+
 // Watching ...
 func (list *AnimeList) Watching() *AnimeList {
 	return list.FilterStatus(AnimeListStatusWatching)
