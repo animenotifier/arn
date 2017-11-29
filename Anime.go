@@ -35,6 +35,7 @@ type Anime struct {
 	Popularity     *AnimePopularity `json:"popularity"`
 	Summary        string           `json:"summary" editable:"true" type:"textarea"`
 	Trailers       []*ExternalMedia `json:"trailers" editable:"true"`
+	Genres         []string         `json:"genres" editable:"true"`
 	Mappings       []*Mapping       `json:"mappings" editable:"true"`
 	StudioIDs      []string         `json:"studios" editable:"true"`
 	ProducerIDs    []string         `json:"producers" editable:"true"`
@@ -46,7 +47,6 @@ type Anime struct {
 
 	// PageGenerated string          `json:"pageGenerated"`
 	// AnilistEdited uint64          `json:"anilistEdited"`
-	// Genres        []string        `json:"genres"`
 	// Tracks        *AnimeTrackList `json:"tracks"`
 	// Links         []AnimeLink     `json:"links"`
 	// Studios       []AnimeStudio   `json:"studios"`
