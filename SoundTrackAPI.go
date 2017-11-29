@@ -98,8 +98,16 @@ func (soundtrack *SoundTrack) Delete() error {
 
 // Authorize returns an error if the given API POST request is not authorized.
 func (soundtrack *SoundTrack) Authorize(ctx *aero.Context, action string) error {
-	if !ctx.HasSession() {
-		return errors.New("Neither logged in nor in session")
+	user := GetUserFromContext(ctx)
+
+	if user == nil {
+		return errors.New("Not logged in")
+	}
+
+	if action == "delete" {
+		if user.Role != "editor" && user.Role != "admin" {
+			return errors.New("Insufficient permissions")
+		}
 	}
 
 	return nil
