@@ -22,7 +22,7 @@ var genreIcons = map[string]string{
 	"Kids":          "child",
 	"Martial Arts":  "hand-rock-o",
 	"Magic":         "magic",
-	"Mecha":         "reddit-alien",
+	"Mecha":         "mecha",
 	"Military":      "fighter-jet",
 	"Music":         "music",
 	"Mystery":       "question",
