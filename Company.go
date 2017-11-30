@@ -2,7 +2,6 @@ package arn
 
 import (
 	"errors"
-	"sort"
 
 	"github.com/aerogo/nano"
 )
@@ -46,17 +45,7 @@ func (company *Company) Anime() []*Anime {
 		}
 	}
 
-	sort.Slice(animes, func(i, j int) bool {
-		popularityA := animes[i].Popularity.Total()
-		popularityB := animes[j].Popularity.Total()
-
-		if popularityA == popularityB {
-			return animes[i].Title.Canonical < animes[j].Title.Canonical
-		}
-
-		return popularityA > popularityB
-	})
-
+	SortAnimeByQuality(animes, "")
 	return animes
 }
 

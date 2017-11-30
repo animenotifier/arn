@@ -637,10 +637,3 @@ func FilterAnime(filter func(*Anime) bool) []*Anime {
 
 	return filtered
 }
-
-// SortAnimeByPopularity sorts the given slice of anime by popularity.
-func SortAnimeByPopularity(animes []*Anime) {
-	sort.Slice(animes, func(i, j int) bool {
-		return animes[i].Popularity.Total() > animes[j].Popularity.Total()
-	})
-}
