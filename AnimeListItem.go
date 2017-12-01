@@ -44,7 +44,7 @@ func (item *AnimeListItem) OnEpisodesChange() {
 	}
 
 	// We set episodes lower than the max but the status is set as completed.
-	if item.Status == AnimeListStatusCompleted && maxEpisodesKnown && item.Episodes != item.Anime().EpisodeCount {
+	if item.Status == AnimeListStatusCompleted && maxEpisodesKnown && item.Episodes < item.Anime().EpisodeCount {
 		// Set status back to watching.
 		item.Status = AnimeListStatusWatching
 	}
