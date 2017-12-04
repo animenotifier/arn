@@ -11,6 +11,7 @@ type Character struct {
 	Image       string                `json:"image"`
 	Description string                `json:"description"`
 	Attributes  []*CharacterAttribute `json:"attributes"`
+	QuotesIds   []string              `json:"quotes"`
 	// Name        *CharacterName        `json:"name"`
 	// Mappings    []*Mapping            `json:"mappings"`
 }
@@ -48,6 +49,17 @@ func GetCharacter(id string) (*Character, error) {
 	}
 
 	return obj.(*Character), nil
+}
+
+// Quotes returns the list of quotes for this character.
+func (character *Character) Quotes() []*Quote {
+	quotes := make([]*Quote, len(character.QuotesIds), len(character.QuotesIds))
+
+	for i, obj := range DB.GetMany("Quote", character.QuotesIds) {
+		quotes[i] = obj.(*Quote)
+	}
+
+	return quotes
 }
 
 // StreamCharacters returns a stream of all characters.
