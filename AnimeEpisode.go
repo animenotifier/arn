@@ -19,6 +19,16 @@ type EpisodeTitle struct {
 	Japanese string `json:"japanese"`
 }
 
+// Available tells you whether the episode is available (triggered when it has a link).
+func (a *AnimeEpisode) Available() bool {
+	return len(a.Links) > 0
+}
+
+// AvailableOn tells you whether the episode is available on a given service.
+func (a *AnimeEpisode) AvailableOn(serviceName string) bool {
+	return a.Links[serviceName] != ""
+}
+
 // Merge combines the data of both episodes to one.
 func (a *AnimeEpisode) Merge(b *AnimeEpisode) {
 	if b == nil {
