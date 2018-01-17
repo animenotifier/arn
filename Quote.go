@@ -4,13 +4,14 @@ import (
 	"errors"
 
 	"github.com/aerogo/nano"
+	"sort"
 )
 
 // Company ...
 type Quote struct {
 	ID          string   `json:"id"`
 	Description string   `json:"description" editable:"true" type:"textarea"`
-	Character   string   `json:"characterId" editable:"true"`
+	CharacterId string   `json:"characterId" editable:"true"`
 	Anime       string   `json:"animeId" editable:"true"`
 	Likes       []string `json:"likes"`
 	IsDraft     bool     `json:"isDraft"`
@@ -70,7 +71,7 @@ func (quote *Quote) Unpublish() error {
 		return errors.New("You still have an unfinished draft")
 	}
 
-	quote.IsDraft = false
+	quote.IsDraft = true
 	draftIndex.QuoteID = quote.ID
 	draftIndex.Save()
 	return nil
@@ -145,4 +146,44 @@ func AllQuotes() []*Quote {
 	}
 
 	return all
+}
+
+// Character returns the character cited in the quote
+func (quote *Quote) Character() *Character {
+	character, _ := GetCharacter(quote.CharacterId)
+	return character
+}
+
+// SortQuotesLatestFirst ...
+func SortQuotesLatestFirst(quotes []*Quote) {
+	sort.Slice(quotes, func(i, j int) bool {
+		return quotes[i].Created > quotes[j].Created
+	})
+}
+
+// SortQuotesPopularFirst ...
+func SortQuotesPopularFirst(quotes []*Quote) {
+	sort.Slice(quotes, func(i, j int) bool {
+		aLikes := len(quotes[i].Likes)
+		bLikes := len(quotes[j].Likes)
+
+		if aLikes == bLikes {
+			return quotes[i].Created > quotes[j].Created
+		}
+
+		return aLikes > bLikes
+	})
+}
+
+// FilterQuotes filters all quotes by a custom function.
+func FilterQuotes(filter func(*Quote) bool) []*Quote {
+	var filtered []*Quote
+
+	for obj := range StreamQuotes() {
+		if filter(obj) {
+			filtered = append(filtered, obj)
+		}
+	}
+
+	return filtered
 }
