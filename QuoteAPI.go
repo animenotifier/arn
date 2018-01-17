@@ -62,6 +62,19 @@ func (quote *Quote) Save() {
 
 // Delete deletes the object from the database.
 func (quote *Quote) Delete() error {
+	character, err := GetCharacter(quote.CharacterId)
+
+	if err != nil {
+		return err
+	}
+
+	// Remove the reference of the post in the thread that contains it
+	if !character.Remove(quote.ID) {
+		return errors.New("This quote does not exist in the thread")
+	}
+
+	character.Save()
+
 	if quote.IsDraft {
 		draftIndex := quote.Creator().DraftIndex()
 		draftIndex.QuoteID = ""

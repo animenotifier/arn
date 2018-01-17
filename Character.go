@@ -89,3 +89,15 @@ func AllCharacters() []*Character {
 
 	return all
 }
+
+// Remove the given quote from the quote list.
+func (character *Character) Remove(quoteID string) bool {
+	for index, item := range character.QuotesIds {
+		if item == quoteID {
+			character.QuotesIds = append(character.QuotesIds[:index], character.QuotesIds[index+1:]...)
+			return true
+		}
+	}
+
+	return false
+}
