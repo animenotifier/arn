@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/aerogo/nano"
+	"github.com/fatih/color"
 	"sort"
 )
 
@@ -12,7 +13,9 @@ type Quote struct {
 	ID          string   `json:"id"`
 	Description string   `json:"description" editable:"true" type:"textarea"`
 	CharacterId string   `json:"characterId" editable:"true"`
-	Anime       string   `json:"animeId" editable:"true"`
+	AnimeId     string   `json:"animeId" editable:"true"`
+	Episode     int      `json:"episode" editable:"true"`
+	Time        int      `json:"time" editable:"true"`
 	Likes       []string `json:"likes"`
 	IsDraft     bool     `json:"isDraft"`
 	Created     string   `json:"created"`
@@ -32,6 +35,12 @@ func (quote *Quote) Creator() *User {
 	return user
 }
 
+// EditedByUser returns the user who edited this quote.
+func (quote *Quote) EditedByUser() *User {
+	user, _ := GetUser(quote.EditedBy)
+	return user
+}
+
 // Publish ...
 func (quote *Quote) Publish() error {
 	// No draft
@@ -39,10 +48,24 @@ func (quote *Quote) Publish() error {
 		return errors.New("Not a draft")
 	}
 
-	// No title
+	// No description
 	if quote.Description == "" {
-		return errors.New("No quote")
+		return errors.New("A description is required")
 	}
+
+	// No character
+	if quote.CharacterId == "" {
+		return errors.New("A character is required")
+	}
+
+	if quote.AnimeId == "" && quote.Episode != 0 {
+		return errors.New("An anime is required before adding an episode")
+	}
+
+	if quote.Episode == 0 && quote.Time != 0 {
+		return errors.New("An episode is required before adding a time")
+	}
+
 	draftIndex, err := GetDraftIndex(quote.CreatedBy)
 
 	if err != nil {
@@ -152,6 +175,18 @@ func AllQuotes() []*Quote {
 func (quote *Quote) Character() *Character {
 	character, _ := GetCharacter(quote.CharacterId)
 	return character
+}
+
+// Anime fetches the anime where the quote is said.
+func (quote *Quote) Anime() *Anime {
+	var anime *Anime
+	anime, err := GetAnime(quote.AnimeId)
+
+	if err != nil {
+		color.Red("Error fetching anime: %v", err)
+	}
+
+	return anime
 }
 
 // SortQuotesLatestFirst ...
