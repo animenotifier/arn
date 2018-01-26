@@ -5,10 +5,12 @@ import (
 
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
+	"reflect"
 )
 
 // Force interface implementations
 var (
+	_ Likeable      = (*Quote)(nil)
 	_ Publishable   = (*Quote)(nil)
 	_ api.Newable   = (*Quote)(nil)
 	_ api.Editable  = (*Quote)(nil)
@@ -48,6 +50,39 @@ func (quote *Quote) Create(ctx *aero.Context) error {
 	return quote.Unpublish()
 }
 
+// Edit ...
+func (quote *Quote) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
+	if key == "CharacterId" {
+		newCharacterId := newValue.String()
+		previousCharacterId := newValue.String()
+		if previousCharacterId != newCharacterId {
+			newCharacter, err := GetCharacter(newCharacterId)
+			previousCharacter, err := GetCharacter(previousCharacterId)
+
+			if err != nil {
+				return false, err
+			}
+
+			// Remove the reference of the quote in the previous character that contained it
+			if !previousCharacter.Remove(quote.ID) {
+				return false, errors.New("This quote does not exist")
+			}
+
+			previousCharacter.Save()
+			value.SetString(newCharacterId)
+
+			// Append to quotes Ids to the new character
+			newCharacter.QuotesIds = append(newCharacter.QuotesIds, quote.ID)
+
+			// Save the character
+			newCharacter.Save()
+			return true, nil
+		}
+
+	}
+	return false, nil
+}
+
 // AfterEdit updates the metadata.
 func (quote *Quote) AfterEdit(ctx *aero.Context) error {
 	quote.Edited = DateTimeUTC()
@@ -68,9 +103,9 @@ func (quote *Quote) Delete() error {
 		return err
 	}
 
-	// Remove the reference of the post in the thread that contains it
+	// Remove the reference of the quote in the character that contains it
 	if !character.Remove(quote.ID) {
-		return errors.New("This quote does not exist in the thread")
+		return errors.New("This quote does not exist")
 	}
 
 	character.Save()
