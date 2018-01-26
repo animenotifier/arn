@@ -58,10 +58,12 @@ func (quote *Quote) Publish() error {
 		return errors.New("A character is required")
 	}
 
+	// Episode is provided without the anime
 	if quote.AnimeId == "" && quote.Episode != 0 {
 		return errors.New("An anime is required before adding an episode")
 	}
 
+	// The time is provided without the Episode
 	if quote.Episode == 0 && quote.Time != 0 {
 		return errors.New("An episode is required before adding a time")
 	}
@@ -75,6 +77,18 @@ func (quote *Quote) Publish() error {
 	if draftIndex.QuoteID == "" {
 		return errors.New("Quote draft doesn't exist in the user draft index")
 	}
+
+	character, characterErr := GetCharacter(quote.CharacterId)
+
+	if characterErr != nil {
+		return errors.New("Character does not exist")
+	}
+
+	// Append to quotes Ids
+	character.QuotesIds = append(character.QuotesIds, quote.ID)
+
+	// Save the character
+	character.Save()
 
 	quote.IsDraft = false
 	draftIndex.QuoteID = ""
