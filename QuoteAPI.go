@@ -50,7 +50,8 @@ func (quote *Quote) Create(ctx *aero.Context) error {
 	return quote.Unpublish()
 }
 
-// Edit ...
+// Edit remove the quote from it's previous linked character quote list if the new one is different
+// and add it to the new one.
 func (quote *Quote) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
 	if key == "CharacterId" {
 		newCharacterId := newValue.String()

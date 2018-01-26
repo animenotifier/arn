@@ -8,7 +8,7 @@ import (
 	"sort"
 )
 
-// Company ...
+// Quote ...
 type Quote struct {
 	ID          string   `json:"id"`
 	Description string   `json:"description" editable:"true" type:"textarea"`
