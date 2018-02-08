@@ -7,6 +7,7 @@ import (
 
 const (
 	currentlyAiringBonus      = 5.0
+	longSummaryBonus          = 0.1
 	popularityThreshold       = 5
 	popularityPenalty         = 8.0
 	watchingPopularityWeight  = 0.3
@@ -54,6 +55,14 @@ func SortAnimeByQuality(animes []*Anime, filterStatus string) {
 
 		if b.Popularity.Total() < popularityThreshold {
 			scoreB -= popularityPenalty
+		}
+
+		if len(a.Summary) >= 140 {
+			scoreA += longSummaryBonus
+		}
+
+		if len(b.Summary) >= 140 {
+			scoreB += longSummaryBonus
 		}
 
 		// If we show current shows, rank old shows a bit lower
