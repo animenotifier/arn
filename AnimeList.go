@@ -310,6 +310,19 @@ func (list *AnimeList) NormalizeRatings() {
 	}
 }
 
+// Genres returns a map of genre names mapped to the list items that belong to that genre.
+func (list *AnimeList) Genres() map[string][]*AnimeListItem {
+	genreToListItems := map[string][]*AnimeListItem{}
+
+	for _, item := range list.Items {
+		for _, genre := range item.Anime().Genres {
+			genreToListItems[genre] = append(genreToListItems[genre], item)
+		}
+	}
+
+	return genreToListItems
+}
+
 // RemoveDuplicates removes duplicate entries.
 func (list *AnimeList) RemoveDuplicates() {
 	list.Lock()
