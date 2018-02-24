@@ -10,18 +10,18 @@ import (
 
 // Quote ...
 type Quote struct {
-	ID          string   `json:"id"`
-	Description string   `json:"description" editable:"true" type:"textarea"`
-	CharacterId string   `json:"characterId" editable:"true"`
-	AnimeId     string   `json:"animeId" editable:"true"`
-	Episode     int      `json:"episode" editable:"true"`
-	Time        int      `json:"time" editable:"true"`
-	Likes       []string `json:"likes"`
-	IsDraft     bool     `json:"isDraft"`
-	Created     string   `json:"created"`
-	CreatedBy   string   `json:"createdBy"`
-	Edited      string   `json:"edited"`
-	EditedBy    string   `json:"editedBy"`
+	ID            string   `json:"id"`
+	Description   string   `json:"description" editable:"true" type:"textarea"`
+	CharacterID   string   `json:"characterId" editable:"true"`
+	AnimeID       string   `json:"animeId" editable:"true"`
+	EpisodeNumber int      `json:"episode" editable:"true"`
+	Time          int      `json:"time" editable:"true"`
+	Likes         []string `json:"likes"`
+	IsDraft       bool     `json:"isDraft"`
+	Created       string   `json:"created"`
+	CreatedBy     string   `json:"createdBy"`
+	Edited        string   `json:"edited"`
+	EditedBy      string   `json:"editedBy"`
 }
 
 // Link returns a single quote.
@@ -54,17 +54,17 @@ func (quote *Quote) Publish() error {
 	}
 
 	// No character
-	if quote.CharacterId == "" {
+	if quote.CharacterID == "" {
 		return errors.New("A character is required")
 	}
 
-	// Episode is provided without the anime
-	if quote.AnimeId == "" && quote.Episode != 0 {
+	// EpisodeNumber is provided without the anime
+	if quote.AnimeID == "" && quote.EpisodeNumber != 0 {
 		return errors.New("An anime is required before adding an episode")
 	}
 
-	// The time is provided without the Episode
-	if quote.Episode == 0 && quote.Time != 0 {
+	// The time is provided without the EpisodeNumber
+	if quote.EpisodeNumber == 0 && quote.Time != 0 {
 		return errors.New("An episode is required before adding a time")
 	}
 
@@ -78,14 +78,14 @@ func (quote *Quote) Publish() error {
 		return errors.New("Quote draft doesn't exist in the user draft index")
 	}
 
-	character, characterErr := GetCharacter(quote.CharacterId)
+	character, characterErr := GetCharacter(quote.CharacterID)
 
 	if characterErr != nil {
 		return errors.New("Character does not exist")
 	}
 
 	// Append to quotes Ids
-	character.QuotesIds = append(character.QuotesIds, quote.ID)
+	character.QuotesIDs = append(character.QuotesIDs, quote.ID)
 
 	// Save the character
 	character.Save()
@@ -114,7 +114,7 @@ func (quote *Quote) Unpublish() error {
 	return nil
 }
 
-// Like adds an user to the quote's Likes array if they aren't already in it.
+// Like adds a user to the quote's Likes array if they aren't already in it.
 func (quote *Quote) Like(userID string) {
 	for _, id := range quote.Likes {
 		if id == userID {
@@ -187,14 +187,14 @@ func AllQuotes() []*Quote {
 
 // Character returns the character cited in the quote
 func (quote *Quote) Character() *Character {
-	character, _ := GetCharacter(quote.CharacterId)
+	character, _ := GetCharacter(quote.CharacterID)
 	return character
 }
 
 // Anime fetches the anime where the quote is said.
 func (quote *Quote) Anime() *Anime {
 	var anime *Anime
-	anime, err := GetAnime(quote.AnimeId)
+	anime, err := GetAnime(quote.AnimeID)
 
 	if err != nil {
 		color.Red("Error fetching anime: %v", err)

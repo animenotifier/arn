@@ -156,7 +156,7 @@ func (post *Post) Delete() error {
 		return err
 	}
 
-	// Remove the reference of the post in the thread that contains it
+	// RemoveQuote the reference of the post in the thread that contains it
 	if !thread.Remove(post.ID) {
 		return errors.New("This post does not exist in the thread")
 	}

@@ -53,27 +53,34 @@ func (quote *Quote) Create(ctx *aero.Context) error {
 // Edit remove the quote from it's previous linked character quote list if the new one is different
 // and add it to the new one.
 func (quote *Quote) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
-	if key == "CharacterId" {
-		newCharacterId := newValue.String()
-		previousCharacterId := newValue.String()
-		if previousCharacterId != newCharacterId {
-			newCharacter, err := GetCharacter(newCharacterId)
-			previousCharacter, err := GetCharacter(previousCharacterId)
+	if key == "CharacterID" {
+
+		newCharacterID := newValue.String()
+		previousCharacterID := value.String()
+
+		if previousCharacterID != newCharacterID {
+			newCharacter, err := GetCharacter(newCharacterID)
 
 			if err != nil {
 				return false, err
 			}
 
-			// Remove the reference of the quote in the previous character that contained it
-			if !previousCharacter.Remove(quote.ID) {
+			previousCharacter, err := GetCharacter(previousCharacterID)
+
+			if err != nil {
+				return false, err
+			}
+
+			// RemoveQuote the reference of the quote in the previous character that contained it
+			if !previousCharacter.RemoveQuote(quote.ID) {
 				return false, errors.New("This quote does not exist")
 			}
 
 			previousCharacter.Save()
-			value.SetString(newCharacterId)
+			value.SetString(newCharacterID)
 
 			// Append to quotes Ids to the new character
-			newCharacter.QuotesIds = append(newCharacter.QuotesIds, quote.ID)
+			newCharacter.QuotesIDs = append(newCharacter.QuotesIDs, quote.ID)
 
 			// Save the character
 			newCharacter.Save()
@@ -98,14 +105,14 @@ func (quote *Quote) Save() {
 
 // Delete deletes the object from the database.
 func (quote *Quote) Delete() error {
-	character, err := GetCharacter(quote.CharacterId)
+	character, err := GetCharacter(quote.CharacterID)
 
 	if err != nil {
 		return err
 	}
 
-	// Remove the reference of the quote in the character that contains it
-	if !character.Remove(quote.ID) {
+	// RemoveQuote the reference of the quote in the character that contains it
+	if !character.RemoveQuote(quote.ID) {
 		return errors.New("This quote does not exist")
 	}
 

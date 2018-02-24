@@ -44,7 +44,7 @@ func (list *AnimeList) Add(animeID string) error {
 	return nil
 }
 
-// Remove removes the anime ID from the list.
+// RemoveQuote removes the anime ID from the list.
 func (list *AnimeList) Remove(animeID string) bool {
 	list.Lock()
 	defer list.Unlock()

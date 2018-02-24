@@ -96,7 +96,7 @@ package arn
 // 	}
 
 // 	searchAnime := func() {
-// 		// Remove special characters when searching anime titles
+// 		// RemoveQuote special characters when searching anime titles
 // 		animeSearchTerm := RemoveSpecialCharacters(term)
 
 // 		// Search anime

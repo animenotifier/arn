@@ -306,7 +306,7 @@ func (anime *Anime) RefreshEpisodes() error {
 	if anime.Status != "finished" && newAvailableCount > oldAvailableCount {
 		notification := &Notification{
 			Title:   anime.Title.Canonical,
-			Message: "Episode " + strconv.Itoa(newAvailableCount) + " has been released!",
+			Message: "EpisodeNumber " + strconv.Itoa(newAvailableCount) + " has been released!",
 			Icon:    anime.Image("medium"),
 			Link:    "https://notify.moe" + anime.Link(),
 		}
