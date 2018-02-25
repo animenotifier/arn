@@ -3,9 +3,10 @@ package arn
 import (
 	"errors"
 
+	"sort"
+
 	"github.com/aerogo/nano"
 	"github.com/fatih/color"
-	"sort"
 )
 
 // Quote ...
@@ -85,7 +86,7 @@ func (quote *Quote) Publish() error {
 	}
 
 	// Append to quotes Ids
-	character.QuotesIDs = append(character.QuotesIDs, quote.ID)
+	character.QuoteIDs = append(character.QuoteIDs, quote.ID)
 
 	// Save the character
 	character.Save()
@@ -193,7 +194,6 @@ func (quote *Quote) Character() *Character {
 
 // Anime fetches the anime where the quote is said.
 func (quote *Quote) Anime() *Anime {
-	var anime *Anime
 	anime, err := GetAnime(quote.AnimeID)
 
 	if err != nil {

@@ -55,40 +55,76 @@ func (quote *Quote) Create(ctx *aero.Context) error {
 // and add it to the new one.
 func (quote *Quote) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
 	if key == "CharacterID" {
-
 		newCharacterID := newValue.String()
-		previousCharacterID := value.String()
+		oldCharacterID := value.String()
 
-		if previousCharacterID != newCharacterID {
-			newCharacter, err := GetCharacter(newCharacterID)
-
-			if err != nil {
-				return false, err
-			}
-
-			previousCharacter, err := GetCharacter(previousCharacterID)
+		// Delete existing entry
+		if newCharacterID == "" {
+			oldCharacter, err := GetCharacter(oldCharacterID)
 
 			if err != nil {
 				return false, err
 			}
 
 			// Remove the reference of the quote in the previous character that contained it
-			if !previousCharacter.RemoveQuote(quote.ID) {
+			if !oldCharacter.RemoveQuote(quote.ID) {
 				return false, errors.New("This quote does not exist")
 			}
 
-			previousCharacter.Save()
 			value.SetString(newCharacterID)
-
-			// Append to quotes Ids to the new character
-			newCharacter.QuotesIDs = append(newCharacter.QuotesIDs, quote.ID)
-
-			// Save the character
-			newCharacter.Save()
 			return true, nil
 		}
 
+		// Add new entry
+		if oldCharacterID == "" {
+			newCharacter, err := GetCharacter(newCharacterID)
+
+			if err != nil {
+				return false, err
+			}
+
+			value.SetString(newCharacterID)
+
+			// Append to quote ID list of the new character
+			newCharacter.AddQuote(quote.ID)
+			newCharacter.Save()
+
+			return true, nil
+		}
+
+		// Existing character ID changed to a new one
+		if oldCharacterID != newCharacterID {
+			oldCharacter, err := GetCharacter(oldCharacterID)
+
+			if err != nil {
+				return false, err
+			}
+
+			newCharacter, err := GetCharacter(newCharacterID)
+
+			if err != nil {
+				return false, err
+			}
+
+			// Remove the reference of the quote in the old character
+			if !oldCharacter.RemoveQuote(quote.ID) {
+				return false, errors.New("This quote does not exist on the given character")
+			}
+
+			// Update character ID in the quote
+			value.SetString(newCharacterID)
+
+			// Append to quotes Ids to the new character
+			newCharacter.AddQuote(quote.ID)
+
+			// Save the characters
+			oldCharacter.Save()
+			newCharacter.Save()
+
+			return true, nil
+		}
 	}
+
 	return false, nil
 }
 
