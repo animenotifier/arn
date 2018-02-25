@@ -3,8 +3,6 @@ package arn
 import (
 	"errors"
 
-	"reflect"
-
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
 )
@@ -51,83 +49,6 @@ func (quote *Quote) Create(ctx *aero.Context) error {
 	return quote.Unpublish()
 }
 
-// Edit remove the quote from it's previous linked character quote list if the new one is different
-// and add it to the new one.
-func (quote *Quote) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
-	if key == "CharacterID" {
-		newCharacterID := newValue.String()
-		oldCharacterID := value.String()
-
-		// Delete existing entry
-		if newCharacterID == "" {
-			oldCharacter, err := GetCharacter(oldCharacterID)
-
-			if err != nil {
-				return false, err
-			}
-
-			// Remove the reference of the quote in the previous character that contained it
-			if !oldCharacter.RemoveQuote(quote.ID) {
-				return false, errors.New("This quote does not exist")
-			}
-
-			value.SetString(newCharacterID)
-			return true, nil
-		}
-
-		// Add new entry
-		if oldCharacterID == "" {
-			newCharacter, err := GetCharacter(newCharacterID)
-
-			if err != nil {
-				return false, err
-			}
-
-			value.SetString(newCharacterID)
-
-			// Append to quote ID list of the new character
-			newCharacter.AddQuote(quote.ID)
-			newCharacter.Save()
-
-			return true, nil
-		}
-
-		// Existing character ID changed to a new one
-		if oldCharacterID != newCharacterID {
-			oldCharacter, err := GetCharacter(oldCharacterID)
-
-			if err != nil {
-				return false, err
-			}
-
-			newCharacter, err := GetCharacter(newCharacterID)
-
-			if err != nil {
-				return false, err
-			}
-
-			// Remove the reference of the quote in the old character
-			if !oldCharacter.RemoveQuote(quote.ID) {
-				return false, errors.New("This quote does not exist on the given character")
-			}
-
-			// Update character ID in the quote
-			value.SetString(newCharacterID)
-
-			// Append to quotes Ids to the new character
-			newCharacter.AddQuote(quote.ID)
-
-			// Save the characters
-			oldCharacter.Save()
-			newCharacter.Save()
-
-			return true, nil
-		}
-	}
-
-	return false, nil
-}
-
 // AfterEdit updates the metadata.
 func (quote *Quote) AfterEdit(ctx *aero.Context) error {
 	quote.Edited = DateTimeUTC()
@@ -142,19 +63,6 @@ func (quote *Quote) Save() {
 
 // Delete deletes the object from the database.
 func (quote *Quote) Delete() error {
-	character, err := GetCharacter(quote.CharacterID)
-
-	if err != nil {
-		return err
-	}
-
-	// Remove the reference of the quote in the character that contains it
-	if !character.RemoveQuote(quote.ID) {
-		return errors.New("This quote does not exist")
-	}
-
-	character.Save()
-
 	if quote.IsDraft {
 		draftIndex := quote.Creator().DraftIndex()
 		draftIndex.QuoteID = ""

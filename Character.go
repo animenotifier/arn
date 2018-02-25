@@ -11,7 +11,6 @@ type Character struct {
 	Image       string                `json:"image"`
 	Description string                `json:"description"`
 	Attributes  []*CharacterAttribute `json:"attributes"`
-	QuoteIDs    []string              `json:"quotes"`
 	// Name        *CharacterName        `json:"name"`
 	// Mappings    []*Mapping            `json:"mappings"`
 }
@@ -53,13 +52,9 @@ func GetCharacter(id string) (*Character, error) {
 
 // Quotes returns the list of quotes for this character.
 func (character *Character) Quotes() []*Quote {
-	quotes := make([]*Quote, len(character.QuoteIDs), len(character.QuoteIDs))
-
-	for i, obj := range DB.GetMany("Quote", character.QuoteIDs) {
-		quotes[i] = obj.(*Quote)
-	}
-
-	return quotes
+	return FilterQuotes(func(quote *Quote) bool {
+		return !quote.IsDraft && quote.CharacterID == character.ID
+	})
 }
 
 // StreamCharacters returns a stream of all characters.
@@ -88,21 +83,4 @@ func AllCharacters() []*Character {
 	}
 
 	return all
-}
-
-// AddQuote adds a quote to the quote list.
-func (character *Character) AddQuote(quoteID string) {
-	character.QuoteIDs = append(character.QuoteIDs, quoteID)
-}
-
-// RemoveQuote removes the given quote from the quote list.
-func (character *Character) RemoveQuote(quoteID string) bool {
-	for index, item := range character.QuoteIDs {
-		if item == quoteID {
-			character.QuoteIDs = append(character.QuoteIDs[:index], character.QuoteIDs[index+1:]...)
-			return true
-		}
-	}
-
-	return false
 }
