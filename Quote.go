@@ -69,6 +69,11 @@ func (quote *Quote) Publish() error {
 		return errors.New("An episode number is required")
 	}
 
+	// No time
+	if quote.Time == -1 {
+		return errors.New("Time in minutes is required")
+	}
+
 	// Invalid anime ID
 	anime := quote.Anime()
 

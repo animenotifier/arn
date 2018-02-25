@@ -46,6 +46,7 @@ func (quote *Quote) Create(ctx *aero.Context) error {
 	quote.CreatedBy = user.ID
 	quote.Likes = []string{}
 	quote.EpisodeNumber = -1
+	quote.Time = -1
 
 	return quote.Unpublish()
 }
