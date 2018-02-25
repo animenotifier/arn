@@ -71,7 +71,7 @@ func (company *Company) Delete() error {
 		draftIndex.Save()
 	}
 
-	// Remove company ID from all anime
+	// RemoveQuote company ID from all anime
 	for anime := range StreamAnime() {
 		for index, id := range anime.StudioIDs {
 			if id == company.ID {

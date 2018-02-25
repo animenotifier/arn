@@ -6,6 +6,7 @@ type DraftIndex struct {
 	GroupID      string `json:"groupId"`
 	SoundTrackID string `json:"soundTrackId"`
 	CompanyID    string `json:"companyId"`
+	QuoteID      string `json:"quoteId"`
 }
 
 // NewDraftIndex ...

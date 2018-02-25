@@ -171,7 +171,7 @@ func (thread *Thread) Unlike(userID string) {
 	}
 }
 
-// Remove post from the post list.
+// RemoveQuote post from the post list.
 func (thread *Thread) Remove(postID string) bool {
 	for index, item := range thread.Posts {
 		if item == postID {

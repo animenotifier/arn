@@ -127,7 +127,7 @@ func (user *User) SendNotification(notification *Notification) {
 		}
 	}
 
-	// Remove expired items
+	// RemoveQuote expired items
 	if len(expired) > 0 {
 		for _, sub := range expired {
 			subs.Remove(sub.ID())

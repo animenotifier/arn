@@ -11,6 +11,7 @@ type Character struct {
 	Image       string                `json:"image"`
 	Description string                `json:"description"`
 	Attributes  []*CharacterAttribute `json:"attributes"`
+	QuotesIDs   []string              `json:"quotes"`
 	// Name        *CharacterName        `json:"name"`
 	// Mappings    []*Mapping            `json:"mappings"`
 }
@@ -50,6 +51,17 @@ func GetCharacter(id string) (*Character, error) {
 	return obj.(*Character), nil
 }
 
+// Quotes returns the list of quotes for this character.
+func (character *Character) Quotes() []*Quote {
+	quotes := make([]*Quote, len(character.QuotesIDs), len(character.QuotesIDs))
+
+	for i, obj := range DB.GetMany("Quote", character.QuotesIDs) {
+		quotes[i] = obj.(*Quote)
+	}
+
+	return quotes
+}
+
 // StreamCharacters returns a stream of all characters.
 func StreamCharacters() chan *Character {
 	channel := make(chan *Character, nano.ChannelBufferSize)
@@ -76,4 +88,16 @@ func AllCharacters() []*Character {
 	}
 
 	return all
+}
+
+// RemoveQuote the given quote from the quote list.
+func (character *Character) RemoveQuote(quoteID string) bool {
+	for index, item := range character.QuotesIDs {
+		if item == quoteID {
+			character.QuotesIDs = append(character.QuotesIDs[:index], character.QuotesIDs[index+1:]...)
+			return true
+		}
+	}
+
+	return false
 }
