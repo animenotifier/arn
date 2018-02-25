@@ -42,7 +42,7 @@ func (quote *Quote) EditedByUser() *User {
 	return user
 }
 
-// Publish ...
+// Publish checks the quote and publishes it when no errors were found.
 func (quote *Quote) Publish() error {
 	// No draft
 	if !quote.IsDraft {
@@ -64,6 +64,26 @@ func (quote *Quote) Publish() error {
 		return errors.New("An anime is required")
 	}
 
+	// No episode number
+	if quote.EpisodeNumber == -1 {
+		return errors.New("An episode number is required")
+	}
+
+	// Invalid anime ID
+	anime := quote.Anime()
+
+	if anime == nil {
+		return errors.New("Invalid anime ID")
+	}
+
+	// Invalid episode number
+	maxEpisodes := anime.EpisodeCount
+
+	if maxEpisodes != 0 && quote.EpisodeNumber > maxEpisodes {
+		return errors.New("Invalid episode number")
+	}
+
+	// Draft index
 	draftIndex, err := GetDraftIndex(quote.CreatedBy)
 
 	if err != nil {
@@ -74,12 +94,14 @@ func (quote *Quote) Publish() error {
 		return errors.New("Quote draft doesn't exist in the user draft index")
 	}
 
+	// Invalid character ID
 	_, characterErr := GetCharacter(quote.CharacterID)
 
 	if characterErr != nil {
 		return errors.New("Character does not exist")
 	}
 
+	// Publish
 	quote.IsDraft = false
 	draftIndex.QuoteID = ""
 	draftIndex.Save()
