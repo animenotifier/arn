@@ -158,7 +158,7 @@ func GetQuote(id string) (*Quote, error) {
 	return obj.(*Quote), nil
 }
 
-// StreamCompanies returns a stream of all quotes.
+// StreamQuotes returns a stream of all quotes.
 func StreamQuotes() chan *Quote {
 	channel := make(chan *Quote, nano.ChannelBufferSize)
 
