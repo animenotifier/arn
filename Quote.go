@@ -11,18 +11,18 @@ import (
 
 // Quote ...
 type Quote struct {
-	ID            string   `json:"id"`
-	Description   string   `json:"description" editable:"true" type:"textarea"`
-	CharacterID   string   `json:"characterId" editable:"true"`
-	AnimeID       string   `json:"animeId" editable:"true"`
-	EpisodeNumber int      `json:"episode" editable:"true"`
-	Time          int      `json:"time" editable:"true"`
-	Likes         []string `json:"likes"`
-	IsDraft       bool     `json:"isDraft"`
-	Created       string   `json:"created"`
-	CreatedBy     string   `json:"createdBy"`
-	Edited        string   `json:"edited"`
-	EditedBy      string   `json:"editedBy"`
+	ID            string    `json:"id"`
+	Text          QuoteText `json:"text" editable:"true"`
+	CharacterID   string    `json:"characterId" editable:"true"`
+	AnimeID       string    `json:"animeId" editable:"true"`
+	EpisodeNumber int       `json:"episode" editable:"true"`
+	Time          int       `json:"time" editable:"true"`
+	Likes         []string  `json:"likes"`
+	IsDraft       bool      `json:"isDraft"`
+	Created       string    `json:"created"`
+	CreatedBy     string    `json:"createdBy"`
+	Edited        string    `json:"edited"`
+	EditedBy      string    `json:"editedBy"`
 }
 
 // Link returns a single quote.
@@ -50,7 +50,7 @@ func (quote *Quote) Publish() error {
 	}
 
 	// No description
-	if quote.Description == "" {
+	if quote.Text.English == "" {
 		return errors.New("A description is required")
 	}
 
