@@ -44,7 +44,7 @@ func init() {
 			},
 		},
 
-		// RemoveQuote subscription
+		// Remove subscription
 		&api.Action{
 			Route: "/remove",
 			Run: func(obj interface{}, ctx *aero.Context) error {
@@ -64,7 +64,7 @@ func init() {
 					return err
 				}
 
-				// RemoveQuote subscription
+				// Remove subscription
 				if !subscriptions.Remove(subscription.ID()) {
 					return errors.New("PushSubscription does not exist")
 				}
@@ -90,7 +90,7 @@ func (list *PushSubscriptions) Add(subscription *PushSubscription) error {
 	return nil
 }
 
-// RemoveQuote removes the subscription ID from the list.
+// Remove removes the subscription ID from the list.
 func (list *PushSubscriptions) Remove(subscriptionID string) bool {
 	for index, item := range list.Items {
 		if item.ID() == subscriptionID {

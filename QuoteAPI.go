@@ -3,9 +3,10 @@ package arn
 import (
 	"errors"
 
+	"reflect"
+
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
-	"reflect"
 )
 
 // Force interface implementations
@@ -71,7 +72,7 @@ func (quote *Quote) Edit(ctx *aero.Context, key string, value reflect.Value, new
 				return false, err
 			}
 
-			// RemoveQuote the reference of the quote in the previous character that contained it
+			// Remove the reference of the quote in the previous character that contained it
 			if !previousCharacter.RemoveQuote(quote.ID) {
 				return false, errors.New("This quote does not exist")
 			}
@@ -111,7 +112,7 @@ func (quote *Quote) Delete() error {
 		return err
 	}
 
-	// RemoveQuote the reference of the quote in the character that contains it
+	// Remove the reference of the quote in the character that contains it
 	if !character.RemoveQuote(quote.ID) {
 		return errors.New("This quote does not exist")
 	}

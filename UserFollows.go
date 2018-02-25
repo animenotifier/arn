@@ -43,7 +43,7 @@ func (list *UserFollows) Add(userID string) error {
 	return nil
 }
 
-// RemoveQuote removes the user ID from the list.
+// Remove removes the user ID from the list.
 func (list *UserFollows) Remove(userID string) bool {
 	for index, item := range list.Items {
 		if item == userID {

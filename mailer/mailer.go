@@ -15,6 +15,6 @@ func SendEmailNotification(email string, notification *arn.Notification) error {
 
 	d := gomail.NewDialer(arn.APIKeys.SMTP.Server, 587, arn.APIKeys.SMTP.Address, arn.APIKeys.SMTP.Password)
 
-	// Send the email to Bob, Cora and Dan.
+	// Send the email
 	return d.DialAndSend(m)
 }

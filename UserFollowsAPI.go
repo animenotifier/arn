@@ -17,7 +17,7 @@ func init() {
 		// Add follow
 		AddAction(),
 
-		// RemoveQuote follow
+		// Remove follow
 		RemoveAction(),
 	})
 }

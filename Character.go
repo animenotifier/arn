@@ -90,7 +90,7 @@ func AllCharacters() []*Character {
 	return all
 }
 
-// RemoveQuote the given quote from the quote list.
+// RemoveQuote removes the given quote from the quote list.
 func (character *Character) RemoveQuote(quoteID string) bool {
 	for index, item := range character.QuotesIDs {
 		if item == quoteID {
