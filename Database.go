@@ -33,6 +33,7 @@ var DB = Node.Namespace("arn").RegisterTypes(
 	(*IDList)(nil),
 	(*Inventory)(nil),
 	(*NickToUser)(nil),
+	(*Notification)(nil),
 	(*PayPalPayment)(nil),
 	(*Post)(nil),
 	(*Purchase)(nil),
