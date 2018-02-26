@@ -304,17 +304,18 @@ func (anime *Anime) RefreshEpisodes() error {
 	newAvailableCount := episodes.AvailableCount()
 
 	if anime.Status != "finished" && newAvailableCount > oldAvailableCount {
-		notification := &Notification{
-			Title:   anime.Title.Canonical,
-			Message: "Episode " + strconv.Itoa(newAvailableCount) + " has been released!",
-			Icon:    anime.Image("medium"),
-			Link:    "https://notify.moe" + anime.Link(),
-		}
-
 		// New episodes have been released.
 		// Notify all users who are watching the anime.
 		go func() {
 			for _, user := range anime.UsersWatchingOrPlanned() {
+				notification := CreateNotification(
+					user.ID,
+					anime.Title.Canonical,
+					"Episode "+strconv.Itoa(newAvailableCount)+" has been released!",
+					anime.Image("medium"),
+					"https://notify.moe"+anime.Link(),
+				)
+
 				user.SendNotification(notification)
 			}
 		}()
