@@ -46,6 +46,7 @@ var DB = Node.Namespace("arn").RegisterTypes(
 	(*TwitterToUser)(nil),
 	(*User)(nil),
 	(*UserFollows)(nil),
+	(*UserNotifications)(nil),
 )
 
 // API ...

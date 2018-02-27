@@ -27,7 +27,7 @@ func (list *UserFollows) Authorize(ctx *aero.Context, action string) error {
 	return AuthorizeIfLoggedInAndOwnData(ctx, "id")
 }
 
-// Save saves the episodes in the database.
+// Save saves the follow list in the database.
 func (list *UserFollows) Save() {
 	DB.Set("UserFollows", list.UserID, list)
 }
