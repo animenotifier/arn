@@ -24,10 +24,16 @@ func (user *User) AnimeList() *AnimeList {
 	return animeList
 }
 
-// Follows ...
+// Follows returns the list of user follows.
 func (user *User) Follows() *UserFollows {
 	follows, _ := GetUserFollows(user.ID)
 	return follows
+}
+
+// Notifications returns the list of user notifications.
+func (user *User) Notifications() *UserNotifications {
+	notifications, _ := GetUserNotifications(user.ID)
+	return notifications
 }
 
 // Followers ...

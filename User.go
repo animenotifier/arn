@@ -103,22 +103,38 @@ func RegisterUser(user *User) {
 
 	DB.Set("UserFollows", user.ID, follows)
 
+	// Add empty notifications list
+	notifications := &UserNotifications{}
+	notifications.UserID = user.ID
+	notifications.Items = []string{}
+
+	DB.Set("UserNotifications", user.ID, notifications)
+
 	// Refresh avatar async
 	go user.RefreshAvatar()
 }
 
 // SendNotification ...
-func (user *User) SendNotification(notification *PushNotification) {
+func (user *User) SendNotification(pushNotification *PushNotification) {
 	// Don't ever send notifications in development mode
 	if IsDevelopment() && user.ID != "4J6qpK1ve" {
 		return
 	}
 
+	// Save notification in database
+	notification := CreateNotification(user.ID, pushNotification)
+	notification.Save()
+
+	userNotifications := user.Notifications()
+	userNotifications.Add(notification.ID)
+	userNotifications.Save()
+
+	// Send push notification
 	subs := user.PushSubscriptions()
 	expired := []*PushSubscription{}
 
 	for _, sub := range subs.Items {
-		err := sub.SendNotification(notification)
+		err := sub.SendNotification(pushNotification)
 
 		if err != nil {
 			if err.Error() == "Subscription expired" {
