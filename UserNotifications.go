@@ -6,10 +6,18 @@ import (
 	"github.com/aerogo/nano"
 )
 
-// UserNotifications ...
+// UserNotifications is a list including IDs to your notifications.
 type UserNotifications struct {
 	UserID string   `json:"userId"`
 	Items  []string `json:"items"`
+}
+
+// NewUserNotifications creates a new UserNotifications list.
+func NewUserNotifications(userID string) *UserNotifications {
+	return &UserNotifications{
+		UserID: userID,
+		Items:  []string{},
+	}
 }
 
 // Add adds an user to the list if it hasn't been added yet.

@@ -6,10 +6,18 @@ import (
 	"github.com/aerogo/nano"
 )
 
-// UserFollows ...
+// UserFollows is a list including IDs to users you follow.
 type UserFollows struct {
 	UserID string   `json:"userId"`
 	Items  []string `json:"items"`
+}
+
+// NewUserFollows creates a new UserFollows list.
+func NewUserFollows(userID string) *UserFollows {
+	return &UserFollows{
+		UserID: userID,
+		Items:  []string{},
+	}
 }
 
 // Add adds an user to the list if it hasn't been added yet.

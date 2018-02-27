@@ -9,8 +9,8 @@ type Notification struct {
 	PushNotification
 }
 
-// CreateNotification creates a new notification.
-func CreateNotification(userID string, pushNotification *PushNotification) *Notification {
+// NewNotification creates a new notification.
+func NewNotification(userID string, pushNotification *PushNotification) *Notification {
 	return &Notification{
 		ID:               GenerateID("Notification"),
 		UserID:           userID,

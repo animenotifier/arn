@@ -97,18 +97,10 @@ func RegisterUser(user *User) {
 	})
 
 	// Add empty follow list
-	follows := &UserFollows{}
-	follows.UserID = user.ID
-	follows.Items = []string{}
-
-	DB.Set("UserFollows", user.ID, follows)
+	NewUserFollows(user.ID).Save()
 
 	// Add empty notifications list
-	notifications := &UserNotifications{}
-	notifications.UserID = user.ID
-	notifications.Items = []string{}
-
-	DB.Set("UserNotifications", user.ID, notifications)
+	NewUserNotifications(user.ID).Save()
 
 	// Refresh avatar async
 	go user.RefreshAvatar()
@@ -122,7 +114,7 @@ func (user *User) SendNotification(pushNotification *PushNotification) {
 	}
 
 	// Save notification in database
-	notification := CreateNotification(user.ID, pushNotification)
+	notification := NewNotification(user.ID, pushNotification)
 	notification.Save()
 
 	userNotifications := user.Notifications()
