@@ -3,8 +3,8 @@ package arn
 import (
 	"sort"
 
-	"github.com/aerogo/nano"
 	"github.com/aerogo/markdown"
+	"github.com/aerogo/nano"
 )
 
 // GroupPost represents a group post.
@@ -156,7 +156,7 @@ func (post *GroupPost) Like(userID string) {
 			return
 		}
 
-		post.Author().SendNotification(&Notification{
+		post.Author().SendNotification(&PushNotification{
 			Title:   likedBy.Nick + " liked your post",
 			Message: likedBy.Nick + " liked your post in the group \"" + post.Group().Name + "\"",
 			Icon:    "https:" + likedBy.LargeAvatar(),

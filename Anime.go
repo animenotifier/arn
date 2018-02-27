@@ -308,15 +308,12 @@ func (anime *Anime) RefreshEpisodes() error {
 		// Notify all users who are watching the anime.
 		go func() {
 			for _, user := range anime.UsersWatchingOrPlanned() {
-				notification := CreateNotification(
-					user.ID,
-					anime.Title.Canonical,
-					"Episode "+strconv.Itoa(newAvailableCount)+" has been released!",
-					anime.Image("medium"),
-					"https://notify.moe"+anime.Link(),
-				)
-
-				user.SendNotification(notification)
+				user.SendNotification(&PushNotification{
+					Title:   anime.Title.Canonical,
+					Message: "Episode " + strconv.Itoa(newAvailableCount) + " has been released!",
+					Icon:    anime.Image("medium"),
+					Link:    "https://notify.moe" + anime.Link(),
+				})
 			}
 		}()
 	}

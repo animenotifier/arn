@@ -4,19 +4,18 @@ package arn
 type Notification struct {
 	ID      string `json:"id"`
 	UserID  string `json:"userId"`
-	Title   string `json:"title"`
-	Message string `json:"message"`
-	Icon    string `json:"icon"`
-	Link    string `json:"link"`
 	Created string `json:"created"`
 	Seen    string `json:"seen"`
+	PushNotification
 }
 
 // CreateNotification creates a new notification.
-func CreateNotification(userID, title, message, icon, link string) *Notification {
+func CreateNotification(userID string, pushNotification *PushNotification) *Notification {
 	return &Notification{
-		ID:      GenerateID("Notification"),
-		UserID:  userID,
-		Created: DateTimeUTC(),
+		ID:               GenerateID("Notification"),
+		UserID:           userID,
+		Created:          DateTimeUTC(),
+		Seen:             "",
+		PushNotification: *pushNotification,
 	}
 }

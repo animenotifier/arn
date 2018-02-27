@@ -108,7 +108,7 @@ func RegisterUser(user *User) {
 }
 
 // SendNotification ...
-func (user *User) SendNotification(notification *Notification) {
+func (user *User) SendNotification(notification *PushNotification) {
 	// Don't ever send notifications in development mode
 	if IsDevelopment() && user.ID != "4J6qpK1ve" {
 		return

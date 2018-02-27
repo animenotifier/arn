@@ -31,7 +31,7 @@ func (list *UserFollows) Add(userID string) error {
 		follower, err := GetUser(list.UserID)
 
 		if err == nil {
-			user.SendNotification(&Notification{
+			user.SendNotification(&PushNotification{
 				Title:   "You have a new follower!",
 				Message: follower.Nick + " started following you.",
 				Icon:    "https:" + follower.LargeAvatar(),

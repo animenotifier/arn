@@ -29,7 +29,7 @@ func (sub *PushSubscription) ID() string {
 }
 
 // SendNotification ...
-func (sub *PushSubscription) SendNotification(notification *Notification) error {
+func (sub *PushSubscription) SendNotification(notification *PushNotification) error {
 	// Define endpoint and security tokens
 	s := webpush.Subscription{
 		Endpoint: sub.Endpoint,
