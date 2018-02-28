@@ -161,6 +161,7 @@ func (post *GroupPost) Like(userID string) {
 			Message: likedBy.Nick + " liked your post in the group \"" + post.Group().Name + "\"",
 			Icon:    "https:" + likedBy.LargeAvatar(),
 			Link:    "https://notify.moe" + likedBy.Link(),
+			Type:    NotificationTypeLike,
 		})
 	}()
 }

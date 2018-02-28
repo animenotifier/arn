@@ -6,4 +6,5 @@ type PushNotification struct {
 	Message string `json:"message"`
 	Icon    string `json:"icon"`
 	Link    string `json:"link"`
+	Type    string `json:"type"`
 }

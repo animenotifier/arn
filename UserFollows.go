@@ -44,6 +44,7 @@ func (list *UserFollows) Add(userID string) error {
 				Message: follower.Nick + " started following you.",
 				Icon:    "https:" + follower.LargeAvatar(),
 				Link:    "https://notify.moe" + follower.Link(),
+				Type:    NotificationTypeFollow,
 			})
 		}
 	}

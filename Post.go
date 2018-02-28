@@ -176,6 +176,7 @@ func (post *Post) Like(userID string) {
 			Message: likedBy.Nick + " liked your post in the thread \"" + post.Thread().Title + "\"",
 			Icon:    "https:" + likedBy.LargeAvatar(),
 			Link:    "https://notify.moe" + likedBy.Link(),
+			Type:    NotificationTypeLike,
 		})
 	}()
 }

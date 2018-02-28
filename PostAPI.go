@@ -125,6 +125,7 @@ func (post *Post) Create(ctx *aero.Context) error {
 				Message: fmt.Sprintf("%s replied in the thread \"%s\".", user.Nick, thread.Title),
 				Icon:    "https://notify.moe/images/brand/220.png",
 				Link:    post.Link(),
+				Type:    NotificationTypeForumReply,
 			}
 
 			for notifyUserID := range notifyUsers {
