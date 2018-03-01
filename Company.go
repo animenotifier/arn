@@ -36,17 +36,26 @@ func (company *Company) Creator() *User {
 }
 
 // Anime returns the anime connected with this company.
-func (company *Company) Anime() []*Anime {
-	animes := []*Anime{}
-
+func (company *Company) Anime() (studioAnime []*Anime, producedAnime []*Anime, licensedAnime []*Anime) {
 	for anime := range StreamAnime() {
-		if Contains(anime.StudioIDs, company.ID) || Contains(anime.ProducerIDs, company.ID) || Contains(anime.LicensorIDs, company.ID) {
-			animes = append(animes, anime)
+		if Contains(anime.StudioIDs, company.ID) {
+			studioAnime = append(studioAnime, anime)
+		}
+
+		if Contains(anime.ProducerIDs, company.ID) {
+			producedAnime = append(producedAnime, anime)
+		}
+
+		if Contains(anime.LicensorIDs, company.ID) {
+			licensedAnime = append(licensedAnime, anime)
 		}
 	}
 
-	SortAnimeByQuality(animes, "")
-	return animes
+	SortAnimeByQuality(studioAnime, "")
+	SortAnimeByQuality(producedAnime, "")
+	SortAnimeByQuality(licensedAnime, "")
+
+	return studioAnime, producedAnime, licensedAnime
 }
 
 // Publish ...
