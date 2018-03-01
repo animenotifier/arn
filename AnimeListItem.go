@@ -33,6 +33,24 @@ func (item *AnimeListItem) Link(userNick string) string {
 	return "/+" + userNick + "/animelist/anime/" + item.AnimeID
 }
 
+// StatusHumanReadable returns the human readable representation of the status.
+func (item *AnimeListItem) StatusHumanReadable() string {
+	switch item.Status {
+	case AnimeListStatusWatching:
+		return "Watching"
+	case AnimeListStatusCompleted:
+		return "Completed"
+	case AnimeListStatusPlanned:
+		return "Planned"
+	case AnimeListStatusHold:
+		return "On Hold"
+	case AnimeListStatusDropped:
+		return "Dropped"
+	default:
+		return "Unknown"
+	}
+}
+
 // OnEpisodesChange is called when the watched episode count changes.
 func (item *AnimeListItem) OnEpisodesChange() {
 	maxEpisodesKnown := item.Anime().EpisodeCount != 0
