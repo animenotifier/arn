@@ -107,10 +107,8 @@ func (company *Company) Authorize(ctx *aero.Context, action string) error {
 		return errors.New("Not logged in")
 	}
 
-	if action == "delete" {
-		if user.Role != "editor" && user.Role != "admin" {
-			return errors.New("Insufficient permissions")
-		}
+	if user.Role != "editor" && user.Role != "admin" {
+		return errors.New("Insufficient permissions")
 	}
 
 	return nil
