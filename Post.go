@@ -190,3 +190,14 @@ func (post *Post) Unlike(userID string) {
 		}
 	}
 }
+
+// LikedBy checks to see if the user has liked the post.
+func (post *Post) LikedBy(userID string) bool {
+	for _, id := range post.Likes {
+		if id == userID {
+			return true
+		}
+	}
+
+	return false
+}

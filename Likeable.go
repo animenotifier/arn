@@ -11,6 +11,8 @@ import (
 type Likeable interface {
 	Like(userID string)
 	Unlike(userID string)
+	LikedBy(userID string) bool
+	Link() string
 	Save()
 }
 

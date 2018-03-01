@@ -172,6 +172,17 @@ func (thread *Thread) Unlike(userID string) {
 	}
 }
 
+// LikedBy checks to see if the user has liked the thread.
+func (thread *Thread) LikedBy(userID string) bool {
+	for _, id := range thread.Likes {
+		if id == userID {
+			return true
+		}
+	}
+
+	return false
+}
+
 // Remove post from the post list.
 func (thread *Thread) Remove(postID string) bool {
 	for index, item := range thread.Posts {
