@@ -6,7 +6,7 @@ import (
 )
 
 // SendEmailNotification sends an e-mail notification.
-func SendEmailNotification(email string, notification *arn.Notification) error {
+func SendEmailNotification(email string, notification *arn.PushNotification) error {
 	m := gomail.NewMessage()
 	m.SetHeader("From", arn.APIKeys.SMTP.Address)
 	m.SetHeader("To", email)
