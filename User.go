@@ -3,11 +3,13 @@ package arn
 import (
 	"errors"
 	"fmt"
+	"net/http"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
 
+	"github.com/aerogo/http/client"
 	"github.com/animenotifier/arn/autocorrect"
 	"github.com/animenotifier/arn/validator"
 	"github.com/animenotifier/osu"
@@ -70,10 +72,12 @@ func RegisterUser(user *User) {
 	})
 
 	// Save email in EmailToUser table
-	DB.Set("EmailToUser", user.Email, &EmailToUser{
-		Email:  user.Email,
-		UserID: user.ID,
-	})
+	if user.Email != "" {
+		DB.Set("EmailToUser", user.Email, &EmailToUser{
+			Email:  user.Email,
+			UserID: user.ID,
+		})
+	}
 
 	// Create default settings
 	NewSettings(user).Save()
@@ -102,8 +106,18 @@ func RegisterUser(user *User) {
 	// Add empty notifications list
 	NewUserNotifications(user.ID).Save()
 
-	// Refresh avatar async
-	go user.RefreshAvatar()
+	// Fetch gravatar
+	if user.Email != "" {
+		gravatarURL := gravatar.Url(user.Email) + "?s=" + fmt.Sprint(AvatarMaxSize) + "&d=404&r=pg"
+		gravatarURL = strings.Replace(gravatarURL, "http://", "https://", 1)
+
+		response, err := client.Get(gravatarURL).End()
+
+		if err == nil && response.StatusCode() == http.StatusOK {
+			data := response.Bytes()
+			user.SetAvatarBytes(data)
+		}
+	}
 }
 
 // SendNotification ...
