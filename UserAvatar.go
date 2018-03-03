@@ -4,14 +4,16 @@ import (
 	"bytes"
 	"fmt"
 	"image"
+	"time"
 
 	"github.com/animenotifier/arn/imageoutput"
 )
 
 // UserAvatar ...
 type UserAvatar struct {
-	Extension string `json:"extension"`
-	Source    string `json:"source"`
+	Extension    string `json:"extension"`
+	Source       string `json:"source"`
+	LastModified int64  `json:"lastModified"`
 }
 
 // RefreshAvatar ...
@@ -51,5 +53,6 @@ func (user *User) SetAvatar(avatar *imageoutput.MetaImage) error {
 	}
 
 	user.Avatar.Extension = avatar.Extension()
+	user.Avatar.LastModified = time.Now().Unix()
 	return lastError
 }

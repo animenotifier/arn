@@ -245,12 +245,12 @@ func (user *User) HasAvatar() bool {
 
 // SmallAvatar ...
 func (user *User) SmallAvatar() string {
-	return "//" + MediaHost + "/images/avatars/small/" + user.ID + user.Avatar.Extension
+	return fmt.Sprintf("//%s/images/avatars/small/%s%s?%v", MediaHost, user.ID, user.Avatar.Extension, user.Avatar.LastModified)
 }
 
 // LargeAvatar ...
 func (user *User) LargeAvatar() string {
-	return "//" + MediaHost + "/images/avatars/large/" + user.ID + user.Avatar.Extension
+	return fmt.Sprintf("//%s/images/avatars/large/%s%s?%v", MediaHost, user.ID, user.Avatar.Extension, user.Avatar.LastModified)
 }
 
 // Gravatar ...
