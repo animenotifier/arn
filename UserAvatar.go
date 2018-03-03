@@ -2,7 +2,6 @@ package arn
 
 import (
 	"bytes"
-	"fmt"
 	"image"
 	"time"
 
@@ -39,8 +38,6 @@ func (user *User) SetAvatarBytes(data []byte) error {
 
 // SetAvatar ...
 func (user *User) SetAvatar(avatar *imageoutput.MetaImage) error {
-	fmt.Println(user.Nick, "uploaded a new avatar:", len(avatar.Data), avatar)
-
 	var lastError error
 
 	// Save the different image formats and sizes
