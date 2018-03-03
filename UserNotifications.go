@@ -20,6 +20,20 @@ func NewUserNotifications(userID string) *UserNotifications {
 	}
 }
 
+// CountUnseen returns the number of unseen notifications.
+func (list *UserNotifications) CountUnseen() int {
+	notifications := list.Notifications()
+	unseen := 0
+
+	for _, notification := range notifications {
+		if notification.Seen == "" {
+			unseen++
+		}
+	}
+
+	return unseen
+}
+
 // Add adds an user to the list if it hasn't been added yet.
 func (list *UserNotifications) Add(notificationID string) error {
 	if list.Contains(notificationID) {
