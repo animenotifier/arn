@@ -5,7 +5,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/chai2010/webp"
+	"github.com/animenotifier/arn/imageoutput"
 )
 
 // OriginalImageExtensions includes all the formats that an avatar source could have sent to us.
@@ -21,7 +21,39 @@ const (
 
 	// AvatarMaxSize is the maximum size in pixels of an avatar.
 	AvatarMaxSize = 560
+
+	// AvatarWebPQuality is the WebP quality of avatars.
+	AvatarWebPQuality = 80
 )
+
+// Define the avatar outputs
+var avatarOutputs = []imageoutput.Output{
+	// Original - Large
+	&imageoutput.OriginalFile{
+		Directory: "images/avatars/large/",
+		Size:      AvatarMaxSize,
+	},
+
+	// Original - Small
+	&imageoutput.OriginalFile{
+		Directory: "images/avatars/small/",
+		Size:      AvatarSmallSize,
+	},
+
+	// WebP - Large
+	&imageoutput.WebPFile{
+		Directory: "images/avatars/large/",
+		Size:      AvatarMaxSize,
+		Quality:   AvatarWebPQuality,
+	},
+
+	// WebP - Small
+	&imageoutput.WebPFile{
+		Directory: "images/avatars/small/",
+		Size:      AvatarSmallSize,
+		Quality:   AvatarWebPQuality,
+	},
+}
 
 // LoadImage loads an image from the given path.
 func LoadImage(path string) (img image.Image, format string, err error) {
@@ -38,23 +70,6 @@ func LoadImage(path string) (img image.Image, format string, err error) {
 	}
 
 	return img, format, nil
-}
-
-// SaveWebP saves an image as a file in WebP format.
-func SaveWebP(img image.Image, out string, quality float32) error {
-	file, writeErr := os.Create(out)
-
-	if writeErr != nil {
-		return writeErr
-	}
-
-	defer file.Close()
-
-	encodeErr := webp.Encode(file, img, &webp.Options{
-		Quality: quality,
-	})
-
-	return encodeErr
 }
 
 // FindFileWithExtension tries to test different file extensions.

@@ -18,9 +18,15 @@ import (
 	"github.com/xrash/smetrics"
 )
 
-var stripTagsRegex = regexp.MustCompile(`<[^>]*>`)
-var sourceRegex = regexp.MustCompile(`\(Source: (.*?)\)`)
-var writtenByRegex = regexp.MustCompile(`\[Written by (.*?)\]`)
+var (
+	// MediaHost is the host we use to link image files.
+	MediaHost = "media.notify.moe"
+
+	// Regular expressions
+	stripTagsRegex = regexp.MustCompile(`<[^>]*>`)
+	sourceRegex    = regexp.MustCompile(`\(Source: (.*?)\)`)
+	writtenByRegex = regexp.MustCompile(`\[Written by (.*?)\]`)
+)
 
 // GenerateID generates a unique ID for a given table.
 func GenerateID(table string) string {

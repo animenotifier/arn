@@ -105,7 +105,7 @@ func (anime *Anime) Licensors() []*Company {
 
 // Image ...
 func (anime *Anime) Image(size string) string {
-	return fmt.Sprintf("//media.notify.moe/images/anime/%s/%s%s", size, anime.ID, anime.ImageExtension)
+	return fmt.Sprintf("//%s/images/anime/%s/%s%s", MediaHost, size, anime.ID, anime.ImageExtension)
 }
 
 // Characters ...

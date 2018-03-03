@@ -1,7 +1,11 @@
 package arn
 
 import (
-	"github.com/aerogo/http/client"
+	"bytes"
+	"fmt"
+	"image"
+
+	"github.com/animenotifier/arn/imageoutput"
 )
 
 // UserAvatar ...
@@ -11,6 +15,41 @@ type UserAvatar struct {
 }
 
 // RefreshAvatar ...
-func (user *User) RefreshAvatar() (client.Response, error) {
-	return client.Get("http://127.0.0.1:8001/" + user.ID).End()
+func (user *User) RefreshAvatar() {
+	// TODO: ...
+}
+
+// SetAvatarBytes accepts a byte buffer that represents an image file and updates the avatar.
+func (user *User) SetAvatarBytes(data []byte) error {
+	// Decode
+	img, format, err := image.Decode(bytes.NewReader(data))
+
+	if err != nil {
+		return err
+	}
+
+	return user.SetAvatar(&imageoutput.MetaImage{
+		Image:  img,
+		Format: format,
+		Data:   data,
+	})
+}
+
+// SetAvatar ...
+func (user *User) SetAvatar(avatar *imageoutput.MetaImage) error {
+	fmt.Println(user.Nick, "uploaded a new avatar:", len(avatar.Data), avatar)
+
+	var lastError error
+
+	// Save the different image formats and sizes
+	for _, output := range avatarOutputs {
+		err := output.Save(avatar, user.ID)
+
+		if err != nil {
+			lastError = err
+		}
+	}
+
+	user.Avatar.Extension = avatar.Extension()
+	return lastError
 }

@@ -245,12 +245,12 @@ func (user *User) HasAvatar() bool {
 
 // SmallAvatar ...
 func (user *User) SmallAvatar() string {
-	return "//media.notify.moe/images/avatars/small/" + user.ID + user.Avatar.Extension
+	return "//" + MediaHost + "/images/avatars/small/" + user.ID + user.Avatar.Extension
 }
 
 // LargeAvatar ...
 func (user *User) LargeAvatar() string {
-	return "//media.notify.moe/images/avatars/large/" + user.ID + user.Avatar.Extension
+	return "//" + MediaHost + "/images/avatars/large/" + user.ID + user.Avatar.Extension
 }
 
 // Gravatar ...
