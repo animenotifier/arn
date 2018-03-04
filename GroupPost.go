@@ -18,30 +18,18 @@ type GroupPost struct {
 	IsDraft  bool     `json:"isDraft" editable:"true"`
 	Created  string   `json:"created"`
 	Edited   string   `json:"edited"`
-
-	author *User
-	group  *Group
-	html   string
 }
 
 // Author returns the group post's author.
 func (post *GroupPost) Author() *User {
-	if post.author != nil {
-		return post.author
-	}
-
-	post.author, _ = GetUser(post.AuthorID)
-	return post.author
+	author, _ := GetUser(post.AuthorID)
+	return author
 }
 
 // Group returns the group post's group.
 func (post *GroupPost) Group() *Group {
-	if post.group != nil {
-		return post.group
-	}
-
-	post.group, _ = GetGroup(post.GroupID)
-	return post.group
+	group, _ := GetGroup(post.GroupID)
+	return group
 }
 
 // Link returns the relative URL of the group post.
@@ -51,12 +39,7 @@ func (post *GroupPost) Link() string {
 
 // HTML returns the HTML representation of the group post.
 func (post *GroupPost) HTML() string {
-	if post.html != "" {
-		return post.html
-	}
-
-	post.html = markdown.Render(post.Text)
-	return post.html
+	return markdown.Render(post.Text)
 }
 
 // GetGroupPost ...

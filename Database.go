@@ -29,6 +29,7 @@ var DB = Node.Namespace("arn").RegisterTypes(
 	(*FacebookToUser)(nil),
 	(*GoogleToUser)(nil),
 	(*Group)(nil),
+	(*GroupPost)(nil),
 	(*Item)(nil),
 	(*IDList)(nil),
 	(*Inventory)(nil),
