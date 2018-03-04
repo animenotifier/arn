@@ -24,6 +24,18 @@ func (user *User) AnimeList() *AnimeList {
 	return animeList
 }
 
+// PushSubscriptions ...
+func (user *User) PushSubscriptions() *PushSubscriptions {
+	subs, _ := GetPushSubscriptions(user.ID)
+	return subs
+}
+
+// Inventory ...
+func (user *User) Inventory() *Inventory {
+	inventory, _ := GetInventory(user.ID)
+	return inventory
+}
+
 // Follows returns the list of user follows.
 func (user *User) Follows() *UserFollows {
 	follows, _ := GetUserFollows(user.ID)

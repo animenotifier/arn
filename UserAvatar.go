@@ -31,7 +31,7 @@ func (user *User) SetAvatarBytes(data []byte) error {
 	})
 }
 
-// SetAvatar ...
+// SetAvatar sets the avatar to the given MetaImage.
 func (user *User) SetAvatar(avatar *imageoutput.MetaImage) error {
 	var lastError error
 

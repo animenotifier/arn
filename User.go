@@ -120,7 +120,8 @@ func RegisterUser(user *User) {
 	}
 }
 
-// SendNotification ...
+// SendNotification accepts a PushNotification and generates a new Notification object.
+// The notification is then sent to all registered push devices.
 func (user *User) SendNotification(pushNotification *PushNotification) {
 	// Don't ever send notifications in development mode
 	if IsDevelopment() && user.ID != "4J6qpK1ve" {
@@ -172,19 +173,20 @@ func (user *User) RealName() string {
 	return user.FirstName + " " + user.LastName
 }
 
-// RegisteredTime ...
+// RegisteredTime returns the time the user registered his account.
 func (user *User) RegisteredTime() time.Time {
 	reg, _ := time.Parse(time.RFC3339, user.Registered)
 	return reg
 }
 
-// IsActive ...
-func (user *User) IsActive() bool {
-	// Exclude people who didn't change their nickname.
-	if !user.HasNick() {
-		return false
-	}
+// LastSeenTime returns the time the user was last seen on the site.
+func (user *User) LastSeenTime() time.Time {
+	lastSeen, _ := time.Parse(time.RFC3339, user.LastSeen)
+	return lastSeen
+}
 
+// IsActive tells you whether the user is active.
+func (user *User) IsActive() bool {
 	lastSeen, _ := time.Parse(time.RFC3339, user.LastSeen)
 	twoWeeksAgo := time.Now().Add(-14 * 24 * time.Hour)
 
@@ -199,7 +201,7 @@ func (user *User) IsActive() bool {
 	return true
 }
 
-// IsPro ...
+// IsPro returns whether the user is a PRO user or not.
 func (user *User) IsPro() bool {
 	if user.ProExpires == "" {
 		return false
@@ -208,7 +210,7 @@ func (user *User) IsPro() bool {
 	return DateTimeUTC() < user.ProExpires
 }
 
-// ExtendProDuration ...
+// ExtendProDuration extends the PRO account duration by the given duration.
 func (user *User) ExtendProDuration(duration time.Duration) {
 	var startDate time.Time
 
@@ -221,7 +223,7 @@ func (user *User) ExtendProDuration(duration time.Duration) {
 	user.ProExpires = startDate.Add(duration).Format(time.RFC3339)
 }
 
-// TimeSinceRegistered ...
+// TimeSinceRegistered returns the duration since the user registered his account.
 func (user *User) TimeSinceRegistered() time.Duration {
 	registered, _ := time.Parse(time.RFC3339, user.Registered)
 	return time.Since(registered)
@@ -237,7 +239,7 @@ func (user *User) WebsiteURL() string {
 	return "https://" + user.WebsiteShortURL()
 }
 
-// WebsiteShortURL ...
+// WebsiteShortURL returns the user website without the protocol.
 func (user *User) WebsiteShortURL() string {
 	return strings.Replace(strings.Replace(user.Website, "https://", "", 1), "http://", "", 1)
 }
@@ -252,22 +254,22 @@ func (user *User) CoverImageURL() string {
 	return "/images/cover/default.jpg"
 }
 
-// HasAvatar ...
+// HasAvatar tells you whether the user has an avatar or not.
 func (user *User) HasAvatar() bool {
 	return user.Avatar.Extension != ""
 }
 
-// SmallAvatar ...
+// SmallAvatar returns the URL to the small user avatar (50 x 50 px).
 func (user *User) SmallAvatar() string {
 	return fmt.Sprintf("//%s/images/avatars/small/%s%s?%v", MediaHost, user.ID, user.Avatar.Extension, user.Avatar.LastModified)
 }
 
-// LargeAvatar ...
+// LargeAvatar returns the URL to the large user avatar (560 x 560 px).
 func (user *User) LargeAvatar() string {
 	return fmt.Sprintf("//%s/images/avatars/large/%s%s?%v", MediaHost, user.ID, user.Avatar.Extension, user.Avatar.LastModified)
 }
 
-// Gravatar ...
+// Gravatar returns the URL to the gravatar if an email has been registered.
 func (user *User) Gravatar() string {
 	if user.Email == "" {
 		return ""
@@ -276,19 +278,7 @@ func (user *User) Gravatar() string {
 	return gravatar.SecureUrl(user.Email) + "?s=" + fmt.Sprint(AvatarMaxSize)
 }
 
-// PushSubscriptions ...
-func (user *User) PushSubscriptions() *PushSubscriptions {
-	subs, _ := GetPushSubscriptions(user.ID)
-	return subs
-}
-
-// Inventory ...
-func (user *User) Inventory() *Inventory {
-	inventory, _ := GetInventory(user.ID)
-	return inventory
-}
-
-// ActivateItemEffect ...
+// ActivateItemEffect activates an item in the user inventory by the given item ID.
 func (user *User) ActivateItemEffect(itemID string) error {
 	month := 30 * 24 * time.Hour
 

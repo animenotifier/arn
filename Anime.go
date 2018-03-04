@@ -18,7 +18,7 @@ import (
 	"github.com/fatih/color"
 )
 
-// Anime ...
+// Anime represents an anime.
 type Anime struct {
 	ID             string           `json:"id"`
 	Type           string           `json:"type" editable:"true"`

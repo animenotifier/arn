@@ -5,14 +5,14 @@ import (
 	"image"
 )
 
-// MetaImage represents a single image and the name of the format.
+// MetaImage represents a single image with the name of the format and the original byte buffer.
 type MetaImage struct {
 	Image  image.Image
 	Data   []byte
 	Format string
 }
 
-// Extension ...
+// Extension returns the file extension of the image.
 func (avatar *MetaImage) Extension() string {
 	switch avatar.Format {
 	case "jpg", "jpeg":

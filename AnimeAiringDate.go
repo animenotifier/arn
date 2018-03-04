@@ -4,51 +4,40 @@ import (
 	"time"
 )
 
-// AnimeAiringDate ...
+// AnimeAiringDate represents the airing date of an anime.
 type AnimeAiringDate struct {
 	Start string `json:"start"`
 	End   string `json:"end"`
-
-	startHumanReadable string
-	endHumanReadable   string
 }
 
-// StartDateHuman ...
+// StartDateHuman returns the start date of the anime in human readable form.
 func (airing *AnimeAiringDate) StartDateHuman() string {
-	if airing.startHumanReadable == "" {
-		t, _ := time.Parse(time.RFC3339, airing.Start)
-		airing.startHumanReadable = t.Format(time.RFC1123)
-	}
+	t, _ := time.Parse(time.RFC3339, airing.Start)
+	humanReadable := t.Format(time.RFC1123)
 
-	return airing.startHumanReadable[:len("Thu, 25 May 2017")]
+	return humanReadable[:len("Thu, 25 May 2017")]
 }
 
-// EndDateHuman ...
+// EndDateHuman returns the end date of the anime in human readable form.
 func (airing *AnimeAiringDate) EndDateHuman() string {
-	if airing.endHumanReadable == "" {
-		t, _ := time.Parse(time.RFC3339, airing.End)
-		airing.endHumanReadable = t.Format(time.RFC1123)
-	}
+	t, _ := time.Parse(time.RFC3339, airing.End)
+	humanReadable := t.Format(time.RFC1123)
 
-	return airing.endHumanReadable[:len("Thu, 25 May 2017")]
+	return humanReadable[:len("Thu, 25 May 2017")]
 }
 
-// StartTimeHuman ...
+// StartTimeHuman returns the start time of the anime in human readable form.
 func (airing *AnimeAiringDate) StartTimeHuman() string {
-	if airing.startHumanReadable == "" {
-		t, _ := time.Parse(time.RFC3339, airing.Start)
-		airing.startHumanReadable = t.Format(time.RFC1123)
-	}
+	t, _ := time.Parse(time.RFC3339, airing.Start)
+	humanReadable := t.Format(time.RFC1123)
 
-	return airing.startHumanReadable[len("Thu, 25 May 2017 "):]
+	return humanReadable[len("Thu, 25 May 2017 "):]
 }
 
-// EndTimeHuman ...
+// EndTimeHuman returns the end time of the anime in human readable form.
 func (airing *AnimeAiringDate) EndTimeHuman() string {
-	if airing.endHumanReadable == "" {
-		t, _ := time.Parse(time.RFC3339, airing.End)
-		airing.endHumanReadable = t.Format(time.RFC1123)
-	}
+	t, _ := time.Parse(time.RFC3339, airing.End)
+	humanReadable := t.Format(time.RFC1123)
 
-	return airing.endHumanReadable[len("Thu, 25 May 2017 "):]
+	return humanReadable[len("Thu, 25 May 2017 "):]
 }

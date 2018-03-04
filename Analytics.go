@@ -2,7 +2,7 @@ package arn
 
 import "github.com/aerogo/nano"
 
-// Analytics ...
+// Analytics stores user-related statistics.
 type Analytics struct {
 	UserID     string              `json:"userId"`
 	General    GeneralAnalytics    `json:"general"`
@@ -11,12 +11,12 @@ type Analytics struct {
 	Connection ConnectionAnalytics `json:"connection"`
 }
 
-// GeneralAnalytics ...
+// GeneralAnalytics stores general information.
 type GeneralAnalytics struct {
 	TimezoneOffset int `json:"timezoneOffset"`
 }
 
-// ScreenAnalytics ...
+// ScreenAnalytics stores information about the device screen.
 type ScreenAnalytics struct {
 	Width           int     `json:"width"`
 	Height          int     `json:"height"`
@@ -25,13 +25,13 @@ type ScreenAnalytics struct {
 	PixelRatio      float64 `json:"pixelRatio"`
 }
 
-// SystemAnalytics ...
+// SystemAnalytics stores information about the CPU and OS.
 type SystemAnalytics struct {
 	CPUCount int    `json:"cpuCount"`
 	Platform string `json:"platform"`
 }
 
-// ConnectionAnalytics ...
+// ConnectionAnalytics stores information about connection speed and ping.
 type ConnectionAnalytics struct {
 	DownLink      float64 `json:"downLink"`
 	RoundTripTime float64 `json:"roundTripTime"`
