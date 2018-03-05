@@ -142,7 +142,7 @@ func (post *GroupPost) Like(userID string) {
 		post.Author().SendNotification(&PushNotification{
 			Title:   likedBy.Nick + " liked your post",
 			Message: likedBy.Nick + " liked your post in the group \"" + post.Group().Name + "\"",
-			Icon:    "https:" + likedBy.LargeAvatar(),
+			Icon:    "https:" + likedBy.AvatarLink("large"),
 			Link:    "https://notify.moe" + likedBy.Link(),
 			Type:    NotificationTypeLike,
 		})

@@ -259,14 +259,14 @@ func (user *User) HasAvatar() bool {
 	return user.Avatar.Extension != ""
 }
 
-// SmallAvatar returns the URL to the small user avatar (50 x 50 px).
-func (user *User) SmallAvatar() string {
-	return fmt.Sprintf("//%s/images/avatars/small/%s%s?%v", MediaHost, user.ID, user.Avatar.Extension, user.Avatar.LastModified)
-}
+// AvatarLink returns the URL to the user avatar.
+// Expects "small" (50 x 50) or "large" (560 x 560) for the size parameter.
+func (user *User) AvatarLink(size string) string {
+	if user.HasAvatar() {
+		return fmt.Sprintf("//%s/images/avatars/%s/%s%s?%v", MediaHost, size, user.ID, user.Avatar.Extension, user.Avatar.LastModified)
+	}
 
-// LargeAvatar returns the URL to the large user avatar (560 x 560 px).
-func (user *User) LargeAvatar() string {
-	return fmt.Sprintf("//%s/images/avatars/large/%s%s?%v", MediaHost, user.ID, user.Avatar.Extension, user.Avatar.LastModified)
+	return fmt.Sprintf("//%s/images/elements/no-avatar.svg", MediaHost)
 }
 
 // Gravatar returns the URL to the gravatar if an email has been registered.

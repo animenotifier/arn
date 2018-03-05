@@ -155,7 +155,7 @@ func (thread *Thread) Like(userID string) {
 		thread.Author().SendNotification(&PushNotification{
 			Title:   likedBy.Nick + " liked your thread",
 			Message: likedBy.Nick + " liked your thread \"" + thread.Title + "\"",
-			Icon:    "https:" + likedBy.LargeAvatar(),
+			Icon:    "https:" + likedBy.AvatarLink("large"),
 			Link:    "https://notify.moe" + likedBy.Link(),
 			Type:    NotificationTypeLike,
 		})

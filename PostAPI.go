@@ -123,7 +123,7 @@ func (post *Post) Create(ctx *aero.Context) error {
 			notification := &PushNotification{
 				Title:   user.Nick + " replied",
 				Message: fmt.Sprintf("%s replied in the thread \"%s\".", user.Nick, thread.Title),
-				Icon:    "https:" + user.LargeAvatar(),
+				Icon:    "https:" + user.AvatarLink("large"),
 				Link:    post.Link(),
 				Type:    NotificationTypeForumReply,
 			}
