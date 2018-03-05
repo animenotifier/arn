@@ -15,8 +15,8 @@ var nyaaInvalidCharsRegex = regexp.MustCompile(`[^[:alnum:]!']`)
 var nyaaTVRegex = regexp.MustCompile(` \(?TV\)?`)
 
 // GetLink retrieves the Nyaa title for the given anime
-func (nyaa *nyaaAnimeProvider) GetLink(anime *Anime) string {
-	searchTitle := nyaa.GetTitle(anime)
+func (nyaa *nyaaAnimeProvider) GetLink(anime *Anime, additionalSearchTerm string) string {
+	searchTitle := nyaa.GetTitle(anime) + "+" + additionalSearchTerm
 	searchTitle = strings.Replace(searchTitle, " ", "+", -1)
 
 	quality := ""
