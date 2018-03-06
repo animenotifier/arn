@@ -21,30 +21,31 @@ var setEmailMutex sync.Mutex
 
 // User ...
 type User struct {
-	ID         string       `json:"id"`
-	Nick       string       `json:"nick" editable:"true"`
-	FirstName  string       `json:"firstName"`
-	LastName   string       `json:"lastName"`
-	Email      string       `json:"email"`
-	Role       string       `json:"role"`
-	Registered string       `json:"registered"`
-	LastLogin  string       `json:"lastLogin"`
-	LastSeen   string       `json:"lastSeen"`
-	ProExpires string       `json:"proExpires"`
-	Gender     string       `json:"gender"`
-	Language   string       `json:"language"`
-	Tagline    string       `json:"tagline" editable:"true"`
-	Website    string       `json:"website" editable:"true"`
-	IP         string       `json:"ip"`
-	UserAgent  string       `json:"agent"`
-	Balance    int          `json:"balance"`
-	Avatar     UserAvatar   `json:"avatar"`
-	AgeRange   UserAgeRange `json:"ageRange"`
-	Location   Location     `json:"location"`
-	Accounts   UserAccounts `json:"accounts"`
-	Browser    UserBrowser  `json:"browser"`
-	OS         UserOS       `json:"os"`
-	Following  []string     `json:"following"`
+	ID           string       `json:"id"`
+	Nick         string       `json:"nick" editable:"true"`
+	FirstName    string       `json:"firstName"`
+	LastName     string       `json:"lastName"`
+	Email        string       `json:"email"`
+	Role         string       `json:"role"`
+	Registered   string       `json:"registered"`
+	LastLogin    string       `json:"lastLogin"`
+	LastSeen     string       `json:"lastSeen"`
+	ProExpires   string       `json:"proExpires"`
+	Gender       string       `json:"gender"`
+	Language     string       `json:"language"`
+	Tagline      string       `json:"tagline" editable:"true"`
+	Introduction string       `json:"introduction" editable:"true" type:"textarea"`
+	Website      string       `json:"website" editable:"true"`
+	IP           string       `json:"ip"`
+	UserAgent    string       `json:"agent"`
+	Balance      int          `json:"balance"`
+	Avatar       UserAvatar   `json:"avatar"`
+	AgeRange     UserAgeRange `json:"ageRange"`
+	Location     Location     `json:"location"`
+	Accounts     UserAccounts `json:"accounts"`
+	Browser      UserBrowser  `json:"browser"`
+	OS           UserOS       `json:"os"`
+	Following    []string     `json:"following"`
 }
 
 // NewUser creates an empty user object with a unique ID.
