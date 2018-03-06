@@ -13,6 +13,8 @@ type GroupPost struct {
 	Text     string   `json:"text" editable:"true"`
 	AuthorID string   `json:"authorId"`
 	GroupID  string   `json:"groupId"`
+	ParentID string   `json:"parentId"`
+	ChildIDs []string `json:"children"`
 	Tags     []string `json:"tags"`
 	Likes    []string `json:"likes"`
 	IsDraft  bool     `json:"isDraft" editable:"true"`

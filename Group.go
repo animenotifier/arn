@@ -58,6 +58,17 @@ func (group *Group) Creator() *User {
 	return creator
 }
 
+// FindMember returns the group member by user ID.
+func (group *Group) FindMember(userID string) *GroupMember {
+	for _, member := range group.Members {
+		if member.UserID == userID {
+			return member
+		}
+	}
+
+	return nil
+}
+
 // Publish ...
 func (group *Group) Publish() error {
 	if !group.IsDraft {
