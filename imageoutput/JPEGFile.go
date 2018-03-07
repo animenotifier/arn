@@ -5,13 +5,14 @@ import (
 	"image/jpeg"
 	"os"
 
-	"github.com/nfnt/resize"
+	"github.com/disintegration/imaging"
 )
 
 // JPEGFile ...
 type JPEGFile struct {
 	Directory string
-	Size      int
+	Width     int
+	Height    int
 	Quality   float32
 }
 
@@ -19,9 +20,9 @@ type JPEGFile struct {
 func (output *JPEGFile) Save(avatar *MetaImage, baseName string) error {
 	img := avatar.Image
 
-	// Resize if needed
-	if img.Bounds().Dx() > output.Size {
-		img = resize.Resize(uint(output.Size), 0, img, resize.Lanczos3)
+	// Resize & crop
+	if img.Bounds().Dx() > output.Width || img.Bounds().Dy() > output.Height {
+		img = imaging.Fill(img, output.Width, output.Height, imaging.Center, imaging.Lanczos)
 	}
 
 	// Write to file

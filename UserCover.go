@@ -8,11 +8,17 @@ import (
 	"github.com/animenotifier/arn/imageoutput"
 )
 
-// CoverMaxSize is the maximum size for covers.
-const CoverMaxSize = 1920
+// CoverMaxWidth is the maximum size for covers.
+const CoverMaxWidth = 1920
 
-// CoverSmallSize is the size used for mobile phones.
-const CoverSmallSize = 640
+// CoverMaxHeight is the maximum height for covers.
+const CoverMaxHeight = 450
+
+// CoverSmallWidth is the width used for mobile phones.
+const CoverSmallWidth = 640
+
+// CoverSmallHeight is the height used for mobile phones.
+const CoverSmallHeight = 640
 
 // CoverWebPQuality is the WebP quality of cover images.
 const CoverWebPQuality = AvatarWebPQuality
@@ -25,28 +31,32 @@ var coverImageOutputs = []imageoutput.Output{
 	// JPEG - Large
 	&imageoutput.JPEGFile{
 		Directory: "images/covers/large/",
-		Size:      CoverMaxSize,
+		Width:     CoverMaxWidth,
+		Height:    CoverMaxHeight,
 		Quality:   CoverJPEGQuality,
 	},
 
 	// JPEG - Small
 	&imageoutput.JPEGFile{
 		Directory: "images/covers/small/",
-		Size:      CoverSmallSize,
+		Width:     CoverSmallWidth,
+		Height:    CoverSmallHeight,
 		Quality:   CoverJPEGQuality,
 	},
 
 	// WebP - Large
 	&imageoutput.WebPFile{
 		Directory: "images/covers/large/",
-		Size:      CoverMaxSize,
+		Width:     CoverMaxWidth,
+		Height:    CoverMaxHeight,
 		Quality:   CoverWebPQuality,
 	},
 
 	// WebP - Small
 	&imageoutput.WebPFile{
 		Directory: "images/covers/small/",
-		Size:      CoverSmallSize,
+		Width:     CoverSmallWidth,
+		Height:    CoverSmallHeight,
 		Quality:   CoverWebPQuality,
 	},
 }

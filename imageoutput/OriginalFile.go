@@ -8,13 +8,14 @@ import (
 	"image/png"
 	"io/ioutil"
 
-	"github.com/nfnt/resize"
+	"github.com/disintegration/imaging"
 )
 
 // OriginalFile ...
 type OriginalFile struct {
 	Directory string
-	Size      int
+	Width     int
+	Height    int
 }
 
 // Save writes the original avatar to the file system.
@@ -26,12 +27,18 @@ func (output *OriginalFile) Save(avatar *MetaImage, baseName string) error {
 		return errors.New("Unknown format: " + avatar.Format)
 	}
 
+	modified := false
+
 	// Resize if needed
 	data := avatar.Data
 	img := avatar.Image
 
-	if img.Bounds().Dx() > output.Size {
-		img = resize.Resize(uint(output.Size), 0, img, resize.Lanczos3)
+	if img.Bounds().Dx() > output.Width || img.Bounds().Dy() > output.Height {
+		img = imaging.Fill(img, output.Width, output.Height, imaging.Center, imaging.Lanczos)
+		modified = true
+	}
+
+	if modified {
 		buffer := new(bytes.Buffer)
 
 		var err error

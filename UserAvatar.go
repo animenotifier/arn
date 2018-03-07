@@ -8,6 +8,50 @@ import (
 	"github.com/animenotifier/arn/imageoutput"
 )
 
+const (
+	// AvatarSmallSize is the minimum size in pixels of an avatar.
+	AvatarSmallSize = 100
+
+	// AvatarMaxSize is the maximum size in pixels of an avatar.
+	AvatarMaxSize = 560
+
+	// AvatarWebPQuality is the WebP quality of avatars.
+	AvatarWebPQuality = 80
+)
+
+// Define the avatar outputs
+var avatarOutputs = []imageoutput.Output{
+	// Original - Large
+	&imageoutput.OriginalFile{
+		Directory: "images/avatars/large/",
+		Width:     AvatarMaxSize,
+		Height:    AvatarMaxSize,
+	},
+
+	// Original - Small
+	&imageoutput.OriginalFile{
+		Directory: "images/avatars/small/",
+		Width:     AvatarSmallSize,
+		Height:    AvatarSmallSize,
+	},
+
+	// WebP - Large
+	&imageoutput.WebPFile{
+		Directory: "images/avatars/large/",
+		Width:     AvatarMaxSize,
+		Height:    AvatarMaxSize,
+		Quality:   AvatarWebPQuality,
+	},
+
+	// WebP - Small
+	&imageoutput.WebPFile{
+		Directory: "images/avatars/small/",
+		Width:     AvatarSmallSize,
+		Height:    AvatarSmallSize,
+		Quality:   AvatarWebPQuality,
+	},
+}
+
 // UserAvatar ...
 type UserAvatar struct {
 	Extension    string `json:"extension"`
