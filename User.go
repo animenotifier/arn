@@ -40,6 +40,7 @@ type User struct {
 	UserAgent    string       `json:"agent"`
 	Balance      int          `json:"balance"`
 	Avatar       UserAvatar   `json:"avatar"`
+	Cover        UserCover    `json:"cover"`
 	AgeRange     UserAgeRange `json:"ageRange"`
 	Location     Location     `json:"location"`
 	Accounts     UserAccounts `json:"accounts"`
@@ -250,11 +251,6 @@ func (user *User) Link() string {
 	return "/+" + user.Nick
 }
 
-// CoverImageURL ...
-func (user *User) CoverImageURL() string {
-	return "/images/cover/default.jpg"
-}
-
 // HasAvatar tells you whether the user has an avatar or not.
 func (user *User) HasAvatar() bool {
 	return user.Avatar.Extension != ""
@@ -268,6 +264,15 @@ func (user *User) AvatarLink(size string) string {
 	}
 
 	return fmt.Sprintf("//%s/images/elements/no-avatar.svg", MediaHost)
+}
+
+// CoverLink ...
+func (user *User) CoverLink(size string) string {
+	if user.Cover.Extension != "" {
+		return fmt.Sprintf("//%s/images/covers/%s/%s%s?%v", MediaHost, size, user.ID, user.Cover.Extension, user.Cover.LastModified)
+	}
+
+	return "/images/cover/default.jpg"
 }
 
 // Gravatar returns the URL to the gravatar if an email has been registered.
