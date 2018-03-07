@@ -96,7 +96,7 @@ func (user *User) SetCover(cover *imageoutput.MetaImage) error {
 		}
 	}
 
-	user.Cover.Extension = cover.Extension()
+	user.Cover.Extension = ".jpg"
 	user.Cover.LastModified = time.Now().Unix()
 	return lastError
 }
