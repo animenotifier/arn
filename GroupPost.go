@@ -16,10 +16,12 @@ type GroupPost struct {
 	ParentID string   `json:"parentId"`
 	ChildIDs []string `json:"children"`
 	Tags     []string `json:"tags"`
-	Likes    []string `json:"likes"`
 	IsDraft  bool     `json:"isDraft" editable:"true"`
 	Created  string   `json:"created"`
 	Edited   string   `json:"edited"`
+	LikeableImplementation
+
+	html string
 }
 
 // Author returns the group post's author.
@@ -42,6 +44,19 @@ func (post *GroupPost) Link() string {
 // HTML returns the HTML representation of the group post.
 func (post *GroupPost) HTML() string {
 	return markdown.Render(post.Text)
+}
+
+// OnLike is called when the group post receives a like.
+func (post *GroupPost) OnLike(likedBy *User) {
+	go func() {
+		post.Author().SendNotification(&PushNotification{
+			Title:   likedBy.Nick + " liked your post",
+			Message: likedBy.Nick + " liked your post in the group \"" + post.Group().Name + "\"",
+			Icon:    "https:" + likedBy.AvatarLink("large"),
+			Link:    "https://notify.moe" + likedBy.Link(),
+			Type:    NotificationTypeLike,
+		})
+	}()
 }
 
 // GetGroupPost ...
@@ -121,42 +136,4 @@ func FilterGroupPosts(filter func(*GroupPost) bool) ([]*GroupPost, error) {
 	}
 
 	return filtered, nil
-}
-
-// Like ...
-func (post *GroupPost) Like(userID string) {
-	for _, id := range post.Likes {
-		if id == userID {
-			return
-		}
-	}
-
-	post.Likes = append(post.Likes, userID)
-
-	// Notify author of the post
-	go func() {
-		likedBy, err := GetUser(userID)
-
-		if err != nil {
-			return
-		}
-
-		post.Author().SendNotification(&PushNotification{
-			Title:   likedBy.Nick + " liked your post",
-			Message: likedBy.Nick + " liked your post in the group \"" + post.Group().Name + "\"",
-			Icon:    "https:" + likedBy.AvatarLink("large"),
-			Link:    "https://notify.moe" + likedBy.Link(),
-			Type:    NotificationTypeLike,
-		})
-	}()
-}
-
-// Unlike ...
-func (post *GroupPost) Unlike(userID string) {
-	for index, id := range post.Likes {
-		if id == userID {
-			post.Likes = append(post.Likes[:index], post.Likes[index+1:]...)
-			return
-		}
-	}
 }

@@ -15,10 +15,10 @@ type Thread struct {
 	AuthorID string   `json:"authorId"`
 	Sticky   int      `json:"sticky"`
 	Tags     []string `json:"tags"`
-	Likes    []string `json:"likes"`
 	Posts    []string `json:"posts"`
 	Created  string   `json:"created"`
 	Edited   string   `json:"edited"`
+	LikeableImplementation
 
 	html string
 }
@@ -42,6 +42,31 @@ func (thread *Thread) HTML() string {
 
 	thread.html = markdown.Render(thread.Text)
 	return thread.html
+}
+
+// OnLike is called when the thread receives a like.
+func (thread *Thread) OnLike(likedBy *User) {
+	go func() {
+		thread.Author().SendNotification(&PushNotification{
+			Title:   likedBy.Nick + " liked your thread",
+			Message: likedBy.Nick + " liked your thread \"" + thread.Title + "\"",
+			Icon:    "https:" + likedBy.AvatarLink("large"),
+			Link:    "https://notify.moe" + likedBy.Link(),
+			Type:    NotificationTypeLike,
+		})
+	}()
+}
+
+// Remove post from the post list.
+func (thread *Thread) Remove(postID string) bool {
+	for index, item := range thread.Posts {
+		if item == postID {
+			thread.Posts = append(thread.Posts[:index], thread.Posts[index+1:]...)
+			return true
+		}
+	}
+
+	return false
 }
 
 // ToPostable converts a thread into an object that implements the Postable interface.
@@ -132,65 +157,4 @@ func SortThreadsLatestFirst(threads []*Thread) {
 	sort.Slice(threads, func(i, j int) bool {
 		return threads[i].Created > threads[j].Created
 	})
-}
-
-// Like ...
-func (thread *Thread) Like(userID string) {
-	for _, id := range thread.Likes {
-		if id == userID {
-			return
-		}
-	}
-
-	thread.Likes = append(thread.Likes, userID)
-
-	// Notify author of the thread
-	go func() {
-		likedBy, err := GetUser(userID)
-
-		if err != nil {
-			return
-		}
-
-		thread.Author().SendNotification(&PushNotification{
-			Title:   likedBy.Nick + " liked your thread",
-			Message: likedBy.Nick + " liked your thread \"" + thread.Title + "\"",
-			Icon:    "https:" + likedBy.AvatarLink("large"),
-			Link:    "https://notify.moe" + likedBy.Link(),
-			Type:    NotificationTypeLike,
-		})
-	}()
-}
-
-// Unlike ...
-func (thread *Thread) Unlike(userID string) {
-	for index, id := range thread.Likes {
-		if id == userID {
-			thread.Likes = append(thread.Likes[:index], thread.Likes[index+1:]...)
-			return
-		}
-	}
-}
-
-// LikedBy checks to see if the user has liked the thread.
-func (thread *Thread) LikedBy(userID string) bool {
-	for _, id := range thread.Likes {
-		if id == userID {
-			return true
-		}
-	}
-
-	return false
-}
-
-// Remove post from the post list.
-func (thread *Thread) Remove(postID string) bool {
-	for index, item := range thread.Posts {
-		if item == postID {
-			thread.Posts = append(thread.Posts[:index], thread.Posts[index+1:]...)
-			return true
-		}
-	}
-
-	return false
 }

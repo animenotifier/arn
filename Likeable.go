@@ -16,6 +16,11 @@ type Likeable interface {
 	Save()
 }
 
+// LikeEventReceiver ...
+type LikeEventReceiver interface {
+	OnLike(user *User)
+}
+
 // LikeAction ...
 func LikeAction() *api.Action {
 	return &api.Action{
@@ -29,6 +34,14 @@ func LikeAction() *api.Action {
 			}
 
 			likeable.Like(user.ID)
+
+			// Call OnLike if the object implements it
+			receiver, ok := likeable.(LikeEventReceiver)
+
+			if ok {
+				receiver.OnLike(user)
+			}
+
 			likeable.Save()
 			return nil
 		},

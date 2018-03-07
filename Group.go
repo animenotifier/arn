@@ -58,7 +58,7 @@ func (group *Group) Creator() *User {
 	return creator
 }
 
-// FindMember returns the group member by user ID.
+// FindMember returns the group member by user ID, if available.
 func (group *Group) FindMember(userID string) *GroupMember {
 	for _, member := range group.Members {
 		if member.UserID == userID {

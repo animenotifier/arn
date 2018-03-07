@@ -17,12 +17,12 @@ type Quote struct {
 	AnimeID       string    `json:"animeId" editable:"true"`
 	EpisodeNumber int       `json:"episode" editable:"true"`
 	Time          int       `json:"time" editable:"true"`
-	Likes         []string  `json:"likes"`
 	IsDraft       bool      `json:"isDraft"`
 	Created       string    `json:"created"`
 	CreatedBy     string    `json:"createdBy"`
 	Edited        string    `json:"edited"`
 	EditedBy      string    `json:"editedBy"`
+	LikeableImplementation
 }
 
 // Link returns a single quote.
@@ -113,6 +113,23 @@ func (quote *Quote) Publish() error {
 	return nil
 }
 
+// OnLike is called when the quote receives a like.
+func (quote *Quote) OnLike(likedBy *User) {
+	if likedBy.ID == quote.CreatedBy {
+		return
+	}
+
+	go func() {
+		quote.Creator().SendNotification(&PushNotification{
+			Title:   likedBy.Nick + " liked your " + quote.Character().Name + " quote",
+			Message: quote.Text.English,
+			Icon:    "https:" + likedBy.AvatarLink("large"),
+			Link:    "https://notify.moe" + likedBy.Link(),
+			Type:    NotificationTypeLike,
+		})
+	}()
+}
+
 // Unpublish ...
 func (quote *Quote) Unpublish() error {
 	draftIndex, err := GetDraftIndex(quote.CreatedBy)
@@ -129,38 +146,6 @@ func (quote *Quote) Unpublish() error {
 	draftIndex.QuoteID = quote.ID
 	draftIndex.Save()
 	return nil
-}
-
-// Like adds a user to the quote's Likes array if they aren't already in it.
-func (quote *Quote) Like(userID string) {
-	for _, id := range quote.Likes {
-		if id == userID {
-			return
-		}
-	}
-
-	quote.Likes = append(quote.Likes, userID)
-}
-
-// Unlike removes the user from the quote's Likes array if they are in it.
-func (quote *Quote) Unlike(userID string) {
-	for index, id := range quote.Likes {
-		if id == userID {
-			quote.Likes = append(quote.Likes[:index], quote.Likes[index+1:]...)
-			return
-		}
-	}
-}
-
-// LikedBy checks to see if the user has liked the quote.
-func (quote *Quote) LikedBy(userID string) bool {
-	for _, id := range quote.Likes {
-		if id == userID {
-			return true
-		}
-	}
-
-	return false
 }
 
 // GetQuote returns a single quote.

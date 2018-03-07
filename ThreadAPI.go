@@ -11,11 +11,12 @@ import (
 
 // Force interface implementations
 var (
-	_ Likeable       = (*Thread)(nil)
-	_ api.Newable    = (*Thread)(nil)
-	_ api.Editable   = (*Thread)(nil)
-	_ api.Actionable = (*Thread)(nil)
-	_ api.Deletable  = (*Thread)(nil)
+	_ Likeable          = (*Thread)(nil)
+	_ LikeEventReceiver = (*Thread)(nil)
+	_ api.Newable       = (*Thread)(nil)
+	_ api.Editable      = (*Thread)(nil)
+	_ api.Actionable    = (*Thread)(nil)
+	_ api.Deletable     = (*Thread)(nil)
 )
 
 // Actions

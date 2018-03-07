@@ -9,11 +9,12 @@ import (
 
 // Force interface implementations
 var (
-	_ Likeable      = (*Quote)(nil)
-	_ Publishable   = (*Quote)(nil)
-	_ api.Newable   = (*Quote)(nil)
-	_ api.Editable  = (*Quote)(nil)
-	_ api.Deletable = (*Quote)(nil)
+	_ Likeable          = (*Quote)(nil)
+	_ LikeEventReceiver = (*Quote)(nil)
+	_ Publishable       = (*Quote)(nil)
+	_ api.Newable       = (*Quote)(nil)
+	_ api.Editable      = (*Quote)(nil)
+	_ api.Deletable     = (*Quote)(nil)
 )
 
 // Actions

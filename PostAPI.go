@@ -12,11 +12,12 @@ import (
 
 // Force interface implementations
 var (
-	_ Likeable       = (*Post)(nil)
-	_ api.Newable    = (*Post)(nil)
-	_ api.Editable   = (*Post)(nil)
-	_ api.Actionable = (*Post)(nil)
-	_ api.Deletable  = (*Post)(nil)
+	_ Likeable          = (*Post)(nil)
+	_ LikeEventReceiver = (*Post)(nil)
+	_ api.Newable       = (*Post)(nil)
+	_ api.Editable      = (*Post)(nil)
+	_ api.Actionable    = (*Post)(nil)
+	_ api.Deletable     = (*Post)(nil)
 )
 
 // Actions
@@ -55,16 +56,10 @@ func (post *Post) Create(ctx *aero.Context) error {
 		return err
 	}
 
-	userID, ok := ctx.Session().Get("userId").(string)
+	user := GetUserFromContext(ctx)
 
-	if !ok || userID == "" {
+	if user == nil {
 		return errors.New("Not logged in")
-	}
-
-	user, err := GetUser(userID)
-
-	if err != nil {
-		return err
 	}
 
 	post.ID = GenerateID("Post")
@@ -78,16 +73,16 @@ func (post *Post) Create(ctx *aero.Context) error {
 	// Post-process text
 	post.Text = autocorrect.FixPostText(post.Text)
 
+	if len(post.Text) < 5 {
+		return errors.New("Text too short: Should be at least 5 characters")
+	}
+
 	// Tags
 	tags, _ := data["tags"].([]interface{})
 	post.Tags = make([]string, len(tags))
 
 	for i := range post.Tags {
 		post.Tags[i] = tags[i].(string)
-	}
-
-	if len(post.Text) < 5 {
-		return errors.New("Text too short: Should be at least 5 characters")
 	}
 
 	thread, threadErr := GetThread(post.ThreadID)

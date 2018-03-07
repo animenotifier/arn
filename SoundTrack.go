@@ -16,12 +16,12 @@ type SoundTrack struct {
 	Title     string           `json:"title" editable:"true"`
 	Media     []*ExternalMedia `json:"media" editable:"true"`
 	Tags      []string         `json:"tags" editable:"true" tooltip:"<ul><li><strong>anime:ID</strong> to connect it with anime</li><li><strong>opening</strong> for openings</li><li><strong>ending</strong> for endings</li><li><strong>cover</strong> for covers</li><li><strong>remix</strong> for remixes</li></ul>"`
-	Likes     []string         `json:"likes"`
 	IsDraft   bool             `json:"isDraft" editable:"true"`
 	Created   string           `json:"created"`
 	CreatedBy string           `json:"createdBy"`
 	Edited    string           `json:"edited"`
 	EditedBy  string           `json:"editedBy"`
+	LikeableImplementation
 }
 
 // Link returns the permalink for the track.
@@ -109,6 +109,23 @@ func (track *SoundTrack) Creator() *User {
 func (track *SoundTrack) EditedByUser() *User {
 	user, _ := GetUser(track.EditedBy)
 	return user
+}
+
+// OnLike is called when the soundtrack receives a like.
+func (track *SoundTrack) OnLike(likedBy *User) {
+	if likedBy.ID == track.CreatedBy {
+		return
+	}
+
+	go func() {
+		track.Creator().SendNotification(&PushNotification{
+			Title:   likedBy.Nick + " liked your soundtrack " + track.Title,
+			Message: likedBy.Nick + " liked your soundtrack " + track.Title + ".",
+			Icon:    "https:" + likedBy.AvatarLink("large"),
+			Link:    "https://notify.moe" + likedBy.Link(),
+			Type:    NotificationTypeLike,
+		})
+	}()
 }
 
 // Publish ...
@@ -253,36 +270,4 @@ func FilterSoundTracks(filter func(*SoundTrack) bool) []*SoundTrack {
 	}
 
 	return filtered
-}
-
-// Like adds an user to the track's Likes array if they aren't already in it.
-func (track *SoundTrack) Like(userID string) {
-	for _, id := range track.Likes {
-		if id == userID {
-			return
-		}
-	}
-
-	track.Likes = append(track.Likes, userID)
-}
-
-// Unlike removes the user from the track's Likes array if they are in it.
-func (track *SoundTrack) Unlike(userID string) {
-	for index, id := range track.Likes {
-		if id == userID {
-			track.Likes = append(track.Likes[:index], track.Likes[index+1:]...)
-			return
-		}
-	}
-}
-
-// LikedBy checks to see if the user has liked the track.
-func (track *SoundTrack) LikedBy(userID string) bool {
-	for _, id := range track.Likes {
-		if id == userID {
-			return true
-		}
-	}
-
-	return false
 }

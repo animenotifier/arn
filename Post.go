@@ -14,9 +14,9 @@ type Post struct {
 	AuthorID string   `json:"authorId"`
 	ThreadID string   `json:"threadId"`
 	Tags     []string `json:"tags"`
-	Likes    []string `json:"likes"`
 	Created  string   `json:"created"`
 	Edited   string   `json:"edited"`
+	LikeableImplementation
 
 	html string
 }
@@ -46,6 +46,19 @@ func (post *Post) HTML() string {
 
 	post.html = markdown.Render(post.Text)
 	return post.html
+}
+
+// OnLike is called when the post receives a like.
+func (post *Post) OnLike(likedBy *User) {
+	go func() {
+		post.Author().SendNotification(&PushNotification{
+			Title:   likedBy.Nick + " liked your post",
+			Message: likedBy.Nick + " liked your post in the thread \"" + post.Thread().Title + "\"",
+			Icon:    "https:" + likedBy.AvatarLink("large"),
+			Link:    "https://notify.moe" + likedBy.Link(),
+			Type:    NotificationTypeLike,
+		})
+	}()
 }
 
 // ToPostable converts a post into an object that implements the Postable interface.
@@ -151,53 +164,4 @@ func FilterPosts(filter func(*Post) bool) ([]*Post, error) {
 	}
 
 	return filtered, nil
-}
-
-// Like ...
-func (post *Post) Like(userID string) {
-	for _, id := range post.Likes {
-		if id == userID {
-			return
-		}
-	}
-
-	post.Likes = append(post.Likes, userID)
-
-	// Notify author of the post
-	go func() {
-		likedBy, err := GetUser(userID)
-
-		if err != nil {
-			return
-		}
-
-		post.Author().SendNotification(&PushNotification{
-			Title:   likedBy.Nick + " liked your post",
-			Message: likedBy.Nick + " liked your post in the thread \"" + post.Thread().Title + "\"",
-			Icon:    "https:" + likedBy.AvatarLink("large"),
-			Link:    "https://notify.moe" + likedBy.Link(),
-			Type:    NotificationTypeLike,
-		})
-	}()
-}
-
-// Unlike ...
-func (post *Post) Unlike(userID string) {
-	for index, id := range post.Likes {
-		if id == userID {
-			post.Likes = append(post.Likes[:index], post.Likes[index+1:]...)
-			return
-		}
-	}
-}
-
-// LikedBy checks to see if the user has liked the post.
-func (post *Post) LikedBy(userID string) bool {
-	for _, id := range post.Likes {
-		if id == userID {
-			return true
-		}
-	}
-
-	return false
 }
