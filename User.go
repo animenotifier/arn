@@ -3,6 +3,7 @@ package arn
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"strconv"
 	"strings"
@@ -143,13 +144,27 @@ func (user *User) SendNotification(pushNotification *PushNotification) {
 	expired := []*PushSubscription{}
 
 	for _, sub := range subs.Items {
-		err := sub.SendNotification(pushNotification)
+		resp, err := sub.SendNotification(pushNotification)
 
-		if err != nil {
-			if err.Error() == "Subscription expired" {
-				expired = append(expired, sub)
-			}
+		if resp != nil && resp.StatusCode == http.StatusGone {
+			expired = append(expired, sub)
+			continue
 		}
+
+		// Print errors
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		// Print bad status codes
+		if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {
+			body, _ := ioutil.ReadAll(resp.Body)
+			fmt.Println(resp.StatusCode, string(body))
+			continue
+		}
+
+		sub.LastSuccess = DateTimeUTC()
 	}
 
 	// Remove expired items
@@ -157,9 +172,10 @@ func (user *User) SendNotification(pushNotification *PushNotification) {
 		for _, sub := range expired {
 			subs.Remove(sub.ID())
 		}
-
-		subs.Save()
 	}
+
+	// Save changes
+	subs.Save()
 }
 
 // RealName returns the real name of the user.
