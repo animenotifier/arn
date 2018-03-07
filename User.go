@@ -272,7 +272,7 @@ func (user *User) CoverLink(size string) string {
 		return fmt.Sprintf("//%s/images/covers/%s/%s%s?%v", MediaHost, size, user.ID, user.Cover.Extension, user.Cover.LastModified)
 	}
 
-	return "/images/cover/default.jpg"
+	return "/images/elements/default-cover.jpg"
 }
 
 // Gravatar returns the URL to the gravatar if an email has been registered.
