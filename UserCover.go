@@ -14,21 +14,26 @@ const CoverMaxSize = 1920
 // CoverSmallSize is the size used for mobile phones.
 const CoverSmallSize = 640
 
-// CoverWebPQuality is the quality of cover images.
+// CoverWebPQuality is the WebP quality of cover images.
 const CoverWebPQuality = AvatarWebPQuality
+
+// CoverJPEGQuality is the JPEG quality of cover images.
+const CoverJPEGQuality = CoverWebPQuality
 
 // Define the cover image outputs
 var coverImageOutputs = []imageoutput.Output{
-	// Original - Large
-	&imageoutput.OriginalFile{
+	// JPEG - Large
+	&imageoutput.JPEGFile{
 		Directory: "images/covers/large/",
 		Size:      CoverMaxSize,
+		Quality:   CoverJPEGQuality,
 	},
 
-	// Original - Small
-	&imageoutput.OriginalFile{
+	// JPEG - Small
+	&imageoutput.JPEGFile{
 		Directory: "images/covers/small/",
 		Size:      CoverSmallSize,
+		Quality:   CoverJPEGQuality,
 	},
 
 	// WebP - Large
