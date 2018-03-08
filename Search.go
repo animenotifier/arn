@@ -21,7 +21,7 @@ type SearchResult struct {
 
 // Search is a fuzzy search.
 func Search(term string, maxUsers, maxAnime, maxPosts, maxThreads, maxTracks int, maxCharacters int) ([]*User, []*Anime, []*Post, []*Thread, []*SoundTrack, []*Character) {
-	term = strings.ToLower(term)
+	term = RemoveSpecialCharacters(strings.ToLower(term))
 
 	if term == "" {
 		return nil, nil, nil, nil, nil, nil
