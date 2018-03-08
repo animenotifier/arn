@@ -87,6 +87,19 @@ func (list *UserFollows) Users() []*User {
 	return follows
 }
 
+// UserFollowerCountMap returns a map of user ID keys and their corresping number of followers as the value.
+func UserFollowerCountMap() map[string]int {
+	followCount := map[string]int{}
+
+	for list := range StreamUserFollows() {
+		for _, followUserID := range list.Items {
+			followCount[followUserID]++
+		}
+	}
+
+	return followCount
+}
+
 // GetUserFollows ...
 func GetUserFollows(id string) (*UserFollows, error) {
 	obj, err := DB.Get("UserFollows", id)
