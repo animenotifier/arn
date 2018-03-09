@@ -4,7 +4,7 @@ import "github.com/aerogo/nano"
 
 // AnimeCharacters ...
 type AnimeCharacters struct {
-	AnimeID string            `json:"animeId"`
+	AnimeID string            `json:"animeId" mainID:"true"`
 	Items   []*AnimeCharacter `json:"items" editable:"true"`
 }
 
