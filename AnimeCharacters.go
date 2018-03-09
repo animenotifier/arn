@@ -1,15 +1,24 @@
 package arn
 
-import "github.com/aerogo/nano"
+import (
+	"sync"
+
+	"github.com/aerogo/nano"
+)
 
 // AnimeCharacters ...
 type AnimeCharacters struct {
 	AnimeID string            `json:"animeId" mainID:"true"`
 	Items   []*AnimeCharacter `json:"items" editable:"true"`
+
+	sync.Mutex
 }
 
 // Contains tells you whether the given character ID exists.
 func (characters *AnimeCharacters) Contains(characterID string) bool {
+	characters.Lock()
+	defer characters.Unlock()
+
 	for _, item := range characters.Items {
 		if item.CharacterID == characterID {
 			return true

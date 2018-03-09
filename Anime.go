@@ -41,6 +41,10 @@ type Anime struct {
 	ProducerIDs    []string         `json:"producers" editable:"true"`
 	LicensorIDs    []string         `json:"licensors" editable:"true"`
 	Links          []*Link          `json:"links" editable:"true"`
+	Created        string           `json:"created"`
+	CreatedBy      string           `json:"createdBy"`
+	Edited         string           `json:"edited"`
+	EditedBy       string           `json:"editedBy"`
 
 	// Hashtag       string          `json:"hashtag"`
 	// Source        string          `json:"source"`
