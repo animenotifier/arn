@@ -8,7 +8,7 @@ import (
 // AnimeRelations ...
 type AnimeRelations struct {
 	AnimeID string           `json:"animeId"`
-	Items   []*AnimeRelation `json:"items"`
+	Items   []*AnimeRelation `json:"items" editable:"true"`
 
 	sync.Mutex
 }

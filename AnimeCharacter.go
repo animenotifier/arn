@@ -1,9 +1,17 @@
 package arn
 
+// Register a list of supported character roles.
+func init() {
+	DataLists["anime-character-roles"] = []*Option{
+		&Option{"main", "Main character"},
+		&Option{"supporting", "Supporting character"},
+	}
+}
+
 // AnimeCharacter ...
 type AnimeCharacter struct {
-	CharacterID string `json:"characterId"`
-	Role        string `json:"role"`
+	CharacterID string `json:"characterId" editable:"true"`
+	Role        string `json:"role" editable:"true" datalist:"anime-character-roles"`
 }
 
 // Character ...

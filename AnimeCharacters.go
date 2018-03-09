@@ -5,7 +5,7 @@ import "github.com/aerogo/nano"
 // AnimeCharacters ...
 type AnimeCharacters struct {
 	AnimeID string            `json:"animeId"`
-	Items   []*AnimeCharacter `json:"items"`
+	Items   []*AnimeCharacter `json:"items" editable:"true"`
 }
 
 // Contains tells you whether the given character ID exists.

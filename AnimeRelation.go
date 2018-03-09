@@ -1,9 +1,25 @@
 package arn
 
+// Register a list of supported anime relation types.
+func init() {
+	DataLists["anime-relation-types"] = []*Option{
+		&Option{"prequel", HumanReadableAnimeRelation("prequel")},
+		&Option{"sequel", HumanReadableAnimeRelation("sequel")},
+		&Option{"alternative version", HumanReadableAnimeRelation("alternative version")},
+		&Option{"alternative setting", HumanReadableAnimeRelation("alternative setting")},
+		&Option{"side story", HumanReadableAnimeRelation("side story")},
+		&Option{"parent story", HumanReadableAnimeRelation("parent story")},
+		&Option{"full story", HumanReadableAnimeRelation("full story")},
+		&Option{"spinoff", HumanReadableAnimeRelation("spinoff")},
+		&Option{"summary", HumanReadableAnimeRelation("summary")},
+		&Option{"other", HumanReadableAnimeRelation("other")},
+	}
+}
+
 // AnimeRelation ...
 type AnimeRelation struct {
-	AnimeID string `json:"animeId"`
-	Type    string `json:"type"`
+	AnimeID string `json:"animeId" editable:"true"`
+	Type    string `json:"type" editable:"true" datalist:"anime-relation-types"`
 }
 
 // Anime ...
@@ -14,7 +30,12 @@ func (relation *AnimeRelation) Anime() *Anime {
 
 // HumanReadableType ...
 func (relation *AnimeRelation) HumanReadableType() string {
-	switch relation.Type {
+	return HumanReadableAnimeRelation(relation.Type)
+}
+
+// HumanReadableAnimeRelation ...
+func HumanReadableAnimeRelation(relationName string) string {
+	switch relationName {
 	case "prequel":
 		return "Prequel"
 	case "sequel":
@@ -37,5 +58,5 @@ func (relation *AnimeRelation) HumanReadableType() string {
 		return "Other"
 	}
 
-	return relation.Type
+	return relationName
 }
