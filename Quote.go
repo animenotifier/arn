@@ -148,6 +148,11 @@ func (quote *Quote) Unpublish() error {
 	return nil
 }
 
+// String implements the default string serialization.
+func (quote *Quote) String() string {
+	return quote.Text.English
+}
+
 // GetQuote returns a single quote.
 func GetQuote(id string) (*Quote, error) {
 	obj, err := DB.Get("Quote", id)

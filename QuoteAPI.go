@@ -2,6 +2,8 @@ package arn
 
 import (
 	"errors"
+	"fmt"
+	"reflect"
 
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
@@ -49,7 +51,22 @@ func (quote *Quote) Create(ctx *aero.Context) error {
 	quote.EpisodeNumber = -1
 	quote.Time = -1
 
+	// Write log entry
+	logEntry := NewEditLogEntry(user.ID, "create", "Quote", quote.ID, "", "", "")
+	logEntry.Save()
+
 	return quote.Unpublish()
+}
+
+// Edit saves a log entry for the edit.
+func (quote *Quote) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
+	user := GetUserFromContext(ctx)
+
+	// Write log entry
+	logEntry := NewEditLogEntry(user.ID, "edit", "Quote", quote.ID, key, fmt.Sprint(value.Interface()), fmt.Sprint(newValue.Interface()))
+	logEntry.Save()
+
+	return false, nil
 }
 
 // AfterEdit updates the metadata.

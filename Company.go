@@ -104,6 +104,11 @@ func (company *Company) Unpublish() error {
 	return nil
 }
 
+// String implements the default string serialization.
+func (company *Company) String() string {
+	return company.Name.English
+}
+
 // GetCompany returns a single company.
 func GetCompany(id string) (*Company, error) {
 	obj, err := DB.Get("Company", id)

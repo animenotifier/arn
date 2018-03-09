@@ -20,7 +20,7 @@ func (anime *Anime) Edit(ctx *aero.Context, key string, value reflect.Value, new
 	user := GetUserFromContext(ctx)
 
 	// Write log entry
-	logEntry := NewEditLogEntry(user.ID, "Anime", anime.ID, key, fmt.Sprint(value.Interface()), fmt.Sprint(newValue.Interface()))
+	logEntry := NewEditLogEntry(user.ID, "edit", "Anime", anime.ID, key, fmt.Sprint(value.Interface()), fmt.Sprint(newValue.Interface()))
 	logEntry.Save()
 
 	return false, nil

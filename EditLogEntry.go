@@ -6,6 +6,7 @@ import "github.com/aerogo/nano"
 type EditLogEntry struct {
 	ID         string `json:"id"`
 	UserID     string `json:"userId"`
+	Action     string `json:"action"`
 	ObjectType string `json:"objectType"` // The typename of what was edited
 	ObjectID   string `json:"objectId"`   // The ID of what was edited
 	Key        string `json:"key"`
@@ -15,10 +16,11 @@ type EditLogEntry struct {
 }
 
 // NewEditLogEntry ...
-func NewEditLogEntry(userID, objectType, objectID, key, oldValue, newValue string) *EditLogEntry {
+func NewEditLogEntry(userID, action, objectType, objectID, key, oldValue, newValue string) *EditLogEntry {
 	return &EditLogEntry{
 		ID:         GenerateID("EditLogEntry"),
 		UserID:     userID,
+		Action:     action,
 		ObjectType: objectType,
 		ObjectID:   objectID,
 		Key:        key,

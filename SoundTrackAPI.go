@@ -52,6 +52,10 @@ func (soundtrack *SoundTrack) Create(ctx *aero.Context) error {
 	soundtrack.Media = []*ExternalMedia{}
 	soundtrack.Tags = []string{}
 
+	// Write log entry
+	logEntry := NewEditLogEntry(user.ID, "create", "SoundTrack", soundtrack.ID, "", "", "")
+	logEntry.Save()
+
 	return soundtrack.Unpublish()
 }
 
@@ -60,7 +64,7 @@ func (soundtrack *SoundTrack) Edit(ctx *aero.Context, key string, value reflect.
 	user := GetUserFromContext(ctx)
 
 	// Write log entry
-	logEntry := NewEditLogEntry(user.ID, "SoundTrack", soundtrack.ID, key, fmt.Sprint(value.Interface()), fmt.Sprint(newValue.Interface()))
+	logEntry := NewEditLogEntry(user.ID, "edit", "SoundTrack", soundtrack.ID, key, fmt.Sprint(value.Interface()), fmt.Sprint(newValue.Interface()))
 	logEntry.Save()
 
 	// Verify service name

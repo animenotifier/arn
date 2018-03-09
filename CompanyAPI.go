@@ -2,6 +2,8 @@ package arn
 
 import (
 	"errors"
+	"fmt"
+	"reflect"
 
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
@@ -48,7 +50,22 @@ func (company *Company) Create(ctx *aero.Context) error {
 	company.Tags = []string{}
 	company.Likes = []string{}
 
+	// Write log entry
+	logEntry := NewEditLogEntry(user.ID, "create", "Company", company.ID, "", "", "")
+	logEntry.Save()
+
 	return company.Unpublish()
+}
+
+// Edit saves a log entry for the edit.
+func (company *Company) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
+	user := GetUserFromContext(ctx)
+
+	// Write log entry
+	logEntry := NewEditLogEntry(user.ID, "edit", "Company", company.ID, key, fmt.Sprint(value.Interface()), fmt.Sprint(newValue.Interface()))
+	logEntry.Save()
+
+	return false, nil
 }
 
 // AfterEdit updates the metadata.
