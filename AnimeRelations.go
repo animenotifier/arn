@@ -30,6 +30,17 @@ func (relations *AnimeRelations) SortByStartDate() {
 	})
 }
 
+// Anime returns the anime the relations list refers to.
+func (relations *AnimeRelations) Anime() *Anime {
+	anime, _ := GetAnime(relations.AnimeID)
+	return anime
+}
+
+// String implements the default string serialization.
+func (relations *AnimeRelations) String() string {
+	return relations.Anime().String()
+}
+
 // GetAnimeRelations ...
 func GetAnimeRelations(animeID string) (*AnimeRelations, error) {
 	obj, err := DB.Get("AnimeRelations", animeID)

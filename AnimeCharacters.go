@@ -14,6 +14,17 @@ type AnimeCharacters struct {
 	sync.Mutex
 }
 
+// Anime returns the anime the characters refer to.
+func (characters *AnimeCharacters) Anime() *Anime {
+	anime, _ := GetAnime(characters.AnimeID)
+	return anime
+}
+
+// String implements the default string serialization.
+func (characters *AnimeCharacters) String() string {
+	return characters.Anime().String()
+}
+
 // Contains tells you whether the given character ID exists.
 func (characters *AnimeCharacters) Contains(characterID string) bool {
 	characters.Lock()

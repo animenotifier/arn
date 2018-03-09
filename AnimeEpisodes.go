@@ -79,14 +79,19 @@ func (episodes *AnimeEpisodes) AvailableCount() int {
 	return available
 }
 
-// Anime returns the anime.
+// Anime returns the anime the episodes refer to.
 func (episodes *AnimeEpisodes) Anime() *Anime {
 	anime, _ := GetAnime(episodes.AnimeID)
 	return anime
 }
 
-// String returns a text representation of the anime episodes.
+// String implements the default string serialization.
 func (episodes *AnimeEpisodes) String() string {
+	return episodes.Anime().String()
+}
+
+// ListString returns a text representation of the anime episodes.
+func (episodes *AnimeEpisodes) ListString() string {
 	episodes.Lock()
 	defer episodes.Unlock()
 
@@ -102,11 +107,6 @@ func (episodes *AnimeEpisodes) String() string {
 	}
 
 	return strings.TrimRight(b.String(), "\n")
-}
-
-// Save saves the episodes in the database.
-func (episodes *AnimeEpisodes) Save() {
-	DB.Set("AnimeEpisodes", episodes.AnimeID, episodes)
 }
 
 // StreamAnimeEpisodes returns a stream of all anime episodes.
