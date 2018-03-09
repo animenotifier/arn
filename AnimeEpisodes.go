@@ -11,8 +11,8 @@ import (
 
 // AnimeEpisodes ...
 type AnimeEpisodes struct {
-	AnimeID string          `json:"animeId"`
-	Items   []*AnimeEpisode `json:"items"`
+	AnimeID string          `json:"animeId" mainID:"true"`
+	Items   []*AnimeEpisode `json:"items" editable:"true"`
 
 	sync.Mutex
 }

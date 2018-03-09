@@ -6,8 +6,8 @@ import (
 
 // AnimeAiringDate represents the airing date of an anime.
 type AnimeAiringDate struct {
-	Start string `json:"start"`
-	End   string `json:"end"`
+	Start string `json:"start" editable:"true"`
+	End   string `json:"end" editable:"true"`
 }
 
 // StartDateHuman returns the start date of the anime in human readable form.

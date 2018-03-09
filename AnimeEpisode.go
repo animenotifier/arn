@@ -6,17 +6,17 @@ import (
 
 // AnimeEpisode ...
 type AnimeEpisode struct {
-	Number     int               `json:"number"`
-	Title      *EpisodeTitle     `json:"title"`
-	AiringDate *AnimeAiringDate  `json:"airingDate"`
+	Number     int               `json:"number" editable:"true"`
+	Title      *EpisodeTitle     `json:"title" editable:"true"`
+	AiringDate *AnimeAiringDate  `json:"airingDate" editable:"true"`
 	Links      map[string]string `json:"links"`
 }
 
 // EpisodeTitle ...
 type EpisodeTitle struct {
-	Romaji   string `json:"romaji"`
-	English  string `json:"english"`
-	Japanese string `json:"japanese"`
+	Romaji   string `json:"romaji" editable:"true"`
+	English  string `json:"english" editable:"true"`
+	Japanese string `json:"japanese" editable:"true"`
 }
 
 // Available tells you whether the episode is available (triggered when it has a link).
