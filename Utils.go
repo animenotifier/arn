@@ -73,6 +73,17 @@ func GetUserFromContext(ctx *aero.Context) *User {
 	return user
 }
 
+// GetObjectTitle ...
+func GetObjectTitle(typeName string, id string) string {
+	obj, err := DB.Get(typeName, id)
+
+	if err != nil {
+		return "<not found>"
+	}
+
+	return fmt.Sprint(obj)
+}
+
 // SetObjectProperties updates the object with the given map[string]interface{}
 func SetObjectProperties(rootObj interface{}, updates map[string]interface{}) error {
 	for key, value := range updates {

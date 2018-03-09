@@ -201,6 +201,11 @@ func (track *SoundTrack) Unpublish() error {
 	return nil
 }
 
+// String implements the default string serialization.
+func (track *SoundTrack) String() string {
+	return track.Title
+}
+
 // SortSoundTracksLatestFirst ...
 func SortSoundTracksLatestFirst(tracks []*SoundTrack) {
 	sort.Slice(tracks, func(i, j int) bool {

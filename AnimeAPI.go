@@ -16,13 +16,11 @@ var (
 )
 
 // Edit creates an edit log entry.
-func (anime *Anime) Edit(ctx *aero.Context, key string, oldValue reflect.Value, newValue reflect.Value) (consumed bool, err error) {
-	fmt.Println(key, oldValue.String(), newValue.String())
-
+func (anime *Anime) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {
 	user := GetUserFromContext(ctx)
 
 	// Write log entry
-	logEntry := NewEditLogEntry(user.ID, "Anime", anime.ID, oldValue.String(), newValue.String())
+	logEntry := NewEditLogEntry(user.ID, "Anime", anime.ID, key, fmt.Sprint(value.Interface()), fmt.Sprint(newValue.Interface()))
 	logEntry.Save()
 
 	return false, nil

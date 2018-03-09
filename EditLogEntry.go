@@ -8,18 +8,20 @@ type EditLogEntry struct {
 	UserID     string `json:"userId"`
 	ObjectType string `json:"objectType"` // The typename of what was edited
 	ObjectID   string `json:"objectId"`   // The ID of what was edited
+	Key        string `json:"key"`
 	OldValue   string `json:"oldValue"`
 	NewValue   string `json:"newValue"`
 	Created    string `json:"created"`
 }
 
 // NewEditLogEntry ...
-func NewEditLogEntry(userID, objectType, objectID, oldValue, newValue string) *EditLogEntry {
+func NewEditLogEntry(userID, objectType, objectID, key, oldValue, newValue string) *EditLogEntry {
 	return &EditLogEntry{
 		ID:         GenerateID("EditLogEntry"),
 		UserID:     userID,
 		ObjectType: objectType,
 		ObjectID:   objectID,
+		Key:        key,
 		OldValue:   oldValue,
 		NewValue:   newValue,
 		Created:    DateTimeUTC(),

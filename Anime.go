@@ -18,6 +18,16 @@ import (
 	"github.com/fatih/color"
 )
 
+// Register a list of supported anime status types.
+func init() {
+	DataLists["anime-status"] = []*Option{
+		&Option{"current", "Current"},
+		&Option{"finished", "Finished"},
+		&Option{"upcoming", "Upcoming"},
+		&Option{"tba", "To be announced"},
+	}
+}
+
 // Anime represents an anime.
 type Anime struct {
 	ID             string           `json:"id"`
@@ -29,7 +39,7 @@ type Anime struct {
 	EndDate        string           `json:"endDate" editable:"true"`
 	EpisodeCount   int              `json:"episodeCount" editable:"true"`
 	EpisodeLength  int              `json:"episodeLength" editable:"true"`
-	Status         string           `json:"status" editable:"true"`
+	Status         string           `json:"status" editable:"true" datalist:"anime-status"`
 	NSFW           int              `json:"nsfw"`
 	Rating         *AnimeRating     `json:"rating"`
 	Popularity     *AnimePopularity `json:"popularity"`
@@ -149,11 +159,6 @@ func (anime *Anime) PrettyJSON() (string, error) {
 func (anime *Anime) StartDateTime() time.Time {
 	t, _ := time.Parse("2006-01-02", anime.StartDate)
 	return t
-}
-
-// String ...
-func (anime *Anime) String() string {
-	return fmt.Sprintf("%s %s", anime.ID, anime.Title.Canonical)
 }
 
 // AddMapping adds the ID of an external site to the anime.
@@ -594,6 +599,11 @@ func (anime *Anime) RefreshAnimeCharacters() (*AnimeCharacters, error) {
 	animeCharacters.Save()
 
 	return animeCharacters, nil
+}
+
+// String implements the default string serialization.
+func (anime *Anime) String() string {
+	return anime.Title.Canonical
 }
 
 // StreamAnime returns a stream of all anime.

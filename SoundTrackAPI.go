@@ -2,6 +2,7 @@ package arn
 
 import (
 	"errors"
+	"fmt"
 	"reflect"
 	"strings"
 
@@ -56,6 +57,13 @@ func (soundtrack *SoundTrack) Create(ctx *aero.Context) error {
 
 // Edit updates the external media object.
 func (soundtrack *SoundTrack) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
+	user := GetUserFromContext(ctx)
+
+	// Write log entry
+	logEntry := NewEditLogEntry(user.ID, "SoundTrack", soundtrack.ID, key, fmt.Sprint(value.Interface()), fmt.Sprint(newValue.Interface()))
+	logEntry.Save()
+
+	// Verify service name
 	if strings.HasPrefix(key, "Media[") && strings.HasSuffix(key, ".Service") {
 		newService := newValue.String()
 		found := false
