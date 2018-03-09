@@ -116,6 +116,17 @@ func (thread *Thread) Save() {
 	DB.Set("Thread", thread.ID, thread)
 }
 
+// DeleteInContext deletes the thread in the given context.
+func (thread *Thread) DeleteInContext(ctx *aero.Context) error {
+	user := GetUserFromContext(ctx)
+
+	// Write log entry
+	logEntry := NewEditLogEntry(user.ID, "delete", "Thread", thread.ID, "", "", "")
+	logEntry.Save()
+
+	return thread.Delete()
+}
+
 // Delete deletes the thread and its posts from the database.
 func (thread *Thread) Delete() error {
 	// Delete all the posts contained in the thread

@@ -81,6 +81,17 @@ func (quote *Quote) Save() {
 	DB.Set("Quote", quote.ID, quote)
 }
 
+// DeleteInContext deletes the quote in the given context.
+func (quote *Quote) DeleteInContext(ctx *aero.Context) error {
+	user := GetUserFromContext(ctx)
+
+	// Write log entry
+	logEntry := NewEditLogEntry(user.ID, "delete", "Quote", quote.ID, "", "", "")
+	logEntry.Save()
+
+	return quote.Delete()
+}
+
 // Delete deletes the object from the database.
 func (quote *Quote) Delete() error {
 	if quote.IsDraft {

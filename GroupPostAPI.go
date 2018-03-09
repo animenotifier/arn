@@ -94,6 +94,17 @@ func (post *GroupPost) Create(ctx *aero.Context) error {
 	return nil
 }
 
+// DeleteInContext deletes the group post in the given context.
+func (post *GroupPost) DeleteInContext(ctx *aero.Context) error {
+	user := GetUserFromContext(ctx)
+
+	// Write log entry
+	logEntry := NewEditLogEntry(user.ID, "delete", "GroupPost", post.ID, "", "", "")
+	logEntry.Save()
+
+	return post.Delete()
+}
+
 // Delete deletes the post from the database.
 func (post *GroupPost) Delete() error {
 	DB.Delete("GroupPost", post.ID)

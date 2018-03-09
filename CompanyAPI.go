@@ -80,6 +80,17 @@ func (company *Company) Save() {
 	DB.Set("Company", company.ID, company)
 }
 
+// DeleteInContext deletes the company in the given context.
+func (company *Company) DeleteInContext(ctx *aero.Context) error {
+	user := GetUserFromContext(ctx)
+
+	// Write log entry
+	logEntry := NewEditLogEntry(user.ID, "delete", "Company", company.ID, "", "", "")
+	logEntry.Save()
+
+	return company.Delete()
+}
+
 // Delete deletes the object from the database.
 func (company *Company) Delete() error {
 	if company.IsDraft {

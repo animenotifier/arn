@@ -144,6 +144,17 @@ func (post *Post) Create(ctx *aero.Context) error {
 	return nil
 }
 
+// DeleteInContext deletes the post in the given context.
+func (post *Post) DeleteInContext(ctx *aero.Context) error {
+	user := GetUserFromContext(ctx)
+
+	// Write log entry
+	logEntry := NewEditLogEntry(user.ID, "delete", "Post", post.ID, "", "", "")
+	logEntry.Save()
+
+	return post.Delete()
+}
+
 // Delete deletes the post from the database.
 func (post *Post) Delete() error {
 	thread, err := GetThread(post.ThreadID)

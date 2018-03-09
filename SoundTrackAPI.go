@@ -97,6 +97,17 @@ func (soundtrack *SoundTrack) AfterEdit(ctx *aero.Context) error {
 	return nil
 }
 
+// DeleteInContext deletes the soundtrack in the given context.
+func (soundtrack *SoundTrack) DeleteInContext(ctx *aero.Context) error {
+	user := GetUserFromContext(ctx)
+
+	// Write log entry
+	logEntry := NewEditLogEntry(user.ID, "delete", "SoundTrack", soundtrack.ID, "", "", "")
+	logEntry.Save()
+
+	return soundtrack.Delete()
+}
+
 // Delete deletes the object from the database.
 func (soundtrack *SoundTrack) Delete() error {
 	if soundtrack.IsDraft {
