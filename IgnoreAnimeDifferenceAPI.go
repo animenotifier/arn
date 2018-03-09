@@ -2,6 +2,7 @@ package arn
 
 import (
 	"errors"
+	"strconv"
 
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
@@ -41,10 +42,24 @@ func (ignore *IgnoreAnimeDifference) Create(ctx *aero.Context) error {
 		return errors.New("Not logged in")
 	}
 
+	hash, err := strconv.ParseUint(data["hash"].(string), 10, 64)
+
+	if err != nil {
+		return errors.New("Invalid hash: Not a number")
+	}
+
 	ignore.ID = data["id"].(string)
-	ignore.ValueHash = data["hash"].(uint64)
+	ignore.ValueHash = hash
 	ignore.Created = DateTimeUTC()
 	ignore.CreatedBy = user.ID
+
+	if ignore.ID == "" {
+		return errors.New("Invalid ID")
+	}
+
+	if ignore.ValueHash == 0 {
+		return errors.New("Invalid hash")
+	}
 
 	return nil
 }
