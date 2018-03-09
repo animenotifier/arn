@@ -4,6 +4,7 @@ import (
 	"github.com/aerogo/api"
 	"github.com/aerogo/nano"
 	"github.com/animenotifier/jikan"
+	"github.com/animenotifier/mal"
 )
 
 // Session ...
@@ -48,6 +49,11 @@ var DB = Node.Namespace("arn").RegisterTypes(
 	(*User)(nil),
 	(*UserFollows)(nil),
 	(*UserNotifications)(nil),
+)
+
+// MAL is the client for the MyAnimeList database.
+var MAL = Node.Namespace("mal").RegisterTypes(
+	(*mal.Anime)(nil),
 )
 
 // API ...
