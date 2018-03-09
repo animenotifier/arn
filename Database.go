@@ -33,6 +33,7 @@ var DB = Node.Namespace("arn").RegisterTypes(
 	(*GroupPost)(nil),
 	(*Item)(nil),
 	(*IDList)(nil),
+	(*IgnoreAnimeDifference)(nil),
 	(*Inventory)(nil),
 	(*NickToUser)(nil),
 	(*Notification)(nil),
