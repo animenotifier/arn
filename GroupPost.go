@@ -46,6 +46,17 @@ func (post *GroupPost) HTML() string {
 	return markdown.Render(post.Text)
 }
 
+// String implements the default string serialization.
+func (post *GroupPost) String() string {
+	const maxLen = 170
+
+	if len(post.Text) > maxLen {
+		return post.Text[:maxLen-3] + "..."
+	}
+
+	return post.Text
+}
+
 // OnLike is called when the group post receives a like.
 func (post *GroupPost) OnLike(likedBy *User) {
 	go func() {

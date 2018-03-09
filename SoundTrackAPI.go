@@ -15,6 +15,7 @@ var (
 	_ Publishable       = (*SoundTrack)(nil)
 	_ Likeable          = (*SoundTrack)(nil)
 	_ LikeEventReceiver = (*SoundTrack)(nil)
+	_ fmt.Stringer      = (*SoundTrack)(nil)
 	_ api.Newable       = (*SoundTrack)(nil)
 	_ api.Editable      = (*SoundTrack)(nil)
 	_ api.Deletable     = (*SoundTrack)(nil)
@@ -102,7 +103,7 @@ func (soundtrack *SoundTrack) DeleteInContext(ctx *aero.Context) error {
 	user := GetUserFromContext(ctx)
 
 	// Write log entry
-	logEntry := NewEditLogEntry(user.ID, "delete", "SoundTrack", soundtrack.ID, "", "", "")
+	logEntry := NewEditLogEntry(user.ID, "delete", "SoundTrack", soundtrack.ID, "", fmt.Sprint(soundtrack), "")
 	logEntry.Save()
 
 	return soundtrack.Delete()

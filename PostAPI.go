@@ -14,6 +14,7 @@ import (
 var (
 	_ Likeable          = (*Post)(nil)
 	_ LikeEventReceiver = (*Post)(nil)
+	_ fmt.Stringer      = (*Post)(nil)
 	_ api.Newable       = (*Post)(nil)
 	_ api.Editable      = (*Post)(nil)
 	_ api.Actionable    = (*Post)(nil)
@@ -149,7 +150,7 @@ func (post *Post) DeleteInContext(ctx *aero.Context) error {
 	user := GetUserFromContext(ctx)
 
 	// Write log entry
-	logEntry := NewEditLogEntry(user.ID, "delete", "Post", post.ID, "", "", "")
+	logEntry := NewEditLogEntry(user.ID, "delete", "Post", post.ID, "", fmt.Sprint(post), "")
 	logEntry.Save()
 
 	return post.Delete()

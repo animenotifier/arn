@@ -2,6 +2,7 @@ package arn
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
@@ -13,6 +14,7 @@ import (
 var (
 	_ Likeable          = (*GroupPost)(nil)
 	_ LikeEventReceiver = (*GroupPost)(nil)
+	_ fmt.Stringer      = (*GroupPost)(nil)
 	_ api.Newable       = (*GroupPost)(nil)
 	_ api.Editable      = (*GroupPost)(nil)
 	_ api.Actionable    = (*GroupPost)(nil)
@@ -99,7 +101,7 @@ func (post *GroupPost) DeleteInContext(ctx *aero.Context) error {
 	user := GetUserFromContext(ctx)
 
 	// Write log entry
-	logEntry := NewEditLogEntry(user.ID, "delete", "GroupPost", post.ID, "", "", "")
+	logEntry := NewEditLogEntry(user.ID, "delete", "GroupPost", post.ID, "", fmt.Sprint(post), "")
 	logEntry.Save()
 
 	return post.Delete()

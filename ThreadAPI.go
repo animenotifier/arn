@@ -2,6 +2,7 @@ package arn
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
@@ -13,6 +14,7 @@ import (
 var (
 	_ Likeable          = (*Thread)(nil)
 	_ LikeEventReceiver = (*Thread)(nil)
+	_ fmt.Stringer      = (*Thread)(nil)
 	_ api.Newable       = (*Thread)(nil)
 	_ api.Editable      = (*Thread)(nil)
 	_ api.Actionable    = (*Thread)(nil)
@@ -121,7 +123,7 @@ func (thread *Thread) DeleteInContext(ctx *aero.Context) error {
 	user := GetUserFromContext(ctx)
 
 	// Write log entry
-	logEntry := NewEditLogEntry(user.ID, "delete", "Thread", thread.ID, "", "", "")
+	logEntry := NewEditLogEntry(user.ID, "delete", "Thread", thread.ID, "", fmt.Sprint(thread), "")
 	logEntry.Save()
 
 	return thread.Delete()

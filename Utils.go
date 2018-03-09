@@ -78,10 +78,21 @@ func GetObjectTitle(typeName string, id string) string {
 	obj, err := DB.Get(typeName, id)
 
 	if err != nil {
-		return "<not found>"
+		return fmt.Sprintf("<not found: %s>", id)
 	}
 
 	return fmt.Sprint(obj)
+}
+
+// JSON turns the object into a JSON string.
+func JSON(obj interface{}) string {
+	data, err := json.Marshal(obj)
+
+	if err == nil {
+		return string(data)
+	}
+
+	return err.Error()
 }
 
 // SetObjectProperties updates the object with the given map[string]interface{}

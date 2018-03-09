@@ -1,7 +1,6 @@
 package arn
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"sort"
@@ -147,12 +146,6 @@ func (anime *Anime) Relations() *AnimeRelations {
 // Link returns the URI to the anime page.
 func (anime *Anime) Link() string {
 	return "/anime/" + anime.ID
-}
-
-// PrettyJSON ...
-func (anime *Anime) PrettyJSON() (string, error) {
-	data, err := json.MarshalIndent(anime, "", "    ")
-	return string(data), err
 }
 
 // StartDateTime ...

@@ -44,6 +44,11 @@ func (thread *Thread) HTML() string {
 	return thread.html
 }
 
+// String implements the default string serialization.
+func (thread *Thread) String() string {
+	return thread.Title
+}
+
 // OnLike is called when the thread receives a like.
 func (thread *Thread) OnLike(likedBy *User) {
 	go func() {

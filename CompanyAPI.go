@@ -12,6 +12,7 @@ import (
 // Force interface implementations
 var (
 	_ Publishable   = (*Company)(nil)
+	_ fmt.Stringer  = (*Company)(nil)
 	_ api.Newable   = (*Company)(nil)
 	_ api.Editable  = (*Company)(nil)
 	_ api.Deletable = (*Company)(nil)
@@ -85,7 +86,7 @@ func (company *Company) DeleteInContext(ctx *aero.Context) error {
 	user := GetUserFromContext(ctx)
 
 	// Write log entry
-	logEntry := NewEditLogEntry(user.ID, "delete", "Company", company.ID, "", "", "")
+	logEntry := NewEditLogEntry(user.ID, "delete", "Company", company.ID, "", fmt.Sprint(company), "")
 	logEntry.Save()
 
 	return company.Delete()

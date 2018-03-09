@@ -11,6 +11,7 @@ import (
 
 // Force interface implementations
 var (
+	_ fmt.Stringer       = (*Anime)(nil)
 	_ api.Editable       = (*Anime)(nil)
 	_ api.CustomEditable = (*Anime)(nil)
 )

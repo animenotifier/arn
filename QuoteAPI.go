@@ -14,6 +14,7 @@ var (
 	_ Likeable          = (*Quote)(nil)
 	_ LikeEventReceiver = (*Quote)(nil)
 	_ Publishable       = (*Quote)(nil)
+	_ fmt.Stringer      = (*Quote)(nil)
 	_ api.Newable       = (*Quote)(nil)
 	_ api.Editable      = (*Quote)(nil)
 	_ api.Deletable     = (*Quote)(nil)
@@ -86,7 +87,7 @@ func (quote *Quote) DeleteInContext(ctx *aero.Context) error {
 	user := GetUserFromContext(ctx)
 
 	// Write log entry
-	logEntry := NewEditLogEntry(user.ID, "delete", "Quote", quote.ID, "", "", "")
+	logEntry := NewEditLogEntry(user.ID, "delete", "Quote", quote.ID, "", fmt.Sprint(quote), "")
 	logEntry.Save()
 
 	return quote.Delete()

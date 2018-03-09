@@ -48,6 +48,17 @@ func (post *Post) HTML() string {
 	return post.html
 }
 
+// String implements the default string serialization.
+func (post *Post) String() string {
+	const maxLen = 170
+
+	if len(post.Text) > maxLen {
+		return post.Text[:maxLen-3] + "..."
+	}
+
+	return post.Text
+}
+
 // OnLike is called when the post receives a like.
 func (post *Post) OnLike(likedBy *User) {
 	go func() {
