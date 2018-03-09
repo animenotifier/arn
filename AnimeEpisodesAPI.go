@@ -11,8 +11,9 @@ import (
 
 // Force interface implementations
 var (
-	_ fmt.Stringer = (*AnimeEpisodes)(nil)
-	_ api.Editable = (*AnimeEpisodes)(nil)
+	_ fmt.Stringer           = (*AnimeEpisodes)(nil)
+	_ api.Editable           = (*AnimeEpisodes)(nil)
+	_ api.ArrayEventListener = (*AnimeEpisodes)(nil)
 )
 
 // Authorize returns an error if the given API POST request is not authorized.
@@ -35,6 +36,20 @@ func (episodes *AnimeEpisodes) Edit(ctx *aero.Context, key string, value reflect
 	logEntry.Save()
 
 	return false, nil
+}
+
+// OnAppend saves a log entry.
+func (episodes *AnimeEpisodes) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
+	user := GetUserFromContext(ctx)
+	logEntry := NewEditLogEntry(user.ID, "arrayAppend", "AnimeEpisodes", episodes.AnimeID, fmt.Sprintf("%s[%d]", key, index), "", fmt.Sprint(obj))
+	logEntry.Save()
+}
+
+// OnRemove saves a log entry.
+func (episodes *AnimeEpisodes) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
+	user := GetUserFromContext(ctx)
+	logEntry := NewEditLogEntry(user.ID, "arrayRemove", "AnimeEpisodes", episodes.AnimeID, fmt.Sprintf("%s[%d]", key, index), fmt.Sprint(obj), "")
+	logEntry.Save()
 }
 
 // Save saves the episodes in the database.

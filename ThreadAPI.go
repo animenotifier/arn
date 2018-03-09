@@ -103,6 +103,10 @@ func (thread *Thread) Create(ctx *aero.Context) error {
 		return errors.New("Text too short: Should be at least 10 characters")
 	}
 
+	// Write log entry
+	logEntry := NewEditLogEntry(user.ID, "create", "Thread", thread.ID, "", "", "")
+	logEntry.Save()
+
 	return nil
 }
 

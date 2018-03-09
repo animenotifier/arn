@@ -11,9 +11,10 @@ import (
 
 // Force interface implementations
 var (
-	_ fmt.Stringer       = (*Anime)(nil)
-	_ api.Editable       = (*Anime)(nil)
-	_ api.CustomEditable = (*Anime)(nil)
+	_ fmt.Stringer           = (*Anime)(nil)
+	_ api.Editable           = (*Anime)(nil)
+	_ api.CustomEditable     = (*Anime)(nil)
+	_ api.ArrayEventListener = (*Anime)(nil)
 )
 
 // Edit creates an edit log entry.
@@ -25,6 +26,20 @@ func (anime *Anime) Edit(ctx *aero.Context, key string, value reflect.Value, new
 	logEntry.Save()
 
 	return false, nil
+}
+
+// OnAppend saves a log entry.
+func (anime *Anime) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
+	user := GetUserFromContext(ctx)
+	logEntry := NewEditLogEntry(user.ID, "arrayAppend", "Anime", anime.ID, fmt.Sprintf("%s[%d]", key, index), "", fmt.Sprint(obj))
+	logEntry.Save()
+}
+
+// OnRemove saves a log entry.
+func (anime *Anime) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
+	user := GetUserFromContext(ctx)
+	logEntry := NewEditLogEntry(user.ID, "arrayRemove", "Anime", anime.ID, fmt.Sprintf("%s[%d]", key, index), fmt.Sprint(obj), "")
+	logEntry.Save()
 }
 
 // Authorize returns an error if the given API POST request is not authorized.

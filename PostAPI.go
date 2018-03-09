@@ -142,6 +142,10 @@ func (post *Post) Create(ctx *aero.Context) error {
 	// Save the parent thread
 	thread.Save()
 
+	// Write log entry
+	logEntry := NewEditLogEntry(user.ID, "create", "Post", post.ID, "", "", "")
+	logEntry.Save()
+
 	return nil
 }
 
