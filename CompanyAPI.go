@@ -11,11 +11,12 @@ import (
 
 // Force interface implementations
 var (
-	_ Publishable   = (*Company)(nil)
-	_ fmt.Stringer  = (*Company)(nil)
-	_ api.Newable   = (*Company)(nil)
-	_ api.Editable  = (*Company)(nil)
-	_ api.Deletable = (*Company)(nil)
+	_ Publishable            = (*Company)(nil)
+	_ fmt.Stringer           = (*Company)(nil)
+	_ api.Newable            = (*Company)(nil)
+	_ api.Editable           = (*Company)(nil)
+	_ api.Deletable          = (*Company)(nil)
+	_ api.ArrayEventListener = (*Company)(nil)
 )
 
 // Actions
@@ -67,6 +68,20 @@ func (company *Company) Edit(ctx *aero.Context, key string, value reflect.Value,
 	logEntry.Save()
 
 	return false, nil
+}
+
+// OnAppend saves a log entry.
+func (company *Company) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
+	user := GetUserFromContext(ctx)
+	logEntry := NewEditLogEntry(user.ID, "arrayAppend", "Company", company.ID, fmt.Sprintf("%s[%d]", key, index), "", fmt.Sprint(obj))
+	logEntry.Save()
+}
+
+// OnRemove saves a log entry.
+func (company *Company) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
+	user := GetUserFromContext(ctx)
+	logEntry := NewEditLogEntry(user.ID, "arrayRemove", "Company", company.ID, fmt.Sprintf("%s[%d]", key, index), fmt.Sprint(obj), "")
+	logEntry.Save()
 }
 
 // AfterEdit updates the metadata.
