@@ -57,10 +57,6 @@ func (ignore *IgnoreAnimeDifference) Create(ctx *aero.Context) error {
 		return errors.New("Invalid ID")
 	}
 
-	if ignore.ValueHash == 0 {
-		return errors.New("Invalid hash")
-	}
-
 	return nil
 }
 
