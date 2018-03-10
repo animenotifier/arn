@@ -17,13 +17,36 @@ import (
 	"github.com/fatih/color"
 )
 
-// Register a list of supported anime status types.
+// AnimeSourceHumanReadable maps the anime source to a human readable version.
+var AnimeSourceHumanReadable = map[string]string{}
+
+// Register a list of supported anime status and source types.
 func init() {
 	DataLists["anime-status"] = []*Option{
 		&Option{"current", "Current"},
 		&Option{"finished", "Finished"},
 		&Option{"upcoming", "Upcoming"},
 		&Option{"tba", "To be announced"},
+	}
+
+	DataLists["anime-source"] = []*Option{
+		&Option{"", "Unknown"},
+		&Option{"original", "Original"},
+		&Option{"manga", "Manga"},
+		&Option{"novel", "Novel"},
+		&Option{"light novel", "Light novel"},
+		&Option{"visual novel", "Visual novel"},
+		&Option{"game", "Game"},
+		&Option{"book", "Book"},
+		&Option{"4-koma manga", "4-koma Manga"},
+		&Option{"music", "Music"},
+		&Option{"picture book", "Picture book"},
+		&Option{"web manga", "Web manga"},
+		&Option{"other", "Other"},
+	}
+
+	for _, option := range DataLists["anime-source"] {
+		AnimeSourceHumanReadable[option.Value] = option.Label
 	}
 }
 
@@ -32,19 +55,19 @@ type Anime struct {
 	ID             string           `json:"id"`
 	Type           string           `json:"type" editable:"true"`
 	Title          *AnimeTitle      `json:"title" editable:"true"`
-	ImageExtension string           `json:"imageExtension"`
-	FirstChannel   string           `json:"firstChannel"`
+	Summary        string           `json:"summary" editable:"true" type:"textarea"`
+	Status         string           `json:"status" editable:"true" datalist:"anime-status"`
+	Genres         []string         `json:"genres" editable:"true"`
 	StartDate      string           `json:"startDate" editable:"true"`
 	EndDate        string           `json:"endDate" editable:"true"`
 	EpisodeCount   int              `json:"episodeCount" editable:"true"`
 	EpisodeLength  int              `json:"episodeLength" editable:"true"`
-	Status         string           `json:"status" editable:"true" datalist:"anime-status"`
-	NSFW           int              `json:"nsfw"`
+	Source         string           `json:"source" editable:"true" datalist:"anime-source"`
+	ImageExtension string           `json:"imageExtension"`
+	FirstChannel   string           `json:"firstChannel"`
 	Rating         *AnimeRating     `json:"rating"`
 	Popularity     *AnimePopularity `json:"popularity"`
-	Summary        string           `json:"summary" editable:"true" type:"textarea"`
 	Trailers       []*ExternalMedia `json:"trailers" editable:"true"`
-	Genres         []string         `json:"genres" editable:"true"`
 	Mappings       []*Mapping       `json:"mappings" editable:"true"`
 	StudioIDs      []string         `json:"studios" editable:"true"`
 	ProducerIDs    []string         `json:"producers" editable:"true"`
@@ -55,21 +78,10 @@ type Anime struct {
 	Edited         string           `json:"edited"`
 	EditedBy       string           `json:"editedBy"`
 
-	// Hashtag       string          `json:"hashtag"`
-	// Source        string          `json:"source"`
-
-	// PageGenerated string          `json:"pageGenerated"`
-	// AnilistEdited uint64          `json:"anilistEdited"`
-	// Tracks        *AnimeTrackList `json:"tracks"`
-	// Links         []AnimeLink     `json:"links"`
-	// Studios       []AnimeStudio   `json:"studios"`
-	// Relations     []AnimeRelation `json:"relations"`
-	// Created       string          `json:"created"`
-	// CreatedBy     string          `json:"createdBy"`
-
-	// episodes   *AnimeEpisodes
-	// relations  *AnimeRelations
-	// characters *AnimeCharacters
+	// SynopsisSource string        `json:"synopsisSource" editable:"true"`
+	// Hashtag        string        `json:"hashtag"`
+	// Created        string        `json:"created"`
+	// CreatedBy      string        `json:"createdBy"`
 }
 
 // GetAnime ...
