@@ -54,13 +54,14 @@ func (entry *EditLogEntry) EditorScore() int {
 		isDraft := v.FieldByName("IsDraft")
 
 		if isDraft.Kind() == reflect.Bool && isDraft.Bool() == true {
+			// No score for drafts
 			return 0
 		}
 
-		return 3
+		return 5
 
 	case "edit":
-		score := 2
+		score := 3
 
 		// Bonus score for editing anime
 		if entry.ObjectType == "Anime" {
@@ -75,7 +76,7 @@ func (entry *EditLogEntry) EditorScore() int {
 		return score
 
 	case "delete", "arrayRemove":
-		return 1
+		return 3
 
 	case "arrayAppend":
 		return 0

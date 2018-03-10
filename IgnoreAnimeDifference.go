@@ -6,6 +6,9 @@ import (
 	"github.com/aerogo/nano"
 )
 
+// IgnoreAnimeDifferenceEditorScore represents how many points you get for a diff ignore.
+const IgnoreAnimeDifferenceEditorScore = 2
+
 // IgnoreAnimeDifference saves which differences between anime providers can be ignored.
 type IgnoreAnimeDifference struct {
 	// The ID is built like this: arn:323|mal:356|JapaneseTitle

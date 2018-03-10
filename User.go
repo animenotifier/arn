@@ -306,11 +306,11 @@ func (user *User) EditorScore() int {
 		return entry.CreatedBy == user.ID
 	})
 
+	score := len(ignoreDifferences) * IgnoreAnimeDifferenceEditorScore
+
 	logEntries := FilterEditLogEntries(func(entry *EditLogEntry) bool {
 		return entry.UserID == user.ID
 	})
-
-	score := len(ignoreDifferences)
 
 	for _, entry := range logEntries {
 		score += entry.EditorScore()
