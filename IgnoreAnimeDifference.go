@@ -1,6 +1,10 @@
 package arn
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/aerogo/nano"
+)
 
 // IgnoreAnimeDifference saves which differences between anime providers can be ignored.
 type IgnoreAnimeDifference struct {
@@ -37,4 +41,45 @@ func IsAnimeDifferenceIgnored(animeID string, dataProvider string, malAnimeID st
 	}
 
 	return ignore.ValueHash == hash
+}
+
+// StreamIgnoreAnimeDifferences returns a stream of all ignored differences.
+func StreamIgnoreAnimeDifferences() chan *IgnoreAnimeDifference {
+	channel := make(chan *IgnoreAnimeDifference, nano.ChannelBufferSize)
+
+	go func() {
+		for obj := range DB.All("IgnoreAnimeDifference") {
+			channel <- obj.(*IgnoreAnimeDifference)
+		}
+
+		close(channel)
+	}()
+
+	return channel
+}
+
+// AllIgnoreAnimeDifferences returns a slice of all ignored differences.
+func AllIgnoreAnimeDifferences() []*IgnoreAnimeDifference {
+	var all []*IgnoreAnimeDifference
+
+	stream := StreamIgnoreAnimeDifferences()
+
+	for obj := range stream {
+		all = append(all, obj)
+	}
+
+	return all
+}
+
+// FilterIgnoreAnimeDifferences filters all ignored differences by a custom function.
+func FilterIgnoreAnimeDifferences(filter func(*IgnoreAnimeDifference) bool) []*IgnoreAnimeDifference {
+	var filtered []*IgnoreAnimeDifference
+
+	for obj := range StreamIgnoreAnimeDifferences() {
+		if filter(obj) {
+			filtered = append(filtered, obj)
+		}
+	}
+
+	return filtered
 }
