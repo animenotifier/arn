@@ -1,6 +1,10 @@
 package arn
 
-import "github.com/aerogo/nano"
+import (
+	"reflect"
+
+	"github.com/aerogo/nano"
+)
 
 // EditLogEntry is an entry in the editor log.
 type EditLogEntry struct {
@@ -34,6 +38,50 @@ func NewEditLogEntry(userID, action, objectType, objectID, key, oldValue, newVal
 func (entry *EditLogEntry) User() *User {
 	user, _ := GetUser(entry.UserID)
 	return user
+}
+
+// EditorScore returns the editing score for this log entry.
+func (entry *EditLogEntry) EditorScore() int {
+	switch entry.Action {
+	case "create":
+		obj, err := DB.Get(entry.ObjectType, entry.ObjectID)
+
+		if err != nil {
+			return 0
+		}
+
+		v := reflect.Indirect(reflect.ValueOf(obj))
+		isDraft := v.FieldByName("IsDraft")
+
+		if isDraft.Kind() == reflect.Bool && isDraft.Bool() == true {
+			return 0
+		}
+
+		return 3
+
+	case "edit":
+		score := 2
+
+		// Bonus score for editing anime
+		if entry.ObjectType == "Anime" {
+			score++
+
+			// Bonus score for editing anime synopsis
+			if entry.Key == "Summary" || entry.Key == "Synopsis" {
+				score++
+			}
+		}
+
+		return score
+
+	case "delete", "arrayRemove":
+		return 1
+
+	case "arrayAppend":
+		return 0
+	}
+
+	return 0
 }
 
 // StreamEditLogEntries returns a stream of all log entries.

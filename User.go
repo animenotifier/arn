@@ -300,6 +300,25 @@ func (user *User) Gravatar() string {
 	return gravatar.SecureUrl(user.Email) + "?s=" + fmt.Sprint(AvatarMaxSize)
 }
 
+// EditorScore returns the editor score.
+func (user *User) EditorScore() int {
+	ignoreDifferences := FilterIgnoreAnimeDifferences(func(entry *IgnoreAnimeDifference) bool {
+		return entry.CreatedBy == user.ID
+	})
+
+	logEntries := FilterEditLogEntries(func(entry *EditLogEntry) bool {
+		return entry.UserID == user.ID
+	})
+
+	score := len(ignoreDifferences)
+
+	for _, entry := range logEntries {
+		score += entry.EditorScore()
+	}
+
+	return score
+}
+
 // ActivateItemEffect activates an item in the user inventory by the given item ID.
 func (user *User) ActivateItemEffect(itemID string) error {
 	month := 30 * 24 * time.Hour
