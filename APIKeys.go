@@ -10,6 +10,9 @@ import (
 	"github.com/animenotifier/osu"
 )
 
+// Root is the full path to the root directory of notify.moe repository.
+var Root = path.Join(os.Getenv("GOPATH"), "src/github.com/animenotifier/notify.moe")
+
 // APIKeys are global API keys for several services
 var APIKeys APIKeysData
 
@@ -77,11 +80,10 @@ type APIKeysData struct {
 }
 
 func init() {
-	root := path.Join(os.Getenv("GOPATH"), "src/github.com/animenotifier/notify.moe")
-	apiKeysPath := path.Join(root, "security/api-keys.json")
+	apiKeysPath := path.Join(Root, "security/api-keys.json")
 
 	if _, err := os.Stat(apiKeysPath); os.IsNotExist(err) {
-		defaultAPIKeysPath := path.Join(root, "security/default/api-keys.json")
+		defaultAPIKeysPath := path.Join(Root, "security/default/api-keys.json")
 		err := os.Link(defaultAPIKeysPath, apiKeysPath)
 
 		if err != nil {

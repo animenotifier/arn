@@ -2,6 +2,9 @@ package arn
 
 import (
 	"errors"
+	"os"
+	"os/exec"
+	"path"
 	"sort"
 	"strings"
 
@@ -17,6 +20,7 @@ type SoundTrack struct {
 	Media     []*ExternalMedia `json:"media" editable:"true"`
 	Tags      []string         `json:"tags" editable:"true" tooltip:"<ul><li><strong>anime:ID</strong> to connect it with anime</li><li><strong>opening</strong> for openings</li><li><strong>ending</strong> for endings</li><li><strong>cover</strong> for covers</li><li><strong>remix</strong> for remixes</li></ul>"`
 	IsDraft   bool             `json:"isDraft" editable:"true"`
+	File      string           `json:"file"`
 	Created   string           `json:"created"`
 	CreatedBy string           `json:"createdBy"`
 	Edited    string           `json:"edited"`
@@ -198,6 +202,58 @@ func (track *SoundTrack) Unpublish() error {
 	track.IsDraft = true
 	draftIndex.SoundTrackID = track.ID
 	draftIndex.Save()
+	return nil
+}
+
+// Download downloads the track.
+func (track *SoundTrack) Download() error {
+	youtubeVideos := track.MediaByService("Youtube")
+
+	if len(youtubeVideos) == 0 {
+		return errors.New("No Youtube ID")
+	}
+
+	youtubeID := youtubeVideos[0].ServiceID
+
+	// Check for existing file
+	if track.File != "" {
+		stat, err := os.Stat(track.File)
+
+		if err != nil && !stat.IsDir() && stat.Size() > 0 {
+			return errors.New("Already downloaded")
+		}
+	}
+
+	audioDirectory := path.Join(Root, "audio")
+	baseName := track.ID + "|" + youtubeID
+	filePath := path.Join(audioDirectory, baseName)
+
+	cmd := exec.Command("youtube-dl", "--extract-audio", "--audio-quality", "0", "--output", filePath+".%(ext)s", youtubeID)
+	err := cmd.Start()
+
+	if err != nil {
+		return err
+	}
+
+	err = cmd.Wait()
+
+	if err != nil {
+		return err
+	}
+
+	fullPath := FindFileWithExtension(baseName, audioDirectory, []string{
+		".opus",
+		".webm",
+		".ogg",
+		".mp3",
+		".m4a",
+		".flac",
+		".wav",
+	})
+
+	extension := path.Ext(fullPath)
+	track.File = baseName + extension
+
 	return nil
 }
 
