@@ -219,7 +219,7 @@ func (track *SoundTrack) Download() error {
 	if track.File != "" {
 		stat, err := os.Stat(track.File)
 
-		if err != nil && !stat.IsDir() && stat.Size() > 0 {
+		if err == nil && !stat.IsDir() && stat.Size() > 0 {
 			return errors.New("Already downloaded")
 		}
 	}
