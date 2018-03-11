@@ -217,7 +217,7 @@ func (track *SoundTrack) Download() error {
 
 	// Check for existing file
 	if track.File != "" {
-		stat, err := os.Stat(track.File)
+		stat, err := os.Stat(path.Join(Root, "audio", track.File))
 
 		if err == nil && !stat.IsDir() && stat.Size() > 0 {
 			return errors.New("Already downloaded")
