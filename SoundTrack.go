@@ -310,14 +310,14 @@ func StreamSoundTracks() chan *SoundTrack {
 }
 
 // AllSoundTracks ...
-func AllSoundTracks() ([]*SoundTrack, error) {
+func AllSoundTracks() []*SoundTrack {
 	var all []*SoundTrack
 
 	for obj := range StreamSoundTracks() {
 		all = append(all, obj)
 	}
 
-	return all, nil
+	return all
 }
 
 // FilterSoundTracks filters all soundtracks by a custom function.
