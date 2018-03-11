@@ -245,8 +245,8 @@ func (track *SoundTrack) Download() error {
 		".opus",
 		".webm",
 		".ogg",
-		".mp3",
 		".m4a",
+		".mp3",
 		".flac",
 		".wav",
 	})
