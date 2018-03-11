@@ -207,6 +207,10 @@ func (track *SoundTrack) Unpublish() error {
 
 // Download downloads the track.
 func (track *SoundTrack) Download() error {
+	if track.IsDraft {
+		return errors.New("Track is a draft")
+	}
+
 	youtubeVideos := track.MediaByService("Youtube")
 
 	if len(youtubeVideos) == 0 {
