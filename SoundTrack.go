@@ -189,7 +189,7 @@ func (track *SoundTrack) Publish() error {
 	go func() {
 		err := track.Download()
 
-		if err != nil {
+		if err == nil {
 			track.Save()
 		}
 	}()
