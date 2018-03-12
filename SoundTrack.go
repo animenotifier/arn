@@ -184,6 +184,16 @@ func (track *SoundTrack) Publish() error {
 	track.IsDraft = false
 	draftIndex.SoundTrackID = ""
 	draftIndex.Save()
+
+	// Start download in the background
+	go func() {
+		err := track.Download()
+
+		if err != nil {
+			track.Save()
+		}
+	}()
+
 	return nil
 }
 
