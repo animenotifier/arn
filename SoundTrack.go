@@ -266,7 +266,7 @@ func (track *SoundTrack) Download() error {
 	}
 
 	// Find downloaded file
-	FindFileWithExtension(baseName, audioDirectory, []string{
+	fullPath = FindFileWithExtension(baseName, audioDirectory, []string{
 		".opus",
 		".webm",
 		".ogg",
