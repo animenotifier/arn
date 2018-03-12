@@ -230,8 +230,28 @@ func (track *SoundTrack) Download() error {
 
 	audioDirectory := path.Join(Root, "audio")
 	baseName := track.ID + "|" + youtubeID
+
+	// Check if it exists on the file system
+	fullPath := FindFileWithExtension(baseName, audioDirectory, []string{
+		".opus",
+		".webm",
+		".ogg",
+		".m4a",
+		".mp3",
+		".flac",
+		".wav",
+	})
+
+	// In case we added the file but didn't register it in database
+	if fullPath != "" {
+		extension := path.Ext(fullPath)
+		track.File = baseName + extension
+		return nil
+	}
+
 	filePath := path.Join(audioDirectory, baseName)
 
+	// Download
 	cmd := exec.Command("youtube-dl", "--extract-audio", "--audio-quality", "0", "--output", filePath+".%(ext)s", youtubeID)
 	err := cmd.Start()
 
@@ -245,7 +265,8 @@ func (track *SoundTrack) Download() error {
 		return err
 	}
 
-	fullPath := FindFileWithExtension(baseName, audioDirectory, []string{
+	// Find downloaded file
+	FindFileWithExtension(baseName, audioDirectory, []string{
 		".opus",
 		".webm",
 		".ogg",
@@ -257,7 +278,6 @@ func (track *SoundTrack) Download() error {
 
 	extension := path.Ext(fullPath)
 	track.File = baseName + extension
-
 	return nil
 }
 
