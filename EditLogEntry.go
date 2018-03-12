@@ -58,10 +58,10 @@ func (entry *EditLogEntry) EditorScore() int {
 			return 0
 		}
 
-		return 5
+		return 4
 
 	case "edit":
-		score := 3
+		score := 4
 
 		// Bonus score for editing anime
 		if entry.ObjectType == "Anime" {
