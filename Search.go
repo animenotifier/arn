@@ -21,8 +21,6 @@ type SearchResult struct {
 
 // Search is a fuzzy search.
 func Search(term string, maxUsers, maxAnime, maxPosts, maxThreads, maxTracks int, maxCharacters int) ([]*User, []*Anime, []*Post, []*Thread, []*SoundTrack, []*Character) {
-	term = RemoveSpecialCharacters(strings.ToLower(term))
-
 	if term == "" {
 		return nil, nil, nil, nil, nil, nil
 	}
@@ -52,14 +50,20 @@ func Search(term string, maxUsers, maxAnime, maxPosts, maxThreads, maxTracks int
 }
 
 // SearchCharacters searches all characters.
-func SearchCharacters(term string, maxLength int) []*Character {
+func SearchCharacters(originalTerm string, maxLength int) []*Character {
 	if maxLength == 0 {
 		return nil
 	}
 
+	term := RemoveSpecialCharacters(strings.ToLower(originalTerm))
+
 	var results []*SearchResult
 
 	for character := range StreamCharacters() {
+		if character.ID == originalTerm {
+			return []*Character{character}
+		}
+
 		if character.Image == "" {
 			continue
 		}
@@ -133,10 +137,16 @@ func SearchCharacters(term string, maxLength int) []*Character {
 }
 
 // SearchSoundTracks searches all soundtracks.
-func SearchSoundTracks(term string, maxLength int) []*SoundTrack {
+func SearchSoundTracks(originalTerm string, maxLength int) []*SoundTrack {
+	term := RemoveSpecialCharacters(strings.ToLower(originalTerm))
+
 	var results []*SearchResult
 
 	for track := range StreamSoundTracks() {
+		if track.ID == originalTerm {
+			return []*SoundTrack{track}
+		}
+
 		text := strings.ToLower(track.Title)
 
 		// Similarity check
@@ -172,10 +182,16 @@ func SearchSoundTracks(term string, maxLength int) []*SoundTrack {
 }
 
 // SearchPosts searches all posts.
-func SearchPosts(term string, maxLength int) []*Post {
+func SearchPosts(originalTerm string, maxLength int) []*Post {
+	term := RemoveSpecialCharacters(strings.ToLower(originalTerm))
+
 	var results []*Post
 
 	for post := range StreamPosts() {
+		if post.ID == originalTerm {
+			return []*Post{post}
+		}
+
 		text := strings.ToLower(post.Text)
 
 		if !strings.Contains(text, term) {
@@ -199,10 +215,16 @@ func SearchPosts(term string, maxLength int) []*Post {
 }
 
 // SearchThreads searches all threads.
-func SearchThreads(term string, maxLength int) []*Thread {
+func SearchThreads(originalTerm string, maxLength int) []*Thread {
+	term := RemoveSpecialCharacters(strings.ToLower(originalTerm))
+
 	var results []*Thread
 
 	for thread := range StreamThreads() {
+		if thread.ID == originalTerm {
+			return []*Thread{thread}
+		}
+
 		text := strings.ToLower(thread.Text)
 
 		if strings.Contains(text, term) {
@@ -232,10 +254,16 @@ func SearchThreads(term string, maxLength int) []*Thread {
 }
 
 // SearchUsers searches all users.
-func SearchUsers(term string, maxLength int) []*User {
+func SearchUsers(originalTerm string, maxLength int) []*User {
+	term := RemoveSpecialCharacters(strings.ToLower(originalTerm))
+
 	var results []*SearchResult
 
 	for user := range StreamUsers() {
+		if user.ID == originalTerm {
+			return []*User{user}
+		}
+
 		text := strings.ToLower(user.Nick)
 
 		// Similarity check
@@ -272,7 +300,9 @@ func SearchUsers(term string, maxLength int) []*User {
 }
 
 // SearchAnime searches all anime.
-func SearchAnime(term string, maxLength int) []*Anime {
+func SearchAnime(originalTerm string, maxLength int) []*Anime {
+	term := RemoveSpecialCharacters(strings.ToLower(originalTerm))
+
 	var results []*SearchResult
 
 	check := func(text string) float64 {
@@ -289,6 +319,10 @@ func SearchAnime(term string, maxLength int) []*Anime {
 	}
 
 	for anime := range StreamAnime() {
+		if anime.ID == originalTerm {
+			return []*Anime{anime}
+		}
+
 		// Canonical title
 		similarity := check(anime.Title.Canonical)
 
