@@ -84,6 +84,21 @@ func GetObjectTitle(typeName string, id string) string {
 	return fmt.Sprint(obj)
 }
 
+// FilterIDTags returns all IDs of the given type in the tag list.
+func FilterIDTags(tags []string, idType string) []string {
+	var idList []string
+	prefix := idType + ":"
+
+	for _, tag := range tags {
+		if strings.HasPrefix(tag, prefix) {
+			id := strings.TrimPrefix(tag, prefix)
+			idList = append(idList, id)
+		}
+	}
+
+	return idList
+}
+
 // JSON turns the object into a JSON string.
 func JSON(obj interface{}) string {
 	data, err := json.Marshal(obj)
