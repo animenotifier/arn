@@ -2,6 +2,7 @@ package arn
 
 import (
 	"reflect"
+	"sort"
 
 	"github.com/aerogo/nano"
 )
@@ -128,4 +129,11 @@ func FilterEditLogEntries(filter func(*EditLogEntry) bool) []*EditLogEntry {
 	}
 
 	return filtered
+}
+
+// SortEditLogEntriesLatestFirst puts the latest entries on top.
+func SortEditLogEntriesLatestFirst(entries []*EditLogEntry) {
+	sort.Slice(entries, func(i, j int) bool {
+		return entries[i].Created > entries[j].Created
+	})
 }
