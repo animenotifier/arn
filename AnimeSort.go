@@ -33,7 +33,12 @@ func SortAnimeByPopularity(animes []*Anime) {
 }
 
 // SortAnimeByQuality sorts the given slice of anime by quality.
-func SortAnimeByQuality(animes []*Anime, filterStatus string) {
+func SortAnimeByQuality(animes []*Anime) {
+	SortAnimeByQualityDetailed(animes, "")
+}
+
+// SortAnimeByQualityDetailed sorts the given slice of anime by quality.
+func SortAnimeByQualityDetailed(animes []*Anime, filterStatus string) {
 	sort.Slice(animes, func(i, j int) bool {
 		a := animes[i]
 		b := animes[j]
@@ -65,7 +70,7 @@ func SortAnimeByQuality(animes []*Anime, filterStatus string) {
 			scoreB += longSummaryBonus
 		}
 
-		// If we show current shows, rank old shows a bit lower
+		// If we show currently running shows, rank shows that started a long time ago a bit lower
 		if filterStatus == "current" {
 			if a.StartDate != "" && time.Since(a.StartDateTime()) > ageThreshold {
 				scoreA -= agePenalty

@@ -51,9 +51,9 @@ func (company *Company) Anime() (studioAnime []*Anime, producedAnime []*Anime, l
 		}
 	}
 
-	SortAnimeByQuality(studioAnime, "")
-	SortAnimeByQuality(producedAnime, "")
-	SortAnimeByQuality(licensedAnime, "")
+	SortAnimeByQuality(studioAnime)
+	SortAnimeByQuality(producedAnime)
+	SortAnimeByQuality(licensedAnime)
 
 	return studioAnime, producedAnime, licensedAnime
 }
