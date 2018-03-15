@@ -61,6 +61,10 @@ func (post *Post) String() string {
 
 // OnLike is called when the post receives a like.
 func (post *Post) OnLike(likedBy *User) {
+	if !post.Author().Settings().Notification.ForumLikes {
+		return
+	}
+
 	go func() {
 		post.Author().SendNotification(&PushNotification{
 			Title:   likedBy.Nick + " liked your post",

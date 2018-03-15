@@ -117,6 +117,10 @@ func (track *SoundTrack) OnLike(likedBy *User) {
 		return
 	}
 
+	if !track.Creator().Settings().Notification.SoundTrackLikes {
+		return
+	}
+
 	go func() {
 		track.Creator().SendNotification(&PushNotification{
 			Title:   likedBy.Nick + " liked your soundtrack " + track.Title,

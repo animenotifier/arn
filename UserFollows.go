@@ -36,6 +36,10 @@ func (list *UserFollows) Add(userID string) error {
 	user, err := GetUser(userID)
 
 	if err == nil {
+		if !user.Settings().Notification.NewFollowers {
+			return nil
+		}
+
 		follower, err := GetUser(list.UserID)
 
 		if err == nil {

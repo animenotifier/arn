@@ -51,6 +51,10 @@ func (thread *Thread) String() string {
 
 // OnLike is called when the thread receives a like.
 func (thread *Thread) OnLike(likedBy *User) {
+	if !thread.Author().Settings().Notification.ForumLikes {
+		return
+	}
+
 	go func() {
 		thread.Author().SendNotification(&PushNotification{
 			Title:   likedBy.Nick + " liked your thread",

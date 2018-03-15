@@ -59,6 +59,10 @@ func (post *GroupPost) String() string {
 
 // OnLike is called when the group post receives a like.
 func (post *GroupPost) OnLike(likedBy *User) {
+	if !post.Author().Settings().Notification.GroupPostLikes {
+		return
+	}
+
 	go func() {
 		post.Author().SendNotification(&PushNotification{
 			Title:   likedBy.Nick + " liked your post",

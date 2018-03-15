@@ -119,6 +119,10 @@ func (quote *Quote) OnLike(likedBy *User) {
 		return
 	}
 
+	if !quote.Creator().Settings().Notification.QuoteLikes {
+		return
+	}
+
 	go func() {
 		quote.Creator().SendNotification(&PushNotification{
 			Title:   likedBy.Nick + " liked your " + quote.Character().Name + " quote",

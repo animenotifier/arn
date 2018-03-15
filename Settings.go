@@ -40,8 +40,13 @@ type Settings struct {
 // NotificationSettings ...
 type NotificationSettings struct {
 	Email                string `json:"email"`
+	NewFollowers         bool   `json:"newFollowers" editable:"true"`
 	AnimeEpisodeReleases bool   `json:"animeEpisodeReleases" editable:"true"`
 	AnimeFinished        bool   `json:"animeFinished" editable:"true"`
+	ForumLikes           bool   `json:"forumLikes" editable:"true"`
+	GroupPostLikes       bool   `json:"groupPostLikes" editable:"true"`
+	QuoteLikes           bool   `json:"quoteLikes" editable:"true"`
+	SoundTrackLikes      bool   `json:"soundTrackLikes" editable:"true"`
 }
 
 // FormatSettings ...
@@ -76,8 +81,13 @@ func NewSettings(user *User) *Settings {
 		Theme: "light",
 		Notification: NotificationSettings{
 			Email:                "",
+			NewFollowers:         true,
 			AnimeEpisodeReleases: true,
 			AnimeFinished:        false,
+			ForumLikes:           true,
+			GroupPostLikes:       true,
+			QuoteLikes:           true,
+			SoundTrackLikes:      true,
 		},
 	}
 }
