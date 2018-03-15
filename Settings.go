@@ -78,17 +78,22 @@ func NewSettings(user *User) *Settings {
 			Source:    "",
 			SourceURL: "",
 		},
-		Theme: "light",
-		Notification: NotificationSettings{
-			Email:                "",
-			NewFollowers:         true,
-			AnimeEpisodeReleases: true,
-			AnimeFinished:        false,
-			ForumLikes:           true,
-			GroupPostLikes:       true,
-			QuoteLikes:           true,
-			SoundTrackLikes:      true,
-		},
+		Theme:        "light",
+		Notification: DefaultNotificationSettings(),
+	}
+}
+
+// DefaultNotificationSettings returns the default notification settings.
+func DefaultNotificationSettings() NotificationSettings {
+	return NotificationSettings{
+		Email:                "",
+		NewFollowers:         true,
+		AnimeEpisodeReleases: true,
+		AnimeFinished:        false,
+		ForumLikes:           true,
+		GroupPostLikes:       true,
+		QuoteLikes:           true,
+		SoundTrackLikes:      true,
 	}
 }
 
