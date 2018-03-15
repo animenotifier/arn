@@ -5,8 +5,8 @@ func init() {
 	DataLists["anime-relation-types"] = []*Option{
 		&Option{"prequel", HumanReadableAnimeRelation("prequel")},
 		&Option{"sequel", HumanReadableAnimeRelation("sequel")},
-		&Option{"alternative version", HumanReadableAnimeRelation("alternative version")},
-		&Option{"alternative setting", HumanReadableAnimeRelation("alternative setting")},
+		&Option{"alternative version", "Alternative version"},
+		&Option{"alternative setting", "Alternative setting"},
 		&Option{"side story", HumanReadableAnimeRelation("side story")},
 		&Option{"parent story", HumanReadableAnimeRelation("parent story")},
 		&Option{"full story", HumanReadableAnimeRelation("full story")},
