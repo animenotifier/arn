@@ -27,14 +27,21 @@ const (
 
 // Settings ...
 type Settings struct {
-	UserID            string           `json:"userId"`
-	SortBy            string           `json:"sortBy"`
-	TitleLanguage     string           `json:"titleLanguage" editable:"true"`
-	Providers         ServiceProviders `json:"providers"`
-	Avatar            AvatarSettings   `json:"avatar"`
-	Format            FormatSettings   `json:"format"`
-	Theme             string           `json:"theme" editable:"true"`
-	NotificationEmail string           `json:"notificationEmail"`
+	UserID        string               `json:"userId"`
+	SortBy        string               `json:"sortBy"`
+	TitleLanguage string               `json:"titleLanguage" editable:"true"`
+	Providers     ServiceProviders     `json:"providers"`
+	Avatar        AvatarSettings       `json:"avatar"`
+	Format        FormatSettings       `json:"format"`
+	Notification  NotificationSettings `json:"notification"`
+	Theme         string               `json:"theme" editable:"true"`
+}
+
+// NotificationSettings ...
+type NotificationSettings struct {
+	Email                string `json:"email"`
+	AnimeEpisodeReleases bool   `json:"animeEpisodeReleases" editable:"true"`
+	AnimeFinished        bool   `json:"animeFinished" editable:"true"`
 }
 
 // FormatSettings ...
@@ -66,8 +73,12 @@ func NewSettings(user *User) *Settings {
 			Source:    "",
 			SourceURL: "",
 		},
-		Theme:             "light",
-		NotificationEmail: user.Email,
+		Theme: "light",
+		Notification: NotificationSettings{
+			Email:                "",
+			AnimeEpisodeReleases: true,
+			AnimeFinished:        false,
+		},
 	}
 }
 

@@ -21,6 +21,30 @@ var (
 func (anime *Anime) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {
 	user := GetUserFromContext(ctx)
 
+	if key == "Status" {
+		oldStatus := value.String()
+		newStatus := newValue.String()
+
+		// Notify people who want to know about finished series
+		if oldStatus == "current" && newStatus == "finished" {
+			go func() {
+				for _, user := range anime.UsersWatchingOrPlanned() {
+					if !user.Settings().Notification.AnimeFinished {
+						continue
+					}
+
+					user.SendNotification(&PushNotification{
+						Title:   anime.Title.ByUser(user),
+						Message: anime.Title.ByUser(user) + " has now finished airing!",
+						Icon:    anime.Image("medium"),
+						Link:    "https://notify.moe" + anime.Link(),
+						Type:    NotificationTypeAnimeFinished,
+					})
+				}
+			}()
+		}
+	}
+
 	// Write log entry
 	logEntry := NewEditLogEntry(user.ID, "edit", "Anime", anime.ID, key, fmt.Sprint(value.Interface()), fmt.Sprint(newValue.Interface()))
 	logEntry.Save()

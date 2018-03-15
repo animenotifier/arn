@@ -42,7 +42,7 @@ func (settings *Settings) Edit(ctx *aero.Context, key string, value reflect.Valu
 
 // Filter removes privacy critical fields from the settings object.
 func (settings *Settings) Filter() {
-	settings.NotificationEmail = ""
+	settings.Notification.Email = ""
 }
 
 // ShouldFilter tells whether data needs to be filtered in the given context.
