@@ -63,6 +63,7 @@ type Anime struct {
 	EpisodeCount   int              `json:"episodeCount" editable:"true"`
 	EpisodeLength  int              `json:"episodeLength" editable:"true"`
 	Source         string           `json:"source" editable:"true" datalist:"anime-source"`
+	Image          AnimeImage       `json:"image"`
 	ImageExtension string           `json:"imageExtension"`
 	FirstChannel   string           `json:"firstChannel"`
 	Rating         *AnimeRating     `json:"rating"`
@@ -128,9 +129,9 @@ func (anime *Anime) Licensors() []*Company {
 	return companies
 }
 
-// Image ...
-func (anime *Anime) Image(size string) string {
-	return fmt.Sprintf("//%s/images/anime/%s/%s%s", MediaHost, size, anime.ID, anime.ImageExtension)
+// ImageLink ...
+func (anime *Anime) ImageLink(size string) string {
+	return fmt.Sprintf("//%s/images/anime/%s/%s%s?%v", MediaHost, size, anime.ID, anime.Image.Extension, anime.Image.LastModified)
 }
 
 // Characters ...
@@ -329,7 +330,7 @@ func (anime *Anime) RefreshEpisodes() error {
 				user.SendNotification(&PushNotification{
 					Title:   anime.Title.ByUser(user),
 					Message: "Episode " + strconv.Itoa(newAvailableCount) + " has been released!",
-					Icon:    anime.Image("medium"),
+					Icon:    anime.ImageLink("medium"),
 					Link:    "https://notify.moe" + anime.Link(),
 					Type:    NotificationTypeAnimeEpisode,
 				})

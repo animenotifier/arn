@@ -33,7 +33,7 @@ func (output *OriginalFile) Save(avatar *MetaImage, baseName string) error {
 	data := avatar.Data
 	img := avatar.Image
 
-	if img.Bounds().Dx() > output.Width || img.Bounds().Dy() > output.Height {
+	if (output.Width != 0 || output.Height != 0) && (img.Bounds().Dx() > output.Width || img.Bounds().Dy() > output.Height) {
 		img = imaging.Fill(img, output.Width, output.Height, imaging.Center, imaging.Lanczos)
 		modified = true
 	}

@@ -8,23 +8,25 @@ import (
 	"github.com/animenotifier/arn/imageoutput"
 )
 
-// CoverMaxWidth is the maximum size for covers.
-const CoverMaxWidth = 1920
+const (
+	// CoverMaxWidth is the maximum size for covers.
+	CoverMaxWidth = 1920
 
-// CoverMaxHeight is the maximum height for covers.
-const CoverMaxHeight = 450
+	// CoverMaxHeight is the maximum height for covers.
+	CoverMaxHeight = 450
 
-// CoverSmallWidth is the width used for mobile phones.
-const CoverSmallWidth = 640
+	// CoverSmallWidth is the width used for mobile phones.
+	CoverSmallWidth = 640
 
-// CoverSmallHeight is the height used for mobile phones.
-const CoverSmallHeight = 640
+	// CoverSmallHeight is the height used for mobile phones.
+	CoverSmallHeight = 640
 
-// CoverWebPQuality is the WebP quality of cover images.
-const CoverWebPQuality = AvatarWebPQuality
+	// CoverWebPQuality is the WebP quality of cover images.
+	CoverWebPQuality = AvatarWebPQuality
 
-// CoverJPEGQuality is the JPEG quality of cover images.
-const CoverJPEGQuality = CoverWebPQuality
+	// CoverJPEGQuality is the JPEG quality of cover images.
+	CoverJPEGQuality = CoverWebPQuality
+)
 
 // Define the cover image outputs
 var coverImageOutputs = []imageoutput.Output{
