@@ -167,8 +167,8 @@ func (anime *Anime) StartDateTime() time.Time {
 	return t
 }
 
-// AddMapping adds the ID of an external site to the anime.
-func (anime *Anime) AddMapping(serviceName string, serviceID string, userID string) {
+// SetMapping sets the ID of an external site to the anime.
+func (anime *Anime) SetMapping(serviceName string, serviceID string, userID string) {
 	// Is the ID valid?
 	if serviceID == "" {
 		return
@@ -176,7 +176,8 @@ func (anime *Anime) AddMapping(serviceName string, serviceID string, userID stri
 
 	// If it already exists we don't need to add it
 	for _, external := range anime.Mappings {
-		if external.Service == serviceName && external.ServiceID == serviceID {
+		if external.Service == serviceName {
+			external.ServiceID = serviceID
 			return
 		}
 	}
