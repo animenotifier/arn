@@ -10,10 +10,10 @@ const (
 	longSummaryBonus          = 0.1
 	popularityThreshold       = 5
 	popularityPenalty         = 8.0
-	watchingPopularityWeight  = 0.3
-	completedPopularityWeight = 0.3
-	plannedPopularityWeight   = 0.2
-	droppedPopularityWeight   = -0.2
+	watchingPopularityWeight  = 0.25
+	completedPopularityWeight = watchingPopularityWeight
+	plannedPopularityWeight   = watchingPopularityWeight * 0.666
+	droppedPopularityWeight   = -plannedPopularityWeight
 	agePenalty                = 11.0
 	ageThreshold              = 6 * 30 * 24 * time.Hour
 )
