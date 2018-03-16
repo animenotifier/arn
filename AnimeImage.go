@@ -196,7 +196,7 @@ func (anime *Anime) SetImage(metaImage *imageoutput.MetaImage) error {
 		}
 	}
 
-	anime.Image.Extension = metaImage.Extension()
+	anime.Image.Extension = ".jpg"
 	anime.Image.LastModified = time.Now().Unix()
 	return lastError
 }
