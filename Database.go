@@ -4,6 +4,7 @@ import (
 	"github.com/aerogo/api"
 	"github.com/aerogo/nano"
 	"github.com/animenotifier/jikan"
+	"github.com/animenotifier/kitsu"
 	"github.com/animenotifier/mal"
 )
 
@@ -56,6 +57,11 @@ var DB = Node.Namespace("arn").RegisterTypes(
 // MAL is the client for the MyAnimeList database.
 var MAL = Node.Namespace("mal").RegisterTypes(
 	(*mal.Anime)(nil),
+)
+
+// Kitsu is the client for the Kitsu database.
+var Kitsu = Node.Namespace("kitsu").RegisterTypes(
+	(*kitsu.Anime)(nil),
 )
 
 // API ...
