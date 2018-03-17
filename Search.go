@@ -20,9 +20,9 @@ type SearchResult struct {
 }
 
 // Search is a fuzzy search.
-func Search(term string, maxUsers, maxAnime, maxPosts, maxThreads, maxTracks int, maxCharacters int) ([]*User, []*Anime, []*Post, []*Thread, []*SoundTrack, []*Character) {
+func Search(term string, maxUsers, maxAnime, maxPosts, maxThreads, maxTracks, maxCharacters, maxCompanies int) ([]*User, []*Anime, []*Post, []*Thread, []*SoundTrack, []*Character, []*Company) {
 	if term == "" {
-		return nil, nil, nil, nil, nil, nil
+		return nil, nil, nil, nil, nil, nil, nil
 	}
 
 	var userResults []*User
@@ -31,6 +31,7 @@ func Search(term string, maxUsers, maxAnime, maxPosts, maxThreads, maxTracks int
 	var threadResults []*Thread
 	var trackResults []*SoundTrack
 	var characterResults []*Character
+	var companyResults []*Company
 
 	flow.Parallel(func() {
 		userResults = SearchUsers(term, maxUsers)
@@ -44,9 +45,11 @@ func Search(term string, maxUsers, maxAnime, maxPosts, maxThreads, maxTracks int
 		trackResults = SearchSoundTracks(term, maxTracks)
 	}, func() {
 		characterResults = SearchCharacters(term, maxCharacters)
+	}, func() {
+		companyResults = SearchCompanies(term, maxCompanies)
 	})
 
-	return userResults, animeResults, postResults, threadResults, trackResults, characterResults
+	return userResults, animeResults, postResults, threadResults, trackResults, characterResults, companyResults
 }
 
 // SearchCharacters searches all characters.
@@ -145,6 +148,10 @@ func SearchSoundTracks(originalTerm string, maxLength int) []*SoundTrack {
 	for track := range StreamSoundTracks() {
 		if track.ID == originalTerm {
 			return []*SoundTrack{track}
+		}
+
+		if track.IsDraft {
+			continue
 		}
 
 		text := strings.ToLower(track.Title)
@@ -294,6 +301,52 @@ func SearchUsers(originalTerm string, maxLength int) []*User {
 
 	for i, result := range results {
 		final[i] = result.obj.(*User)
+	}
+
+	return final
+}
+
+// SearchCompanies searches all companies.
+func SearchCompanies(originalTerm string, maxLength int) []*Company {
+	term := RemoveSpecialCharacters(strings.ToLower(originalTerm))
+
+	var results []*SearchResult
+
+	for company := range StreamCompanies() {
+		if company.ID == originalTerm {
+			return []*Company{company}
+		}
+
+		if company.IsDraft {
+			continue
+		}
+
+		text := RemoveSpecialCharacters(strings.ToLower(company.Name.English))
+		similarity := AdvancedStringSimilarity(term, text)
+
+		if similarity >= MinimumStringSimilarity {
+			results = append(results, &SearchResult{
+				obj:        company,
+				similarity: similarity,
+			})
+		}
+	}
+
+	// Sort
+	sort.Slice(results, func(i, j int) bool {
+		return results[i].similarity > results[j].similarity
+	})
+
+	// Limit
+	if len(results) >= maxLength {
+		results = results[:maxLength]
+	}
+
+	// Final list
+	final := make([]*Company, len(results), len(results))
+
+	for i, result := range results {
+		final[i] = result.obj.(*Company)
 	}
 
 	return final
