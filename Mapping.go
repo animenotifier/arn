@@ -4,8 +4,6 @@ package arn
 type Mapping struct {
 	Service   string `json:"service" editable:"true"`
 	ServiceID string `json:"serviceId" editable:"true"`
-	Created   string `json:"created"`
-	CreatedBy string `json:"createdBy"`
 }
 
 // Name ...

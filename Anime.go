@@ -180,7 +180,7 @@ func (anime *Anime) StartDateTime() time.Time {
 }
 
 // SetMapping sets the ID of an external site to the anime.
-func (anime *Anime) SetMapping(serviceName string, serviceID string, userID string) {
+func (anime *Anime) SetMapping(serviceName string, serviceID string) {
 	// Is the ID valid?
 	if serviceID == "" {
 		return
@@ -198,8 +198,6 @@ func (anime *Anime) SetMapping(serviceName string, serviceID string, userID stri
 	anime.Mappings = append(anime.Mappings, &Mapping{
 		Service:   serviceName,
 		ServiceID: serviceID,
-		Created:   DateTimeUTC(),
-		CreatedBy: userID,
 	})
 
 	// Add the references
@@ -212,7 +210,6 @@ func (anime *Anime) SetMapping(serviceName string, serviceID string, userID stri
 			AnimeID:   anime.ID,
 			ServiceID: serviceID,
 			Edited:    DateTimeUTC(),
-			EditedBy:  userID,
 		})
 
 	case "myanimelist/anime":
@@ -220,7 +217,6 @@ func (anime *Anime) SetMapping(serviceName string, serviceID string, userID stri
 			AnimeID:   anime.ID,
 			ServiceID: serviceID,
 			Edited:    DateTimeUTC(),
-			EditedBy:  userID,
 		})
 	}
 }

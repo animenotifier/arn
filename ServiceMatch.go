@@ -5,7 +5,7 @@ type ServiceMatch struct {
 	AnimeID    string  `json:"animeId"`
 	ServiceID  string  `json:"serviceId"`
 	Similarity float64 `json:"similarity"`
-	Edited     string      `json:"edited"`
+	Edited     string  `json:"edited"`
 	EditedBy   string  `json:"editedBy"`
 }
 
