@@ -85,6 +85,18 @@ type Anime struct {
 	// CreatedBy      string        `json:"createdBy"`
 }
 
+// NewAnime creates a new anime.
+func NewAnime() *Anime {
+	return &Anime{
+		Title:      &AnimeTitle{},
+		Rating:     &AnimeRating{},
+		Popularity: &AnimePopularity{},
+		Mappings:   []*Mapping{},
+		Trailers:   []*ExternalMedia{},
+		Created:    DateTimeUTC(),
+	}
+}
+
 // GetAnime ...
 func GetAnime(id string) (*Anime, error) {
 	obj, err := DB.Get("Anime", id)
