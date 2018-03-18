@@ -62,6 +62,7 @@ var MAL = Node.Namespace("mal").RegisterTypes(
 // Kitsu is the client for the Kitsu database.
 var Kitsu = Node.Namespace("kitsu").RegisterTypes(
 	(*kitsu.Anime)(nil),
+	(*kitsu.Mapping)(nil),
 )
 
 // API ...
