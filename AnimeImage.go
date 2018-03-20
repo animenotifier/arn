@@ -37,6 +37,9 @@ const (
 	// AnimeImageQualityBonusLowDPI ...
 	AnimeImageQualityBonusLowDPI = 10
 
+	// AnimeImageQualityBonusLarge ...
+	AnimeImageQualityBonusLarge = 5
+
 	// AnimeImageQualityBonusMedium ...
 	AnimeImageQualityBonusMedium = 10
 
@@ -58,7 +61,7 @@ var animeImageOutputs = []imageoutput.Output{
 		Directory: path.Join(Root, "images/anime/large/"),
 		Width:     AnimeImageLargeWidth,
 		Height:    AnimeImageLargeHeight,
-		Quality:   AnimeImageJPEGQuality + AnimeImageQualityBonusLowDPI,
+		Quality:   AnimeImageJPEGQuality + AnimeImageQualityBonusLowDPI + AnimeImageQualityBonusLarge,
 	},
 
 	// JPEG - Medium
@@ -82,7 +85,7 @@ var animeImageOutputs = []imageoutput.Output{
 		Directory: path.Join(Root, "images/anime/large/"),
 		Width:     AnimeImageLargeWidth,
 		Height:    AnimeImageLargeHeight,
-		Quality:   AnimeImageWebPQuality + AnimeImageQualityBonusLowDPI,
+		Quality:   AnimeImageWebPQuality + AnimeImageQualityBonusLowDPI + AnimeImageQualityBonusLarge,
 	},
 
 	// WebP - Medium
@@ -109,7 +112,7 @@ var animeImageOutputsHighDPI = []imageoutput.Output{
 		Directory: path.Join(Root, "images/anime/large/"),
 		Width:     AnimeImageLargeWidth * 2,
 		Height:    AnimeImageLargeHeight * 2,
-		Quality:   AnimeImageJPEGQuality,
+		Quality:   AnimeImageJPEGQuality + AnimeImageQualityBonusLarge,
 	},
 
 	// JPEG - Medium
@@ -133,7 +136,7 @@ var animeImageOutputsHighDPI = []imageoutput.Output{
 		Directory: path.Join(Root, "images/anime/large/"),
 		Width:     AnimeImageLargeWidth * 2,
 		Height:    AnimeImageLargeHeight * 2,
-		Quality:   AnimeImageWebPQuality,
+		Quality:   AnimeImageWebPQuality + AnimeImageQualityBonusLarge,
 	},
 
 	// WebP - Medium
