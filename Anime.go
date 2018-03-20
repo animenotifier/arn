@@ -142,7 +142,13 @@ func (anime *Anime) Licensors() []*Company {
 
 // ImageLink ...
 func (anime *Anime) ImageLink(size string) string {
-	return fmt.Sprintf("//%s/images/anime/%s/%s%s?%v", MediaHost, size, anime.ID, ".jpg", anime.Image.LastModified)
+	extension := ".jpg"
+
+	if size == "original" {
+		extension = anime.Image.Extension
+	}
+
+	return fmt.Sprintf("//%s/images/anime/%s/%s%s?%v", MediaHost, size, anime.ID, extension, anime.Image.LastModified)
 }
 
 // Characters ...
