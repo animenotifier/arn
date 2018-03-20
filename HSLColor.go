@@ -13,8 +13,13 @@ type HSLColor struct {
 	Lightness  float64 `json:"lightness"`
 }
 
-// String returns a representation like hsl(0, 0%, 0%)
+// String returns a representation like hsl(0, 0%, 0%).
+// If all values are 0, it returns an empty string.
 func (color HSLColor) String() string {
+	if color.Hue == 0 && color.Saturation == 0 && color.Lightness == 0 {
+		return ""
+	}
+
 	return fmt.Sprintf("hsl(%.1f, %.1f%%, %.1f%%)", color.Hue*360, color.Saturation*100, color.Lightness*100)
 }
 
