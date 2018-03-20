@@ -52,32 +52,31 @@ func init() {
 
 // Anime represents an anime.
 type Anime struct {
-	ID             string           `json:"id"`
-	Type           string           `json:"type" editable:"true"`
-	Title          *AnimeTitle      `json:"title" editable:"true"`
-	Summary        string           `json:"summary" editable:"true" type:"textarea"`
-	Status         string           `json:"status" editable:"true" datalist:"anime-status"`
-	Genres         []string         `json:"genres" editable:"true"`
-	StartDate      string           `json:"startDate" editable:"true"`
-	EndDate        string           `json:"endDate" editable:"true"`
-	EpisodeCount   int              `json:"episodeCount" editable:"true"`
-	EpisodeLength  int              `json:"episodeLength" editable:"true"`
-	Source         string           `json:"source" editable:"true" datalist:"anime-source"`
-	Image          AnimeImage       `json:"image"`
-	ImageExtension string           `json:"imageExtension"`
-	FirstChannel   string           `json:"firstChannel"`
-	Rating         *AnimeRating     `json:"rating"`
-	Popularity     *AnimePopularity `json:"popularity"`
-	Trailers       []*ExternalMedia `json:"trailers" editable:"true"`
-	Mappings       []*Mapping       `json:"mappings" editable:"true"`
-	StudioIDs      []string         `json:"studios" editable:"true"`
-	ProducerIDs    []string         `json:"producers" editable:"true"`
-	LicensorIDs    []string         `json:"licensors" editable:"true"`
-	Links          []*Link          `json:"links" editable:"true"`
-	Created        string           `json:"created"`
-	CreatedBy      string           `json:"createdBy"`
-	Edited         string           `json:"edited"`
-	EditedBy       string           `json:"editedBy"`
+	ID            string           `json:"id"`
+	Type          string           `json:"type" editable:"true"`
+	Title         *AnimeTitle      `json:"title" editable:"true"`
+	Summary       string           `json:"summary" editable:"true" type:"textarea"`
+	Status        string           `json:"status" editable:"true" datalist:"anime-status"`
+	Genres        []string         `json:"genres" editable:"true"`
+	StartDate     string           `json:"startDate" editable:"true"`
+	EndDate       string           `json:"endDate" editable:"true"`
+	EpisodeCount  int              `json:"episodeCount" editable:"true"`
+	EpisodeLength int              `json:"episodeLength" editable:"true"`
+	Source        string           `json:"source" editable:"true" datalist:"anime-source"`
+	Image         AnimeImage       `json:"image"`
+	FirstChannel  string           `json:"firstChannel"`
+	Rating        *AnimeRating     `json:"rating"`
+	Popularity    *AnimePopularity `json:"popularity"`
+	Trailers      []*ExternalMedia `json:"trailers" editable:"true"`
+	Mappings      []*Mapping       `json:"mappings" editable:"true"`
+	StudioIDs     []string         `json:"studios" editable:"true"`
+	ProducerIDs   []string         `json:"producers" editable:"true"`
+	LicensorIDs   []string         `json:"licensors" editable:"true"`
+	Links         []*Link          `json:"links" editable:"true"`
+	Created       string           `json:"created"`
+	CreatedBy     string           `json:"createdBy"`
+	Edited        string           `json:"edited"`
+	EditedBy      string           `json:"editedBy"`
 
 	// SynopsisSource string        `json:"synopsisSource" editable:"true"`
 	// Hashtag        string        `json:"hashtag"`
@@ -143,7 +142,7 @@ func (anime *Anime) Licensors() []*Company {
 
 // ImageLink ...
 func (anime *Anime) ImageLink(size string) string {
-	return fmt.Sprintf("//%s/images/anime/%s/%s%s?%v", MediaHost, size, anime.ID, anime.Image.Extension, anime.Image.LastModified)
+	return fmt.Sprintf("//%s/images/anime/%s/%s%s?%v", MediaHost, size, anime.ID, ".jpg", anime.Image.LastModified)
 }
 
 // Characters ...
