@@ -151,6 +151,17 @@ func (anime *Anime) ImageLink(size string) string {
 	return fmt.Sprintf("//%s/images/anime/%s/%s%s?%v", MediaHost, size, anime.ID, extension, anime.Image.LastModified)
 }
 
+// AverageColor returns the average color of the image.
+func (anime *Anime) AverageColor() string {
+	color := anime.Image.AverageColor
+
+	if color.Hue == 0 && color.Saturation == 0 && color.Lightness == 0 {
+		return ""
+	}
+
+	return color.String()
+}
+
 // Characters ...
 func (anime *Anime) Characters() *AnimeCharacters {
 	characters, _ := GetAnimeCharacters(anime.ID)

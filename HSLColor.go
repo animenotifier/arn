@@ -14,13 +14,13 @@ type HSLColor struct {
 }
 
 // String returns a representation like hsl(0, 0%, 0%).
-// If all values are 0, it returns an empty string.
 func (color HSLColor) String() string {
-	if color.Hue == 0 && color.Saturation == 0 && color.Lightness == 0 {
-		return ""
-	}
-
 	return fmt.Sprintf("hsl(%.1f, %.1f%%, %.1f%%)", color.Hue*360, color.Saturation*100, color.Lightness*100)
+}
+
+// StringWithAlpha returns a representation like hsla(0, 0%, 0%, 0.5).
+func (color HSLColor) StringWithAlpha(alpha float64) string {
+	return fmt.Sprintf("hsla(%.1f, %.1f%%, %.1f%%, %.2f)", color.Hue*360, color.Saturation*100, color.Lightness*100, alpha)
 }
 
 // GetAverageColor returns the average color of an image in HSL format.
