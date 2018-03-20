@@ -158,10 +158,11 @@ var animeImageOutputsHighDPI = []imageoutput.Output{
 
 // AnimeImage ...
 type AnimeImage struct {
-	Extension    string `json:"extension"`
-	Width        int    `json:"width"`
-	Height       int    `json:"height"`
-	LastModified int64  `json:"lastModified"`
+	Extension    string   `json:"extension"`
+	Width        int      `json:"width"`
+	Height       int      `json:"height"`
+	AverageColor HSLColor `json:"averageColor"`
+	LastModified int64    `json:"lastModified"`
 }
 
 // SetImageBytes accepts a byte buffer that represents an image file and updates the anime image.
@@ -205,6 +206,7 @@ func (anime *Anime) SetImage(metaImage *imageoutput.MetaImage) error {
 	anime.Image.Extension = metaImage.Extension()
 	anime.Image.Width = metaImage.Image.Bounds().Dx()
 	anime.Image.Height = metaImage.Image.Bounds().Dy()
+	anime.Image.AverageColor = GetAverageColor(metaImage.Image)
 	anime.Image.LastModified = time.Now().Unix()
 	return lastError
 }
