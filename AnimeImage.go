@@ -3,6 +3,7 @@ package arn
 import (
 	"bytes"
 	"image"
+	"path"
 	"time"
 
 	"github.com/animenotifier/arn/imageoutput"
@@ -47,14 +48,14 @@ const (
 var animeImageOutputs = []imageoutput.Output{
 	// Original at full size
 	&imageoutput.OriginalFile{
-		Directory: "images/anime/original/",
+		Directory: path.Join(Root, "images/anime/original/"),
 		Width:     0,
 		Height:    0,
 	},
 
 	// JPEG - Large
 	&imageoutput.JPEGFile{
-		Directory: "images/anime/large/",
+		Directory: path.Join(Root, "images/anime/large/"),
 		Width:     AnimeImageLargeWidth,
 		Height:    AnimeImageLargeHeight,
 		Quality:   AnimeImageJPEGQuality + AnimeImageQualityBonusLowDPI,
@@ -62,7 +63,7 @@ var animeImageOutputs = []imageoutput.Output{
 
 	// JPEG - Medium
 	&imageoutput.JPEGFile{
-		Directory: "images/anime/medium/",
+		Directory: path.Join(Root, "images/anime/medium/"),
 		Width:     AnimeImageMediumWidth,
 		Height:    AnimeImageMediumHeight,
 		Quality:   AnimeImageJPEGQuality + AnimeImageQualityBonusLowDPI + AnimeImageQualityBonusMedium,
@@ -70,7 +71,7 @@ var animeImageOutputs = []imageoutput.Output{
 
 	// JPEG - Small
 	&imageoutput.JPEGFile{
-		Directory: "images/anime/small/",
+		Directory: path.Join(Root, "images/anime/small/"),
 		Width:     AnimeImageSmallWidth,
 		Height:    AnimeImageSmallHeight,
 		Quality:   AnimeImageJPEGQuality + AnimeImageQualityBonusLowDPI + AnimeImageQualityBonusSmall,
@@ -78,7 +79,7 @@ var animeImageOutputs = []imageoutput.Output{
 
 	// WebP - Large
 	&imageoutput.WebPFile{
-		Directory: "images/anime/large/",
+		Directory: path.Join(Root, "images/anime/large/"),
 		Width:     AnimeImageLargeWidth,
 		Height:    AnimeImageLargeHeight,
 		Quality:   AnimeImageWebPQuality + AnimeImageQualityBonusLowDPI,
@@ -86,7 +87,7 @@ var animeImageOutputs = []imageoutput.Output{
 
 	// WebP - Medium
 	&imageoutput.WebPFile{
-		Directory: "images/anime/medium/",
+		Directory: path.Join(Root, "images/anime/medium/"),
 		Width:     AnimeImageMediumWidth,
 		Height:    AnimeImageMediumHeight,
 		Quality:   AnimeImageWebPQuality + AnimeImageQualityBonusLowDPI + AnimeImageQualityBonusMedium,
@@ -94,7 +95,7 @@ var animeImageOutputs = []imageoutput.Output{
 
 	// WebP - Small
 	&imageoutput.WebPFile{
-		Directory: "images/anime/small/",
+		Directory: path.Join(Root, "images/anime/small/"),
 		Width:     AnimeImageSmallWidth,
 		Height:    AnimeImageSmallHeight,
 		Quality:   AnimeImageWebPQuality + AnimeImageQualityBonusLowDPI + AnimeImageQualityBonusSmall,
@@ -105,7 +106,7 @@ var animeImageOutputs = []imageoutput.Output{
 var animeImageOutputsHighDPI = []imageoutput.Output{
 	// JPEG - Large
 	&imageoutput.JPEGFile{
-		Directory: "images/anime/large/",
+		Directory: path.Join(Root, "images/anime/large/"),
 		Width:     AnimeImageLargeWidth * 2,
 		Height:    AnimeImageLargeHeight * 2,
 		Quality:   AnimeImageJPEGQuality,
@@ -113,7 +114,7 @@ var animeImageOutputsHighDPI = []imageoutput.Output{
 
 	// JPEG - Medium
 	&imageoutput.JPEGFile{
-		Directory: "images/anime/medium/",
+		Directory: path.Join(Root, "images/anime/medium/"),
 		Width:     AnimeImageMediumWidth * 2,
 		Height:    AnimeImageMediumHeight * 2,
 		Quality:   AnimeImageJPEGQuality + AnimeImageQualityBonusMedium,
@@ -121,7 +122,7 @@ var animeImageOutputsHighDPI = []imageoutput.Output{
 
 	// JPEG - Small
 	&imageoutput.JPEGFile{
-		Directory: "images/anime/small/",
+		Directory: path.Join(Root, "images/anime/small/"),
 		Width:     AnimeImageSmallWidth * 2,
 		Height:    AnimeImageSmallHeight * 2,
 		Quality:   AnimeImageJPEGQuality + AnimeImageQualityBonusSmall,
@@ -129,7 +130,7 @@ var animeImageOutputsHighDPI = []imageoutput.Output{
 
 	// WebP - Large
 	&imageoutput.WebPFile{
-		Directory: "images/anime/large/",
+		Directory: path.Join(Root, "images/anime/large/"),
 		Width:     AnimeImageLargeWidth * 2,
 		Height:    AnimeImageLargeHeight * 2,
 		Quality:   AnimeImageWebPQuality,
@@ -137,7 +138,7 @@ var animeImageOutputsHighDPI = []imageoutput.Output{
 
 	// WebP - Medium
 	&imageoutput.WebPFile{
-		Directory: "images/anime/medium/",
+		Directory: path.Join(Root, "images/anime/medium/"),
 		Width:     AnimeImageMediumWidth * 2,
 		Height:    AnimeImageMediumHeight * 2,
 		Quality:   AnimeImageWebPQuality + AnimeImageQualityBonusMedium,
@@ -145,7 +146,7 @@ var animeImageOutputsHighDPI = []imageoutput.Output{
 
 	// WebP - Small
 	&imageoutput.WebPFile{
-		Directory: "images/anime/small/",
+		Directory: path.Join(Root, "images/anime/small/"),
 		Width:     AnimeImageSmallWidth * 2,
 		Height:    AnimeImageSmallHeight * 2,
 		Quality:   AnimeImageWebPQuality + AnimeImageQualityBonusSmall,

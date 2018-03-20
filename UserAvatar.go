@@ -3,6 +3,7 @@ package arn
 import (
 	"bytes"
 	"image"
+	"path"
 	"time"
 
 	"github.com/animenotifier/arn/imageoutput"
@@ -23,21 +24,21 @@ const (
 var avatarOutputs = []imageoutput.Output{
 	// Original - Large
 	&imageoutput.OriginalFile{
-		Directory: "images/avatars/large/",
+		Directory: path.Join(Root, "images/avatars/large/"),
 		Width:     AvatarMaxSize,
 		Height:    AvatarMaxSize,
 	},
 
 	// Original - Small
 	&imageoutput.OriginalFile{
-		Directory: "images/avatars/small/",
+		Directory: path.Join(Root, "images/avatars/small/"),
 		Width:     AvatarSmallSize,
 		Height:    AvatarSmallSize,
 	},
 
 	// WebP - Large
 	&imageoutput.WebPFile{
-		Directory: "images/avatars/large/",
+		Directory: path.Join(Root, "images/avatars/large/"),
 		Width:     AvatarMaxSize,
 		Height:    AvatarMaxSize,
 		Quality:   AvatarWebPQuality,
@@ -45,7 +46,7 @@ var avatarOutputs = []imageoutput.Output{
 
 	// WebP - Small
 	&imageoutput.WebPFile{
-		Directory: "images/avatars/small/",
+		Directory: path.Join(Root, "images/avatars/small/"),
 		Width:     AvatarSmallSize,
 		Height:    AvatarSmallSize,
 		Quality:   AvatarWebPQuality,

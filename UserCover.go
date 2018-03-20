@@ -3,6 +3,7 @@ package arn
 import (
 	"bytes"
 	"image"
+	"path"
 	"time"
 
 	"github.com/animenotifier/arn/imageoutput"
@@ -32,7 +33,7 @@ const (
 var coverImageOutputs = []imageoutput.Output{
 	// JPEG - Large
 	&imageoutput.JPEGFile{
-		Directory: "images/covers/large/",
+		Directory: path.Join(Root, "images/covers/large/"),
 		Width:     CoverMaxWidth,
 		Height:    CoverMaxHeight,
 		Quality:   CoverJPEGQuality,
@@ -40,7 +41,7 @@ var coverImageOutputs = []imageoutput.Output{
 
 	// JPEG - Small
 	&imageoutput.JPEGFile{
-		Directory: "images/covers/small/",
+		Directory: path.Join(Root, "images/covers/small/"),
 		Width:     CoverSmallWidth,
 		Height:    CoverSmallHeight,
 		Quality:   CoverJPEGQuality,
@@ -48,7 +49,7 @@ var coverImageOutputs = []imageoutput.Output{
 
 	// WebP - Large
 	&imageoutput.WebPFile{
-		Directory: "images/covers/large/",
+		Directory: path.Join(Root, "images/covers/large/"),
 		Width:     CoverMaxWidth,
 		Height:    CoverMaxHeight,
 		Quality:   CoverWebPQuality,
@@ -56,7 +57,7 @@ var coverImageOutputs = []imageoutput.Output{
 
 	// WebP - Small
 	&imageoutput.WebPFile{
-		Directory: "images/covers/small/",
+		Directory: path.Join(Root, "images/covers/small/"),
 		Width:     CoverSmallWidth,
 		Height:    CoverSmallHeight,
 		Quality:   CoverWebPQuality,
