@@ -7,6 +7,7 @@ import (
 	"image/jpeg"
 	"image/png"
 	"io/ioutil"
+	"path"
 
 	"github.com/disintegration/imaging"
 )
@@ -59,6 +60,6 @@ func (output *OriginalFile) Save(avatar *MetaImage, baseName string) error {
 	}
 
 	// Write to file
-	fileName := output.Directory + baseName + extension
+	fileName := path.Join(output.Directory, baseName+extension)
 	return ioutil.WriteFile(fileName, data, 0644)
 }

@@ -3,6 +3,7 @@ package imageoutput
 import (
 	"image"
 	"os"
+	"path"
 
 	"github.com/chai2010/webp"
 	"github.com/disintegration/imaging"
@@ -21,12 +22,12 @@ func (output *WebPFile) Save(avatar *MetaImage, baseName string) error {
 	img := avatar.Image
 
 	// Resize & crop
-	if img.Bounds().Dx() > output.Width || img.Bounds().Dy() > output.Height {
+	if img.Bounds().Dx() != output.Width || img.Bounds().Dy() != output.Height {
 		img = imaging.Fill(img, output.Width, output.Height, imaging.Center, imaging.Lanczos)
 	}
 
 	// Write to file
-	fileName := output.Directory + baseName + ".webp"
+	fileName := path.Join(output.Directory, baseName+".webp")
 	return saveWebP(img, fileName, output.Quality)
 }
 
