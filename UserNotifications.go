@@ -70,10 +70,14 @@ func (list *UserNotifications) Contains(notificationID string) bool {
 // Notifications returns a slice of all the notifications.
 func (list *UserNotifications) Notifications() []*Notification {
 	notificationsObj := DB.GetMany("Notification", list.Items)
-	notifications := make([]*Notification, len(notificationsObj), len(notificationsObj))
+	notifications := []*Notification{}
 
-	for i, obj := range notificationsObj {
-		notifications[i] = obj.(*Notification)
+	for _, obj := range notificationsObj {
+		notification, ok := obj.(*Notification)
+
+		if ok {
+			notifications = append(notifications, notification)
+		}
 	}
 
 	return notifications
