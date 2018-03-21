@@ -417,7 +417,7 @@ func (user *User) SetEmail(newName string) error {
 // RefreshOsuInfo refreshes a user's Osu information.
 func (user *User) RefreshOsuInfo() error {
 	if user.Accounts.Osu.Nick == "" {
-		return errors.New("User doesn't have an osu username")
+		return nil
 	}
 
 	osu, err := osu.GetUser(user.Accounts.Osu.Nick)
