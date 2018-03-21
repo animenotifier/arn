@@ -109,10 +109,14 @@ func GetAnime(id string) (*Anime, error) {
 
 // Studios returns the list of studios for this anime.
 func (anime *Anime) Studios() []*Company {
-	companies := make([]*Company, len(anime.StudioIDs), len(anime.StudioIDs))
+	companies := []*Company{}
 
-	for i, obj := range DB.GetMany("Company", anime.StudioIDs) {
-		companies[i] = obj.(*Company)
+	for _, obj := range DB.GetMany("Company", anime.StudioIDs) {
+		if obj == nil {
+			continue
+		}
+
+		companies = append(companies, obj.(*Company))
 	}
 
 	return companies
@@ -120,10 +124,14 @@ func (anime *Anime) Studios() []*Company {
 
 // Producers returns the list of producers for this anime.
 func (anime *Anime) Producers() []*Company {
-	companies := make([]*Company, len(anime.ProducerIDs), len(anime.ProducerIDs))
+	companies := []*Company{}
 
-	for i, obj := range DB.GetMany("Company", anime.ProducerIDs) {
-		companies[i] = obj.(*Company)
+	for _, obj := range DB.GetMany("Company", anime.ProducerIDs) {
+		if obj == nil {
+			continue
+		}
+
+		companies = append(companies, obj.(*Company))
 	}
 
 	return companies
@@ -131,10 +139,14 @@ func (anime *Anime) Producers() []*Company {
 
 // Licensors returns the list of licensors for this anime.
 func (anime *Anime) Licensors() []*Company {
-	companies := make([]*Company, len(anime.LicensorIDs), len(anime.LicensorIDs))
+	companies := []*Company{}
 
-	for i, obj := range DB.GetMany("Company", anime.LicensorIDs) {
-		companies[i] = obj.(*Company)
+	for _, obj := range DB.GetMany("Company", anime.LicensorIDs) {
+		if obj == nil {
+			continue
+		}
+
+		companies = append(companies, obj.(*Company))
 	}
 
 	return companies
