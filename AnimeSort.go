@@ -1,6 +1,7 @@
 package arn
 
 import (
+	"fmt"
 	"sort"
 	"time"
 )
@@ -47,49 +48,8 @@ func SortAnimeByQualityDetailed(animes []*Anime, filterStatus string) {
 		a := animes[i]
 		b := animes[j]
 
-		scoreA := a.Rating.Overall
-		scoreB := b.Rating.Overall
-
-		scoreA += a.Rating.Story * storyWeight
-		scoreB += b.Rating.Story * storyWeight
-
-		scoreA += a.Rating.Visuals * visualsWeight
-		scoreB += b.Rating.Visuals * visualsWeight
-
-		scoreA += a.Rating.Soundtrack * soundtrackWeight
-		scoreB += b.Rating.Soundtrack * soundtrackWeight
-
-		if a.Status == "current" {
-			scoreA += currentlyAiringBonus
-		}
-
-		if b.Status == "current" {
-			scoreB += currentlyAiringBonus
-		}
-
-		if a.Type == "movie" {
-			scoreA += movieBonus
-		}
-
-		if b.Type == "movie" {
-			scoreB += movieBonus
-		}
-
-		if a.Popularity.Total() < popularityThreshold {
-			scoreA -= popularityPenalty
-		}
-
-		if b.Popularity.Total() < popularityThreshold {
-			scoreB -= popularityPenalty
-		}
-
-		if len(a.Summary) >= 140 {
-			scoreA += longSummaryBonus
-		}
-
-		if len(b.Summary) >= 140 {
-			scoreB += longSummaryBonus
-		}
+		scoreA := a.Score()
+		scoreB := b.Score()
 
 		// If we show currently running shows, rank shows that started a long time ago a bit lower
 		if filterStatus == "current" {
@@ -102,22 +62,46 @@ func SortAnimeByQualityDetailed(animes []*Anime, filterStatus string) {
 			}
 		}
 
-		scoreA += float64(a.Popularity.Watching) * watchingPopularityWeight
-		scoreB += float64(b.Popularity.Watching) * watchingPopularityWeight
-
-		scoreA += float64(a.Popularity.Planned) * plannedPopularityWeight
-		scoreB += float64(b.Popularity.Planned) * plannedPopularityWeight
-
-		scoreA += float64(a.Popularity.Completed) * completedPopularityWeight
-		scoreB += float64(b.Popularity.Completed) * completedPopularityWeight
-
-		scoreA += float64(a.Popularity.Dropped) * droppedPopularityWeight
-		scoreB += float64(b.Popularity.Dropped) * droppedPopularityWeight
-
 		if scoreA == scoreB {
 			return a.Title.Canonical < b.Title.Canonical
 		}
 
 		return scoreA > scoreB
 	})
+}
+
+// Score returns the score used for the anime ranking.
+func (anime *Anime) Score() float64 {
+	score := anime.Rating.Overall
+	score += anime.Rating.Story * storyWeight
+	score += anime.Rating.Visuals * visualsWeight
+	score += anime.Rating.Soundtrack * soundtrackWeight
+
+	score += float64(anime.Popularity.Watching) * watchingPopularityWeight
+	score += float64(anime.Popularity.Planned) * plannedPopularityWeight
+	score += float64(anime.Popularity.Completed) * completedPopularityWeight
+	score += float64(anime.Popularity.Dropped) * droppedPopularityWeight
+
+	if anime.Status == "current" {
+		score += currentlyAiringBonus
+	}
+
+	if anime.Type == "movie" {
+		score += movieBonus
+	}
+
+	if anime.Popularity.Total() < popularityThreshold {
+		score -= popularityPenalty
+	}
+
+	if len(anime.Summary) >= 140 {
+		score += longSummaryBonus
+	}
+
+	return score
+}
+
+// ScoreHumanReadable returns the score used for the anime ranking in human readable format.
+func (anime *Anime) ScoreHumanReadable() string {
+	return fmt.Sprintf("%.1f", anime.Score())
 }
