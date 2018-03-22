@@ -14,10 +14,10 @@ const (
 	completedPopularityWeight = watchingPopularityWeight
 	plannedPopularityWeight   = watchingPopularityWeight * (2.0 / 3.0)
 	droppedPopularityWeight   = -plannedPopularityWeight
-	visualsWeight             = 0.005
-	storyWeight               = 0.005
-	soundtrackWeight          = 0.005
-	movieBonus                = 0.25
+	visualsWeight             = 0.0075
+	storyWeight               = 0.0075
+	soundtrackWeight          = 0.0075
+	movieBonus                = 0.28
 	agePenalty                = 11.0
 	ageThreshold              = 6 * 30 * 24 * time.Hour
 )
