@@ -1,10 +1,18 @@
 package arn
 
-// DefaultAverageRating is the average rating we're going to assume for an anime with 0 ratings.
-const DefaultAverageRating = 0.0
+// DefaultRating is the default rating value.
+const DefaultRating = 0.0
+
+// AverageRating is the center rating in the system.
+// Note that the mathematically correct center would be a little higher,
+// but we don't care about these slight offsets.
+const AverageRating = 5.0
 
 // MaxRating is the maximum rating users can give.
 const MaxRating = 10.0
+
+// RatingCountThreshold is the number of users threshold that, when passed, doesn't dampen the result.
+const RatingCountThreshold = 4
 
 // AnimeRating ...
 type AnimeRating struct {
@@ -12,6 +20,17 @@ type AnimeRating struct {
 	Story      float64 `json:"story" editable:"true"`
 	Visuals    float64 `json:"visuals" editable:"true"`
 	Soundtrack float64 `json:"soundtrack" editable:"true"`
+
+	// The amount of people who rated
+	Count AnimeRatingCount `json:"count"`
+}
+
+// AnimeRatingCount ...
+type AnimeRatingCount struct {
+	Overall    int `json:"overall"`
+	Story      int `json:"story"`
+	Visuals    int `json:"visuals"`
+	Soundtrack int `json:"soundtrack"`
 }
 
 // IsNotRated tells you whether all ratings are zero.
@@ -21,10 +40,10 @@ func (rating *AnimeRating) IsNotRated() bool {
 
 // Reset sets all values to the default anime average rating.
 func (rating *AnimeRating) Reset() {
-	rating.Overall = DefaultAverageRating
-	rating.Story = DefaultAverageRating
-	rating.Visuals = DefaultAverageRating
-	rating.Soundtrack = DefaultAverageRating
+	rating.Overall = DefaultRating
+	rating.Story = DefaultRating
+	rating.Visuals = DefaultRating
+	rating.Soundtrack = DefaultRating
 }
 
 // Clamp ...

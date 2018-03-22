@@ -12,8 +12,12 @@ const (
 	popularityPenalty         = 8.0
 	watchingPopularityWeight  = 0.25
 	completedPopularityWeight = watchingPopularityWeight
-	plannedPopularityWeight   = watchingPopularityWeight * 0.666
+	plannedPopularityWeight   = watchingPopularityWeight * (2.0 / 3.0)
 	droppedPopularityWeight   = -plannedPopularityWeight
+	visualsWeight             = 0.005
+	storyWeight               = 0.005
+	soundtrackWeight          = 0.005
+	movieBonus                = 0.25
 	agePenalty                = 11.0
 	ageThreshold              = 6 * 30 * 24 * time.Hour
 )
@@ -46,12 +50,29 @@ func SortAnimeByQualityDetailed(animes []*Anime, filterStatus string) {
 		scoreA := a.Rating.Overall
 		scoreB := b.Rating.Overall
 
+		scoreA += a.Rating.Story * storyWeight
+		scoreB += b.Rating.Story * storyWeight
+
+		scoreA += a.Rating.Visuals * visualsWeight
+		scoreB += b.Rating.Visuals * visualsWeight
+
+		scoreA += a.Rating.Soundtrack * soundtrackWeight
+		scoreB += b.Rating.Soundtrack * soundtrackWeight
+
 		if a.Status == "current" {
 			scoreA += currentlyAiringBonus
 		}
 
 		if b.Status == "current" {
 			scoreB += currentlyAiringBonus
+		}
+
+		if a.Type == "movie" {
+			scoreA += movieBonus
+		}
+
+		if b.Type == "movie" {
+			scoreB += movieBonus
 		}
 
 		if a.Popularity.Total() < popularityThreshold {
@@ -92,6 +113,10 @@ func SortAnimeByQualityDetailed(animes []*Anime, filterStatus string) {
 
 		scoreA += float64(a.Popularity.Dropped) * droppedPopularityWeight
 		scoreB += float64(b.Popularity.Dropped) * droppedPopularityWeight
+
+		if scoreA == scoreB {
+			return a.Title.Canonical < b.Title.Canonical
+		}
 
 		return scoreA > scoreB
 	})
