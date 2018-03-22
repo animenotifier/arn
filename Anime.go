@@ -17,6 +17,9 @@ import (
 	"github.com/fatih/color"
 )
 
+// AnimeDateFormat describes the anime date format for the date conversion.
+const AnimeDateFormat = "2006-01-02"
+
 // AnimeSourceHumanReadable maps the anime source to a human readable version.
 var AnimeSourceHumanReadable = map[string]string{}
 
@@ -203,7 +206,7 @@ func (anime *Anime) Link() string {
 
 // StartDateTime ...
 func (anime *Anime) StartDateTime() time.Time {
-	t, _ := time.Parse("2006-01-02", anime.StartDate)
+	t, _ := time.Parse(AnimeDateFormat, anime.StartDate)
 	return t
 }
 
