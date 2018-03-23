@@ -1,5 +1,7 @@
 package arn
 
+import "fmt"
+
 const (
 	// SortByAiringDate sorts your watching list by airing date.
 	SortByAiringDate = "airing date"
@@ -34,6 +36,7 @@ type Settings struct {
 	Avatar        AvatarSettings       `json:"avatar"`
 	Format        FormatSettings       `json:"format"`
 	Notification  NotificationSettings `json:"notification"`
+	Editor        EditorSettings       `json:"editor"`
 	Theme         string               `json:"theme" editable:"true"`
 }
 
@@ -47,6 +50,39 @@ type NotificationSettings struct {
 	GroupPostLikes       bool   `json:"groupPostLikes" editable:"true"`
 	QuoteLikes           bool   `json:"quoteLikes" editable:"true"`
 	SoundTrackLikes      bool   `json:"soundTrackLikes" editable:"true"`
+}
+
+// EditorSettings ...
+type EditorSettings struct {
+	Filter EditorFilterSettings `json:"filter"`
+}
+
+// EditorFilterSettings ...
+type EditorFilterSettings struct {
+	Year   string `json:"year" editable:"true"`
+	Status string `json:"status" editable:"true"`
+	Type   string `json:"type" editable:"true"`
+}
+
+// Suffix returns the URL suffix.
+func (filter *EditorFilterSettings) Suffix() string {
+	year := filter.Year
+	status := filter.Status
+	typ := filter.Type
+
+	if year == "" {
+		year = "any"
+	}
+
+	if status == "" {
+		status = "any"
+	}
+
+	if typ == "" {
+		typ = "any"
+	}
+
+	return fmt.Sprintf("/%s/%s/%s", year, status, typ)
 }
 
 // FormatSettings ...
@@ -78,8 +114,8 @@ func NewSettings(user *User) *Settings {
 			Source:    "",
 			SourceURL: "",
 		},
-		Theme:        "light",
 		Notification: DefaultNotificationSettings(),
+		Theme:        "light",
 	}
 }
 
