@@ -9,29 +9,35 @@ import (
 
 // FindAniListAnime tries to find an AniListAnime in our Anime database.
 func FindAniListAnime(search *anilist.Anime, allAnime []*Anime) *Anime {
-	match, err := GetAniListToAnime(strconv.Itoa(search.ID))
-
-	if err == nil {
-		anime, _ := GetAnime(match.AnimeID)
-		return anime
-	}
-
 	var mostSimilar *Anime
 	var similarity float64
 
+	searchID := strconv.Itoa(search.ID)
+
 	for _, anime := range allAnime {
-		anime.Title.Japanese = strings.Replace(anime.Title.Japanese, "2ndシーズン", "2", 1)
-		anime.Title.Romaji = strings.Replace(anime.Title.Romaji, " 2nd Season", " 2", 1)
+		if anime.GetMapping("anilist/anime") == searchID {
+			return anime
+		}
+
+		japanese := strings.Replace(anime.Title.Japanese, "2ndシーズン", "2", 1)
+		romaji := strings.Replace(anime.Title.Romaji, " 2nd Season", " 2", 1)
+
 		search.TitleJapanese = strings.TrimSpace(strings.Replace(search.TitleJapanese, "2ndシーズン", "2", 1))
 		search.TitleRomaji = strings.TrimSpace(strings.Replace(search.TitleRomaji, " 2nd Season", " 2", 1))
 
-		titleSimilarity := StringSimilarity(anime.Title.Romaji, search.TitleRomaji)
+		titleSimilarity := 0.0
 
-		if strings.ToLower(anime.Title.Japanese) == strings.ToLower(search.TitleJapanese) {
+		if anime.Title.Romaji != "" {
+			titleSimilarity = StringSimilarity(anime.Title.Romaji, search.TitleRomaji)
+		} else {
+			titleSimilarity = StringSimilarity(anime.Title.Canonical, search.TitleRomaji)
+		}
+
+		if strings.ToLower(japanese) == strings.ToLower(search.TitleJapanese) {
 			titleSimilarity += 1.0
 		}
 
-		if strings.ToLower(anime.Title.Romaji) == strings.ToLower(search.TitleRomaji) {
+		if strings.ToLower(romaji) == strings.ToLower(search.TitleRomaji) {
 			titleSimilarity += 1.0
 		}
 
@@ -57,7 +63,6 @@ func FindAniListAnime(search *anilist.Anime, allAnime []*Anime) *Anime {
 	}
 
 	// color.Red("MISMATCH: %s => %s (%.2f)", search.TitleRomaji, mostSimilar.Title.Romaji, similarity)
-
 	return nil
 }
 

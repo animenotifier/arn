@@ -235,20 +235,6 @@ func (anime *Anime) SetMapping(serviceName string, serviceID string) {
 	switch serviceName {
 	case "shoboi/anime":
 		go anime.RefreshEpisodes()
-
-	case "anilist/anime":
-		DB.Set("AniListToAnime", serviceID, &AniListToAnime{
-			AnimeID:   anime.ID,
-			ServiceID: serviceID,
-			Edited:    DateTimeUTC(),
-		})
-
-	case "myanimelist/anime":
-		DB.Set("MyAnimeListToAnime", serviceID, &MyAnimeListToAnime{
-			AnimeID:   anime.ID,
-			ServiceID: serviceID,
-			Edited:    DateTimeUTC(),
-		})
 	}
 }
 
