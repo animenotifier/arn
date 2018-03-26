@@ -3,6 +3,8 @@ package arn
 import (
 	"sort"
 	"sync"
+
+	"github.com/aerogo/nano"
 )
 
 // AnimeRelations ...
@@ -41,6 +43,21 @@ func (relations *AnimeRelations) String() string {
 	return relations.Anime().String()
 }
 
+// Remove removes the anime ID from the relations.
+func (relations *AnimeRelations) Remove(animeID string) bool {
+	relations.Lock()
+	defer relations.Unlock()
+
+	for index, item := range relations.Items {
+		if item.AnimeID == animeID {
+			relations.Items = append(relations.Items[:index], relations.Items[index+1:]...)
+			return true
+		}
+	}
+
+	return false
+}
+
 // GetAnimeRelations ...
 func GetAnimeRelations(animeID string) (*AnimeRelations, error) {
 	obj, err := DB.Get("AnimeRelations", animeID)
@@ -50,4 +67,19 @@ func GetAnimeRelations(animeID string) (*AnimeRelations, error) {
 	}
 
 	return obj.(*AnimeRelations), nil
+}
+
+// StreamAnimeRelations returns a stream of all anime relations.
+func StreamAnimeRelations() chan *AnimeRelations {
+	channel := make(chan *AnimeRelations, nano.ChannelBufferSize)
+
+	go func() {
+		for obj := range DB.All("AnimeRelations") {
+			channel <- obj.(*AnimeRelations)
+		}
+
+		close(channel)
+	}()
+
+	return channel
 }

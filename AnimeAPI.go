@@ -119,6 +119,15 @@ func (anime *Anime) Delete() error {
 		}
 	}
 
+	// Delete anime ID from existing relations
+	for relations := range StreamAnimeRelations() {
+		removed := relations.Remove(anime.ID)
+
+		if removed {
+			relations.Save()
+		}
+	}
+
 	// Delete anime ID from quotes
 	for quote := range StreamQuotes() {
 		if quote.AnimeID == anime.ID {
