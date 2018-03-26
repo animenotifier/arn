@@ -155,6 +155,25 @@ func (anime *Anime) Licensors() []*Company {
 	return companies
 }
 
+// Prequels returns the list of prequels for that anime.
+func (anime *Anime) Prequels() []*Anime {
+	prequels := []*Anime{}
+	relations := anime.Relations()
+
+	relations.Lock()
+	defer relations.Unlock()
+
+	for _, relation := range relations.Items {
+		if relation.Type != "prequel" {
+			continue
+		}
+
+		prequels = append(prequels, relation.Anime())
+	}
+
+	return prequels
+}
+
 // ImageLink ...
 func (anime *Anime) ImageLink(size string) string {
 	extension := ".jpg"
