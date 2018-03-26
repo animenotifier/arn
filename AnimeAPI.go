@@ -3,10 +3,14 @@ package arn
 import (
 	"errors"
 	"fmt"
+	"os"
+	"path"
 	"reflect"
+	"strings"
 
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
+	"github.com/fatih/color"
 )
 
 // Force interface implementations
@@ -81,6 +85,101 @@ func (anime *Anime) Authorize(ctx *aero.Context, action string) error {
 func (anime *Anime) AfterEdit(ctx *aero.Context) error {
 	anime.Edited = DateTimeUTC()
 	anime.EditedBy = GetUserFromContext(ctx).ID
+	return nil
+}
+
+// DeleteInContext deletes the anime in the given context.
+func (anime *Anime) DeleteInContext(ctx *aero.Context) error {
+	user := GetUserFromContext(ctx)
+
+	// Write log entry
+	logEntry := NewEditLogEntry(user.ID, "delete", "Anime", anime.ID, "", fmt.Sprint(anime), "")
+	logEntry.Save()
+
+	return anime.Delete()
+}
+
+// Delete deletes the anime from the database.
+func (anime *Anime) Delete() error {
+	// Delete anime characters
+	DB.Delete("AnimeCharacters", anime.ID)
+
+	// Delete anime relations
+	DB.Delete("AnimeRelations", anime.ID)
+
+	// Delete anime episodes
+	DB.Delete("AnimeEpisodes", anime.ID)
+
+	// Delete anime list items
+	for animeList := range StreamAnimeLists() {
+		removed := animeList.Remove(anime.ID)
+
+		if removed {
+			animeList.Save()
+		}
+	}
+
+	// Delete anime ID from quotes
+	for quote := range StreamQuotes() {
+		if quote.AnimeID == anime.ID {
+			quote.AnimeID = ""
+			quote.Save()
+		}
+	}
+
+	// Delete soundtrack tags
+	for track := range StreamSoundTracks() {
+		newTags := []string{}
+
+		for _, tag := range track.Tags {
+			if strings.HasPrefix(tag, "anime:") {
+				parts := strings.Split(tag, ":")
+				id := parts[1]
+
+				if id == anime.ID {
+					continue
+				}
+			}
+
+			newTags = append(newTags, tag)
+		}
+
+		if len(track.Tags) != len(newTags) {
+			track.Tags = newTags
+			track.Save()
+		}
+	}
+
+	// Delete image on file system
+	if anime.Image.Extension != "" {
+		err := os.Remove(path.Join(Root, "images/anime/original/", anime.ID+anime.Image.Extension))
+
+		if err != nil {
+			// Don't return the error.
+			// It's too late to stop the process at this point.
+			// Instead, log the error.
+			color.Red(err.Error())
+		}
+
+		os.Remove(path.Join(Root, "images/anime/large/", anime.ID+".jpg"))
+		os.Remove(path.Join(Root, "images/anime/large/", anime.ID+"@2.jpg"))
+		os.Remove(path.Join(Root, "images/anime/large/", anime.ID+".webp"))
+		os.Remove(path.Join(Root, "images/anime/large/", anime.ID+"@2.webp"))
+
+		os.Remove(path.Join(Root, "images/anime/medium/", anime.ID+".jpg"))
+		os.Remove(path.Join(Root, "images/anime/medium/", anime.ID+"@2.jpg"))
+		os.Remove(path.Join(Root, "images/anime/medium/", anime.ID+".webp"))
+		os.Remove(path.Join(Root, "images/anime/medium/", anime.ID+"@2.webp"))
+
+		os.Remove(path.Join(Root, "images/anime/small/", anime.ID+".jpg"))
+		os.Remove(path.Join(Root, "images/anime/small/", anime.ID+"@2.jpg"))
+		os.Remove(path.Join(Root, "images/anime/small/", anime.ID+".webp"))
+		os.Remove(path.Join(Root, "images/anime/small/", anime.ID+"@2.webp"))
+	}
+
+	// Delete the actual anime
+	DB.Delete("Anime", anime.ID)
+
 	return nil
 }
 
