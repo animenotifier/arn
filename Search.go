@@ -114,7 +114,7 @@ func SearchCharacters(originalTerm string, maxLength int) []*Character {
 			characterA := results[i].obj.(*Character)
 			characterB := results[j].obj.(*Character)
 
-			if characterA.Name == characterB.Name {
+			if characterA.Name.Canonical == characterB.Name.Canonical {
 				return characterA.ID < characterB.ID
 			}
 

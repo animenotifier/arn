@@ -61,6 +61,7 @@ var MAL = Node.Namespace("mal").RegisterTypes(
 var Kitsu = Node.Namespace("kitsu").RegisterTypes(
 	(*kitsu.Anime)(nil),
 	(*kitsu.Mapping)(nil),
+	(*kitsu.Character)(nil),
 )
 
 // API ...
