@@ -125,7 +125,7 @@ func (quote *Quote) OnLike(likedBy *User) {
 
 	go func() {
 		quote.Creator().SendNotification(&PushNotification{
-			Title:   likedBy.Nick + " liked your " + quote.Character().Name + " quote",
+			Title:   likedBy.Nick + " liked your " + quote.Character().Name.Canonical + " quote",
 			Message: quote.Text.English,
 			Icon:    "https:" + likedBy.AvatarLink("large"),
 			Link:    "https://notify.moe" + likedBy.Link(),

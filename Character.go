@@ -1,23 +1,29 @@
 package arn
 
 import (
+	"fmt"
+
 	"github.com/aerogo/nano"
 )
 
 // Character ...
 type Character struct {
 	ID          string                `json:"id"`
-	Name        string                `json:"name"`
-	Image       string                `json:"image"`
+	Name        CharacterName         `json:"name"`
+	Image       CharacterImage        `json:"image"`
 	Description string                `json:"description"`
 	Attributes  []*CharacterAttribute `json:"attributes"`
-	// Name        *CharacterName        `json:"name"`
-	// Mappings    []*Mapping            `json:"mappings"`
+	Mappings    []*Mapping            `json:"mappings"`
 }
 
 // Link ...
 func (character *Character) Link() string {
 	return "/character/" + character.ID
+}
+
+// ImageLink ...
+func (character *Character) ImageLink(size string) string {
+	return fmt.Sprintf("//media.kitsu.io/characters/images/%s/original%s?%d", character.ID, character.Image.Extension, character.Image.LastModified)
 }
 
 // Anime returns a list of all anime the character appears in.

@@ -67,11 +67,11 @@ func SearchCharacters(originalTerm string, maxLength int) []*Character {
 			return []*Character{character}
 		}
 
-		if character.Image == "" {
+		if character.Image.Extension == "" {
 			continue
 		}
 
-		text := strings.ToLower(character.Name)
+		text := strings.ToLower(character.Name.Canonical)
 
 		if text == term {
 			results = append(results, &SearchResult{
@@ -118,7 +118,7 @@ func SearchCharacters(originalTerm string, maxLength int) []*Character {
 				return characterA.ID < characterB.ID
 			}
 
-			return characterA.Name < characterB.Name
+			return characterA.Name.Canonical < characterB.Name.Canonical
 		}
 
 		return similarityA > similarityB
