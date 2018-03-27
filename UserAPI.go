@@ -96,6 +96,7 @@ func (user *User) Filter() {
 	user.FirstName = ""
 	user.LastName = ""
 	user.IP = ""
+	user.UserAgent = ""
 	user.LastLogin = ""
 	user.LastSeen = ""
 	user.Accounts.Facebook.ID = ""
@@ -103,6 +104,8 @@ func (user *User) Filter() {
 	user.Accounts.Twitter.ID = ""
 	user.AgeRange = UserAgeRange{}
 	user.Location = Location{}
+	user.Browser = UserBrowser{}
+	user.OS = UserOS{}
 }
 
 // ShouldFilter tells whether data needs to be filtered in the given context.
