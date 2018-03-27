@@ -28,7 +28,7 @@ func (list *AnimeList) Add(animeID string) error {
 	item := &AnimeListItem{
 		AnimeID: animeID,
 		Status:  AnimeListStatusPlanned,
-		Rating:  &AnimeRating{},
+		Rating:  AnimeListItemRating{},
 		Created: creationDate,
 		Edited:  creationDate,
 	}
