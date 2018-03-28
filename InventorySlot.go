@@ -7,7 +7,7 @@ type InventorySlot struct {
 	ItemID   string `json:"itemId"`
 	Quantity uint   `json:"quantity"`
 
-	item *Item
+	item *ShopItem
 }
 
 // IsEmpty ...
@@ -16,7 +16,7 @@ func (slot *InventorySlot) IsEmpty() bool {
 }
 
 // Item ...
-func (slot *InventorySlot) Item() *Item {
+func (slot *InventorySlot) Item() *ShopItem {
 	if slot.item != nil {
 		return slot.item
 	}
@@ -25,7 +25,7 @@ func (slot *InventorySlot) Item() *Item {
 		return nil
 	}
 
-	slot.item, _ = GetItem(slot.ItemID)
+	slot.item, _ = GetShopItem(slot.ItemID)
 	return slot.item
 }
 

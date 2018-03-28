@@ -14,8 +14,8 @@ type Purchase struct {
 }
 
 // Item returns the item the user bought.
-func (purchase *Purchase) Item() *Item {
-	item, _ := GetItem(purchase.ItemID)
+func (purchase *Purchase) Item() *ShopItem {
+	item, _ := GetShopItem(purchase.ItemID)
 	return item
 }
 
