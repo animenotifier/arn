@@ -14,6 +14,7 @@ type Character struct {
 	Description string                `json:"description"`
 	Attributes  []*CharacterAttribute `json:"attributes"`
 	HasMappings
+	MainQuoteID string                `json:"mainQuoteId"`
 }
 
 // Link ...
