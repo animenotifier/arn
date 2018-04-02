@@ -39,7 +39,7 @@ func (anime *Anime) Edit(ctx *aero.Context, key string, value reflect.Value, new
 
 					user.SendNotification(&PushNotification{
 						Title:   anime.Title.ByUser(user),
-						Message: anime.Title.ByUser(user) + " has now finished airing!",
+						Message: anime.Title.ByUser(user) + " has finished airing!",
 						Icon:    anime.ImageLink("medium"),
 						Link:    "https://notify.moe" + anime.Link(),
 						Type:    NotificationTypeAnimeFinished,
