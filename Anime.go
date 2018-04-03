@@ -71,15 +71,23 @@ type Anime struct {
 	Rating        *AnimeRating     `json:"rating"`
 	Popularity    *AnimePopularity `json:"popularity"`
 	Trailers      []*ExternalMedia `json:"trailers" editable:"true"`
-	StudioIDs     []string         `json:"studios" editable:"true"`
-	ProducerIDs   []string         `json:"producers" editable:"true"`
-	LicensorIDs   []string         `json:"licensors" editable:"true"`
-	Links         []*Link          `json:"links" editable:"true"`
-	Created       string           `json:"created"`
-	CreatedBy     string           `json:"createdBy"`
-	Edited        string           `json:"edited"`
-	EditedBy      string           `json:"editedBy"`
+
+	// Mixins
 	HasMappings
+
+	// Company IDs
+	StudioIDs   []string `json:"studios" editable:"true"`
+	ProducerIDs []string `json:"producers" editable:"true"`
+	LicensorIDs []string `json:"licensors" editable:"true"`
+
+	// Links to external websites
+	Links []*Link `json:"links" editable:"true"`
+
+	// Editing dates
+	Created   string `json:"created"`
+	CreatedBy string `json:"createdBy"`
+	Edited    string `json:"edited"`
+	EditedBy  string `json:"editedBy"`
 
 	// SynopsisSource string        `json:"synopsisSource" editable:"true"`
 	// Hashtag        string        `json:"hashtag"`

@@ -13,15 +13,21 @@ type Company struct {
 	Image       string      `json:"image"`
 	Description string      `json:"description" editable:"true" type:"textarea"`
 	Links       []*Link     `json:"links" editable:"true"`
-	Location    Location    `json:"location" editable:"true"`
-	Tags        []string    `json:"tags" editable:"true"`
 	IsDraft     bool        `json:"isDraft"`
-	Created     string      `json:"created"`
-	CreatedBy   string      `json:"createdBy"`
-	Edited      string      `json:"edited"`
-	EditedBy    string      `json:"editedBy"`
-	HasLikes
+
+	// Mixins
 	HasMappings
+	HasLikes
+
+	// Other editable fields
+	Location Location `json:"location" editable:"true"`
+	Tags     []string `json:"tags" editable:"true"`
+
+	// Editing dates
+	Created   string `json:"created"`
+	CreatedBy string `json:"createdBy"`
+	Edited    string `json:"edited"`
+	EditedBy  string `json:"editedBy"`
 }
 
 // NewCompany creates a new company.
