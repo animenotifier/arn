@@ -359,6 +359,10 @@ func SearchAnime(originalTerm string, maxLength int) []*Anime {
 	var results []*SearchResult
 
 	check := func(text string) float64 {
+		if text == "" {
+			return 0
+		}
+
 		return AdvancedStringSimilarity(term, RemoveSpecialCharacters(strings.ToLower(text)))
 	}
 
@@ -386,6 +390,14 @@ func SearchAnime(originalTerm string, maxLength int) []*Anime {
 
 		// English
 		similarity = check(anime.Title.English)
+
+		if similarity >= MinimumStringSimilarity {
+			add(anime, similarity)
+			continue
+		}
+
+		// Romaji
+		similarity = check(anime.Title.Romaji)
 
 		if similarity >= MinimumStringSimilarity {
 			add(anime, similarity)
