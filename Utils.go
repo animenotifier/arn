@@ -27,6 +27,10 @@ var (
 	stripTagsRegex = regexp.MustCompile(`<[^>]*>`)
 	sourceRegex    = regexp.MustCompile(`\(Source: (.*?)\)`)
 	writtenByRegex = regexp.MustCompile(`\[Written by (.*?)\]`)
+	// Regex to find @userNickname
+	mentionIDRegex = regexp.MustCompile(`(^|[\s])(<@[\w]+>)`)
+	// Regex to find <@userID>
+	mentionNickRegex = regexp.MustCompile(`(?:[^\S]|^)(@[\w]+)`)
 )
 
 // GenerateID generates a unique ID for a given table.
@@ -306,4 +310,13 @@ func PanicOnError(err error) {
 func PrettyPrint(obj interface{}) {
 	pretty, _ := json.MarshalIndent(obj, "", "\t")
 	fmt.Println(string(pretty))
+}
+
+// ReplaceMention look for any whole src in postText and replace them by repl
+func TransformIDToMention(src string, postText string, repl string) string {
+	// Regex to replace a whole word so if we're looking to replace @Scott, @Scotttt would not be matched
+	re := regexp.MustCompile(`(^|[^\p{L}0-9_])` + regexp.QuoteMeta(src) + `([^\p{L}0-9_]|$)`)
+	// Replace <@userID> by the markdown link [@userNickname](userLink)
+	postText = re.ReplaceAllString(postText, repl)
+	return postText
 }

@@ -44,13 +44,38 @@ func (post *Post) HTML() string {
 		return post.html
 	}
 
-	post.html = markdown.Render(post.Text)
+	// Don't change the text otherwise we loose the mentioned Ids
+	postText := post.Text
+	// Look for mentionedNicknames
+	for _, match := range mentionIDRegex.FindAllStringSubmatch(postText, -1) {
+		mentionedID := match[2]
+		mentionedUser, err := GetUser(mentionedID[2 : len(match[2])-1])
+		// Ignore the mention if the user is not found
+		if err == nil {
+			replacement := "${1}[@" + mentionedUser.Nick + "]" + "(" + mentionedUser.Link() + ")${2}"
+			postText = TransformIDToMention(mentionedID, postText, replacement)
+		}
+	}
+
+	post.html = markdown.Render(postText)
 	return post.html
 }
 
 // String implements the default string serialization.
 func (post *Post) String() string {
 	const maxLen = 170
+
+	postText := post.Text
+	// Look for mentionedNicknames
+	for _, match := range mentionIDRegex.FindAllStringSubmatch(postText, -1) {
+		mentionedID := match[2]
+		mentionedUser, err := GetUser(mentionedID[2 : len(match[2])-1])
+		// Ignore the mention if the user is not found
+		if err == nil {
+			replacement := "${1}@" + mentionedUser.Nick + "${2}"
+			postText = TransformIDToMention(mentionedID, postText, replacement)
+		}
+	}
 
 	if len(post.Text) > maxLen {
 		return post.Text[:maxLen-3] + "..."

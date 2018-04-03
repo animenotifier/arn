@@ -92,6 +92,23 @@ func (post *Post) Create(ctx *aero.Context) error {
 		return errors.New("Thread does not exist")
 	}
 
+	mentionedUsers := map[string]*User{}
+	// Look for mentionedNicknames
+	for _, match := range mentionNickRegex.FindAllStringSubmatch(post.Text, -1) {
+		mentionedNickname := match[1]
+		mentionedUser, err := GetUserByNick(mentionedNickname[1:])
+
+		// Ignore the mention if the user is not found
+		if err == nil {
+			// Check if we've already passed the current mentionned user.
+			if _, ok := mentionedUsers[mentionedUser.ID]; !ok {
+				replacement := "${1}<@" + mentionedUser.ID + ">${2}"
+				post.Text = TransformIDToMention(mentionedNickname, post.Text, replacement)
+				mentionedUsers[mentionedUser.ID] = mentionedUser
+			}
+		}
+	}
+
 	// Bind to local variable for the upcoming goroutine.
 	oldPosts := thread.Posts
 
