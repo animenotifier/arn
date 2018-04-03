@@ -26,12 +26,12 @@ type User struct {
 	Nick         string       `json:"nick" editable:"true"`
 	FirstName    string       `json:"firstName"`
 	LastName     string       `json:"lastName"`
-	Email        string       `json:"email"`
+	Email        string       `json:"email" editable:"true"`
 	Role         string       `json:"role"`
 	Registered   string       `json:"registered"`
 	LastLogin    string       `json:"lastLogin"`
 	LastSeen     string       `json:"lastSeen"`
-	ProExpires   string       `json:"proExpires"`
+	ProExpires   string       `json:"proExpires" editable:"true"`
 	Gender       string       `json:"gender"`
 	Language     string       `json:"language"`
 	Tagline      string       `json:"tagline" editable:"true"`
@@ -233,8 +233,9 @@ func (user *User) ExtendProDuration(duration time.Duration) {
 	now := time.Now().UTC()
 	expires, _ := time.Parse(time.RFC3339, user.ProExpires)
 
-	// If the user never had a PRO account yet or if it already expired,
-	// use current time as the start time.
+	// If the user never had a PRO account yet,
+	// or if it already expired,
+	// use the current time as the start time.
 	if user.ProExpires == "" || now.Unix() > expires.Unix() {
 		expires = now
 	}

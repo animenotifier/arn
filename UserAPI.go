@@ -1,6 +1,7 @@
 package arn
 
 import (
+	"errors"
 	"reflect"
 	"strings"
 
@@ -18,7 +19,17 @@ var (
 
 // Authorize returns an error if the given API POST request is not authorized.
 func (user *User) Authorize(ctx *aero.Context, action string) error {
-	return AuthorizeIfLoggedInAndOwnData(ctx, "id")
+	editor := GetUserFromContext(ctx)
+
+	if editor == nil {
+		return errors.New("Not authorized")
+	}
+
+	if editor.ID != ctx.Get("id") && editor.Role != "admin" {
+		return errors.New("Can not modify data from other users")
+	}
+
+	return nil
 }
 
 // Edit updates the user object.
@@ -79,6 +90,13 @@ func (user *User) Edit(ctx *aero.Context, key string, value reflect.Value, newVa
 		newNick := newValue.String()
 		err := user.SetNick(newNick)
 		return true, err
+
+	case "ProExpires":
+		user := GetUserFromContext(ctx)
+
+		if user == nil || user.Role != "admin" {
+			return true, errors.New("Not authorized to edit")
+		}
 	}
 
 	return false, nil
