@@ -32,7 +32,7 @@ func init() {
 		&Option{"tba", "To be announced"},
 	}
 
-	DataLists["anime-source"] = []*Option{
+	DataLists["anime-sources"] = []*Option{
 		&Option{"", "Unknown"},
 		&Option{"original", "Original"},
 		&Option{"manga", "Manga"},
@@ -65,7 +65,7 @@ type Anime struct {
 	EndDate       string           `json:"endDate" editable:"true"`
 	EpisodeCount  int              `json:"episodeCount" editable:"true"`
 	EpisodeLength int              `json:"episodeLength" editable:"true"`
-	Source        string           `json:"source" editable:"true" datalist:"anime-source"`
+	Source        string           `json:"source" editable:"true" datalist:"anime-sources"`
 	Image         AnimeImage       `json:"image"`
 	FirstChannel  string           `json:"firstChannel"`
 	Rating        *AnimeRating     `json:"rating"`

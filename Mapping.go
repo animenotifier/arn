@@ -1,8 +1,23 @@
 package arn
 
+// Register a list of supported services.
+func init() {
+	DataLists["mapping-services"] = []*Option{
+		&Option{"anidb/anime", "anidb/anime"},
+		&Option{"anilist/anime", "anilist/anime"},
+		&Option{"kitsu/anime", "kitsu/anime"},
+		&Option{"kitsu/character", "kitsu/character"},
+		&Option{"myanimelist/anime", "myanimelist/anime"},
+		&Option{"myanimelist/character", "myanimelist/character"},
+		&Option{"myanimelist/producer", "myanimelist/producer"},
+		&Option{"shoboi/anime", "shoboi/anime"},
+		&Option{"thetvdb/anime", "thetvdb/anime"},
+	}
+}
+
 // Mapping ...
 type Mapping struct {
-	Service   string `json:"service" editable:"true"`
+	Service   string `json:"service" editable:"true" datalist:"mapping-services"`
 	ServiceID string `json:"serviceId" editable:"true"`
 }
 
