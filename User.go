@@ -230,15 +230,16 @@ func (user *User) IsPro() bool {
 
 // ExtendProDuration extends the PRO account duration by the given duration.
 func (user *User) ExtendProDuration(duration time.Duration) {
-	var startDate time.Time
+	now := time.Now().UTC()
+	expires, _ := time.Parse(time.RFC3339, user.ProExpires)
 
-	if user.ProExpires == "" {
-		startDate = time.Now().UTC()
-	} else {
-		startDate, _ = time.Parse(time.RFC3339, user.ProExpires)
+	// If the user never had a PRO account yet or if it already expired,
+	// use current time as the start time.
+	if user.ProExpires == "" || now.Unix() > expires.Unix() {
+		expires = now
 	}
 
-	user.ProExpires = startDate.Add(duration).Format(time.RFC3339)
+	user.ProExpires = expires.Add(duration).Format(time.RFC3339)
 }
 
 // TimeSinceRegistered returns the duration since the user registered his account.
