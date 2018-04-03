@@ -16,7 +16,7 @@ type Post struct {
 	Tags     []string `json:"tags"`
 	Created  string   `json:"created"`
 	Edited   string   `json:"edited"`
-	LikeableImplementation
+	HasLikes
 
 	html string
 }

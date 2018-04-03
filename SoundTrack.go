@@ -26,7 +26,7 @@ type SoundTrack struct {
 	CreatedBy string           `json:"createdBy"`
 	Edited    string           `json:"edited"`
 	EditedBy  string           `json:"editedBy"`
-	LikeableImplementation
+	HasLikes
 }
 
 // Link returns the permalink for the track.

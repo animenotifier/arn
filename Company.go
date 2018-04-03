@@ -12,7 +12,6 @@ type Company struct {
 	Name        CompanyName `json:"name" editable:"true"`
 	Image       string      `json:"image"`
 	Description string      `json:"description" editable:"true" type:"textarea"`
-	Mappings    []*Mapping  `json:"mappings" editable:"true"`
 	Links       []*Link     `json:"links" editable:"true"`
 	Location    Location    `json:"location" editable:"true"`
 	Tags        []string    `json:"tags" editable:"true"`
@@ -21,7 +20,8 @@ type Company struct {
 	CreatedBy   string      `json:"createdBy"`
 	Edited      string      `json:"edited"`
 	EditedBy    string      `json:"editedBy"`
-	LikeableImplementation
+	HasLikes
+	HasMappings
 }
 
 // Link returns a single company.

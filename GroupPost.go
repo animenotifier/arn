@@ -19,7 +19,7 @@ type GroupPost struct {
 	IsDraft  bool     `json:"isDraft" editable:"true"`
 	Created  string   `json:"created"`
 	Edited   string   `json:"edited"`
-	LikeableImplementation
+	HasLikes
 
 	html string
 }

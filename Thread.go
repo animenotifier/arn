@@ -18,7 +18,7 @@ type Thread struct {
 	Posts    []string `json:"posts"`
 	Created  string   `json:"created"`
 	Edited   string   `json:"edited"`
-	LikeableImplementation
+	HasLikes
 
 	html string
 }

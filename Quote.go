@@ -22,7 +22,7 @@ type Quote struct {
 	CreatedBy     string    `json:"createdBy"`
 	Edited        string    `json:"edited"`
 	EditedBy      string    `json:"editedBy"`
-	LikeableImplementation
+	HasLikes
 }
 
 // Link returns a single quote.

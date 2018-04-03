@@ -71,7 +71,6 @@ type Anime struct {
 	Rating        *AnimeRating     `json:"rating"`
 	Popularity    *AnimePopularity `json:"popularity"`
 	Trailers      []*ExternalMedia `json:"trailers" editable:"true"`
-	Mappings      []*Mapping       `json:"mappings" editable:"true"`
 	StudioIDs     []string         `json:"studios" editable:"true"`
 	ProducerIDs   []string         `json:"producers" editable:"true"`
 	LicensorIDs   []string         `json:"licensors" editable:"true"`
@@ -80,6 +79,7 @@ type Anime struct {
 	CreatedBy     string           `json:"createdBy"`
 	Edited        string           `json:"edited"`
 	EditedBy      string           `json:"editedBy"`
+	HasMappings
 
 	// SynopsisSource string        `json:"synopsisSource" editable:"true"`
 	// Hashtag        string        `json:"hashtag"`
@@ -93,9 +93,11 @@ func NewAnime() *Anime {
 		Title:      &AnimeTitle{},
 		Rating:     &AnimeRating{},
 		Popularity: &AnimePopularity{},
-		Mappings:   []*Mapping{},
 		Trailers:   []*ExternalMedia{},
 		Created:    DateTimeUTC(),
+		HasMappings: HasMappings{
+			Mappings: []*Mapping{},
+		},
 	}
 }
 
@@ -227,71 +229,6 @@ func (anime *Anime) Link() string {
 func (anime *Anime) StartDateTime() time.Time {
 	t, _ := time.Parse(AnimeDateFormat, anime.StartDate)
 	return t
-}
-
-// SetMapping sets the ID of an external site to the anime.
-func (anime *Anime) SetMapping(serviceName string, serviceID string) {
-	// Is the ID valid?
-	if serviceID == "" {
-		return
-	}
-
-	// If it already exists we don't need to add it
-	for _, external := range anime.Mappings {
-		if external.Service == serviceName {
-			external.ServiceID = serviceID
-			return
-		}
-	}
-
-	// Add the mapping
-	anime.Mappings = append(anime.Mappings, &Mapping{
-		Service:   serviceName,
-		ServiceID: serviceID,
-	})
-
-	// Add the references
-	switch serviceName {
-	case "shoboi/anime":
-		go anime.RefreshEpisodes()
-	}
-}
-
-// GetMapping returns the external ID for the given service.
-func (anime *Anime) GetMapping(name string) string {
-	for _, external := range anime.Mappings {
-		if external.Service == name {
-			return external.ServiceID
-		}
-	}
-
-	return ""
-}
-
-// RemoveMapping removes all mappings with the given service name and ID.
-func (anime *Anime) RemoveMapping(name string, id string) bool {
-	switch name {
-	case "shoboi/anime":
-		eps := anime.Episodes()
-
-		if eps != nil {
-			eps.Items = eps.Items[:0]
-			eps.Save()
-		}
-	case "anilist/anime":
-		DB.Delete("AniListToAnime", id)
-	case "myanimelist/anime":
-		DB.Delete("MyAnimeListToAnime", id)
-	}
-
-	for index, external := range anime.Mappings {
-		if external.Service == name && external.ServiceID == id {
-			anime.Mappings = append(anime.Mappings[:index], anime.Mappings[index+1:]...)
-			return true
-		}
-	}
-
-	return false
 }
 
 // Episodes returns the anime episodes wrapper.
