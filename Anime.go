@@ -571,6 +571,41 @@ func (anime *Anime) EpisodeCountString() string {
 	return strconv.Itoa(anime.EpisodeCount)
 }
 
+// ImportKitsuMapping imports the given Kitsu mapping.
+func (anime *Anime) ImportKitsuMapping(mapping *kitsu.Mapping) {
+	switch mapping.Attributes.ExternalSite {
+	case "myanimelist/anime":
+		anime.SetMapping("myanimelist/anime", mapping.Attributes.ExternalID)
+	case "anidb":
+		anime.SetMapping("anidb/anime", mapping.Attributes.ExternalID)
+	case "trakt":
+		anime.SetMapping("trakt/anime", mapping.Attributes.ExternalID)
+	// case "hulu":
+	// 	anime.SetMapping("hulu/anime", mapping.Attributes.ExternalID)
+	case "anilist":
+		externalID := mapping.Attributes.ExternalID
+
+		if strings.HasPrefix(externalID, "anime/") {
+			externalID = externalID[len("anime/"):]
+		}
+
+		anime.SetMapping("anilist/anime", externalID)
+	case "thetvdb", "thetvdb/series":
+		externalID := mapping.Attributes.ExternalID
+		slashPos := strings.Index(externalID, "/")
+
+		if slashPos != -1 {
+			externalID = externalID[:slashPos]
+		}
+
+		anime.SetMapping("thetvdb/anime", externalID)
+	case "thetvdb/season":
+		// Ignore
+	default:
+		color.Yellow("Unknown mapping: %s %s", mapping.Attributes.ExternalSite, mapping.Attributes.ExternalID)
+	}
+}
+
 // TypeHumanReadable ...
 func (anime *Anime) TypeHumanReadable() string {
 	switch anime.Type {

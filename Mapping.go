@@ -12,6 +12,7 @@ func init() {
 		&Option{"myanimelist/producer", "myanimelist/producer"},
 		&Option{"shoboi/anime", "shoboi/anime"},
 		&Option{"thetvdb/anime", "thetvdb/anime"},
+		&Option{"trakt/anime", "trakt/anime"},
 	}
 }
 
@@ -24,18 +25,22 @@ type Mapping struct {
 // Name ...
 func (mapping *Mapping) Name() string {
 	switch mapping.Service {
-	case "shoboi/anime":
-		return "Shoboi"
-	case "anilist/anime":
-		return "AniList"
-	case "myanimelist/anime":
-		return "MyAnimeList"
-	case "thetvdb/anime":
-		return "TheTVDB"
 	case "anidb/anime":
 		return "AniDB"
+	case "anilist/anime":
+		return "AniList"
+	case "kitsu/anime":
+		return "Kitsu"
+	case "myanimelist/anime":
+		return "MyAnimeList"
+	case "shoboi/anime":
+		return "Shoboi"
+	case "thetvdb/anime":
+		return "TheTVDB"
+	case "trakt/anime":
+		return "Trakt"
 	default:
-		return ""
+		return mapping.Service
 	}
 }
 
@@ -52,6 +57,8 @@ func (mapping *Mapping) Link() string {
 		return "https://thetvdb.com/?tab=series&id=" + mapping.ServiceID
 	case "anidb/anime":
 		return "https://anidb.net/perl-bin/animedb.pl?show=anime&aid=" + mapping.ServiceID
+	case "trakt/anime":
+		return "https://trakt.tv/shows/" + mapping.ServiceID
 	default:
 		return ""
 	}
