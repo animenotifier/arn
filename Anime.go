@@ -112,6 +112,57 @@ func GetAnime(id string) (*Anime, error) {
 	return obj.(*Anime), nil
 }
 
+// AddStudio adds the company ID to the studio ID list if it doesn't exist already.
+func (anime *Anime) AddStudio(companyID string) {
+	// Is the ID valid?
+	if companyID == "" {
+		return
+	}
+
+	// If it already exists we don't need to add it
+	for _, id := range anime.StudioIDs {
+		if id == companyID {
+			return
+		}
+	}
+
+	anime.StudioIDs = append(anime.StudioIDs, companyID)
+}
+
+// AddProducer adds the company ID to the producer ID list if it doesn't exist already.
+func (anime *Anime) AddProducer(companyID string) {
+	// Is the ID valid?
+	if companyID == "" {
+		return
+	}
+
+	// If it already exists we don't need to add it
+	for _, id := range anime.ProducerIDs {
+		if id == companyID {
+			return
+		}
+	}
+
+	anime.ProducerIDs = append(anime.ProducerIDs, companyID)
+}
+
+// AddLicensor adds the company ID to the licensor ID list if it doesn't exist already.
+func (anime *Anime) AddLicensor(companyID string) {
+	// Is the ID valid?
+	if companyID == "" {
+		return
+	}
+
+	// If it already exists we don't need to add it
+	for _, id := range anime.LicensorIDs {
+		if id == companyID {
+			return
+		}
+	}
+
+	anime.LicensorIDs = append(anime.LicensorIDs, companyID)
+}
+
 // Studios returns the list of studios for this anime.
 func (anime *Anime) Studios() []*Company {
 	companies := []*Company{}

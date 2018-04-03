@@ -24,6 +24,24 @@ type Company struct {
 	HasMappings
 }
 
+// NewCompany creates a new company.
+func NewCompany() *Company {
+	return &Company{
+		ID:        GenerateID("Company"),
+		Name:      CompanyName{},
+		Created:   DateTimeUTC(),
+		CreatedBy: "",
+		Links:     []*Link{},
+		Tags:      []string{},
+		HasLikes: HasLikes{
+			Likes: []string{},
+		},
+		HasMappings: HasMappings{
+			Mappings: []*Mapping{},
+		},
+	}
+}
+
 // Link returns a single company.
 func (company *Company) Link() string {
 	return "/company/" + company.ID
