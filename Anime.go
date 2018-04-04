@@ -749,6 +749,19 @@ func (anime *Anime) SetID(newID string) {
 		}
 	}
 
+	// Update ignored anime differences
+	for ignore := range StreamIgnoreAnimeDifferences() {
+		// ID example: arn:10052|mal:28701|RomajiTitle
+		arnPart := strings.Split(ignore.ID, "|")[0]
+		actualID := strings.Split(arnPart, ":")[1]
+
+		if actualID == oldID {
+			DB.Delete("IgnoreAnimeDifference", ignore.ID)
+			ignore.ID = strings.Replace(ignore.ID, arnPart, "arn:"+newID, 1)
+			ignore.Save()
+		}
+	}
+
 	// Update soundtrack tags
 	for track := range StreamSoundTracks() {
 		newTags := []string{}
