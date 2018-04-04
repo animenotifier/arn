@@ -16,7 +16,6 @@ func NewAnimeFromKitsuAnime(kitsuAnime *kitsu.Anime) (*Anime, *AnimeCharacters, 
 	attr := kitsuAnime.Attributes
 
 	// General data
-	anime.ID = kitsuAnime.ID
 	anime.Type = strings.ToLower(attr.ShowType)
 	anime.Title.Canonical = attr.CanonicalTitle
 	anime.Title.English = attr.Titles.En

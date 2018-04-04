@@ -56,3 +56,9 @@ func (episodes *AnimeEpisodes) OnRemove(ctx *aero.Context, key string, index int
 func (episodes *AnimeEpisodes) Save() {
 	DB.Set("AnimeEpisodes", episodes.AnimeID, episodes)
 }
+
+// Delete deletes the episode list from the database.
+func (episodes *AnimeEpisodes) Delete() error {
+	DB.Delete("AnimeEpisodes", episodes.AnimeID)
+	return nil
+}

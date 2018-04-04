@@ -3,6 +3,8 @@ package arn
 import (
 	"errors"
 	"fmt"
+	"os"
+	"path"
 	"sort"
 	"strconv"
 	"strings"
@@ -98,6 +100,7 @@ type Anime struct {
 // NewAnime creates a new anime.
 func NewAnime() *Anime {
 	return &Anime{
+		ID:         GenerateID("Anime"),
 		Title:      &AnimeTitle{},
 		Rating:     &AnimeRating{},
 		Popularity: &AnimePopularity{},
@@ -685,6 +688,162 @@ func (anime *Anime) RefreshAnimeCharacters() (*AnimeCharacters, error) {
 	animeCharacters.Save()
 
 	return animeCharacters, nil
+}
+
+// SetID performs a database-wide ID change.
+// Calling this will automatically save the anime.
+func (anime *Anime) SetID(newID string) {
+	oldID := anime.ID
+
+	// Update anime ID in character list
+	characters, _ := GetAnimeCharacters(oldID)
+	characters.Delete()
+	characters.AnimeID = newID
+	characters.Save()
+
+	// Update anime ID in relation list
+	relations, _ := GetAnimeRelations(oldID)
+	relations.Delete()
+	relations.AnimeID = newID
+	relations.Save()
+
+	// Update anime ID in episode list
+	episodes, _ := GetAnimeEpisodes(oldID)
+	episodes.Delete()
+	episodes.AnimeID = newID
+	episodes.Save()
+
+	// Update anime list items
+	for animeList := range StreamAnimeLists() {
+		item := animeList.Find(oldID)
+
+		if item != nil {
+			item.AnimeID = newID
+			animeList.Save()
+		}
+	}
+
+	// Update relations pointing to this anime
+	for relations := range StreamAnimeRelations() {
+		relation := relations.Find(oldID)
+
+		if relation != nil {
+			relation.AnimeID = newID
+			relations.Save()
+		}
+	}
+
+	// Update quotes
+	for quote := range StreamQuotes() {
+		if quote.AnimeID == oldID {
+			quote.AnimeID = newID
+			quote.Save()
+		}
+	}
+
+	// Update soundtrack tags
+	for track := range StreamSoundTracks() {
+		newTags := []string{}
+
+		for _, tag := range track.Tags {
+			if strings.HasPrefix(tag, "anime:") {
+				parts := strings.Split(tag, ":")
+				id := parts[1]
+
+				if id == oldID {
+					newTags = append(newTags, "anime:"+newID)
+					continue
+				}
+			}
+
+			newTags = append(newTags, tag)
+		}
+
+		track.Tags = newTags
+		track.Save()
+	}
+
+	// Update images on file system
+	if anime.Image.Extension != "" {
+		err := os.Rename(
+			path.Join(Root, "images/anime/original/", oldID+anime.Image.Extension),
+			path.Join(Root, "images/anime/original/", newID+anime.Image.Extension),
+		)
+
+		if err != nil {
+			// Don't return the error.
+			// It's too late to stop the process at this point.
+			// Instead, log the error.
+			color.Red(err.Error())
+		}
+
+		os.Rename(
+			path.Join(Root, "images/anime/large/", oldID+".jpg"),
+			path.Join(Root, "images/anime/large/", newID+".jpg"),
+		)
+
+		os.Rename(
+			path.Join(Root, "images/anime/large/", oldID+"@2.jpg"),
+			path.Join(Root, "images/anime/large/", newID+"@2.jpg"),
+		)
+
+		os.Rename(
+			path.Join(Root, "images/anime/large/", oldID+".webp"),
+			path.Join(Root, "images/anime/large/", newID+".webp"),
+		)
+
+		os.Rename(
+			path.Join(Root, "images/anime/large/", oldID+"@2.webp"),
+			path.Join(Root, "images/anime/large/", newID+"@2.webp"),
+		)
+
+		os.Rename(
+			path.Join(Root, "images/anime/medium/", oldID+".jpg"),
+			path.Join(Root, "images/anime/medium/", newID+".jpg"),
+		)
+
+		os.Rename(
+			path.Join(Root, "images/anime/medium/", oldID+"@2.jpg"),
+			path.Join(Root, "images/anime/medium/", newID+"@2.jpg"),
+		)
+
+		os.Rename(
+			path.Join(Root, "images/anime/medium/", oldID+".webp"),
+			path.Join(Root, "images/anime/medium/", newID+".webp"),
+		)
+
+		os.Rename(
+			path.Join(Root, "images/anime/medium/", oldID+"@2.webp"),
+			path.Join(Root, "images/anime/medium/", newID+"@2.webp"),
+		)
+
+		os.Rename(
+			path.Join(Root, "images/anime/small/", oldID+".jpg"),
+			path.Join(Root, "images/anime/small/", newID+".jpg"),
+		)
+
+		os.Rename(
+			path.Join(Root, "images/anime/small/", oldID+"@2.jpg"),
+			path.Join(Root, "images/anime/small/", newID+"@2.jpg"),
+		)
+
+		os.Rename(
+			path.Join(Root, "images/anime/small/", oldID+".webp"),
+			path.Join(Root, "images/anime/small/", newID+".webp"),
+		)
+
+		os.Rename(
+			path.Join(Root, "images/anime/small/", oldID+"@2.webp"),
+			path.Join(Root, "images/anime/small/", newID+"@2.webp"),
+		)
+	}
+
+	// Delete old anime ID
+	DB.Delete("Anime", oldID)
+
+	// Change anime ID and save it
+	anime.ID = newID
+	anime.Save()
 }
 
 // String implements the default string serialization.

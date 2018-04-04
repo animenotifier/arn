@@ -43,6 +43,20 @@ func (relations *AnimeRelations) String() string {
 	return relations.Anime().String()
 }
 
+// Find returns the relation with the specified anime ID, if available.
+func (relations *AnimeRelations) Find(animeID string) *AnimeRelation {
+	relations.Lock()
+	defer relations.Unlock()
+
+	for _, item := range relations.Items {
+		if item.AnimeID == animeID {
+			return item
+		}
+	}
+
+	return nil
+}
+
 // Remove removes the anime ID from the relations.
 func (relations *AnimeRelations) Remove(animeID string) bool {
 	relations.Lock()

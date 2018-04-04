@@ -16,6 +16,7 @@ import (
 // Force interface implementations
 var (
 	_ fmt.Stringer           = (*Anime)(nil)
+	_ api.Deletable          = (*Anime)(nil)
 	_ api.Editable           = (*Anime)(nil)
 	_ api.CustomEditable     = (*Anime)(nil)
 	_ api.ArrayEventListener = (*Anime)(nil)
@@ -159,7 +160,7 @@ func (anime *Anime) Delete() error {
 		}
 	}
 
-	// Delete image on file system
+	// Delete images on file system
 	if anime.Image.Extension != "" {
 		err := os.Remove(path.Join(Root, "images/anime/original/", anime.ID+anime.Image.Extension))
 

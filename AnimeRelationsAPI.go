@@ -56,3 +56,9 @@ func (relations *AnimeRelations) OnRemove(ctx *aero.Context, key string, index i
 func (relations *AnimeRelations) Save() {
 	DB.Set("AnimeRelations", relations.AnimeID, relations)
 }
+
+// Delete deletes the relation list from the database.
+func (relations *AnimeRelations) Delete() error {
+	DB.Delete("AnimeRelations", relations.AnimeID)
+	return nil
+}
