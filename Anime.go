@@ -503,7 +503,7 @@ func (anime *Anime) TwistEpisodes() ([]*AnimeEpisode, error) {
 	}
 
 	// Get twist.moe feed
-	feed, err := twist.GetFeedByKitsuID(anime.ID)
+	feed, err := twist.GetFeedByKitsuID(anime.GetMapping("kitsu/anime"))
 
 	if err != nil {
 		return nil, err
@@ -658,7 +658,7 @@ func (anime *Anime) EpisodeByNumber(number int) *AnimeEpisode {
 
 // RefreshAnimeCharacters ...
 func (anime *Anime) RefreshAnimeCharacters() (*AnimeCharacters, error) {
-	resp, err := kitsu.GetAnimeCharactersForAnime(anime.ID)
+	resp, err := kitsu.GetAnimeCharactersForAnime(anime.GetMapping("kitsu/anime"))
 
 	if err != nil {
 		return nil, err
@@ -738,6 +738,14 @@ func (anime *Anime) SetID(newID string) {
 		if quote.AnimeID == oldID {
 			quote.AnimeID = newID
 			quote.Save()
+		}
+	}
+
+	// Update log entries
+	for entry := range StreamEditLogEntries() {
+		if entry.ObjectType == "Anime" && entry.ObjectID == oldID {
+			entry.ObjectID = newID
+			entry.Save()
 		}
 	}
 
