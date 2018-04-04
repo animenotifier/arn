@@ -27,6 +27,15 @@ var AnimeSourceHumanReadable = map[string]string{}
 
 // Register a list of supported anime status and source types.
 func init() {
+	DataLists["anime-types"] = []*Option{
+		&Option{"tv", "TV"},
+		&Option{"movie", "Movie"},
+		&Option{"ova", "OVA"},
+		&Option{"ona", "ONA"},
+		&Option{"special", "Special"},
+		&Option{"music", "Music"},
+	}
+
 	DataLists["anime-status"] = []*Option{
 		&Option{"current", "Current"},
 		&Option{"finished", "Finished"},
@@ -58,7 +67,7 @@ func init() {
 // Anime represents an anime.
 type Anime struct {
 	ID            string           `json:"id"`
-	Type          string           `json:"type" editable:"true"`
+	Type          string           `json:"type" editable:"true" datalist:"anime-types"`
 	Title         *AnimeTitle      `json:"title" editable:"true"`
 	Summary       string           `json:"summary" editable:"true" type:"textarea"`
 	Status        string           `json:"status" editable:"true" datalist:"anime-status"`
@@ -623,6 +632,8 @@ func (anime *Anime) TypeHumanReadable() string {
 		return "ONA"
 	case "special":
 		return "Special"
+	case "music":
+		return "Music"
 	default:
 		return anime.Type
 	}
