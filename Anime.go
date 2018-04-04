@@ -811,79 +811,7 @@ func (anime *Anime) SetID(newID string) {
 	}
 
 	// Update images on file system
-	if anime.Image.Extension != "" {
-		err := os.Rename(
-			path.Join(Root, "images/anime/original/", oldID+anime.Image.Extension),
-			path.Join(Root, "images/anime/original/", newID+anime.Image.Extension),
-		)
-
-		if err != nil {
-			// Don't return the error.
-			// It's too late to stop the process at this point.
-			// Instead, log the error.
-			color.Red(err.Error())
-		}
-
-		os.Rename(
-			path.Join(Root, "images/anime/large/", oldID+".jpg"),
-			path.Join(Root, "images/anime/large/", newID+".jpg"),
-		)
-
-		os.Rename(
-			path.Join(Root, "images/anime/large/", oldID+"@2.jpg"),
-			path.Join(Root, "images/anime/large/", newID+"@2.jpg"),
-		)
-
-		os.Rename(
-			path.Join(Root, "images/anime/large/", oldID+".webp"),
-			path.Join(Root, "images/anime/large/", newID+".webp"),
-		)
-
-		os.Rename(
-			path.Join(Root, "images/anime/large/", oldID+"@2.webp"),
-			path.Join(Root, "images/anime/large/", newID+"@2.webp"),
-		)
-
-		os.Rename(
-			path.Join(Root, "images/anime/medium/", oldID+".jpg"),
-			path.Join(Root, "images/anime/medium/", newID+".jpg"),
-		)
-
-		os.Rename(
-			path.Join(Root, "images/anime/medium/", oldID+"@2.jpg"),
-			path.Join(Root, "images/anime/medium/", newID+"@2.jpg"),
-		)
-
-		os.Rename(
-			path.Join(Root, "images/anime/medium/", oldID+".webp"),
-			path.Join(Root, "images/anime/medium/", newID+".webp"),
-		)
-
-		os.Rename(
-			path.Join(Root, "images/anime/medium/", oldID+"@2.webp"),
-			path.Join(Root, "images/anime/medium/", newID+"@2.webp"),
-		)
-
-		os.Rename(
-			path.Join(Root, "images/anime/small/", oldID+".jpg"),
-			path.Join(Root, "images/anime/small/", newID+".jpg"),
-		)
-
-		os.Rename(
-			path.Join(Root, "images/anime/small/", oldID+"@2.jpg"),
-			path.Join(Root, "images/anime/small/", newID+"@2.jpg"),
-		)
-
-		os.Rename(
-			path.Join(Root, "images/anime/small/", oldID+".webp"),
-			path.Join(Root, "images/anime/small/", newID+".webp"),
-		)
-
-		os.Rename(
-			path.Join(Root, "images/anime/small/", oldID+"@2.webp"),
-			path.Join(Root, "images/anime/small/", newID+"@2.webp"),
-		)
-	}
+	anime.MoveImageFiles(oldID, newID)
 
 	// Delete old anime ID
 	DB.Delete("Anime", oldID)
@@ -891,6 +819,85 @@ func (anime *Anime) SetID(newID string) {
 	// Change anime ID and save it
 	anime.ID = newID
 	anime.Save()
+}
+
+// MoveImageFiles ...
+func (anime *Anime) MoveImageFiles(oldID string, newID string) {
+	if anime.Image.Extension == "" {
+		return
+	}
+
+	err := os.Rename(
+		path.Join(Root, "images/anime/original/", oldID+anime.Image.Extension),
+		path.Join(Root, "images/anime/original/", newID+anime.Image.Extension),
+	)
+
+	if err != nil {
+		// Don't return the error.
+		// It's too late to stop the process at this point.
+		// Instead, log the error.
+		color.Red(err.Error())
+	}
+
+	os.Rename(
+		path.Join(Root, "images/anime/large/", oldID+".jpg"),
+		path.Join(Root, "images/anime/large/", newID+".jpg"),
+	)
+
+	os.Rename(
+		path.Join(Root, "images/anime/large/", oldID+"@2.jpg"),
+		path.Join(Root, "images/anime/large/", newID+"@2.jpg"),
+	)
+
+	os.Rename(
+		path.Join(Root, "images/anime/large/", oldID+".webp"),
+		path.Join(Root, "images/anime/large/", newID+".webp"),
+	)
+
+	os.Rename(
+		path.Join(Root, "images/anime/large/", oldID+"@2.webp"),
+		path.Join(Root, "images/anime/large/", newID+"@2.webp"),
+	)
+
+	os.Rename(
+		path.Join(Root, "images/anime/medium/", oldID+".jpg"),
+		path.Join(Root, "images/anime/medium/", newID+".jpg"),
+	)
+
+	os.Rename(
+		path.Join(Root, "images/anime/medium/", oldID+"@2.jpg"),
+		path.Join(Root, "images/anime/medium/", newID+"@2.jpg"),
+	)
+
+	os.Rename(
+		path.Join(Root, "images/anime/medium/", oldID+".webp"),
+		path.Join(Root, "images/anime/medium/", newID+".webp"),
+	)
+
+	os.Rename(
+		path.Join(Root, "images/anime/medium/", oldID+"@2.webp"),
+		path.Join(Root, "images/anime/medium/", newID+"@2.webp"),
+	)
+
+	os.Rename(
+		path.Join(Root, "images/anime/small/", oldID+".jpg"),
+		path.Join(Root, "images/anime/small/", newID+".jpg"),
+	)
+
+	os.Rename(
+		path.Join(Root, "images/anime/small/", oldID+"@2.jpg"),
+		path.Join(Root, "images/anime/small/", newID+"@2.jpg"),
+	)
+
+	os.Rename(
+		path.Join(Root, "images/anime/small/", oldID+".webp"),
+		path.Join(Root, "images/anime/small/", newID+".webp"),
+	)
+
+	os.Rename(
+		path.Join(Root, "images/anime/small/", oldID+"@2.webp"),
+		path.Join(Root, "images/anime/small/", newID+"@2.webp"),
+	)
 }
 
 // String implements the default string serialization.
