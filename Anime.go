@@ -488,10 +488,11 @@ func (anime *Anime) TwistEpisodes() ([]*AnimeEpisode, error) {
 	}
 
 	// Does the index contain the ID?
+	kitsuID := anime.GetMapping("kitsu/anime")
 	found := false
 
 	for _, id := range idList {
-		if id == anime.ID {
+		if id == kitsuID {
 			found = true
 			break
 		}
@@ -503,7 +504,7 @@ func (anime *Anime) TwistEpisodes() ([]*AnimeEpisode, error) {
 	}
 
 	// Get twist.moe feed
-	feed, err := twist.GetFeedByKitsuID(anime.GetMapping("kitsu/anime"))
+	feed, err := twist.GetFeedByKitsuID(kitsuID)
 
 	if err != nil {
 		return nil, err
