@@ -744,9 +744,12 @@ func (anime *Anime) SetID(newID string) {
 
 	// Update log entries
 	for entry := range StreamEditLogEntries() {
-		if entry.ObjectType == "Anime" && entry.ObjectID == oldID {
-			entry.ObjectID = newID
-			entry.Save()
+		switch entry.ObjectType {
+		case "Anime", "AnimeRelations", "AnimeCharacters", "AnimeEpisodes":
+			if entry.ObjectID == oldID {
+				entry.ObjectID = newID
+				entry.Save()
+			}
 		}
 	}
 
