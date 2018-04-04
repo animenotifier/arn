@@ -215,7 +215,7 @@ func (list *AnimeList) FilterStatus(status string) *AnimeList {
 	defer list.Unlock()
 
 	for _, item := range list.Items {
-		if item.Status == status { // (item.Status == AnimeListStatusPlanned)
+		if item.Status == status {
 			newList.Items = append(newList.Items, item)
 		}
 	}
