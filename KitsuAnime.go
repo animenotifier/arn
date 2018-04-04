@@ -35,6 +35,9 @@ func NewAnimeFromKitsuAnime(kitsuAnime *kitsu.Anime) (*Anime, *AnimeCharacters, 
 		anime.Status = "upcoming"
 	}
 
+	// Kitsu mapping
+	anime.SetMapping("kitsu/anime", kitsuAnime.ID)
+
 	// Import mappings
 	mappings := FilterKitsuMappings(func(mapping *kitsu.Mapping) bool {
 		return mapping.Relationships.Item.Data.Type == "anime" && mapping.Relationships.Item.Data.ID == anime.ID

@@ -29,14 +29,16 @@ func (mapping *Mapping) Name() string {
 		return "AniDB"
 	case "anilist/anime":
 		return "AniList"
+	case "imdb/anime":
+		return "IMDb"
 	case "kitsu/anime":
 		return "Kitsu"
 	case "myanimelist/anime":
-		return "MyAnimeList"
+		return "MAL"
 	case "shoboi/anime":
 		return "Shoboi"
 	case "thetvdb/anime":
-		return "TheTVDB"
+		return "TVDB"
 	case "trakt/anime":
 		return "Trakt"
 	default:
@@ -47,10 +49,14 @@ func (mapping *Mapping) Name() string {
 // Link ...
 func (mapping *Mapping) Link() string {
 	switch mapping.Service {
+	case "kitsu/anime":
+		return "https://kitsu.io/anime/" + mapping.ServiceID
 	case "shoboi/anime":
 		return "http://cal.syoboi.jp/tid/" + mapping.ServiceID
 	case "anilist/anime":
 		return "https://anilist.co/anime/" + mapping.ServiceID
+	case "imdb/anime":
+		return "https://www.imdb.com/title/" + mapping.ServiceID
 	case "myanimelist/anime":
 		return "https://myanimelist.net/anime/" + mapping.ServiceID
 	case "thetvdb/anime":
