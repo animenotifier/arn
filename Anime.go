@@ -744,6 +744,7 @@ func (anime *Anime) SetID(newID string) {
 	// Update soundtrack tags
 	for track := range StreamSoundTracks() {
 		newTags := []string{}
+		modified := false
 
 		for _, tag := range track.Tags {
 			if strings.HasPrefix(tag, "anime:") {
@@ -752,6 +753,7 @@ func (anime *Anime) SetID(newID string) {
 
 				if id == oldID {
 					newTags = append(newTags, "anime:"+newID)
+					modified = true
 					continue
 				}
 			}
@@ -759,8 +761,10 @@ func (anime *Anime) SetID(newID string) {
 			newTags = append(newTags, tag)
 		}
 
-		track.Tags = newTags
-		track.Save()
+		if modified {
+			track.Tags = newTags
+			track.Save()
+		}
 	}
 
 	// Update images on file system
