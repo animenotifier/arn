@@ -241,7 +241,14 @@ func (anime *Anime) Prequels() []*Anime {
 			continue
 		}
 
-		prequels = append(prequels, relation.Anime())
+		prequel := relation.Anime()
+
+		if prequel == nil {
+			color.Red("Anime %s has invalid anime relation ID %s", anime.ID, relation.AnimeID)
+			continue
+		}
+
+		prequels = append(prequels, prequel)
 	}
 
 	return prequels

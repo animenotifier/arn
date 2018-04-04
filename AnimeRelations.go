@@ -24,6 +24,14 @@ func (relations *AnimeRelations) SortByStartDate() {
 		a := relations.Items[i].Anime()
 		b := relations.Items[j].Anime()
 
+		if a == nil {
+			return false
+		}
+
+		if b == nil {
+			return true
+		}
+
 		if a.StartDate == b.StartDate {
 			return a.Title.Canonical < b.Title.Canonical
 		}
