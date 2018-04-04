@@ -59,7 +59,7 @@ func init() {
 		&Option{"other", "Other"},
 	}
 
-	for _, option := range DataLists["anime-source"] {
+	for _, option := range DataLists["anime-sources"] {
 		AnimeSourceHumanReadable[option.Value] = option.Label
 	}
 }
