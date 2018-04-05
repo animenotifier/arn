@@ -7,7 +7,7 @@ type AnimeFinder struct {
 	idToAnime map[string]*Anime
 }
 
-// NewAnimeFinder creates a new finder for Kitsu anime.
+// NewAnimeFinder creates a new finder for external anime.
 func NewAnimeFinder(mappingName string) *AnimeFinder {
 	finder := &AnimeFinder{
 		idToAnime: map[string]*Anime{},
@@ -24,7 +24,7 @@ func NewAnimeFinder(mappingName string) *AnimeFinder {
 	return finder
 }
 
-// GetAnime tries to find a Kitsu anime in our anime database.
+// GetAnime tries to find an external anime in our anime database.
 func (finder *AnimeFinder) GetAnime(id string) *Anime {
 	return finder.idToAnime[id]
 }

@@ -39,9 +39,9 @@ func (obj *HasMappings) GetMapping(name string) string {
 }
 
 // RemoveMapping removes all mappings with the given service name and ID.
-func (obj *HasMappings) RemoveMapping(name string, id string) bool {
+func (obj *HasMappings) RemoveMapping(name string) bool {
 	for index, external := range obj.Mappings {
-		if external.Service == name && external.ServiceID == id {
+		if external.Service == name {
 			obj.Mappings = append(obj.Mappings[:index], obj.Mappings[index+1:]...)
 			return true
 		}

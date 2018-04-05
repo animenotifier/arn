@@ -1,83 +1,92 @@
 package arn
 
 import (
-	"strconv"
-	"strings"
+	"fmt"
 
 	"github.com/animenotifier/anilist"
 )
 
-// FindAniListAnime tries to find an AniListAnime in our Anime database.
-func FindAniListAnime(search *anilist.Anime, allAnime []*Anime) *Anime {
-	var mostSimilar *Anime
-	var similarity float64
+// AniListAnimeFinder holds an internal map of ID to anime mappings
+// and is therefore very efficient to use when trying to find
+// anime by a given service and ID.
+type AniListAnimeFinder struct {
+	idToAnime    map[string]*Anime
+	malIDToAnime map[string]*Anime
+}
 
-	searchID := strconv.Itoa(search.ID)
+// NewAniListAnimeFinder creates a new finder for Anilist anime.
+func NewAniListAnimeFinder() *AniListAnimeFinder {
+	finder := &AniListAnimeFinder{
+		idToAnime:    map[string]*Anime{},
+		malIDToAnime: map[string]*Anime{},
+	}
 
-	for _, anime := range allAnime {
-		if anime.GetMapping("anilist/anime") == searchID {
-			return anime
+	for anime := range StreamAnime() {
+		id := anime.GetMapping("anilist/anime")
+
+		if id != "" {
+			finder.idToAnime[id] = anime
 		}
 
-		japanese := strings.Replace(anime.Title.Japanese, "2ndシーズン", "2", 1)
-		romaji := strings.Replace(anime.Title.Romaji, " 2nd Season", " 2", 1)
+		malID := anime.GetMapping("myanimelist/anime")
 
-		search.TitleJapanese = strings.TrimSpace(strings.Replace(search.TitleJapanese, "2ndシーズン", "2", 1))
-		search.TitleRomaji = strings.TrimSpace(strings.Replace(search.TitleRomaji, " 2nd Season", " 2", 1))
-
-		titleSimilarity := 0.0
-
-		if anime.Title.Romaji != "" {
-			titleSimilarity = StringSimilarity(anime.Title.Romaji, search.TitleRomaji)
-		} else {
-			titleSimilarity = StringSimilarity(anime.Title.Canonical, search.TitleRomaji)
-		}
-
-		if strings.ToLower(japanese) == strings.ToLower(search.TitleJapanese) {
-			titleSimilarity += 1.0
-		}
-
-		if strings.ToLower(romaji) == strings.ToLower(search.TitleRomaji) {
-			titleSimilarity += 1.0
-		}
-
-		if strings.ToLower(anime.Title.English) == strings.ToLower(search.TitleEnglish) {
-			titleSimilarity += 1.0
-		}
-
-		if titleSimilarity > similarity {
-			mostSimilar = anime
-			similarity = titleSimilarity
+		if malID != "" {
+			finder.malIDToAnime[malID] = anime
 		}
 	}
 
-	if mostSimilar.EpisodeCount != search.TotalEpisodes {
-		similarity -= 0.02
+	return finder
+}
+
+// GetAnime tries to find an AniList anime in our anime database.
+func (finder *AniListAnimeFinder) GetAnime(id string, malID string) *Anime {
+	animeByID, existsByID := finder.idToAnime[id]
+	animeByMALID, existsByMALID := finder.malIDToAnime[malID]
+
+	// If both MAL ID and AniList ID are matched, but the matched anime are different,
+	// then we're trusting the MAL ID matching more and deleting the incorrect mapping.
+	if existsByID && existsByMALID && animeByID.ID != animeByMALID.ID {
+		animeByID.RemoveMapping("anilist/anime")
+		animeByID.Save()
+
+		delete(finder.idToAnime, id)
+
+		fmt.Println("MAL / Anilist mismatch:")
+		fmt.Println(animeByID.ID, animeByID)
+		fmt.Println(animeByMALID.ID, animeByMALID)
 	}
 
-	if similarity >= 0.92 && mostSimilar.GetMapping("anilist/anime") == "" {
-		// fmt.Printf("MATCH:    %s => %s (%.2f)\n", search.TitleRomaji, mostSimilar.Title.Romaji, similarity)
-		mostSimilar.SetMapping("anilist/anime", strconv.Itoa(search.ID))
-		mostSimilar.Save()
-		return mostSimilar
+	// Add anilist mapping to the MAL mapped anime if it's missing
+	if existsByMALID && animeByMALID.GetMapping("anilist/anime") != id {
+		animeByMALID.SetMapping("anilist/anime", id)
+		animeByMALID.Save()
+
+		finder.idToAnime[id] = animeByMALID
 	}
 
-	// color.Red("MISMATCH: %s => %s (%.2f)", search.TitleRomaji, mostSimilar.Title.Romaji, similarity)
+	if existsByID {
+		return animeByID
+	}
+
+	if existsByMALID {
+		return animeByMALID
+	}
+
 	return nil
 }
 
 // AniListAnimeListStatus returns the ARN version of the anime status.
 func AniListAnimeListStatus(item *anilist.AnimeListItem) string {
-	switch item.ListStatus {
-	case "watching":
+	switch item.Status {
+	case "CURRENT", "REPEATING":
 		return AnimeListStatusWatching
-	case "completed":
+	case "COMPLETED":
 		return AnimeListStatusCompleted
-	case "plan to watch":
+	case "PLANNING":
 		return AnimeListStatusPlanned
-	case "on-hold":
+	case "PAUSED":
 		return AnimeListStatusHold
-	case "dropped":
+	case "DROPPED":
 		return AnimeListStatusDropped
 	default:
 		return AnimeListStatusPlanned
