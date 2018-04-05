@@ -43,9 +43,18 @@ func (finder *AniListAnimeFinder) GetAnime(id string, malID string) *Anime {
 	animeByID, existsByID := finder.idToAnime[id]
 	animeByMALID, existsByMALID := finder.malIDToAnime[malID]
 
+	// Add anilist mapping to the MAL mapped anime if it's missing
+	if existsByMALID && animeByMALID.GetMapping("anilist/anime") != id {
+		animeByMALID.SetMapping("anilist/anime", id)
+		animeByMALID.Save()
+
+		finder.idToAnime[id] = animeByMALID
+	}
+
 	// If both MAL ID and AniList ID are matched, but the matched anime are different,
+	// while the MAL IDs are different as well,
 	// then we're trusting the MAL ID matching more and deleting the incorrect mapping.
-	if existsByID && existsByMALID && animeByID.ID != animeByMALID.ID {
+	if existsByID && existsByMALID && animeByID.ID != animeByMALID.ID && animeByID.GetMapping("myanimelist/anime") != animeByMALID.GetMapping("myanimelist/anime") {
 		animeByID.RemoveMapping("anilist/anime")
 		animeByID.Save()
 
@@ -54,14 +63,6 @@ func (finder *AniListAnimeFinder) GetAnime(id string, malID string) *Anime {
 		fmt.Println("MAL / Anilist mismatch:")
 		fmt.Println(animeByID.ID, animeByID)
 		fmt.Println(animeByMALID.ID, animeByMALID)
-	}
-
-	// Add anilist mapping to the MAL mapped anime if it's missing
-	if existsByMALID && animeByMALID.GetMapping("anilist/anime") != id {
-		animeByMALID.SetMapping("anilist/anime", id)
-		animeByMALID.Save()
-
-		finder.idToAnime[id] = animeByMALID
 	}
 
 	if existsByID {
