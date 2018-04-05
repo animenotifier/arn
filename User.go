@@ -326,6 +326,11 @@ func (user *User) ActivateItemEffect(itemID string) error {
 	month := 30 * 24 * time.Hour
 
 	switch itemID {
+	case "pro-account-1":
+		user.ExtendProDuration(1 * month)
+		user.Save()
+		return nil
+
 	case "pro-account-3":
 		user.ExtendProDuration(3 * month)
 		user.Save()
