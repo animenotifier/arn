@@ -15,15 +15,14 @@ import (
 
 // SoundTrack ...
 type SoundTrack struct {
-	ID       string           `json:"id"`
-	Title    string           `json:"title" editable:"true"`
-	NewTitle SoundTrackTitle  `json:"newTitle" editable:"true"`
-	Media    []*ExternalMedia `json:"media" editable:"true"`
-	Links    []*Link          `json:"links" editable:"true"`
-	Lyrics   SoundTrackLyrics `json:"lyrics" editable:"true"`
-	Tags     []string         `json:"tags" editable:"true" tooltip:"<ul><li><strong>anime:ID</strong> to connect it with anime</li><li><strong>opening</strong> for openings</li><li><strong>ending</strong> for endings</li><li><strong>cover</strong> for covers</li><li><strong>remix</strong> for remixes</li></ul>"`
-	IsDraft  bool             `json:"isDraft" editable:"true"`
-	File     string           `json:"file"`
+	ID      string           `json:"id"`
+	Title   SoundTrackTitle  `json:"title" editable:"true"`
+	Media   []*ExternalMedia `json:"media" editable:"true"`
+	Links   []*Link          `json:"links" editable:"true"`
+	Lyrics  SoundTrackLyrics `json:"lyrics" editable:"true"`
+	Tags    []string         `json:"tags" editable:"true" tooltip:"<ul><li><strong>anime:ID</strong> to connect it with anime</li><li><strong>opening</strong> for openings</li><li><strong>ending</strong> for endings</li><li><strong>cover</strong> for covers</li><li><strong>remix</strong> for remixes</li></ul>"`
+	IsDraft bool             `json:"isDraft" editable:"true"`
+	File    string           `json:"file"`
 
 	HasCreator
 	HasEditor
@@ -125,8 +124,8 @@ func (track *SoundTrack) OnLike(likedBy *User) {
 
 	go func() {
 		track.Creator().SendNotification(&PushNotification{
-			Title:   likedBy.Nick + " liked your soundtrack " + track.Title,
-			Message: likedBy.Nick + " liked your soundtrack " + track.Title + ".",
+			Title:   likedBy.Nick + " liked your soundtrack " + track.Title.ByUser(track.Creator()),
+			Message: likedBy.Nick + " liked your soundtrack " + track.Title.ByUser(track.Creator()) + ".",
 			Icon:    "https:" + likedBy.AvatarLink("large"),
 			Link:    "https://notify.moe" + likedBy.Link(),
 			Type:    NotificationTypeLike,
@@ -295,7 +294,7 @@ func (track *SoundTrack) Download() error {
 
 // String implements the default string serialization.
 func (track *SoundTrack) String() string {
-	return track.Title
+	return track.Title.ByUser(nil)
 }
 
 // SortSoundTracksLatestFirst ...

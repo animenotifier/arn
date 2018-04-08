@@ -154,10 +154,19 @@ func SearchSoundTracks(originalTerm string, maxLength int) []*SoundTrack {
 			continue
 		}
 
-		text := strings.ToLower(track.Title)
-
-		// Similarity check
+		text := strings.ToLower(track.Title.Canonical)
 		similarity := AdvancedStringSimilarity(term, text)
+
+		if similarity >= MinimumStringSimilarity {
+			results = append(results, &SearchResult{
+				obj:        track,
+				similarity: similarity,
+			})
+			continue
+		}
+
+		text = strings.ToLower(track.Title.Native)
+		similarity = AdvancedStringSimilarity(term, text)
 
 		if similarity >= MinimumStringSimilarity {
 			results = append(results, &SearchResult{
