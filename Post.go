@@ -14,17 +14,12 @@ type Post struct {
 	AuthorID string   `json:"authorId"`
 	ThreadID string   `json:"threadId"`
 	Tags     []string `json:"tags"`
-	Created  string   `json:"created"`
 	Edited   string   `json:"edited"`
+
+	HasCreator
 	HasLikes
 
 	html string
-}
-
-// Author returns the post author.
-func (post *Post) Author() *User {
-	author, _ := GetUser(post.AuthorID)
-	return author
 }
 
 // Thread returns the thread this post was posted in.
@@ -61,12 +56,12 @@ func (post *Post) String() string {
 
 // OnLike is called when the post receives a like.
 func (post *Post) OnLike(likedBy *User) {
-	if !post.Author().Settings().Notification.ForumLikes {
+	if !post.Creator().Settings().Notification.ForumLikes {
 		return
 	}
 
 	go func() {
-		post.Author().SendNotification(&PushNotification{
+		post.Creator().SendNotification(&PushNotification{
 			Title:   likedBy.Nick + " liked your post",
 			Message: likedBy.Nick + " liked your post in the thread \"" + post.Thread().Title + "\"",
 			Icon:    "https:" + likedBy.AvatarLink("large"),

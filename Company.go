@@ -24,21 +24,20 @@ type Company struct {
 	Tags     []string  `json:"tags" editable:"true"`
 
 	// Editing dates
-	Created   string `json:"created"`
-	CreatedBy string `json:"createdBy"`
-	Edited    string `json:"edited"`
-	EditedBy  string `json:"editedBy"`
+	HasCreator
+	HasEditor
 }
 
 // NewCompany creates a new company.
 func NewCompany() *Company {
 	return &Company{
-		ID:        GenerateID("Company"),
-		Name:      CompanyName{},
-		Created:   DateTimeUTC(),
-		CreatedBy: "",
-		Links:     []*Link{},
-		Tags:      []string{},
+		ID:    GenerateID("Company"),
+		Name:  CompanyName{},
+		Links: []*Link{},
+		Tags:  []string{},
+		HasCreator: HasCreator{
+			Created: DateTimeUTC(),
+		},
 		HasLikes: HasLikes{
 			Likes: []string{},
 		},

@@ -13,11 +13,11 @@ type Postable interface {
 	HTML() string
 	Likes() []string
 	LikedBy(userID string) bool
-	Author() *User
 	Thread() *Thread
 	ThreadID() string
 	Link() string
 	Type() string
+	Creator() *User
 	Created() string
 }
 

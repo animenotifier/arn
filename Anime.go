@@ -83,6 +83,8 @@ type Anime struct {
 
 	// Mixins
 	HasMappings
+	HasCreator
+	HasEditor
 
 	// Company IDs
 	StudioIDs   []string `json:"studios" editable:"true"`
@@ -92,16 +94,8 @@ type Anime struct {
 	// Links to external websites
 	Links []*Link `json:"links" editable:"true"`
 
-	// Editing dates
-	Created   string `json:"created"`
-	CreatedBy string `json:"createdBy"`
-	Edited    string `json:"edited"`
-	EditedBy  string `json:"editedBy"`
-
 	// SynopsisSource string        `json:"synopsisSource" editable:"true"`
 	// Hashtag        string        `json:"hashtag"`
-	// Created        string        `json:"created"`
-	// CreatedBy      string        `json:"createdBy"`
 }
 
 // NewAnime creates a new anime.
@@ -112,7 +106,9 @@ func NewAnime() *Anime {
 		Rating:     &AnimeRating{},
 		Popularity: &AnimePopularity{},
 		Trailers:   []*ExternalMedia{},
-		Created:    DateTimeUTC(),
+		HasCreator: HasCreator{
+			Created: DateTimeUTC(),
+		},
 		HasMappings: HasMappings{
 			Mappings: []*Mapping{},
 		},

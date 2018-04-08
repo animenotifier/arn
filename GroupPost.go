@@ -17,17 +17,12 @@ type GroupPost struct {
 	ChildIDs []string `json:"children"`
 	Tags     []string `json:"tags"`
 	IsDraft  bool     `json:"isDraft" editable:"true"`
-	Created  string   `json:"created"`
 	Edited   string   `json:"edited"`
+
+	HasCreator
 	HasLikes
 
 	html string
-}
-
-// Author returns the group post's author.
-func (post *GroupPost) Author() *User {
-	author, _ := GetUser(post.AuthorID)
-	return author
 }
 
 // Group returns the group post's group.
@@ -59,12 +54,12 @@ func (post *GroupPost) String() string {
 
 // OnLike is called when the group post receives a like.
 func (post *GroupPost) OnLike(likedBy *User) {
-	if !post.Author().Settings().Notification.GroupPostLikes {
+	if !post.Creator().Settings().Notification.GroupPostLikes {
 		return
 	}
 
 	go func() {
-		post.Author().SendNotification(&PushNotification{
+		post.Creator().SendNotification(&PushNotification{
 			Title:   likedBy.Nick + " liked your post",
 			Message: likedBy.Nick + " liked your post in the group \"" + post.Group().Name + "\"",
 			Icon:    "https:" + likedBy.AvatarLink("large"),

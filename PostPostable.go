@@ -25,9 +25,9 @@ func (postable *PostPostable) HTML() string {
 	return postable.post.HTML()
 }
 
-// Author returns the user object representing the post's author.
-func (postable *PostPostable) Author() *User {
-	return postable.post.Author()
+// Creator returns the user object representing the post's author.
+func (postable *PostPostable) Creator() *User {
+	return postable.post.Creator()
 }
 
 // Likes returns an array of user IDs for the post.

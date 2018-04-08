@@ -16,17 +16,12 @@ type Thread struct {
 	Sticky   int      `json:"sticky"`
 	Tags     []string `json:"tags"`
 	Posts    []string `json:"posts"`
-	Created  string   `json:"created"`
 	Edited   string   `json:"edited"`
+
+	HasCreator
 	HasLikes
 
 	html string
-}
-
-// Author returns the thread author.
-func (thread *Thread) Author() *User {
-	author, _ := GetUser(thread.AuthorID)
-	return author
 }
 
 // Link returns the relative URL of the thread.
@@ -51,12 +46,12 @@ func (thread *Thread) String() string {
 
 // OnLike is called when the thread receives a like.
 func (thread *Thread) OnLike(likedBy *User) {
-	if !thread.Author().Settings().Notification.ForumLikes {
+	if !thread.Creator().Settings().Notification.ForumLikes {
 		return
 	}
 
 	go func() {
-		thread.Author().SendNotification(&PushNotification{
+		thread.Creator().SendNotification(&PushNotification{
 			Title:   likedBy.Nick + " liked your thread",
 			Message: likedBy.Nick + " liked your thread \"" + thread.Title + "\"",
 			Icon:    "https:" + likedBy.AvatarLink("large"),

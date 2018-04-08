@@ -18,10 +18,10 @@ type Group struct {
 	Members     []*GroupMember `json:"members"`
 	Neighbors   []string       `json:"neighbors"`
 	IsDraft     bool           `json:"isDraft" editable:"true"`
-	Created     string         `json:"created"`
-	CreatedBy   string         `json:"createdBy"`
-	Edited      string         `json:"edited"`
-	EditedBy    string         `json:"editedBy"`
+
+	// Mixins
+	HasCreator
+	HasEditor
 
 	posts []*GroupPost
 }

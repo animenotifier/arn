@@ -18,28 +18,15 @@ type Quote struct {
 	EpisodeNumber int       `json:"episode" editable:"true"`
 	Time          int       `json:"time" editable:"true"`
 	IsDraft       bool      `json:"isDraft"`
-	Created       string    `json:"created"`
-	CreatedBy     string    `json:"createdBy"`
-	Edited        string    `json:"edited"`
-	EditedBy      string    `json:"editedBy"`
+
+	HasCreator
+	HasEditor
 	HasLikes
 }
 
 // Link returns a single quote.
 func (quote *Quote) Link() string {
 	return "/quote/" + quote.ID
-}
-
-// Creator returns the user who created this quote.
-func (quote *Quote) Creator() *User {
-	user, _ := GetUser(quote.CreatedBy)
-	return user
-}
-
-// EditedByUser returns the user who edited this quote.
-func (quote *Quote) EditedByUser() *User {
-	user, _ := GetUser(quote.EditedBy)
-	return user
 }
 
 // Publish checks the quote and publishes it when no errors were found.
