@@ -11,7 +11,6 @@ import (
 type GroupPost struct {
 	ID       string   `json:"id"`
 	Text     string   `json:"text" editable:"true"`
-	AuthorID string   `json:"authorId"`
 	GroupID  string   `json:"groupId"`
 	ParentID string   `json:"parentId"`
 	ChildIDs []string `json:"children"`
