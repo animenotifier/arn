@@ -42,7 +42,7 @@ type Settings struct {
 
 // NotificationSettings ...
 type NotificationSettings struct {
-	Email                string `json:"email"`
+	Email                string `json:"email" private:"true"`
 	NewFollowers         bool   `json:"newFollowers" editable:"true"`
 	AnimeEpisodeReleases bool   `json:"animeEpisodeReleases" editable:"true"`
 	AnimeFinished        bool   `json:"animeFinished" editable:"true"`

@@ -3,15 +3,15 @@ package arn
 // UserAccounts ...
 type UserAccounts struct {
 	Facebook struct {
-		ID string `json:"id"`
+		ID string `json:"id" private:"true"`
 	} `json:"facebook"`
 
 	Google struct {
-		ID string `json:"id"`
+		ID string `json:"id" private:"true"`
 	} `json:"google"`
 
 	Twitter struct {
-		ID   string `json:"id"`
+		ID   string `json:"id" private:"true"`
 		Nick string `json:"nick"`
 	} `json:"twitter"`
 

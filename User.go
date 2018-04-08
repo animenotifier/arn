@@ -24,30 +24,46 @@ var setEmailMutex sync.Mutex
 type User struct {
 	ID           string       `json:"id"`
 	Nick         string       `json:"nick" editable:"true"`
-	FirstName    string       `json:"firstName"`
-	LastName     string       `json:"lastName"`
-	Email        string       `json:"email" editable:"true"`
+	FirstName    string       `json:"firstName" private:"true"`
+	LastName     string       `json:"lastName" private:"true"`
+	Email        string       `json:"email" editable:"true" private:"true"`
 	Role         string       `json:"role"`
 	Registered   string       `json:"registered"`
-	LastLogin    string       `json:"lastLogin"`
-	LastSeen     string       `json:"lastSeen"`
+	LastLogin    string       `json:"lastLogin" private:"true"`
+	LastSeen     string       `json:"lastSeen" private:"true"`
 	ProExpires   string       `json:"proExpires" editable:"true"`
-	Gender       string       `json:"gender"`
+	Gender       string       `json:"gender" private:"true"`
 	Language     string       `json:"language"`
 	Tagline      string       `json:"tagline" editable:"true"`
 	Introduction string       `json:"introduction" editable:"true" type:"textarea"`
 	Website      string       `json:"website" editable:"true"`
-	IP           string       `json:"ip"`
-	UserAgent    string       `json:"agent"`
-	Balance      int          `json:"balance"`
+	IP           string       `json:"ip" private:"true"`
+	UserAgent    string       `json:"agent" private:"true"`
+	Balance      int          `json:"balance" private:"true"`
 	Avatar       UserAvatar   `json:"avatar"`
 	Cover        UserCover    `json:"cover"`
-	AgeRange     UserAgeRange `json:"ageRange"`
-	Accounts     UserAccounts `json:"accounts"`
-	Browser      UserBrowser  `json:"browser"`
-	OS           UserOS       `json:"os"`
-	Location     *Location    `json:"location"`
+	AgeRange     UserAgeRange `json:"ageRange" private:"true"`
+	Accounts     UserAccounts `json:"accounts" private:"true"`
+	Browser      UserBrowser  `json:"browser" private:"true"`
+	OS           UserOS       `json:"os" private:"true"`
+	Location     *Location    `json:"location" private:"true"`
 	Following    []string     `json:"following"`
+
+	// user.Email = ""
+	// user.Gender = ""
+	// user.FirstName = ""
+	// user.LastName = ""
+	// user.IP = ""
+	// user.UserAgent = ""
+	// user.LastLogin = ""
+	// user.LastSeen = ""
+	// user.Accounts.Facebook.ID = ""
+	// user.Accounts.Google.ID = ""
+	// user.Accounts.Twitter.ID = ""
+	// user.AgeRange = UserAgeRange{}
+	// user.Location = &Location{}
+	// user.Browser = UserBrowser{}
+	// user.OS = UserOS{}
 }
 
 // NewUser creates an empty user object with a unique ID.

@@ -10,7 +10,6 @@ import (
 type Company struct {
 	ID          string      `json:"id"`
 	Name        CompanyName `json:"name" editable:"true"`
-	Image       string      `json:"image"`
 	Description string      `json:"description" editable:"true" type:"textarea"`
 	Links       []*Link     `json:"links" editable:"true"`
 	IsDraft     bool        `json:"isDraft"`
