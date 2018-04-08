@@ -1,11 +1,13 @@
-package arn
+package arn_test
 
 import (
 	"testing"
+
+	"github.com/animenotifier/arn"
 )
 
 func TestNormalizeRatings(t *testing.T) {
-	user, _ := GetUser("4J6qpK1ve")
+	user, _ := arn.GetUser("4J6qpK1ve")
 	animeList := user.AnimeList()
 	animeList.NormalizeRatings()
 }

@@ -37,7 +37,7 @@ func (user *User) Edit(ctx *aero.Context, key string, value reflect.Value, newVa
 	// Automatically correct account nicks
 	if strings.HasPrefix(key, "Accounts.") && strings.HasSuffix(key, ".Nick") {
 		newNick := newValue.String()
-		newNick = autocorrect.FixAccountNick(newNick)
+		newNick = autocorrect.AccountNick(newNick)
 		value.SetString(newNick)
 
 		// Refresh osu info if the name changed

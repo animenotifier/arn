@@ -12,7 +12,7 @@ import (
 
 	"github.com/aerogo/http/client"
 	"github.com/animenotifier/arn/autocorrect"
-	"github.com/animenotifier/arn/validator"
+	"github.com/animenotifier/arn/validate"
 	"github.com/animenotifier/osu"
 	gravatar "github.com/ungerik/go-gravatar"
 )
@@ -362,9 +362,9 @@ func (user *User) SetNick(newName string) error {
 	setNickMutex.Lock()
 	defer setNickMutex.Unlock()
 
-	newName = autocorrect.FixUserNick(newName)
+	newName = autocorrect.UserNick(newName)
 
-	if !validator.IsValidNick(newName) {
+	if !validate.Nick(newName) {
 		return errors.New("Invalid nickname")
 	}
 
@@ -404,7 +404,7 @@ func (user *User) SetEmail(newName string) error {
 	setEmailMutex.Lock()
 	defer setEmailMutex.Unlock()
 
-	if !validator.IsValidEmail(user.Email) {
+	if !validate.Email(user.Email) {
 		return errors.New("Invalid email address")
 	}
 

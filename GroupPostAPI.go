@@ -73,7 +73,7 @@ func (post *GroupPost) Create(ctx *aero.Context) error {
 	post.Edited = ""
 
 	// Post-process text
-	post.Text = autocorrect.FixPostText(post.Text)
+	post.Text = autocorrect.PostText(post.Text)
 
 	if len(post.Text) < 5 {
 		return errors.New("Text too short: Should be at least 5 characters")

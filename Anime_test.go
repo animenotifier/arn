@@ -1,8 +1,9 @@
-package arn
+package arn_test
 
 import (
 	"testing"
 
+	"github.com/animenotifier/arn"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -14,7 +15,7 @@ func TestStreamAnime(t *testing.T) {
 		"tba",
 	}
 
-	for anime := range StreamAnime() {
+	for anime := range arn.StreamAnime() {
 		assert.NotEmpty(t, anime.ID)
 		assert.Contains(t, validAnimeStatus, anime.Status)
 		assert.NotEmpty(t, anime.Link())

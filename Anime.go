@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/aerogo/nano"
-	"github.com/animenotifier/arn/validator"
+	"github.com/animenotifier/arn/validate"
 	"github.com/animenotifier/twist"
 
 	"github.com/animenotifier/kitsu"
@@ -411,7 +411,7 @@ func (anime *Anime) RefreshEpisodes() error {
 	timeDifference := oneWeek
 
 	for _, episode := range episodes.Items {
-		if validator.IsValidDate(episode.AiringDate.Start) {
+		if validate.Date(episode.AiringDate.Start) {
 			if lastAiringDate != "" {
 				a, _ := time.Parse(time.RFC3339, lastAiringDate)
 				b, _ := time.Parse(time.RFC3339, episode.AiringDate.Start)
@@ -549,7 +549,7 @@ func (anime *Anime) UpcomingEpisodes() []*UpcomingEpisode {
 	now := time.Now().UTC().Format(time.RFC3339)
 
 	for _, episode := range anime.Episodes().Items {
-		if episode.AiringDate.Start > now && validator.IsValidDate(episode.AiringDate.Start) {
+		if episode.AiringDate.Start > now && validate.Date(episode.AiringDate.Start) {
 			upcomingEpisodes = append(upcomingEpisodes, &UpcomingEpisode{
 				Anime:   anime,
 				Episode: episode,
@@ -565,7 +565,7 @@ func (anime *Anime) UpcomingEpisode() *UpcomingEpisode {
 	now := time.Now().UTC().Format(time.RFC3339)
 
 	for _, episode := range anime.Episodes().Items {
-		if episode.AiringDate.Start > now && validator.IsValidDate(episode.AiringDate.Start) {
+		if episode.AiringDate.Start > now && validate.Date(episode.AiringDate.Start) {
 			return &UpcomingEpisode{
 				Anime:   anime,
 				Episode: episode,

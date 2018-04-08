@@ -1,21 +1,22 @@
-package arn
+package arn_test
 
 import (
 	"strings"
 	"testing"
 
+	"github.com/animenotifier/arn"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewUser(t *testing.T) {
-	user := NewUser()
+	user := arn.NewUser()
 
 	assert.NotNil(t, user)
 	assert.NotEmpty(t, user.ID)
 }
 
 func TestDatabaseErrorMessages(t *testing.T) {
-	_, err := GetUser("NON EXISTENT USER ID")
+	_, err := arn.GetUser("NON EXISTENT USER ID")
 
 	// We need to make sure that non-existent records return "not found" in the error message.
 	assert.NotNil(t, err)

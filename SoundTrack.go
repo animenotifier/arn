@@ -147,7 +147,7 @@ func (track *SoundTrack) Publish() error {
 	animeFound := false
 
 	for _, tag := range track.Tags {
-		tag = autocorrect.FixTag(tag)
+		tag = autocorrect.Tag(tag)
 
 		if strings.HasPrefix(tag, "anime:") {
 			animeID := strings.TrimPrefix(tag, "anime:")

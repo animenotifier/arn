@@ -80,8 +80,8 @@ func (thread *Thread) Create(ctx *aero.Context) error {
 	thread.Edited = ""
 
 	// Post-process text
-	thread.Title = autocorrect.FixThreadTitle(thread.Title)
-	thread.Text = autocorrect.FixPostText(thread.Text)
+	thread.Title = autocorrect.ThreadTitle(thread.Title)
+	thread.Text = autocorrect.PostText(thread.Text)
 
 	// Tags
 	tags, _ := data["tags"].([]interface{})
