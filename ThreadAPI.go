@@ -41,7 +41,7 @@ func (thread *Thread) Authorize(ctx *aero.Context, action string) error {
 	if action == "edit" {
 		user := GetUserFromContext(ctx)
 
-		if thread.AuthorID != user.ID {
+		if thread.CreatedBy != user.ID {
 			return errors.New("Can't edit the threads of other users")
 		}
 	}
@@ -72,7 +72,7 @@ func (thread *Thread) Create(ctx *aero.Context) error {
 	thread.ID = GenerateID("Thread")
 	thread.Title, _ = data["title"].(string)
 	thread.Text, _ = data["text"].(string)
-	thread.AuthorID = user.ID
+	thread.CreatedBy = user.ID
 	thread.Sticky, _ = data["sticky"].(int)
 	thread.Likes = []string{}
 	thread.Posts = []string{}

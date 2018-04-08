@@ -9,15 +9,15 @@ import (
 
 // GroupPost represents a group post.
 type GroupPost struct {
-	ID       string   `json:"id"`
-	Text     string   `json:"text" editable:"true"`
-	AuthorID string   `json:"authorId"`
-	GroupID  string   `json:"groupId"`
-	ParentID string   `json:"parentId"`
-	ChildIDs []string `json:"children"`
-	Tags     []string `json:"tags"`
-	IsDraft  bool     `json:"isDraft" editable:"true"`
-	Edited   string   `json:"edited"`
+	ID        string   `json:"id"`
+	Text      string   `json:"text" editable:"true"`
+	CreatedBy string   `json:"CreatedBy"`
+	GroupID   string   `json:"groupId"`
+	ParentID  string   `json:"parentId"`
+	ChildIDs  []string `json:"children"`
+	Tags      []string `json:"tags"`
+	IsDraft   bool     `json:"isDraft" editable:"true"`
+	Edited    string   `json:"edited"`
 
 	HasCreator
 	HasLikes
@@ -127,7 +127,7 @@ func GetGroupPostsByUser(user *User) ([]*GroupPost, error) {
 	var posts []*GroupPost
 
 	for post := range StreamGroupPosts() {
-		if post.AuthorID == user.ID {
+		if post.CreatedBy == user.ID {
 			posts = append(posts, post)
 		}
 	}

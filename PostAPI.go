@@ -41,7 +41,7 @@ func (post *Post) Authorize(ctx *aero.Context, action string) error {
 	if action == "edit" {
 		user := GetUserFromContext(ctx)
 
-		if post.AuthorID != user.ID {
+		if post.CreatedBy != user.ID {
 			return errors.New("Can't edit the posts of other users")
 		}
 	}
@@ -65,7 +65,7 @@ func (post *Post) Create(ctx *aero.Context) error {
 
 	post.ID = GenerateID("Post")
 	post.Text, _ = data["text"].(string)
-	post.AuthorID = user.ID
+	post.CreatedBy = user.ID
 	post.ThreadID, _ = data["threadId"].(string)
 	post.Likes = []string{}
 	post.Created = DateTimeUTC()
@@ -106,14 +106,14 @@ func (post *Post) Create(ctx *aero.Context) error {
 
 		if err == nil {
 			notifyUsers := map[string]bool{}
-			notifyUsers[thread.AuthorID] = true
+			notifyUsers[thread.CreatedBy] = true
 
 			for _, post := range posts {
-				notifyUsers[post.AuthorID] = true
+				notifyUsers[post.CreatedBy] = true
 			}
 
 			// Exclude author of the new post
-			delete(notifyUsers, post.AuthorID)
+			delete(notifyUsers, post.CreatedBy)
 
 			// Notify
 			notification := &PushNotification{

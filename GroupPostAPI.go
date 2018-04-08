@@ -41,7 +41,7 @@ func (post *GroupPost) Authorize(ctx *aero.Context, action string) error {
 	if action == "edit" {
 		user := GetUserFromContext(ctx)
 
-		if post.AuthorID != user.ID {
+		if post.CreatedBy != user.ID {
 			return errors.New("Can't edit the posts of other users")
 		}
 	}
@@ -65,7 +65,7 @@ func (post *GroupPost) Create(ctx *aero.Context) error {
 
 	post.ID = GenerateID("GroupPost")
 	post.Text, _ = data["text"].(string)
-	post.AuthorID = user.ID
+	post.CreatedBy = user.ID
 	post.GroupID = data["groupId"].(string)
 	post.Likes = []string{}
 	post.ChildIDs = []string{}

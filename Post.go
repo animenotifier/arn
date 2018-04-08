@@ -9,12 +9,12 @@ import (
 
 // Post represents a forum post.
 type Post struct {
-	ID       string   `json:"id"`
-	Text     string   `json:"text" editable:"true"`
-	AuthorID string   `json:"authorId"`
-	ThreadID string   `json:"threadId"`
-	Tags     []string `json:"tags"`
-	Edited   string   `json:"edited"`
+	ID        string   `json:"id"`
+	Text      string   `json:"text" editable:"true"`
+	CreatedBy string   `json:"CreatedBy"`
+	ThreadID  string   `json:"threadId"`
+	Tags      []string `json:"tags"`
+	Edited    string   `json:"edited"`
 
 	HasCreator
 	HasLikes
@@ -155,7 +155,7 @@ func GetPostsByUser(user *User) ([]*Post, error) {
 	var posts []*Post
 
 	for post := range StreamPosts() {
-		if post.AuthorID == user.ID {
+		if post.CreatedBy == user.ID {
 			posts = append(posts, post)
 		}
 	}
