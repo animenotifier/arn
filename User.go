@@ -43,10 +43,10 @@ type User struct {
 	Avatar       UserAvatar   `json:"avatar"`
 	Cover        UserCover    `json:"cover"`
 	AgeRange     UserAgeRange `json:"ageRange"`
-	Location     Location     `json:"location"`
 	Accounts     UserAccounts `json:"accounts"`
 	Browser      UserBrowser  `json:"browser"`
 	OS           UserOS       `json:"os"`
+	Location     *Location    `json:"location"`
 	Following    []string     `json:"following"`
 }
 
@@ -57,6 +57,7 @@ func NewUser() *User {
 
 		// Avoid nil value fields
 		Following: make([]string, 0),
+		Location:  &Location{},
 	}
 
 	return user

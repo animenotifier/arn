@@ -121,7 +121,7 @@ func (user *User) Filter() {
 	user.Accounts.Google.ID = ""
 	user.Accounts.Twitter.ID = ""
 	user.AgeRange = UserAgeRange{}
-	user.Location = Location{}
+	user.Location = &Location{}
 	user.Browser = UserBrowser{}
 	user.OS = UserOS{}
 }

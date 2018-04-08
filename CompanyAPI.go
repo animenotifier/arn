@@ -51,6 +51,7 @@ func (company *Company) Create(ctx *aero.Context) error {
 	company.Links = []*Link{}
 	company.Tags = []string{}
 	company.Likes = []string{}
+	company.Location = &Location{}
 
 	// Write log entry
 	logEntry := NewEditLogEntry(user.ID, "create", "Company", company.ID, "", "", "")

@@ -20,8 +20,8 @@ type Company struct {
 	HasLikes
 
 	// Other editable fields
-	Location Location `json:"location" editable:"true"`
-	Tags     []string `json:"tags" editable:"true"`
+	Location *Location `json:"location" editable:"true"`
+	Tags     []string  `json:"tags" editable:"true"`
 
 	// Editing dates
 	Created   string `json:"created"`
