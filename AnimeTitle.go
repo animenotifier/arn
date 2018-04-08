@@ -10,7 +10,7 @@ type AnimeTitle struct {
 	Synonyms  []string `json:"synonyms" editable:"true"`
 }
 
-// ByUser ...
+// ByUser returns the preferred title for the given user.
 func (title *AnimeTitle) ByUser(user *User) string {
 	if user == nil {
 		return title.Canonical

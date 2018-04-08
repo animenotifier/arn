@@ -15,13 +15,15 @@ import (
 
 // SoundTrack ...
 type SoundTrack struct {
-	ID      string           `json:"id"`
-	Title   string           `json:"title" editable:"true"`
-	Media   []*ExternalMedia `json:"media" editable:"true"`
-	Links   []*Link          `json:"links" editable:"true"`
-	Tags    []string         `json:"tags" editable:"true" tooltip:"<ul><li><strong>anime:ID</strong> to connect it with anime</li><li><strong>opening</strong> for openings</li><li><strong>ending</strong> for endings</li><li><strong>cover</strong> for covers</li><li><strong>remix</strong> for remixes</li></ul>"`
-	IsDraft bool             `json:"isDraft" editable:"true"`
-	File    string           `json:"file"`
+	ID       string           `json:"id"`
+	Title    string           `json:"title" editable:"true"`
+	NewTitle SoundTrackTitle  `json:"newTitle" editable:"true"`
+	Media    []*ExternalMedia `json:"media" editable:"true"`
+	Links    []*Link          `json:"links" editable:"true"`
+	Lyrics   SoundTrackLyrics `json:"lyrics" editable:"true"`
+	Tags     []string         `json:"tags" editable:"true" tooltip:"<ul><li><strong>anime:ID</strong> to connect it with anime</li><li><strong>opening</strong> for openings</li><li><strong>ending</strong> for endings</li><li><strong>cover</strong> for covers</li><li><strong>remix</strong> for remixes</li></ul>"`
+	IsDraft  bool             `json:"isDraft" editable:"true"`
+	File     string           `json:"file"`
 
 	HasCreator
 	HasEditor
