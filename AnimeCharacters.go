@@ -20,6 +20,11 @@ func (characters *AnimeCharacters) Anime() *Anime {
 	return anime
 }
 
+// Link returns the link for that object.
+func (characters *AnimeCharacters) Link() string {
+	return "/anime/" + characters.AnimeID + "/characters"
+}
+
 // String implements the default string serialization.
 func (characters *AnimeCharacters) String() string {
 	return characters.Anime().String()

@@ -15,6 +15,11 @@ type AnimeRelations struct {
 	sync.Mutex
 }
 
+// Link returns the link for that object.
+func (relations *AnimeRelations) Link() string {
+	return "/anime/" + relations.AnimeID + "/relations"
+}
+
 // SortByStartDate ...
 func (relations *AnimeRelations) SortByStartDate() {
 	relations.Lock()

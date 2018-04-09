@@ -17,6 +17,11 @@ type AnimeEpisodes struct {
 	sync.Mutex
 }
 
+// Link returns the link for that object.
+func (episodes *AnimeEpisodes) Link() string {
+	return "/anime/" + episodes.AnimeID + "/episodes"
+}
+
 // Find finds the given episode number.
 func (episodes *AnimeEpisodes) Find(episodeNumber int) *AnimeEpisode {
 	episodes.Lock()

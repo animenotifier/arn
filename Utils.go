@@ -85,6 +85,23 @@ func GetObjectTitle(typeName string, id string) string {
 	return fmt.Sprint(obj)
 }
 
+// GetObjectLink ...
+func GetObjectLink(typeName string, id string) string {
+	obj, err := DB.Get(typeName, id)
+
+	if err != nil {
+		return fmt.Sprintf("<not found: %s>", id)
+	}
+
+	linkable, ok := obj.(Linkable)
+
+	if ok {
+		return linkable.Link()
+	}
+
+	return "/" + strings.ToLower(typeName) + "/" + id
+}
+
 // FilterIDTags returns all IDs of the given type in the tag list.
 func FilterIDTags(tags []string, idType string) []string {
 	var idList []string
