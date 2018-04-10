@@ -85,6 +85,7 @@ func (quote *Quote) AfterEdit(ctx *aero.Context) error {
 	if quote.IsMainQuote {
 		if character.MainQuoteID != "" {
 			previousMainQuote, err := GetQuote(character.MainQuoteID)
+
 			if err != nil {
 				return errors.New("Previous main quote does not exist")
 			}

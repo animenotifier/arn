@@ -13,8 +13,8 @@ type Character struct {
 	Image       CharacterImage        `json:"image"`
 	Description string                `json:"description"`
 	Attributes  []*CharacterAttribute `json:"attributes"`
-	HasMappings
 	MainQuoteID string                `json:"mainQuoteId"`
+	HasMappings
 }
 
 // Link ...
