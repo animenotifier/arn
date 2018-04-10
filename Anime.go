@@ -464,23 +464,17 @@ func (anime *Anime) ShoboiEpisodes() ([]*AnimeEpisode, error) {
 	for _, shoboiEpisode := range shoboiEpisodes {
 		episode := NewAnimeEpisode()
 		episode.Number = shoboiEpisode.Number
-		episode.Title = &EpisodeTitle{
-			Japanese: shoboiEpisode.TitleJapanese,
-		}
+		episode.Title.Japanese = shoboiEpisode.TitleJapanese
 
 		// Try to get airing date
 		airingDate := shoboiEpisode.AiringDate
 
 		if airingDate != nil {
-			episode.AiringDate = &AnimeAiringDate{
-				Start: airingDate.Start,
-				End:   airingDate.End,
-			}
+			episode.AiringDate.Start = airingDate.Start
+			episode.AiringDate.End = airingDate.End
 		} else {
-			episode.AiringDate = &AnimeAiringDate{
-				Start: "",
-				End:   "",
-			}
+			episode.AiringDate.Start = ""
+			episode.AiringDate.End = ""
 		}
 
 		arnEpisodes = append(arnEpisodes, episode)

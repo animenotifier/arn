@@ -5,8 +5,8 @@ import "github.com/animenotifier/arn/validate"
 // AnimeEpisode ...
 type AnimeEpisode struct {
 	Number     int               `json:"number" editable:"true"`
-	Title      *EpisodeTitle     `json:"title" editable:"true"`
-	AiringDate *AnimeAiringDate  `json:"airingDate" editable:"true"`
+	Title      EpisodeTitle      `json:"title" editable:"true"`
+	AiringDate AnimeAiringDate   `json:"airingDate" editable:"true"`
 	Links      map[string]string `json:"links"`
 }
 
@@ -49,18 +49,12 @@ func (a *AnimeEpisode) Merge(b *AnimeEpisode) {
 	}
 
 	// Airing date
-	if a.AiringDate == nil {
-		a.AiringDate = &AnimeAiringDate{}
+	if validate.Date(b.AiringDate.Start) {
+		a.AiringDate.Start = b.AiringDate.Start
 	}
 
-	if b.AiringDate != nil {
-		if validate.Date(b.AiringDate.Start) {
-			a.AiringDate.Start = b.AiringDate.Start
-		}
-
-		if validate.Date(b.AiringDate.End) {
-			a.AiringDate.End = b.AiringDate.End
-		}
+	if validate.Date(b.AiringDate.End) {
+		a.AiringDate.End = b.AiringDate.End
 	}
 
 	// Links
@@ -77,8 +71,8 @@ func (a *AnimeEpisode) Merge(b *AnimeEpisode) {
 func NewAnimeEpisode() *AnimeEpisode {
 	return &AnimeEpisode{
 		Number:     -1,
-		Title:      new(EpisodeTitle),
-		AiringDate: new(AnimeAiringDate),
+		Title:      EpisodeTitle{},
+		AiringDate: AnimeAiringDate{},
 		Links:      map[string]string{},
 	}
 }
