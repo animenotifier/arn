@@ -9,11 +9,11 @@ import (
 // Character ...
 type Character struct {
 	ID          string                `json:"id"`
-	Name        CharacterName         `json:"name"`
+	Name        CharacterName         `json:"name" editable:"true"`
 	Image       CharacterImage        `json:"image"`
-	Description string                `json:"description"`
-	Attributes  []*CharacterAttribute `json:"attributes"`
-	MainQuoteID string                `json:"mainQuoteId"`
+	Description string                `json:"description" editable:"true" type:"textarea"`
+	MainQuoteID string                `json:"mainQuoteId" editable:"true"`
+	Attributes  []*CharacterAttribute `json:"attributes" editable:"true"`
 	HasMappings
 }
 
