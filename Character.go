@@ -11,8 +11,9 @@ type Character struct {
 	ID          string                `json:"id"`
 	Name        CharacterName         `json:"name" editable:"true"`
 	Image       CharacterImage        `json:"image"`
-	Description string                `json:"description" editable:"true" type:"textarea"`
 	MainQuoteID string                `json:"mainQuoteId" editable:"true"`
+	Description string                `json:"description" editable:"true" type:"textarea"`
+	Spoilers    []Spoiler             `json:"spoilers" editable:"true"`
 	Attributes  []*CharacterAttribute `json:"attributes" editable:"true"`
 	HasMappings
 }
