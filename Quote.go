@@ -17,12 +17,16 @@ type Quote struct {
 	AnimeID       string    `json:"animeId" editable:"true"`
 	EpisodeNumber int       `json:"episode" editable:"true"`
 	Time          int       `json:"time" editable:"true"`
-	IsMainQuote   bool      `json:"isMainQuote" editable:"true"`
 	IsDraft       bool      `json:"isDraft"`
 
 	HasCreator
 	HasEditor
 	HasLikes
+}
+
+// IsMainQuote returns true if the quote is the main quote of the character.
+func (quote *Quote) IsMainQuote() bool {
+	return quote.CharacterID != "" && quote.Character().MainQuoteID == quote.ID
 }
 
 // Link returns a single quote.
@@ -88,23 +92,10 @@ func (quote *Quote) Publish() error {
 	}
 
 	// Invalid character ID
-	character, characterErr := GetCharacter(quote.CharacterID)
+	_, characterErr := GetCharacter(quote.CharacterID)
 
 	if characterErr != nil {
 		return errors.New("Character does not exist")
-	}
-
-	if quote.IsMainQuote {
-		if character.MainQuoteID == "" {
-			previousMainQuote, err := GetQuote(character.MainQuoteID)
-			if err != nil {
-				return errors.New("Previous main quote does not exist")
-			}
-
-			previousMainQuote.IsMainQuote = false
-		}
-
-		character.MainQuoteID = quote.ID
 	}
 
 	// Publish

@@ -51,7 +51,6 @@ func (quote *Quote) Create(ctx *aero.Context) error {
 	quote.Likes = []string{}
 	quote.EpisodeNumber = -1
 	quote.Time = -1
-	quote.IsMainQuote = false
 
 	// Write log entry
 	logEntry := NewEditLogEntry(user.ID, "create", "Quote", quote.ID, "", "", "")
@@ -75,26 +74,6 @@ func (quote *Quote) Edit(ctx *aero.Context, key string, value reflect.Value, new
 func (quote *Quote) AfterEdit(ctx *aero.Context) error {
 	quote.Edited = DateTimeUTC()
 	quote.EditedBy = GetUserFromContext(ctx).ID
-
-	// Invalid character ID
-	character, characterErr := GetCharacter(quote.CharacterID)
-
-	if characterErr != nil {
-		return errors.New("Character does not exist")
-	}
-	if quote.IsMainQuote {
-		if character.MainQuoteID != "" {
-			previousMainQuote, err := GetQuote(character.MainQuoteID)
-
-			if err != nil {
-				return errors.New("Previous main quote does not exist")
-			}
-
-			previousMainQuote.IsMainQuote = false
-		}
-
-		character.MainQuoteID = quote.ID
-	}
 	return nil
 }
 
