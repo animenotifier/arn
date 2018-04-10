@@ -22,6 +22,11 @@ func (character *Character) Link() string {
 	return "/character/" + character.ID
 }
 
+// String returns the canonical name of the character.
+func (character *Character) String() string {
+	return character.Name.Canonical
+}
+
 // MainQuote ...
 func (character *Character) MainQuote() *Quote {
 	quote, _ := GetQuote(character.MainQuoteID)
