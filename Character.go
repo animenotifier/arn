@@ -22,6 +22,12 @@ func (character *Character) Link() string {
 	return "/character/" + character.ID
 }
 
+// MainQuote ...
+func (character *Character) MainQuote() *Quote {
+	quote, _ := GetQuote(character.MainQuoteID)
+	return quote
+}
+
 // ImageLink ...
 func (character *Character) ImageLink(size string) string {
 	return fmt.Sprintf("//media.kitsu.io/characters/images/%s/original%s?%d", character.ID, character.Image.Extension, character.Image.LastModified)
