@@ -36,7 +36,7 @@ func (character *Character) MainQuote() *Quote {
 
 // ImageLink ...
 func (character *Character) ImageLink(size string) string {
-	return fmt.Sprintf("//media.kitsu.io/characters/images/%s/original%s?%d", character.ID, character.Image.Extension, character.Image.LastModified)
+	return fmt.Sprintf("//media.kitsu.io/characters/images/%s/original%s?%d", character.GetMapping("kitsu/character"), character.Image.Extension, character.Image.LastModified)
 }
 
 // Anime returns a list of all anime the character appears in.
@@ -89,6 +89,23 @@ func StreamCharacters() chan *Character {
 	}()
 
 	return channel
+}
+
+// FilterCharacters filters all characters by a custom function.
+func FilterCharacters(filter func(*Character) bool) []*Character {
+	var filtered []*Character
+
+	channel := DB.All("Character")
+
+	for obj := range channel {
+		realObject := obj.(*Character)
+
+		if filter(realObject) {
+			filtered = append(filtered, realObject)
+		}
+	}
+
+	return filtered
 }
 
 // AllCharacters returns a slice of all characters.
