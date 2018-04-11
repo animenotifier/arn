@@ -3,6 +3,7 @@ package imageoutput
 import (
 	"image"
 	"image/jpeg"
+	"io/ioutil"
 	"os"
 	"path"
 
@@ -20,14 +21,18 @@ type JPEGFile struct {
 // Save writes the image in JPEG format to the file system.
 func (output *JPEGFile) Save(avatar *MetaImage, baseName string) error {
 	img := avatar.Image
+	suppliedWidth := img.Bounds().Dx()
+	suppliedHeight := img.Bounds().Dy()
+	fileName := path.Join(output.Directory, baseName+".jpg")
 
-	// Resize & crop
-	if img.Bounds().Dx() != output.Width || img.Bounds().Dy() != output.Height {
+	if suppliedWidth != output.Width || suppliedHeight != output.Height {
+		// Resize & crop
 		img = imaging.Fill(img, output.Width, output.Height, imaging.Center, imaging.Lanczos)
+	} else if avatar.Extension() == ".jpg" {
+		// If it's the same image encoding and same size, save the file as is
+		return ioutil.WriteFile(fileName, avatar.Data, 0644)
 	}
 
-	// Write to file
-	fileName := path.Join(output.Directory, baseName+".jpg")
 	return saveJPEG(img, fileName, output.Quality)
 }
 

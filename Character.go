@@ -34,9 +34,26 @@ func (character *Character) MainQuote() *Quote {
 	return quote
 }
 
+// AverageColor returns the average color of the image.
+func (character *Character) AverageColor() string {
+	color := character.Image.AverageColor
+
+	if color.Hue == 0 && color.Saturation == 0 && color.Lightness == 0 {
+		return ""
+	}
+
+	return color.String()
+}
+
 // ImageLink ...
 func (character *Character) ImageLink(size string) string {
-	return fmt.Sprintf("//media.kitsu.io/characters/images/%s/original%s?%d", character.GetMapping("kitsu/character"), character.Image.Extension, character.Image.LastModified)
+	extension := ".jpg"
+
+	if size == "original" {
+		extension = character.Image.Extension
+	}
+
+	return fmt.Sprintf("//%s/images/characters/%s/%s%s?%v", MediaHost, size, character.ID, extension, character.Image.LastModified)
 }
 
 // Anime returns a list of all anime the character appears in.
