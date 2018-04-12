@@ -54,6 +54,7 @@ var DB = Node.Namespace("arn").RegisterTypes(
 // MAL is the client for the MyAnimeList database.
 var MAL = Node.Namespace("mal").RegisterTypes(
 	(*mal.Anime)(nil),
+	(*mal.Character)(nil),
 )
 
 // Kitsu is the client for the Kitsu database.
