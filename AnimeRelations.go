@@ -7,7 +7,7 @@ import (
 	"github.com/aerogo/nano"
 )
 
-// AnimeRelations ...
+// AnimeRelations is a list of relations for an anime.
 type AnimeRelations struct {
 	AnimeID string           `json:"animeId" mainID:"true"`
 	Items   []*AnimeRelation `json:"items" editable:"true"`

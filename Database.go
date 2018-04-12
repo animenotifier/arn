@@ -7,9 +7,6 @@ import (
 	"github.com/animenotifier/mal"
 )
 
-// Session ...
-type Session map[string]interface{}
-
 // Node represents the database node.
 var Node = nano.New(5000)
 

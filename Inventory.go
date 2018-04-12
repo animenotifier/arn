@@ -7,9 +7,9 @@ import (
 // DefaultInventorySlotCount tells you how many slots are available by default in an inventory.
 const DefaultInventorySlotCount = 24
 
-// Inventory ...
+// Inventory has inventory slots that store shop item IDs and their quantity.
 type Inventory struct {
-	UserID string               `json:"userId"`
+	UserID string           `json:"userId"`
 	Slots  []*InventorySlot `json:"slots"`
 }
 

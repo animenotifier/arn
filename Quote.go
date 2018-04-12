@@ -9,7 +9,7 @@ import (
 	"github.com/fatih/color"
 )
 
-// Quote ...
+// Quote is a quote made by a character in an anime.
 type Quote struct {
 	ID            string    `json:"id"`
 	Text          QuoteText `json:"text" editable:"true"`

@@ -27,7 +27,7 @@ const (
 	TitleLanguageJapanese = "japanese"
 )
 
-// Settings ...
+// Settings represents user settings.
 type Settings struct {
 	UserID        string               `json:"userId"`
 	SortBy        string               `json:"sortBy"`

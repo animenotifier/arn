@@ -2,7 +2,7 @@ package arn
 
 import "github.com/aerogo/nano"
 
-// Purchase ...
+// Purchase represents an item purchase by a user.
 type Purchase struct {
 	ID       string `json:"id"`
 	UserID   string `json:"userId"`

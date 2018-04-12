@@ -15,9 +15,9 @@ type PushSubscription struct {
 		Width  int `json:"width"`
 		Height int `json:"height"`
 	} `json:"screen"`
-	Endpoint    string `json:"endpoint"`
-	P256DH      string `json:"p256dh"`
-	Auth        string `json:"auth"`
+	Endpoint    string `json:"endpoint" private:"true"`
+	P256DH      string `json:"p256dh" private:"true"`
+	Auth        string `json:"auth" private:"true"`
 	Created     string `json:"created"`
 	LastSuccess string `json:"lastSuccess"`
 }

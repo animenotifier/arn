@@ -7,7 +7,7 @@ import (
 	"github.com/aerogo/nano"
 )
 
-// Post represents a forum post.
+// Post is a forum post.
 type Post struct {
 	ID       string   `json:"id"`
 	Text     string   `json:"text" editable:"true"`

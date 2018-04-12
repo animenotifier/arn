@@ -8,6 +8,12 @@ import (
 	"github.com/aerogo/api"
 )
 
+// Force interface implementations
+var (
+	_ api.Editable = (*PushSubscriptions)(nil)
+	_ api.Filter   = (*PushSubscriptions)(nil)
+)
+
 // Actions
 func init() {
 	API.RegisterActions("PushSubscriptions", []*api.Action{
@@ -77,40 +83,24 @@ func init() {
 	})
 }
 
-// Add adds a subscription to the list if it hasn't been added yet.
-func (list *PushSubscriptions) Add(subscription *PushSubscription) error {
-	if list.Contains(subscription.ID()) {
-		return errors.New("PushSubscription " + subscription.ID() + " has already been added")
-	}
-
-	subscription.Created = DateTimeUTC()
-
-	list.Items = append(list.Items, subscription)
-
-	return nil
-}
-
-// Remove removes the subscription ID from the list.
-func (list *PushSubscriptions) Remove(subscriptionID string) bool {
-	for index, item := range list.Items {
-		if item.ID() == subscriptionID {
-			list.Items = append(list.Items[:index], list.Items[index+1:]...)
-			return true
-		}
-	}
-
-	return false
-}
-
-// Contains checks if the list contains the subscription ID already.
-func (list *PushSubscriptions) Contains(subscriptionID string) bool {
+// Filter removes privacy critical fields from the settings object.
+func (list *PushSubscriptions) Filter() {
 	for _, item := range list.Items {
-		if item.ID() == subscriptionID {
-			return true
-		}
+		item.P256DH = ""
+		item.Auth = ""
+		item.Endpoint = ""
+	}
+}
+
+// ShouldFilter tells whether data needs to be filtered in the given context.
+func (list *PushSubscriptions) ShouldFilter(ctx *aero.Context) bool {
+	ctxUser := GetUserFromContext(ctx)
+
+	if ctxUser != nil && ctxUser.Role == "admin" {
+		return false
 	}
 
-	return false
+	return true
 }
 
 // Authorize returns an error if the given API request is not authorized.

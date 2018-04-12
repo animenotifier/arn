@@ -19,7 +19,7 @@ const (
 	ShopItemRarityLegendary = "legendary"
 )
 
-// ShopItem ...
+// ShopItem is a purchasable item in the shop.
 type ShopItem struct {
 	ID          string `json:"id"`
 	Name        string `json:"name"`

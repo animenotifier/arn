@@ -20,7 +20,7 @@ import (
 var setNickMutex sync.Mutex
 var setEmailMutex sync.Mutex
 
-// User ...
+// User is a registered person.
 type User struct {
 	ID           string       `json:"id"`
 	Nick         string       `json:"nick" editable:"true"`

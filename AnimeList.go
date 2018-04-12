@@ -9,7 +9,7 @@ import (
 	"github.com/aerogo/nano"
 )
 
-// AnimeList ...
+// AnimeList is a list of anime list items.
 type AnimeList struct {
 	UserID string           `json:"userId"`
 	Items  []*AnimeListItem `json:"items"`

@@ -7,7 +7,7 @@ import (
 	"github.com/aerogo/nano"
 )
 
-// GroupPost represents a group post.
+// GroupPost is a group post.
 type GroupPost struct {
 	ID       string   `json:"id"`
 	Text     string   `json:"text" editable:"true"`

@@ -1,6 +1,6 @@
 package arn
 
-// IDList ...
+// IDList stores lists of IDs that are retrievable by name.
 type IDList []string
 
 // GetIDList ...

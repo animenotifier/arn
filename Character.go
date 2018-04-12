@@ -6,7 +6,7 @@ import (
 	"github.com/aerogo/nano"
 )
 
-// Character ...
+// Character represents an anime or manga character.
 type Character struct {
 	ID          string                `json:"id"`
 	Name        CharacterName         `json:"name" editable:"true"`

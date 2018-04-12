@@ -6,7 +6,7 @@ import (
 	"github.com/aerogo/nano"
 )
 
-// Group ...
+// Group represents a group of users.
 type Group struct {
 	ID          string         `json:"id"`
 	Name        string         `json:"name" editable:"true"`

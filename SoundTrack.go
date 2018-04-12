@@ -13,7 +13,7 @@ import (
 	"github.com/fatih/color"
 )
 
-// SoundTrack ...
+// SoundTrack is a soundtrack used in one or multiple anime.
 type SoundTrack struct {
 	ID      string           `json:"id"`
 	Title   SoundTrackTitle  `json:"title" editable:"true"`

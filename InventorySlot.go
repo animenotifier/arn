@@ -6,8 +6,6 @@ import "errors"
 type InventorySlot struct {
 	ItemID   string `json:"itemId"`
 	Quantity uint   `json:"quantity"`
-
-	item *ShopItem
 }
 
 // IsEmpty ...
@@ -17,16 +15,12 @@ func (slot *InventorySlot) IsEmpty() bool {
 
 // Item ...
 func (slot *InventorySlot) Item() *ShopItem {
-	if slot.item != nil {
-		return slot.item
-	}
-
 	if slot.ItemID == "" {
 		return nil
 	}
 
-	slot.item, _ = GetShopItem(slot.ItemID)
-	return slot.item
+	item, _ := GetShopItem(slot.ItemID)
+	return item
 }
 
 // Decrease reduces the quantity by the given number.

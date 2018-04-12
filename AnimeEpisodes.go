@@ -9,7 +9,7 @@ import (
 	"github.com/aerogo/nano"
 )
 
-// AnimeEpisodes ...
+// AnimeEpisodes is a list of episodes for an anime.
 type AnimeEpisodes struct {
 	AnimeID string          `json:"animeId" mainID:"true"`
 	Items   []*AnimeEpisode `json:"items" editable:"true"`

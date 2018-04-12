@@ -8,7 +8,7 @@ import (
 	"github.com/fatih/color"
 )
 
-// AnimeCharacters ...
+// AnimeCharacters is a list of characters for an anime.
 type AnimeCharacters struct {
 	AnimeID string            `json:"animeId" mainID:"true"`
 	Items   []*AnimeCharacter `json:"items" editable:"true"`
