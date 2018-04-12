@@ -3,7 +3,6 @@ package arn
 import (
 	"github.com/aerogo/api"
 	"github.com/aerogo/nano"
-	"github.com/animenotifier/jikan"
 	"github.com/animenotifier/kitsu"
 	"github.com/animenotifier/mal"
 )
@@ -66,11 +65,3 @@ var Kitsu = Node.Namespace("kitsu").RegisterTypes(
 
 // API ...
 var API = api.New("/api/", DB)
-
-// init ...
-func init() {
-	Node.Namespace("jikan").RegisterTypes(
-		(*jikan.Anime)(nil),
-		(*jikan.Character)(nil),
-	)
-}
