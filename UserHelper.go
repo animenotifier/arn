@@ -1,6 +1,7 @@
 package arn
 
 import (
+	"errors"
 	"sort"
 
 	"github.com/aerogo/nano"
@@ -33,6 +34,10 @@ func GetUserByNick(nick string) (*User, error) {
 
 // GetUserByEmail fetches the user with the given email from the database.
 func GetUserByEmail(email string) (*User, error) {
+	if email == "" {
+		return nil, errors.New("Email is empty")
+	}
+
 	obj, err := DB.Get("EmailToUser", email)
 
 	if err != nil {
