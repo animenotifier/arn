@@ -2,10 +2,13 @@ package arn
 
 import (
 	"bytes"
+	"fmt"
 	"image"
+	"net/http"
 	"path"
 	"time"
 
+	"github.com/aerogo/http/client"
 	"github.com/animenotifier/arn/imageoutput"
 	"github.com/disintegration/imaging"
 )
@@ -193,4 +196,25 @@ func (character *Character) SetImage(metaImage *imageoutput.MetaImage) error {
 	character.Image.AverageColor = GetAverageColor(metaImage.Image)
 	character.Image.LastModified = time.Now().Unix()
 	return lastError
+}
+
+// DownloadImage ...
+func (character *Character) DownloadImage(url string) error {
+	response, err := client.Get(url).End()
+
+	// Cancel the import if image could not be fetched
+	if err != nil {
+		return err
+	}
+
+	if response.StatusCode() != http.StatusOK {
+		return fmt.Errorf("Image response status code: %d", response.StatusCode())
+	}
+
+	return character.SetImageBytes(response.Bytes())
+}
+
+// HasImage returns true if the character has an image.
+func (character *Character) HasImage() bool {
+	return character.Image.Extension != "" && character.Image.Width > 0
 }

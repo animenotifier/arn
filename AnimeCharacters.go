@@ -1,9 +1,11 @@
 package arn
 
 import (
+	"errors"
 	"sync"
 
 	"github.com/aerogo/nano"
+	"github.com/fatih/color"
 )
 
 // AnimeCharacters ...
@@ -18,6 +20,40 @@ type AnimeCharacters struct {
 func (characters *AnimeCharacters) Anime() *Anime {
 	anime, _ := GetAnime(characters.AnimeID)
 	return anime
+}
+
+// Add adds an anime character to the list.
+func (characters *AnimeCharacters) Add(animeCharacter *AnimeCharacter) error {
+	if animeCharacter.CharacterID == "" || animeCharacter.Role == "" {
+		return errors.New("Empty ID or role")
+	}
+
+	characters.Lock()
+	characters.Items = append(characters.Items, animeCharacter)
+	characters.Unlock()
+
+	return nil
+}
+
+// FindByMapping finds an anime character by the given mapping.
+func (characters *AnimeCharacters) FindByMapping(service string, serviceID string) *AnimeCharacter {
+	characters.Lock()
+	defer characters.Unlock()
+
+	for _, animeCharacter := range characters.Items {
+		character := animeCharacter.Character()
+
+		if character == nil {
+			color.Red("Anime %s has an incorrect Character ID inside AnimeCharacter: %s", characters.AnimeID, animeCharacter.CharacterID)
+			continue
+		}
+
+		if character.GetMapping(service) == serviceID {
+			return animeCharacter
+		}
+	}
+
+	return nil
 }
 
 // Link returns the link for that object.

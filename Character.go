@@ -18,6 +18,13 @@ type Character struct {
 	HasMappings
 }
 
+// NewCharacter creates a new character.
+func NewCharacter() *Character {
+	return &Character{
+		ID: GenerateID("Character"),
+	}
+}
+
 // Link ...
 func (character *Character) Link() string {
 	return "/character/" + character.ID
