@@ -306,9 +306,15 @@ func (anime *Anime) Link() string {
 	return "/anime/" + anime.ID
 }
 
-// StartDateTime ...
+// StartDateTime returns the start date as a time object.
 func (anime *Anime) StartDateTime() time.Time {
 	t, _ := time.Parse(AnimeDateFormat, anime.StartDate)
+	return t
+}
+
+// EndDateTime returns the end date as a time object.
+func (anime *Anime) EndDateTime() time.Time {
+	t, _ := time.Parse(AnimeDateFormat, anime.EndDate)
 	return t
 }
 
