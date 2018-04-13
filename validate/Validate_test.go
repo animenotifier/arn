@@ -31,8 +31,8 @@ func TestIsValidEmail(t *testing.T) {
 }
 
 func TestIsValidDate(t *testing.T) {
-	assert.False(t, validate.Date(""))
-	assert.False(t, validate.Date("0001-01-01T01:01:00Z"))
-	assert.False(t, validate.Date("292277026596-12-04T15:30:07Z"))
-	assert.True(t, validate.Date("2017-03-09T10:25:00Z"))
+	assert.False(t, validate.DateTime(""))
+	assert.False(t, validate.DateTime("0001-01-01T01:01:00Z"))
+	assert.False(t, validate.DateTime("292277026596-12-04T15:30:07Z"))
+	assert.True(t, validate.DateTime("2017-03-09T10:25:00Z"))
 }

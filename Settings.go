@@ -60,6 +60,7 @@ type EditorSettings struct {
 // EditorFilterSettings ...
 type EditorFilterSettings struct {
 	Year   string `json:"year" editable:"true"`
+	Season string `json:"season" editable:"true"`
 	Status string `json:"status" editable:"true"`
 	Type   string `json:"type" editable:"true"`
 }
@@ -68,10 +69,15 @@ type EditorFilterSettings struct {
 func (filter *EditorFilterSettings) Suffix() string {
 	year := filter.Year
 	status := filter.Status
+	season := filter.Season
 	typ := filter.Type
 
 	if year == "" {
 		year = "any"
+	}
+
+	if season == "" {
+		season = "any"
 	}
 
 	if status == "" {
@@ -82,7 +88,7 @@ func (filter *EditorFilterSettings) Suffix() string {
 		typ = "any"
 	}
 
-	return fmt.Sprintf("/%s/%s/%s", year, status, typ)
+	return fmt.Sprintf("/%s/%s/%s/%s", year, season, status, typ)
 }
 
 // FormatSettings ...

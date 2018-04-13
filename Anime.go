@@ -18,7 +18,7 @@ import (
 )
 
 // AnimeDateFormat describes the anime date format for the date conversion.
-const AnimeDateFormat = "2006-01-02"
+const AnimeDateFormat = validate.DateFormat
 
 // AnimeSourceHumanReadable maps the anime source to a human readable version.
 var AnimeSourceHumanReadable = map[string]string{}
@@ -270,6 +270,15 @@ func (anime *Anime) AverageColor() string {
 	return color.String()
 }
 
+// Season returns the season the anime started airing in.
+func (anime *Anime) Season() string {
+	if !validate.Date(anime.StartDate) {
+		return ""
+	}
+
+	return DateToSeason(anime.StartDateTime())
+}
+
 // Characters ...
 func (anime *Anime) Characters() *AnimeCharacters {
 	characters, _ := GetAnimeCharacters(anime.ID)
@@ -411,7 +420,7 @@ func (anime *Anime) RefreshEpisodes() error {
 	timeDifference := oneWeek
 
 	for _, episode := range episodes.Items {
-		if validate.Date(episode.AiringDate.Start) {
+		if validate.DateTime(episode.AiringDate.Start) {
 			if lastAiringDate != "" {
 				a, _ := time.Parse(time.RFC3339, lastAiringDate)
 				b, _ := time.Parse(time.RFC3339, episode.AiringDate.Start)
@@ -543,7 +552,7 @@ func (anime *Anime) UpcomingEpisodes() []*UpcomingEpisode {
 	now := time.Now().UTC().Format(time.RFC3339)
 
 	for _, episode := range anime.Episodes().Items {
-		if episode.AiringDate.Start > now && validate.Date(episode.AiringDate.Start) {
+		if episode.AiringDate.Start > now && validate.DateTime(episode.AiringDate.Start) {
 			upcomingEpisodes = append(upcomingEpisodes, &UpcomingEpisode{
 				Anime:   anime,
 				Episode: episode,
@@ -559,7 +568,7 @@ func (anime *Anime) UpcomingEpisode() *UpcomingEpisode {
 	now := time.Now().UTC().Format(time.RFC3339)
 
 	for _, episode := range anime.Episodes().Items {
-		if episode.AiringDate.Start > now && validate.Date(episode.AiringDate.Start) {
+		if episode.AiringDate.Start > now && validate.DateTime(episode.AiringDate.Start) {
 			return &UpcomingEpisode{
 				Anime:   anime,
 				Episode: episode,

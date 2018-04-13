@@ -49,11 +49,11 @@ func (a *AnimeEpisode) Merge(b *AnimeEpisode) {
 	}
 
 	// Airing date
-	if validate.Date(b.AiringDate.Start) {
+	if validate.DateTime(b.AiringDate.Start) {
 		a.AiringDate.Start = b.AiringDate.Start
 	}
 
-	if validate.Date(b.AiringDate.End) {
+	if validate.DateTime(b.AiringDate.End) {
 		a.AiringDate.End = b.AiringDate.End
 	}
 

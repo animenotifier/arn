@@ -184,6 +184,29 @@ func FixGender(gender string) string {
 	return gender
 }
 
+// DateToSeason returns the season of the year for the given date.
+func DateToSeason(date time.Time) string {
+	month := date.Month()
+
+	if month >= 4 && month <= 6 {
+		return "spring"
+	}
+
+	if month >= 7 && month <= 9 {
+		return "summer"
+	}
+
+	if month >= 10 && month <= 12 {
+		return "autumn"
+	}
+
+	if month >= 1 && month < 4 {
+		return "winter"
+	}
+
+	return ""
+}
+
 // AnimeRatingStars displays the rating in Unicode stars.
 func AnimeRatingStars(rating float64) string {
 	stars := int(rating/20 + 0.5)
