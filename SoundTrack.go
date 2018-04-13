@@ -58,6 +58,11 @@ func (track *SoundTrack) HasTag(search string) bool {
 	return false
 }
 
+// HasLyrics returns true if the track has lyrics in any language.
+func (track *SoundTrack) HasLyrics() bool {
+	return track.Lyrics.Native != "" || track.Lyrics.Romaji != ""
+}
+
 // Anime fetches all tagged anime of the sound track.
 func (track *SoundTrack) Anime() []*Anime {
 	var animeList []*Anime
