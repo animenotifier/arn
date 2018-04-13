@@ -114,6 +114,9 @@ func NewSettings(user *User) *Settings {
 			Source:    "",
 			SourceURL: "",
 		},
+		Format: FormatSettings{
+			RatingsPrecision: 1,
+		},
 		Notification: DefaultNotificationSettings(),
 		Theme:        "light",
 	}
