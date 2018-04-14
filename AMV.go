@@ -9,6 +9,7 @@ import (
 // AMV is an anime music video.
 type AMV struct {
 	ID            string   `json:"id"`
+	File          string   `json:"file" editable:"true" type:"upload" filetype:"video" endpoint:"/api/upload/amv"`
 	Title         AMVTitle `json:"title" editable:"true"`
 	MainAnimeID   string   `json:"mainAnimeId" editable:"true"`
 	ExtraAnimeIDs []string `json:"extraAnimeIds" editable:"true"`
