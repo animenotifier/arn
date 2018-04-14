@@ -8,12 +8,12 @@ import (
 
 // AMV is an anime music video.
 type AMV struct {
-	ID          string   `json:"id"`
-	Title       AMVTitle `json:"title"`
-	MainAnimeID string   `json:"mainAnimeId" editable:"true"`
-	AnimeIDs    []string `json:"animeIds" editable:"true"`
-	Tags        []string `json:"tags" editable:"true"`
-	IsDraft     bool     `json:"isDraft" editable:"true"`
+	ID            string   `json:"id"`
+	Title         AMVTitle `json:"title" editable:"true"`
+	MainAnimeID   string   `json:"mainAnimeId" editable:"true"`
+	ExtraAnimeIDs []string `json:"extraAnimeIds" editable:"true"`
+	Tags          []string `json:"tags" editable:"true"`
+	IsDraft       bool     `json:"isDraft" editable:"true"`
 
 	HasCreator
 	HasEditor
@@ -22,7 +22,7 @@ type AMV struct {
 
 // Link returns the permalink for the AMV.
 func (amv *AMV) Link() string {
-	return "/soundtrack/" + amv.ID
+	return "/amv/" + amv.ID
 }
 
 // Publish ...
@@ -33,7 +33,7 @@ func (amv *AMV) Publish() error {
 	}
 
 	// No anime found
-	if len(amv.AnimeIDs) == 0 {
+	if amv.MainAnimeID == "" && len(amv.ExtraAnimeIDs) == 0 {
 		return errors.New("Need to specify at least one anime")
 	}
 
@@ -96,4 +96,15 @@ func (amv *AMV) OnLike(likedBy *User) {
 // String implements the default string serialization.
 func (amv *AMV) String() string {
 	return amv.Title.ByUser(nil)
+}
+
+// GetAMV returns the AMV with the given ID.
+func GetAMV(id string) (*AMV, error) {
+	obj, err := DB.Get("AMV", id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return obj.(*AMV), nil
 }
