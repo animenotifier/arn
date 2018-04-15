@@ -16,6 +16,7 @@ type AMV struct {
 	Title         AMVTitle `json:"title" editable:"true"`
 	MainAnimeID   string   `json:"mainAnimeId" editable:"true"`
 	ExtraAnimeIDs []string `json:"extraAnimeIds" editable:"true"`
+	Links         []Link   `json:"links" editable:"true"`
 	Tags          []string `json:"tags" editable:"true"`
 	IsDraft       bool     `json:"isDraft" editable:"true"`
 
