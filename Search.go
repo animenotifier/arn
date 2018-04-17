@@ -11,7 +11,7 @@ import (
 const MinimumStringSimilarity = 0.89
 
 // popularityDamping reduces the factor of popularity in search results.
-const popularityDamping = 0.024
+const popularityDamping = 0.01
 
 // SearchResult ...
 type SearchResult struct {
