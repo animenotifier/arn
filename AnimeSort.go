@@ -11,7 +11,7 @@ const (
 	longSummaryBonus          = 0.1
 	popularityThreshold       = 5
 	popularityPenalty         = 8.0
-	watchingPopularityWeight  = 0.2
+	watchingPopularityWeight  = 0.15
 	completedPopularityWeight = watchingPopularityWeight
 	plannedPopularityWeight   = watchingPopularityWeight * (2.0 / 3.0)
 	droppedPopularityWeight   = -plannedPopularityWeight
