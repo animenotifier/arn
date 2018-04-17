@@ -259,6 +259,11 @@ func (anime *Anime) ImageLink(size string) string {
 	return fmt.Sprintf("//%s/images/anime/%s/%s%s?%v", MediaHost, size, anime.ID, extension, anime.Image.LastModified)
 }
 
+// HasImage returns whether the anime has an image or not.
+func (anime *Anime) HasImage() bool {
+	return anime.Image.Extension != "" && anime.Image.Width > 0
+}
+
 // AverageColor returns the average color of the image.
 func (anime *Anime) AverageColor() string {
 	color := anime.Image.AverageColor

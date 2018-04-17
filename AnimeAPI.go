@@ -161,7 +161,7 @@ func (anime *Anime) Delete() error {
 	}
 
 	// Delete images on file system
-	if anime.Image.Extension != "" {
+	if anime.HasImage() {
 		err := os.Remove(path.Join(Root, "images/anime/original/", anime.ID+anime.Image.Extension))
 
 		if err != nil {
