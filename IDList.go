@@ -14,7 +14,7 @@ func GetIDList(id string) (IDList, error) {
 	return *obj.(*IDList), nil
 }
 
-// Append appends the given ID to the end of the list.
-func (idList IDList) Append(id string) {
-	idList = append(idList, id)
+// Append appends the given ID to the end of the list and returns the new IDList.
+func (idList IDList) Append(id string) IDList {
+	return append(idList, id)
 }
