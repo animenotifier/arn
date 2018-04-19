@@ -71,7 +71,7 @@ func SearchCharacters(originalTerm string, maxLength int) []*Character {
 			continue
 		}
 
-		text := strings.ToLower(character.Name.Canonical)
+		text := RemoveSpecialCharacters(strings.ToLower(character.Name.Canonical))
 
 		if text == term {
 			results = append(results, &SearchResult{
