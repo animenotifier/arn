@@ -223,6 +223,25 @@ func (list *AnimeList) FilterStatus(status string) *AnimeList {
 	return newList
 }
 
+// WithoutPrivateItems returns a new anime list with the private items removed.
+func (list *AnimeList) WithoutPrivateItems() *AnimeList {
+	newList := &AnimeList{
+		UserID: list.UserID,
+		Items:  []*AnimeListItem{},
+	}
+
+	list.Lock()
+	defer list.Unlock()
+
+	for _, item := range list.Items {
+		if item.Private == false {
+			newList.Items = append(newList.Items, item)
+		}
+	}
+
+	return newList
+}
+
 // SplitByStatus splits the anime list into multiple ones by status.
 func (list *AnimeList) SplitByStatus() map[string]*AnimeList {
 	statusToList := map[string]*AnimeList{}
