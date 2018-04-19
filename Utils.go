@@ -16,7 +16,6 @@ import (
 	"github.com/animenotifier/kitsu"
 	"github.com/animenotifier/mal"
 	shortid "github.com/ventu-io/go-shortid"
-	"github.com/xrash/smetrics"
 )
 
 var (
@@ -219,7 +218,7 @@ func EpisodesToString(episodes int) string {
 		return "?"
 	}
 
-	return ToString(episodes)
+	return fmt.Sprint(episodes)
 }
 
 // EpisodeCountMax is used for the max value of number input on episodes.
@@ -234,26 +233,6 @@ func EpisodeCountMax(episodes int) string {
 // DateTimeUTC returns the current UTC time in RFC3339 format.
 func DateTimeUTC() string {
 	return time.Now().UTC().Format(time.RFC3339)
-}
-
-// StringSimilarity returns 1.0 if the strings are equal and goes closer to 0 when they are different.
-func StringSimilarity(a string, b string) float64 {
-	return smetrics.JaroWinkler(a, b, 0.7, 4)
-}
-
-// AdvancedStringSimilarity is like StringSimilarity but boosts the value if a appears directly in b.
-func AdvancedStringSimilarity(a string, b string) float64 {
-	s := StringSimilarity(a, b)
-
-	if strings.Contains(b, a) {
-		s += 0.5
-
-		if strings.HasPrefix(b, a) {
-			s += 5.0
-		}
-	}
-
-	return s
 }
 
 // OverallRatingName returns Overall in general, but Hype when episodes watched is zero.

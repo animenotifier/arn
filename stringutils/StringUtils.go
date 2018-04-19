@@ -1,10 +1,12 @@
-package arn
+package stringutils
 
 import (
 	"fmt"
 	"strings"
 	"unicode"
 	"unicode/utf8"
+
+	"github.com/xrash/smetrics"
 )
 
 var whitespace = rune(' ')
@@ -23,6 +25,26 @@ func RemoveSpecialCharacters(s string) string {
 	)
 }
 
+// AdvancedStringSimilarity is like StringSimilarity but boosts the value if a appears directly in b.
+func AdvancedStringSimilarity(a string, b string) float64 {
+	s := StringSimilarity(a, b)
+
+	if strings.Contains(b, a) {
+		s += 0.5
+
+		if strings.HasPrefix(b, a) {
+			s += 5.0
+		}
+	}
+
+	return s
+}
+
+// StringSimilarity returns 1.0 if the strings are equal and goes closer to 0 when they are different.
+func StringSimilarity(a string, b string) float64 {
+	return smetrics.JaroWinkler(a, b, 0.7, 4)
+}
+
 // Capitalize returns the string with the first letter capitalized.
 func Capitalize(s string) string {
 	if s == "" {
@@ -33,18 +55,13 @@ func Capitalize(s string) string {
 	return string(unicode.ToUpper(r)) + s[n:]
 }
 
-// ToString converts anything into a string.
-func ToString(v interface{}) string {
-	return fmt.Sprint(v)
-}
-
 // Plural returns the number concatenated to the proper pluralization of the word.
 func Plural(count int, singular string) string {
 	if count == 1 || count == -1 {
-		return ToString(count) + " " + singular
+		return fmt.Sprint(count) + " " + singular
 	}
 
-	return ToString(count) + " " + singular + "s"
+	return fmt.Sprint(count) + " " + singular + "s"
 }
 
 // ContainsUnicodeLetters tells you if unicode characters are inside the string.
