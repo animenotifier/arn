@@ -86,6 +86,29 @@ func (entry *EditLogEntry) EditorScore() int {
 	return 0
 }
 
+// ActionHumanReadable returns the human readable version of the action.
+func (entry *EditLogEntry) ActionHumanReadable() string {
+	switch entry.Action {
+	case "create":
+		return "Created"
+
+	case "edit":
+		return "Edited"
+
+	case "delete":
+		return "Deleted"
+
+	case "arrayAppend":
+		return "Added an element"
+
+	case "arrayRemove":
+		return "Removed an element"
+
+	default:
+		return entry.Action
+	}
+}
+
 // StreamEditLogEntries returns a stream of all log entries.
 func StreamEditLogEntries() chan *EditLogEntry {
 	channel := make(chan *EditLogEntry, nano.ChannelBufferSize)
