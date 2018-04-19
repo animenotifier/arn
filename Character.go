@@ -16,6 +16,7 @@ type Character struct {
 	Spoilers    []Spoiler             `json:"spoilers" editable:"true"`
 	Attributes  []*CharacterAttribute `json:"attributes" editable:"true"`
 	HasMappings
+	HasLikes
 }
 
 // NewCharacter creates a new character.

@@ -15,6 +15,17 @@ var (
 	_ api.Editable = (*Character)(nil)
 )
 
+// Actions
+func init() {
+	API.RegisterActions("Character", []*api.Action{
+		// Like character
+		LikeAction(),
+
+		// Unlike character
+		UnlikeAction(),
+	})
+}
+
 // Authorize returns an error if the given API request is not authorized.
 func (character *Character) Authorize(ctx *aero.Context, action string) error {
 	user := GetUserFromContext(ctx)
