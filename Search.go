@@ -76,7 +76,7 @@ func SearchCharacters(originalTerm string, maxLength int) []*Character {
 		if text == term {
 			results = append(results, &SearchResult{
 				obj:        character,
-				similarity: 1000,
+				similarity: float64(1000 + len(character.Likes)),
 			})
 			continue
 		}
@@ -89,18 +89,18 @@ func SearchCharacters(originalTerm string, maxLength int) []*Character {
 				if firstName == term {
 					results = append(results, &SearchResult{
 						obj:        character,
-						similarity: 10.0,
+						similarity: float64(10 + len(character.Likes)),
 					})
-					break
 				}
 
 				if lastName == term {
 					results = append(results, &SearchResult{
 						obj:        character,
-						similarity: 1,
+						similarity: float64(1 + len(character.Likes)),
 					})
-					break
 				}
+
+				break
 			}
 		}
 	}
