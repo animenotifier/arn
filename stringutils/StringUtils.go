@@ -1,6 +1,7 @@
 package stringutils
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"unicode"
@@ -67,4 +68,10 @@ func Plural(count int, singular string) string {
 // ContainsUnicodeLetters tells you if unicode characters are inside the string.
 func ContainsUnicodeLetters(s string) bool {
 	return len(s) != len([]rune(s))
+}
+
+// PrettyPrint prints the object as indented JSON data on the console.
+func PrettyPrint(obj interface{}) {
+	pretty, _ := json.MarshalIndent(obj, "", "\t")
+	fmt.Println(string(pretty))
 }

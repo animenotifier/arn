@@ -320,9 +320,3 @@ func PanicOnError(err error) {
 		panic(err)
 	}
 }
-
-// PrettyPrint prints the object as indented JSON data on the console.
-func PrettyPrint(obj interface{}) {
-	pretty, _ := json.MarshalIndent(obj, "", "\t")
-	fmt.Println(string(pretty))
-}
