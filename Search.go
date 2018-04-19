@@ -58,7 +58,7 @@ func SearchCharacters(originalTerm string, maxLength int) []*Character {
 		return nil
 	}
 
-	term := RemoveSpecialCharacters(strings.ToLower(originalTerm))
+	term := strings.ToLower(RemoveSpecialCharacters(originalTerm))
 
 	var results []*SearchResult
 
@@ -71,36 +71,32 @@ func SearchCharacters(originalTerm string, maxLength int) []*Character {
 			continue
 		}
 
-		text := RemoveSpecialCharacters(strings.ToLower(character.Name.Canonical))
+		text := strings.ToLower(RemoveSpecialCharacters(character.Name.Canonical))
 
 		if text == term {
 			results = append(results, &SearchResult{
 				obj:        character,
-				similarity: float64(1000 + len(character.Likes)),
+				similarity: float64(20 + len(character.Likes)),
 			})
 			continue
 		}
 
-		for index, char := range text {
-			if char == ' ' {
-				firstName := text[:index]
-				lastName := text[index+1:]
+		spaceCount := 0
+		start := 0
 
-				if firstName == term {
+		for i := 0; i <= len(text); i++ {
+			if i == len(text) || text[i] == ' ' {
+				part := text[start:i]
+
+				if part == term {
 					results = append(results, &SearchResult{
 						obj:        character,
-						similarity: float64(10 + len(character.Likes)),
+						similarity: float64(10 - spaceCount*5 + len(character.Likes)),
 					})
 				}
 
-				if lastName == term {
-					results = append(results, &SearchResult{
-						obj:        character,
-						similarity: float64(1 + len(character.Likes)),
-					})
-				}
-
-				break
+				start = i + 1
+				spaceCount++
 			}
 		}
 	}
@@ -141,7 +137,7 @@ func SearchCharacters(originalTerm string, maxLength int) []*Character {
 
 // SearchSoundTracks searches all soundtracks.
 func SearchSoundTracks(originalTerm string, maxLength int) []*SoundTrack {
-	term := RemoveSpecialCharacters(strings.ToLower(originalTerm))
+	term := strings.ToLower(RemoveSpecialCharacters(originalTerm))
 
 	var results []*SearchResult
 
@@ -199,7 +195,7 @@ func SearchSoundTracks(originalTerm string, maxLength int) []*SoundTrack {
 
 // SearchPosts searches all posts.
 func SearchPosts(originalTerm string, maxLength int) []*Post {
-	term := RemoveSpecialCharacters(strings.ToLower(originalTerm))
+	term := strings.ToLower(RemoveSpecialCharacters(originalTerm))
 
 	var results []*Post
 
@@ -232,7 +228,7 @@ func SearchPosts(originalTerm string, maxLength int) []*Post {
 
 // SearchThreads searches all threads.
 func SearchThreads(originalTerm string, maxLength int) []*Thread {
-	term := RemoveSpecialCharacters(strings.ToLower(originalTerm))
+	term := strings.ToLower(RemoveSpecialCharacters(originalTerm))
 
 	var results []*Thread
 
@@ -271,7 +267,7 @@ func SearchThreads(originalTerm string, maxLength int) []*Thread {
 
 // SearchUsers searches all users.
 func SearchUsers(originalTerm string, maxLength int) []*User {
-	term := RemoveSpecialCharacters(strings.ToLower(originalTerm))
+	term := strings.ToLower(RemoveSpecialCharacters(originalTerm))
 
 	var results []*SearchResult
 
@@ -317,7 +313,7 @@ func SearchUsers(originalTerm string, maxLength int) []*User {
 
 // SearchCompanies searches all companies.
 func SearchCompanies(originalTerm string, maxLength int) []*Company {
-	term := RemoveSpecialCharacters(strings.ToLower(originalTerm))
+	term := strings.ToLower(RemoveSpecialCharacters(originalTerm))
 
 	var results []*SearchResult
 
@@ -330,7 +326,7 @@ func SearchCompanies(originalTerm string, maxLength int) []*Company {
 			continue
 		}
 
-		text := RemoveSpecialCharacters(strings.ToLower(company.Name.English))
+		text := strings.ToLower(RemoveSpecialCharacters(company.Name.English))
 		similarity := AdvancedStringSimilarity(term, text)
 
 		if similarity >= MinimumStringSimilarity {
@@ -363,7 +359,7 @@ func SearchCompanies(originalTerm string, maxLength int) []*Company {
 
 // SearchAnime searches all anime.
 func SearchAnime(originalTerm string, maxLength int) []*Anime {
-	term := RemoveSpecialCharacters(strings.ToLower(originalTerm))
+	term := strings.ToLower(RemoveSpecialCharacters(originalTerm))
 
 	var results []*SearchResult
 
@@ -372,7 +368,7 @@ func SearchAnime(originalTerm string, maxLength int) []*Anime {
 			return 0
 		}
 
-		return AdvancedStringSimilarity(term, RemoveSpecialCharacters(strings.ToLower(text)))
+		return AdvancedStringSimilarity(term, strings.ToLower(RemoveSpecialCharacters(text)))
 	}
 
 	add := func(anime *Anime, similarity float64) {
