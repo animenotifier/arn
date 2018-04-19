@@ -47,7 +47,6 @@ type User struct {
 	Browser      UserBrowser  `json:"browser" private:"true"`
 	OS           UserOS       `json:"os" private:"true"`
 	Location     *Location    `json:"location" private:"true"`
-	Following    []string     `json:"following"`
 
 	// user.Email = ""
 	// user.Gender = ""
@@ -72,8 +71,7 @@ func NewUser() *User {
 		ID: GenerateID("User"),
 
 		// Avoid nil value fields
-		Following: make([]string, 0),
-		Location:  &Location{},
+		Location: &Location{},
 	}
 
 	return user
