@@ -41,6 +41,7 @@ func Characters(originalTerm string, maxLength int) []*arn.Character {
 
 		spaceCount := 0
 		start := 0
+		found := false
 
 		for i := 0; i <= len(text); i++ {
 			if i == len(text) || text[i] == ' ' {
@@ -51,11 +52,18 @@ func Characters(originalTerm string, maxLength int) []*arn.Character {
 						obj:        character,
 						similarity: float64(10 - spaceCount*5 + len(character.Likes)),
 					})
+
+					found = true
+					break
 				}
 
 				start = i + 1
 				spaceCount++
 			}
+		}
+
+		if found {
+			continue
 		}
 
 		// Japanese
@@ -67,6 +75,7 @@ func Characters(originalTerm string, maxLength int) []*arn.Character {
 					obj:        character,
 					similarity: float64(len(character.Likes)),
 				})
+				continue
 			}
 		}
 	}
