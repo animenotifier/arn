@@ -15,6 +15,7 @@ func Characters(originalTerm string, maxLength int) []*arn.Character {
 	}
 
 	term := strings.ToLower(stringutils.RemoveSpecialCharacters(originalTerm))
+	termHasUnicode := stringutils.ContainsUnicodeLetters(term)
 
 	var results []*Result
 
@@ -27,6 +28,7 @@ func Characters(originalTerm string, maxLength int) []*arn.Character {
 			continue
 		}
 
+		// Canonical
 		text := strings.ToLower(stringutils.RemoveSpecialCharacters(character.Name.Canonical))
 
 		if text == term {
@@ -53,6 +55,18 @@ func Characters(originalTerm string, maxLength int) []*arn.Character {
 
 				start = i + 1
 				spaceCount++
+			}
+		}
+
+		// Japanese
+		if termHasUnicode {
+			text = character.Name.Japanese
+
+			if strings.Contains(character.Name.Japanese, term) {
+				results = append(results, &Result{
+					obj:        character,
+					similarity: float64(len(character.Likes)),
+				})
 			}
 		}
 	}
