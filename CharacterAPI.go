@@ -34,6 +34,11 @@ func (character *Character) Authorize(ctx *aero.Context, action string) error {
 		return errors.New("Not logged in")
 	}
 
+	// Allow custom actions (like, unlike) for normal users
+	if action == "action" {
+		return nil
+	}
+
 	if user.Role != "editor" && user.Role != "admin" {
 		return errors.New("Insufficient permissions")
 	}
