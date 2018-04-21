@@ -10,7 +10,6 @@ import (
 
 	"github.com/aerogo/http/client"
 	"github.com/animenotifier/arn/imageoutput"
-	"github.com/disintegration/imaging"
 )
 
 const (
@@ -170,9 +169,6 @@ func (character *Character) SetImageBytes(data []byte) error {
 // SetImage sets the character image to the given MetaImage.
 func (character *Character) SetImage(metaImage *imageoutput.MetaImage) error {
 	var lastError error
-
-	// Adjust gamma of character images
-	metaImage.Image = imaging.AdjustGamma(metaImage.Image, 0.92)
 
 	// Save the different image formats and sizes in low DPI
 	for _, output := range characterImageOutputs {
