@@ -11,14 +11,15 @@ import (
 
 // AMV is an anime music video.
 type AMV struct {
-	ID            string   `json:"id"`
-	File          string   `json:"file" editable:"true" type:"upload" filetype:"video" endpoint:"/api/upload/amv/:id/file"`
-	Title         AMVTitle `json:"title" editable:"true"`
-	MainAnimeID   string   `json:"mainAnimeId" editable:"true"`
-	ExtraAnimeIDs []string `json:"extraAnimeIds" editable:"true"`
-	Links         []Link   `json:"links" editable:"true"`
-	Tags          []string `json:"tags" editable:"true"`
-	IsDraft       bool     `json:"isDraft" editable:"true"`
+	ID             string   `json:"id"`
+	File           string   `json:"file" editable:"true" type:"upload" filetype:"video" endpoint:"/api/upload/amv/:id/file"`
+	Title          AMVTitle `json:"title" editable:"true"`
+	MainAnimeID    string   `json:"mainAnimeId" editable:"true"`
+	ExtraAnimeIDs  []string `json:"extraAnimeIds" editable:"true"`
+	VideoEditorIDs []string `json:"videoEditorIds" editable:"true"`
+	Links          []Link   `json:"links" editable:"true"`
+	Tags           []string `json:"tags" editable:"true"`
+	IsDraft        bool     `json:"isDraft" editable:"true"`
 
 	HasCreator
 	HasEditor
@@ -64,6 +65,22 @@ func (amv *AMV) ExtraAnime() []*Anime {
 	}
 
 	return animes
+}
+
+// VideoEditors returns a slice of all the users involved in creating the AMV.
+func (amv *AMV) VideoEditors() []*User {
+	objects := DB.GetMany("User", amv.VideoEditorIDs)
+	editors := []*User{}
+
+	for _, obj := range objects {
+		if obj == nil {
+			continue
+		}
+
+		editors = append(editors, obj.(*User))
+	}
+
+	return editors
 }
 
 // Publish ...
