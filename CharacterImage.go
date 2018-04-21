@@ -15,10 +15,12 @@ import (
 
 const (
 	// CharacterImageLargeWidth is the minimum width in pixels of a large character image.
-	CharacterImageLargeWidth = 225
+	// We subtract 6 pixels due to border removal which can remove up to 6 pixels.
+	CharacterImageLargeWidth = 225 - 6
 
 	// CharacterImageLargeHeight is the minimum height in pixels of a large character image.
-	CharacterImageLargeHeight = 350
+	// We subtract 6 pixels due to border removal which can remove up to 6 pixels.
+	CharacterImageLargeHeight = 350 - 6
 
 	// CharacterImageMediumWidth is the minimum width in pixels of a medium character image.
 	CharacterImageMediumWidth = 112
