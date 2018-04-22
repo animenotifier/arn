@@ -168,9 +168,9 @@ func (character *Character) DeleteImages() {
 	}
 
 	os.Remove(path.Join(Root, "images/characters/large/", character.ID+".jpg"))
-	// os.Remove(path.Join(Root, "images/characters/large/", character.ID+"@2.jpg"))
+	os.Remove(path.Join(Root, "images/characters/large/", character.ID+"@2.jpg"))
 	os.Remove(path.Join(Root, "images/characters/large/", character.ID+".webp"))
-	// os.Remove(path.Join(Root, "images/characters/large/", character.ID+"@2.webp"))
+	os.Remove(path.Join(Root, "images/characters/large/", character.ID+"@2.webp"))
 	os.Remove(path.Join(Root, "images/characters/medium/", character.ID+".jpg"))
 	os.Remove(path.Join(Root, "images/characters/medium/", character.ID+"@2.jpg"))
 	os.Remove(path.Join(Root, "images/characters/medium/", character.ID+".webp"))
