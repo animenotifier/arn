@@ -5,23 +5,30 @@ package arn
 // anime by a given service and ID.
 type CharacterFinder struct {
 	idToCharacter map[string]*Character
+	mappingName   string
 }
 
-// NewCharacterFinder creates a new finder for external anime.
+// NewCharacterFinder creates a new finder for external characters.
 func NewCharacterFinder(mappingName string) *CharacterFinder {
 	finder := &CharacterFinder{
 		idToCharacter: map[string]*Character{},
+		mappingName:   mappingName,
 	}
 
-	for anime := range StreamCharacters() {
-		id := anime.GetMapping(mappingName)
-
-		if id != "" {
-			finder.idToCharacter[id] = anime
-		}
+	for character := range StreamCharacters() {
+		finder.Add(character)
 	}
 
 	return finder
+}
+
+// Add adds a character to the search pool.
+func (finder *CharacterFinder) Add(character *Character) {
+	id := character.GetMapping(finder.mappingName)
+
+	if id != "" {
+		finder.idToCharacter[id] = character
+	}
 }
 
 // GetCharacter tries to find an external anime in our anime database.

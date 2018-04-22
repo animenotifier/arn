@@ -17,6 +17,7 @@ type Character struct {
 	Attributes  []*CharacterAttribute `json:"attributes" editable:"true"`
 
 	HasMappings
+	HasCreator
 	HasLikes
 	HasDraft
 }
@@ -25,6 +26,9 @@ type Character struct {
 func NewCharacter() *Character {
 	return &Character{
 		ID: GenerateID("Character"),
+		HasCreator: HasCreator{
+			Created: DateTimeUTC(),
+		},
 	}
 }
 
