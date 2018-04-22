@@ -19,11 +19,11 @@ type AMV struct {
 	VideoEditorIDs []string `json:"videoEditorIds" editable:"true"`
 	Links          []Link   `json:"links" editable:"true"`
 	Tags           []string `json:"tags" editable:"true"`
-	IsDraft        bool     `json:"isDraft" editable:"true"`
 
 	HasCreator
 	HasEditor
 	HasLikes
+	HasDraft
 }
 
 // Link returns the permalink for the AMV.

@@ -15,8 +15,10 @@ type Character struct {
 	Description string                `json:"description" editable:"true" type:"textarea"`
 	Spoilers    []Spoiler             `json:"spoilers" editable:"true"`
 	Attributes  []*CharacterAttribute `json:"attributes" editable:"true"`
+
 	HasMappings
 	HasLikes
+	HasDraft
 }
 
 // NewCharacter creates a new character.

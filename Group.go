@@ -17,11 +17,11 @@ type Group struct {
 	Tags        []string       `json:"tags" editable:"true"`
 	Members     []*GroupMember `json:"members"`
 	Neighbors   []string       `json:"neighbors"`
-	IsDraft     bool           `json:"isDraft" editable:"true"`
 
 	// Mixins
 	HasCreator
 	HasEditor
+	HasDraft
 
 	posts []*GroupPost
 }

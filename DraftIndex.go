@@ -7,6 +7,8 @@ type DraftIndex struct {
 	SoundTrackID string `json:"soundTrackId"`
 	CompanyID    string `json:"companyId"`
 	QuoteID      string `json:"quoteId"`
+	CharacterID  string `json:"characterId"`
+	AnimeID      string `json:"animeId"`
 	AMVID        string `json:"amvId"`
 }
 

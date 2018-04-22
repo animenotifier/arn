@@ -12,11 +12,11 @@ type Company struct {
 	Name        CompanyName `json:"name" editable:"true"`
 	Description string      `json:"description" editable:"true" type:"textarea"`
 	Links       []*Link     `json:"links" editable:"true"`
-	IsDraft     bool        `json:"isDraft"`
 
 	// Mixins
 	HasMappings
 	HasLikes
+	HasDraft
 
 	// Other editable fields
 	Location *Location `json:"location" editable:"true"`

@@ -85,6 +85,7 @@ type Anime struct {
 	HasMappings
 	HasCreator
 	HasEditor
+	HasDraft
 
 	// Company IDs
 	StudioIDs   []string `json:"studios" editable:"true"`

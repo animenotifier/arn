@@ -17,11 +17,11 @@ type Quote struct {
 	AnimeID       string    `json:"animeId" editable:"true"`
 	EpisodeNumber int       `json:"episode" editable:"true"`
 	Time          int       `json:"time" editable:"true"`
-	IsDraft       bool      `json:"isDraft"`
 
 	HasCreator
 	HasEditor
 	HasLikes
+	HasDraft
 }
 
 // IsMainQuote returns true if the quote is the main quote of the character.

@@ -15,18 +15,18 @@ import (
 
 // SoundTrack is a soundtrack used in one or multiple anime.
 type SoundTrack struct {
-	ID      string           `json:"id"`
-	Title   SoundTrackTitle  `json:"title" editable:"true"`
-	Media   []*ExternalMedia `json:"media" editable:"true"`
-	Links   []*Link          `json:"links" editable:"true"`
-	Lyrics  SoundTrackLyrics `json:"lyrics" editable:"true"`
-	Tags    []string         `json:"tags" editable:"true" tooltip:"<ul><li><strong>anime:ID</strong> to connect it with anime (e.g. anime:yF1RhKiiR)</li><li><strong>opening</strong> for openings</li><li><strong>ending</strong> for endings</li><li><strong>op:NUMBER</strong> or <strong>ed:NUMBER</strong> if it has more than one OP/ED (e.g. op:2 or ed:3)</li><li><strong>cover</strong> for covers</li><li><strong>remix</strong> for remixes</li><li><strong>male</strong> or <strong>female</strong></li><li><strong title='Has lyrics'>vocal</strong>, <strong title='Has orchestral instruments, mostly no lyrics'>orchestral</strong> or <strong title='Has a mix of different instruments, mostly no lyrics'>instrumental</strong></li></ul>"`
-	IsDraft bool             `json:"isDraft" editable:"true"`
-	File    string           `json:"file"`
+	ID     string           `json:"id"`
+	Title  SoundTrackTitle  `json:"title" editable:"true"`
+	Media  []*ExternalMedia `json:"media" editable:"true"`
+	Links  []*Link          `json:"links" editable:"true"`
+	Lyrics SoundTrackLyrics `json:"lyrics" editable:"true"`
+	Tags   []string         `json:"tags" editable:"true" tooltip:"<ul><li><strong>anime:ID</strong> to connect it with anime (e.g. anime:yF1RhKiiR)</li><li><strong>opening</strong> for openings</li><li><strong>ending</strong> for endings</li><li><strong>op:NUMBER</strong> or <strong>ed:NUMBER</strong> if it has more than one OP/ED (e.g. op:2 or ed:3)</li><li><strong>cover</strong> for covers</li><li><strong>remix</strong> for remixes</li><li><strong>male</strong> or <strong>female</strong></li><li><strong title='Has lyrics'>vocal</strong>, <strong title='Has orchestral instruments, mostly no lyrics'>orchestral</strong> or <strong title='Has a mix of different instruments, mostly no lyrics'>instrumental</strong></li></ul>"`
+	File   string           `json:"file"`
 
 	HasCreator
 	HasEditor
 	HasLikes
+	HasDraft
 }
 
 // Link returns the permalink for the track.
