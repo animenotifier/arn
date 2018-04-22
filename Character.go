@@ -2,8 +2,11 @@ package arn
 
 import (
 	"fmt"
+	"os"
+	"path"
 
 	"github.com/aerogo/nano"
+	"github.com/fatih/color"
 )
 
 // Character represents an anime or manga character.
@@ -98,6 +101,84 @@ func GetCharacter(id string) (*Character, error) {
 	}
 
 	return obj.(*Character), nil
+}
+
+// Merge deletes the character and moves all existing references to the new character.
+func (character *Character) Merge(target *Character) {
+	// Check anime characters
+	for list := range StreamAnimeCharacters() {
+		for _, animeCharacter := range list.Items {
+			if animeCharacter.CharacterID == character.ID {
+				animeCharacter.CharacterID = target.ID
+				list.Save()
+				break
+			}
+		}
+	}
+
+	// Check quotes
+	for quote := range StreamQuotes() {
+		if quote.CharacterID == character.ID {
+			quote.CharacterID = target.ID
+			quote.Save()
+		}
+	}
+
+	// Check log
+	for entry := range StreamEditLogEntries() {
+		if entry.ObjectType != "Character" {
+			continue
+		}
+
+		if entry.ObjectID == character.ID {
+			// Delete log entries for the old character
+			DB.Delete("EditLogEntry", entry.ID)
+		}
+	}
+
+	// Merge likes
+	for _, userID := range character.Likes {
+		if !Contains(target.Likes, userID) {
+			target.Likes = append(target.Likes, userID)
+		}
+	}
+
+	target.Save()
+
+	// Delete image files
+	character.DeleteImages()
+
+	// Delete character
+	DB.Delete("Character", character.ID)
+}
+
+// DeleteImages deletes all images for the character.
+func (character *Character) DeleteImages() {
+	if character.Image.Extension == "" {
+		return
+	}
+
+	err := os.Remove(path.Join(Root, "images/characters/original/", character.ID+character.Image.Extension))
+
+	if err != nil {
+		// Don't return the error.
+		// It's too late to stop the process at this point.
+		// Instead, log the error.
+		color.Red(err.Error())
+	}
+
+	os.Remove(path.Join(Root, "images/characters/large/", character.ID+".jpg"))
+	// os.Remove(path.Join(Root, "images/characters/large/", character.ID+"@2.jpg"))
+	os.Remove(path.Join(Root, "images/characters/large/", character.ID+".webp"))
+	// os.Remove(path.Join(Root, "images/characters/large/", character.ID+"@2.webp"))
+	os.Remove(path.Join(Root, "images/characters/medium/", character.ID+".jpg"))
+	os.Remove(path.Join(Root, "images/characters/medium/", character.ID+"@2.jpg"))
+	os.Remove(path.Join(Root, "images/characters/medium/", character.ID+".webp"))
+	os.Remove(path.Join(Root, "images/characters/medium/", character.ID+"@2.webp"))
+	os.Remove(path.Join(Root, "images/characters/small/", character.ID+".jpg"))
+	os.Remove(path.Join(Root, "images/characters/small/", character.ID+"@2.jpg"))
+	os.Remove(path.Join(Root, "images/characters/small/", character.ID+".webp"))
+	os.Remove(path.Join(Root, "images/characters/small/", character.ID+"@2.webp"))
 }
 
 // Quotes returns the list of quotes for this character.
