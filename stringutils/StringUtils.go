@@ -16,6 +16,10 @@ var whitespace = rune(' ')
 func RemoveSpecialCharacters(s string) string {
 	return strings.Map(
 		func(r rune) rune {
+			if r == '-' {
+				return -1
+			}
+
 			if !unicode.IsLetter(r) && !unicode.IsDigit(r) {
 				return whitespace
 			}
