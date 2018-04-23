@@ -11,13 +11,23 @@ import (
 
 // Force interface implementations
 var (
-	_ fmt.Stringer = (*Character)(nil)
-	_ api.Editable = (*Character)(nil)
+	_ Likeable      = (*Character)(nil)
+	_ Publishable   = (*Character)(nil)
+	_ fmt.Stringer  = (*Character)(nil)
+	_ api.Newable   = (*Character)(nil)
+	_ api.Editable  = (*Character)(nil)
+	_ api.Deletable = (*Character)(nil)
 )
 
 // Actions
 func init() {
 	API.RegisterActions("Character", []*api.Action{
+		// Publish
+		PublishAction(),
+
+		// Unpublish
+		UnpublishAction(),
+
 		// Like character
 		LikeAction(),
 
@@ -94,6 +104,56 @@ func (character *Character) OnRemove(ctx *aero.Context, key string, index int, o
 func (character *Character) AfterEdit(ctx *aero.Context) error {
 	character.Edited = DateTimeUTC()
 	character.EditedBy = GetUserFromContext(ctx).ID
+	return nil
+}
+
+// DeleteInContext deletes the character in the given context.
+func (character *Character) DeleteInContext(ctx *aero.Context) error {
+	user := GetUserFromContext(ctx)
+
+	// Write log entry
+	logEntry := NewEditLogEntry(user.ID, "delete", "Character", character.ID, "", fmt.Sprint(character), "")
+	logEntry.Save()
+
+	return character.Delete()
+}
+
+// Delete deletes the object from the database.
+func (character *Character) Delete() error {
+	if character.IsDraft {
+		draftIndex := character.Creator().DraftIndex()
+		draftIndex.CharacterID = ""
+		draftIndex.Save()
+	}
+
+	// Delete from anime characters
+	for list := range StreamAnimeCharacters() {
+		list.Lock()
+
+		for index, animeCharacter := range list.Items {
+			if animeCharacter.CharacterID == character.ID {
+				list.Items = append(list.Items[:index], list.Items[index+1:]...)
+				list.Unlock()
+				list.Save()
+				break
+			}
+		}
+
+		list.Unlock()
+	}
+
+	// Delete from quotes
+	for quote := range StreamQuotes() {
+		if quote.CharacterID == character.ID {
+			quote.Delete()
+		}
+	}
+
+	// Delete image files
+	character.DeleteImages()
+
+	// Delete character
+	DB.Delete("Character", character.ID)
 	return nil
 }
 
