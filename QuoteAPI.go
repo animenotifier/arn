@@ -101,6 +101,14 @@ func (quote *Quote) Delete() error {
 		draftIndex.Save()
 	}
 
+	// Remove main quote reference
+	character := quote.Character()
+
+	if character.MainQuoteID == quote.ID {
+		character.MainQuoteID = ""
+		character.Save()
+	}
+
 	DB.Delete("Quote", quote.ID)
 	return nil
 }
