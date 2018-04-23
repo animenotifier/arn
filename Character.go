@@ -84,6 +84,11 @@ func (character *Character) Publish() error {
 		return errors.New("No canonical character name")
 	}
 
+	// No image
+	if !character.HasImage() {
+		return errors.New("No character image")
+	}
+
 	return publish(character)
 }
 
