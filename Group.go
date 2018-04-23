@@ -1,14 +1,11 @@
 package arn
 
 import (
-	"errors"
-
 	"github.com/aerogo/nano"
 )
 
 // Group represents a group of users.
 type Group struct {
-	ID          string         `json:"id"`
 	Name        string         `json:"name" editable:"true"`
 	Tagline     string         `json:"tagline" editable:"true"`
 	Image       string         `json:"image" editable:"true"`
@@ -19,6 +16,7 @@ type Group struct {
 	Neighbors   []string       `json:"neighbors"`
 
 	// Mixins
+	HasID
 	HasCreator
 	HasEditor
 	HasDraft
@@ -71,44 +69,12 @@ func (group *Group) FindMember(userID string) *GroupMember {
 
 // Publish ...
 func (group *Group) Publish() error {
-	if !group.IsDraft {
-		return errors.New("Not a draft")
-	}
-
-	group.IsDraft = false
-	draftIndex, err := GetDraftIndex(group.CreatedBy)
-
-	if err != nil {
-		return err
-	}
-
-	if draftIndex.GroupID == "" {
-		return errors.New("Group draft doesn't exist in the user draft index")
-	}
-
-	draftIndex.GroupID = ""
-	draftIndex.Save()
-
-	return nil
+	return publish(group)
 }
 
 // Unpublish ...
 func (group *Group) Unpublish() error {
-	group.IsDraft = true
-	draftIndex, err := GetDraftIndex(group.CreatedBy)
-
-	if err != nil {
-		return err
-	}
-
-	if draftIndex.GroupID != "" {
-		return errors.New("You still have an unfinished draft")
-	}
-
-	draftIndex.GroupID = group.ID
-	draftIndex.Save()
-
-	return nil
+	return unpublish(group)
 }
 
 // GetGroup ...

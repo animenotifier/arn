@@ -1,5 +1,10 @@
 package arn
 
+import (
+	"errors"
+	"reflect"
+)
+
 // DraftIndex has references to unpublished drafts a user created.
 type DraftIndex struct {
 	UserID       string `json:"userId"`
@@ -17,6 +22,31 @@ func NewDraftIndex(userID string) *DraftIndex {
 	return &DraftIndex{
 		UserID: userID,
 	}
+}
+
+// GetID gets the ID for the given type name.
+func (index *DraftIndex) GetID(typeName string) (string, error) {
+	v := reflect.ValueOf(index).Elem()
+	fieldValue := v.FieldByName(typeName + "ID")
+
+	if !fieldValue.IsValid() {
+		return "", errors.New("Invalid draft index ID type: " + typeName)
+	}
+
+	return fieldValue.String(), nil
+}
+
+// SetID sets the ID for the given type name.
+func (index *DraftIndex) SetID(typeName string, id string) error {
+	v := reflect.ValueOf(index).Elem()
+	fieldValue := v.FieldByName(typeName + "ID")
+
+	if !fieldValue.IsValid() {
+		return errors.New("Invalid draft index ID type: " + typeName)
+	}
+
+	fieldValue.SetString(id)
+	return nil
 }
 
 // GetDraftIndex ...

@@ -11,3 +11,8 @@ func (obj *HasCreator) Creator() *User {
 	user, _ := GetUser(obj.CreatedBy)
 	return user
 }
+
+// GetCreatedBy returns the ID of the user who created this object.
+func (obj *HasCreator) GetCreatedBy() string {
+	return obj.CreatedBy
+}

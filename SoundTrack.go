@@ -15,7 +15,6 @@ import (
 
 // SoundTrack is a soundtrack used in one or multiple anime.
 type SoundTrack struct {
-	ID     string           `json:"id"`
 	Title  SoundTrackTitle  `json:"title" editable:"true"`
 	Media  []*ExternalMedia `json:"media" editable:"true"`
 	Links  []*Link          `json:"links" editable:"true"`
@@ -23,6 +22,7 @@ type SoundTrack struct {
 	Tags   []string         `json:"tags" editable:"true" tooltip:"<ul><li><strong>anime:ID</strong> to connect it with anime (e.g. anime:yF1RhKiiR)</li><li><strong>opening</strong> for openings</li><li><strong>ending</strong> for endings</li><li><strong>op:NUMBER</strong> or <strong>ed:NUMBER</strong> if it has more than one OP/ED (e.g. op:2 or ed:3)</li><li><strong>cover</strong> for covers</li><li><strong>remix</strong> for remixes</li><li><strong>male</strong> or <strong>female</strong></li><li><strong title='Has lyrics'>vocal</strong>, <strong title='Has orchestral instruments, mostly no lyrics'>orchestral</strong> or <strong title='Has a mix of different instruments, mostly no lyrics'>instrumental</strong></li></ul>"`
 	File   string           `json:"file"`
 
+	HasID
 	HasCreator
 	HasEditor
 	HasLikes
@@ -140,11 +140,6 @@ func (track *SoundTrack) OnLike(likedBy *User) {
 
 // Publish ...
 func (track *SoundTrack) Publish() error {
-	// No draft
-	if !track.IsDraft {
-		return errors.New("Not a draft")
-	}
-
 	// No media added
 	if len(track.Media) == 0 {
 		return errors.New("No media specified (at least 1 media source is required)")
@@ -177,19 +172,12 @@ func (track *SoundTrack) Publish() error {
 		return errors.New("Need to specify at least one tag")
 	}
 
-	draftIndex, err := GetDraftIndex(track.CreatedBy)
+	// Publish
+	err := publish(track)
 
 	if err != nil {
 		return err
 	}
-
-	if draftIndex.SoundTrackID == "" {
-		return errors.New("Soundtrack draft doesn't exist in the user draft index")
-	}
-
-	track.IsDraft = false
-	draftIndex.SoundTrackID = ""
-	draftIndex.Save()
 
 	// Start download in the background
 	go func() {

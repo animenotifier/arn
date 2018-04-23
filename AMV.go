@@ -11,7 +11,6 @@ import (
 
 // AMV is an anime music video.
 type AMV struct {
-	ID             string   `json:"id"`
 	File           string   `json:"file" editable:"true" type:"upload" filetype:"video" endpoint:"/api/upload/amv/:id/file"`
 	Title          AMVTitle `json:"title" editable:"true"`
 	MainAnimeID    string   `json:"mainAnimeId" editable:"true"`
@@ -20,6 +19,7 @@ type AMV struct {
 	Links          []Link   `json:"links" editable:"true"`
 	Tags           []string `json:"tags" editable:"true"`
 
+	HasID
 	HasCreator
 	HasEditor
 	HasLikes
@@ -83,13 +83,8 @@ func (amv *AMV) VideoEditors() []*User {
 	return editors
 }
 
-// Publish ...
+// Publish turns the draft into a published object.
 func (amv *AMV) Publish() error {
-	// No draft
-	if !amv.IsDraft {
-		return errors.New("Not a draft")
-	}
-
 	// No title
 	if amv.Title.String() == "" {
 		return errors.New("AMV doesn't have a title")
@@ -109,39 +104,12 @@ func (amv *AMV) Publish() error {
 		return errors.New("You need to upload a WebM file for this AMV")
 	}
 
-	draftIndex, err := GetDraftIndex(amv.CreatedBy)
-
-	if err != nil {
-		return err
-	}
-
-	if draftIndex.AMVID == "" {
-		return errors.New("AMV draft doesn't exist in the user draft index")
-	}
-
-	amv.IsDraft = false
-	draftIndex.AMVID = ""
-	draftIndex.Save()
-
-	return nil
+	return publish(amv)
 }
 
-// Unpublish ...
+// Unpublish turns the object back into a draft.
 func (amv *AMV) Unpublish() error {
-	draftIndex, err := GetDraftIndex(amv.CreatedBy)
-
-	if err != nil {
-		return err
-	}
-
-	if draftIndex.AMVID != "" {
-		return errors.New("You still have an unfinished draft")
-	}
-
-	amv.IsDraft = true
-	draftIndex.AMVID = amv.ID
-	draftIndex.Save()
-	return nil
+	return unpublish(amv)
 }
 
 // OnLike is called when the AMV receives a like.

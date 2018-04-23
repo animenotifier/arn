@@ -1,6 +1,7 @@
 package arn
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path"
@@ -11,7 +12,6 @@ import (
 
 // Character represents an anime or manga character.
 type Character struct {
-	ID          string                `json:"id"`
 	Name        CharacterName         `json:"name" editable:"true"`
 	Image       CharacterImage        `json:"image"`
 	MainQuoteID string                `json:"mainQuoteId" editable:"true"`
@@ -19,8 +19,10 @@ type Character struct {
 	Spoilers    []Spoiler             `json:"spoilers" editable:"true"`
 	Attributes  []*CharacterAttribute `json:"attributes" editable:"true"`
 
+	HasID
 	HasMappings
 	HasCreator
+	HasEditor
 	HasLikes
 	HasDraft
 }
@@ -28,7 +30,9 @@ type Character struct {
 // NewCharacter creates a new character.
 func NewCharacter() *Character {
 	return &Character{
-		ID: GenerateID("Character"),
+		HasID: HasID{
+			ID: GenerateID("Character"),
+		},
 		HasCreator: HasCreator{
 			Created: DateTimeUTC(),
 		},
@@ -71,6 +75,21 @@ func (character *Character) ImageLink(size string) string {
 	}
 
 	return fmt.Sprintf("//%s/images/characters/%s/%s%s?%v", MediaHost, size, character.ID, extension, character.Image.LastModified)
+}
+
+// Publish publishes the character draft.
+func (character *Character) Publish() error {
+	// No name
+	if character.Name.Canonical == "" {
+		return errors.New("No canonical character name")
+	}
+
+	return publish(character)
+}
+
+// Unpublish turns the character into a draft.
+func (character *Character) Unpublish() error {
+	return unpublish(character)
 }
 
 // Anime returns a list of all anime the character appears in.

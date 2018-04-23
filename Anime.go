@@ -64,7 +64,6 @@ func init() {
 
 // Anime represents an anime.
 type Anime struct {
-	ID            string           `json:"id"`
 	Type          string           `json:"type" editable:"true" datalist:"anime-types"`
 	Title         *AnimeTitle      `json:"title" editable:"true"`
 	Summary       string           `json:"summary" editable:"true" type:"textarea"`
@@ -82,6 +81,7 @@ type Anime struct {
 	Trailers      []*ExternalMedia `json:"trailers" editable:"true"`
 
 	// Mixins
+	HasID
 	HasMappings
 	HasCreator
 	HasEditor
@@ -102,7 +102,9 @@ type Anime struct {
 // NewAnime creates a new anime.
 func NewAnime() *Anime {
 	return &Anime{
-		ID:         GenerateID("Anime"),
+		HasID: HasID{
+			ID: GenerateID("Anime"),
+		},
 		Title:      &AnimeTitle{},
 		Rating:     &AnimeRating{},
 		Popularity: &AnimePopularity{},

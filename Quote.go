@@ -11,13 +11,13 @@ import (
 
 // Quote is a quote made by a character in an anime.
 type Quote struct {
-	ID            string    `json:"id"`
 	Text          QuoteText `json:"text" editable:"true"`
 	CharacterID   string    `json:"characterId" editable:"true"`
 	AnimeID       string    `json:"animeId" editable:"true"`
 	EpisodeNumber int       `json:"episode" editable:"true"`
 	Time          int       `json:"time" editable:"true"`
 
+	HasID
 	HasCreator
 	HasEditor
 	HasLikes
@@ -36,14 +36,9 @@ func (quote *Quote) Link() string {
 
 // Publish checks the quote and publishes it when no errors were found.
 func (quote *Quote) Publish() error {
-	// No draft
-	if !quote.IsDraft {
-		return errors.New("Not a draft")
-	}
-
-	// No description
+	// No quote text
 	if quote.Text.English == "" {
-		return errors.New("A description is required")
+		return errors.New("English quote text is required")
 	}
 
 	// No character
@@ -80,29 +75,12 @@ func (quote *Quote) Publish() error {
 		return errors.New("Invalid episode number")
 	}
 
-	// Draft index
-	draftIndex, err := GetDraftIndex(quote.CreatedBy)
+	return publish(quote)
+}
 
-	if err != nil {
-		return err
-	}
-
-	if draftIndex.QuoteID == "" {
-		return errors.New("Quote draft doesn't exist in the user draft index")
-	}
-
-	// Invalid character ID
-	_, characterErr := GetCharacter(quote.CharacterID)
-
-	if characterErr != nil {
-		return errors.New("Character does not exist")
-	}
-
-	// Publish
-	quote.IsDraft = false
-	draftIndex.QuoteID = ""
-	draftIndex.Save()
-	return nil
+// Unpublish ...
+func (quote *Quote) Unpublish() error {
+	return unpublish(quote)
 }
 
 // OnLike is called when the quote receives a like.
@@ -124,24 +102,6 @@ func (quote *Quote) OnLike(likedBy *User) {
 			Type:    NotificationTypeLike,
 		})
 	}()
-}
-
-// Unpublish ...
-func (quote *Quote) Unpublish() error {
-	draftIndex, err := GetDraftIndex(quote.CreatedBy)
-
-	if err != nil {
-		return err
-	}
-
-	if draftIndex.QuoteID != "" {
-		return errors.New("You still have an unfinished draft")
-	}
-
-	quote.IsDraft = true
-	draftIndex.QuoteID = quote.ID
-	draftIndex.Save()
-	return nil
 }
 
 // String implements the default string serialization.

@@ -9,7 +9,6 @@ import (
 
 // GroupPost is a group post.
 type GroupPost struct {
-	ID       string   `json:"id"`
 	Text     string   `json:"text" editable:"true"`
 	GroupID  string   `json:"groupId"`
 	ParentID string   `json:"parentId"`
@@ -18,6 +17,7 @@ type GroupPost struct {
 	IsDraft  bool     `json:"isDraft" editable:"true"`
 	Edited   string   `json:"edited"`
 
+	HasID
 	HasCreator
 	HasLikes
 

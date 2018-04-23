@@ -9,12 +9,12 @@ import (
 
 // Post is a forum post.
 type Post struct {
-	ID       string   `json:"id"`
 	Text     string   `json:"text" editable:"true"`
 	ThreadID string   `json:"threadId"`
 	Tags     []string `json:"tags"`
 	Edited   string   `json:"edited"`
 
+	HasID
 	HasCreator
 	HasLikes
 

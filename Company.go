@@ -8,12 +8,12 @@ import (
 
 // Company represents an anime studio, producer or licensor.
 type Company struct {
-	ID          string      `json:"id"`
 	Name        CompanyName `json:"name" editable:"true"`
 	Description string      `json:"description" editable:"true" type:"textarea"`
 	Links       []*Link     `json:"links" editable:"true"`
 
 	// Mixins
+	HasID
 	HasMappings
 	HasLikes
 	HasDraft
@@ -30,7 +30,9 @@ type Company struct {
 // NewCompany creates a new company.
 func NewCompany() *Company {
 	return &Company{
-		ID:    GenerateID("Company"),
+		HasID: HasID{
+			ID: GenerateID("Company"),
+		},
 		Name:  CompanyName{},
 		Links: []*Link{},
 		Tags:  []string{},
@@ -80,50 +82,19 @@ func (company *Company) Anime() (studioAnime []*Anime, producedAnime []*Anime, l
 	return studioAnime, producedAnime, licensedAnime
 }
 
-// Publish ...
+// Publish publishes the company draft.
 func (company *Company) Publish() error {
-	// No draft
-	if !company.IsDraft {
-		return errors.New("Not a draft")
-	}
-
 	// No title
 	if company.Name.English == "" {
 		return errors.New("No English company name")
 	}
 
-	draftIndex, err := GetDraftIndex(company.CreatedBy)
-
-	if err != nil {
-		return err
-	}
-
-	if draftIndex.CompanyID == "" {
-		return errors.New("Company draft doesn't exist in the user draft index")
-	}
-
-	company.IsDraft = false
-	draftIndex.CompanyID = ""
-	draftIndex.Save()
-	return nil
+	return publish(company)
 }
 
-// Unpublish ...
+// Unpublish turns the company into a draft.
 func (company *Company) Unpublish() error {
-	draftIndex, err := GetDraftIndex(company.CreatedBy)
-
-	if err != nil {
-		return err
-	}
-
-	if draftIndex.CompanyID != "" {
-		return errors.New("You still have an unfinished draft")
-	}
-
-	company.IsDraft = true
-	draftIndex.CompanyID = company.ID
-	draftIndex.Save()
-	return nil
+	return unpublish(company)
 }
 
 // String implements the default string serialization.

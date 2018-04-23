@@ -26,6 +26,25 @@ func init() {
 	})
 }
 
+// Create sets the data for a new character with data we received from the API request.
+func (character *Character) Create(ctx *aero.Context) error {
+	user := GetUserFromContext(ctx)
+
+	if user == nil {
+		return errors.New("Not logged in")
+	}
+
+	character.ID = GenerateID("Character")
+	character.Created = DateTimeUTC()
+	character.CreatedBy = user.ID
+
+	// Write log entry
+	logEntry := NewEditLogEntry(user.ID, "create", "Character", character.ID, "", "", "")
+	logEntry.Save()
+
+	return character.Unpublish()
+}
+
 // Authorize returns an error if the given API request is not authorized.
 func (character *Character) Authorize(ctx *aero.Context, action string) error {
 	user := GetUserFromContext(ctx)
@@ -55,6 +74,27 @@ func (character *Character) Edit(ctx *aero.Context, key string, value reflect.Va
 	logEntry.Save()
 
 	return false, nil
+}
+
+// OnAppend saves a log entry.
+func (character *Character) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
+	user := GetUserFromContext(ctx)
+	logEntry := NewEditLogEntry(user.ID, "arrayAppend", "Character", character.ID, fmt.Sprintf("%s[%d]", key, index), "", fmt.Sprint(obj))
+	logEntry.Save()
+}
+
+// OnRemove saves a log entry.
+func (character *Character) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
+	user := GetUserFromContext(ctx)
+	logEntry := NewEditLogEntry(user.ID, "arrayRemove", "Character", character.ID, fmt.Sprintf("%s[%d]", key, index), fmt.Sprint(obj), "")
+	logEntry.Save()
+}
+
+// AfterEdit updates the metadata.
+func (character *Character) AfterEdit(ctx *aero.Context) error {
+	character.Edited = DateTimeUTC()
+	character.EditedBy = GetUserFromContext(ctx).ID
+	return nil
 }
 
 // Save saves the character in the database.

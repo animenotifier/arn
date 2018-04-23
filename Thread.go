@@ -9,7 +9,6 @@ import (
 
 // Thread is a forum thread.
 type Thread struct {
-	ID     string   `json:"id"`
 	Title  string   `json:"title" editable:"true"`
 	Text   string   `json:"text" editable:"true"`
 	Sticky int      `json:"sticky"`
@@ -17,6 +16,7 @@ type Thread struct {
 	Posts  []string `json:"posts"`
 	Edited string   `json:"edited"`
 
+	HasID
 	HasCreator
 	HasLikes
 
