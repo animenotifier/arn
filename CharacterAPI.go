@@ -133,7 +133,6 @@ func (character *Character) Delete() error {
 		for index, animeCharacter := range list.Items {
 			if animeCharacter.CharacterID == character.ID {
 				list.Items = append(list.Items[:index], list.Items[index+1:]...)
-				list.Unlock()
 				list.Save()
 				break
 			}
