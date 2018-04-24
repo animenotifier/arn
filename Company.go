@@ -10,6 +10,7 @@ import (
 type Company struct {
 	Name        CompanyName `json:"name" editable:"true"`
 	Description string      `json:"description" editable:"true" type:"textarea"`
+	Email       string      `json:"email" editable:"true"`
 	Links       []*Link     `json:"links" editable:"true"`
 
 	// Mixins
@@ -21,7 +22,6 @@ type Company struct {
 	// Other editable fields
 	Location *Location `json:"location" editable:"true"`
 	Tags     []string  `json:"tags" editable:"true"`
-	Email    string    `json:"email" editable:"true"`
 
 	// Editing dates
 	HasCreator
