@@ -21,6 +21,7 @@ type Company struct {
 	// Other editable fields
 	Location *Location `json:"location" editable:"true"`
 	Tags     []string  `json:"tags" editable:"true"`
+	Email    string    `json:"email" editable:"true"`
 
 	// Editing dates
 	HasCreator
