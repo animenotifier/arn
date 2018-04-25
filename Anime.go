@@ -635,10 +635,7 @@ func (anime *Anime) ImportKitsuMapping(mapping *kitsu.Mapping) {
 	// 	anime.SetMapping("hulu/anime", mapping.Attributes.ExternalID)
 	case "anilist":
 		externalID := mapping.Attributes.ExternalID
-
-		if strings.HasPrefix(externalID, "anime/") {
-			externalID = externalID[len("anime/"):]
-		}
+		externalID = strings.TrimPrefix(externalID, "anime/")
 
 		anime.SetMapping("anilist/anime", externalID)
 	case "thetvdb", "thetvdb/series":

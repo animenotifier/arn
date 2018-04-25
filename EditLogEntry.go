@@ -54,7 +54,7 @@ func (entry *EditLogEntry) EditorScore() int {
 		v := reflect.Indirect(reflect.ValueOf(obj))
 		isDraft := v.FieldByName("IsDraft")
 
-		if isDraft.Kind() == reflect.Bool && isDraft.Bool() == true {
+		if isDraft.Kind() == reflect.Bool && isDraft.Bool() {
 			// No score for drafts
 			return 0
 		}

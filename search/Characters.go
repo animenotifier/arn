@@ -68,8 +68,6 @@ func Characters(originalTerm string, maxLength int) []*arn.Character {
 
 		// Japanese
 		if termHasUnicode {
-			text = character.Name.Japanese
-
 			if strings.Contains(character.Name.Japanese, term) {
 				results = append(results, &Result{
 					obj:        character,

@@ -391,7 +391,7 @@ func (user *User) SetNick(newName string) error {
 
 	// If there was no error: the username exists.
 	// If "not found" is not included in the error message it's a different error type.
-	if err == nil || strings.Index(err.Error(), "not found") == -1 {
+	if err == nil || !strings.Contains(err.Error(), "not found") {
 		return errors.New("Username '" + newName + "' is taken already")
 	}
 

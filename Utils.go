@@ -38,7 +38,7 @@ func GenerateID(table string) string {
 	for {
 		_, err := DB.Get(table, id)
 
-		if err != nil && strings.Index(err.Error(), "not found") != -1 {
+		if err != nil && strings.Contains(err.Error(), "not found") {
 			return id
 		}
 

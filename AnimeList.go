@@ -234,7 +234,7 @@ func (list *AnimeList) WithoutPrivateItems() *AnimeList {
 	defer list.Unlock()
 
 	for _, item := range list.Items {
-		if item.Private == false {
+		if !item.Private {
 			newList.Items = append(newList.Items, item)
 		}
 	}

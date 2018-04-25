@@ -46,11 +46,6 @@ func Date(date string) bool {
 
 // Email tests if the given email address is valid.
 func Email(email string) bool {
-	if email == "" {
-		return false
-	}
-
-	// TODO: ...
-
-	return true
+	// TODO: Add email check
+	return email != ""
 }
