@@ -10,7 +10,7 @@ type PayPalPayment struct {
 	Amount   string `json:"amount"`
 	Currency string `json:"currency"`
 	Method   string `json:"method"`
-	Created  string     `json:"created"`
+	Created  string `json:"created"`
 }
 
 // Gems returns the total amount of gems.
