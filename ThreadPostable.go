@@ -37,13 +37,7 @@ func (postable *ThreadPostable) Likes() []string {
 
 // LikedBy tells you whether the given user has liked the thread.
 func (postable *ThreadPostable) LikedBy(userID string) bool {
-	for _, id := range postable.thread.Likes {
-		if id == userID {
-			return true
-		}
-	}
-
-	return false
+	return postable.thread.LikedBy(userID)
 }
 
 // Link returns the relative URL of the thread.
