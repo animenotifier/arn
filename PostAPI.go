@@ -86,10 +86,16 @@ func (post *Post) Create(ctx *aero.Context) error {
 		post.Tags[i] = tags[i].(string)
 	}
 
+	// Thread
 	thread, threadErr := GetThread(post.ThreadID)
 
 	if threadErr != nil {
 		return errors.New("Thread does not exist")
+	}
+
+	// Is the thread locked?
+	if thread.Locked {
+		return errors.New("Thread is locked")
 	}
 
 	// Bind to local variable for the upcoming goroutine.

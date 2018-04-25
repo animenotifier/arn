@@ -19,6 +19,7 @@ type Thread struct {
 	HasID
 	HasCreator
 	HasLikes
+	HasLocked
 
 	html string
 }
@@ -58,6 +59,18 @@ func (thread *Thread) OnLike(likedBy *User) {
 			Type:    NotificationTypeLike,
 		})
 	}()
+}
+
+// OnLock is called when the thread is locked.
+func (thread *Thread) OnLock(user *User) {
+	logEntry := NewEditLogEntry(user.ID, "edit", "Thread", thread.ID, "Locked", "false", "true")
+	logEntry.Save()
+}
+
+// OnUnlock is called when the thread is unlocked.
+func (thread *Thread) OnUnlock(user *User) {
+	logEntry := NewEditLogEntry(user.ID, "edit", "Thread", thread.ID, "Locked", "true", "false")
+	logEntry.Save()
 }
 
 // Remove post from the post list.

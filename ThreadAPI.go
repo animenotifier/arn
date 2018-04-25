@@ -14,6 +14,8 @@ import (
 var (
 	_ Likeable          = (*Thread)(nil)
 	_ LikeEventReceiver = (*Thread)(nil)
+	_ Lockable          = (*Thread)(nil)
+	_ LockEventReceiver = (*Thread)(nil)
 	_ fmt.Stringer      = (*Thread)(nil)
 	_ api.Newable       = (*Thread)(nil)
 	_ api.Editable      = (*Thread)(nil)
@@ -29,6 +31,12 @@ func init() {
 
 		// Unlike thread
 		UnlikeAction(),
+
+		// Lock thread
+		LockAction(),
+
+		// Unlock thread
+		UnlockAction(),
 	})
 }
 
