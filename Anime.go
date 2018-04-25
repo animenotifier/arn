@@ -316,13 +316,33 @@ func (anime *Anime) Link() string {
 
 // StartDateTime returns the start date as a time object.
 func (anime *Anime) StartDateTime() time.Time {
-	t, _ := time.Parse(AnimeDateFormat, anime.StartDate)
+	format := AnimeDateFormat
+
+	if len(anime.StartDate) >= len(AnimeDateFormat) {
+		// ...
+	} else if len(anime.StartDate) >= len("2006-01") {
+		format = "2006-01"
+	} else if len(anime.StartDate) >= len("2006") {
+		format = "2006"
+	}
+
+	t, _ := time.Parse(format, anime.StartDate)
 	return t
 }
 
 // EndDateTime returns the end date as a time object.
 func (anime *Anime) EndDateTime() time.Time {
-	t, _ := time.Parse(AnimeDateFormat, anime.EndDate)
+	format := AnimeDateFormat
+
+	if len(anime.EndDate) >= len(AnimeDateFormat) {
+		// ...
+	} else if len(anime.EndDate) >= len("2006-01") {
+		format = "2006-01"
+	} else if len(anime.EndDate) >= len("2006") {
+		format = "2006"
+	}
+
+	t, _ := time.Parse(format, anime.EndDate)
 	return t
 }
 
