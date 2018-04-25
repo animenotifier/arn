@@ -96,3 +96,26 @@ func PostText(text string) string {
 func ThreadTitle(title string) string {
 	return strings.TrimSpace(title)
 }
+
+// Website fixed common website mistakes.
+func Website(url string) string {
+	// Disallow links that aren't actual websites,
+	// just tracker links.
+	if strings.Contains(url, "myanimelist.net/") {
+		return ""
+	}
+
+	if strings.Contains(url, "anilist.co/") {
+		return ""
+	}
+
+	if strings.Contains(url, "kitsu.io/") {
+		return ""
+	}
+
+	url = strings.TrimSpace(url)
+	url = strings.TrimPrefix(url, "http://")
+	url = strings.TrimPrefix(url, "https://")
+
+	return url
+}

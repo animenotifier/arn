@@ -34,3 +34,10 @@ func TestFixTag(t *testing.T) {
 	assert.Equal(t, autocorrect.Tag("https://notify.moe/anime/244/"), "anime:244")
 	assert.Equal(t, autocorrect.Tag("https://osu.ppy.sh/s/320118"), "osu-beatmap:320118")
 }
+
+func TestFixWebsite(t *testing.T) {
+	// Website autocorrect
+	assert.Equal(t, autocorrect.Website("http://websi.te"), "websi.te")
+	assert.Equal(t, autocorrect.Website("https://websi.te"), "websi.te")
+	assert.Equal(t, autocorrect.Website("http://myanimelist.net/profile/patcho"), "")
+}
