@@ -91,6 +91,16 @@ func (user *User) Edit(ctx *aero.Context, key string, value reflect.Value, newVa
 		err := user.SetNick(newNick)
 		return true, err
 
+	case "Website":
+		newSite := newValue.String()
+
+		if autocorrect.IsTrackerLink(newSite) {
+			return true, errors.New("Not an actual website or homepage")
+		}
+
+		user.Website = autocorrect.Website(newSite)
+		return true, nil
+
 	case "ProExpires":
 		user := GetUserFromContext(ctx)
 

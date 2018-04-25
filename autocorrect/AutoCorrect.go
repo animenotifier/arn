@@ -101,21 +101,19 @@ func ThreadTitle(title string) string {
 func Website(url string) string {
 	// Disallow links that aren't actual websites,
 	// just tracker links.
-	if strings.Contains(url, "myanimelist.net/") {
-		return ""
-	}
-
-	if strings.Contains(url, "anilist.co/") {
-		return ""
-	}
-
-	if strings.Contains(url, "kitsu.io/") {
+	if IsTrackerLink(url) {
 		return ""
 	}
 
 	url = strings.TrimSpace(url)
 	url = strings.TrimPrefix(url, "http://")
 	url = strings.TrimPrefix(url, "https://")
+	url = strings.TrimSuffix(url, "/")
 
 	return url
+}
+
+// IsTrackerLink returns true if the URL is a tracker link.
+func IsTrackerLink(url string) bool {
+	return strings.Contains(url, "myanimelist.net/") || strings.Contains(url, "anilist.co/") || strings.Contains(url, "kitsu.io/")
 }
