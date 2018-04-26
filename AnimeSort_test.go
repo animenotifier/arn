@@ -15,5 +15,5 @@ func TestAnimeSort(t *testing.T) {
 	arn.SortAnimeByQuality(anime2011)
 
 	// Best anime of 2011 needs to be Steins;Gate
-	assert.Equal(t, "5646", anime2011[0].ID)
+	assert.Equal(t, "0KUWpFmig", anime2011[0].ID)
 }
