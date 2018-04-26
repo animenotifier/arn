@@ -15,6 +15,7 @@ func TestRemoveSpecialCharacters(t *testing.T) {
 	assert.Equal(t, stringutils.RemoveSpecialCharacters("Working!!!"), "Working   ")
 	assert.Equal(t, stringutils.RemoveSpecialCharacters("Lucky☆Star"), "Lucky Star")
 	assert.Equal(t, stringutils.RemoveSpecialCharacters("ChäoS;Child"), "ChäoS Child")
+	assert.Equal(t, stringutils.RemoveSpecialCharacters("K-On!"), "KOn ")
 	assert.Equal(t, stringutils.RemoveSpecialCharacters("僕だけがいない街"), "僕だけがいない街")
 }
 

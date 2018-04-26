@@ -33,13 +33,17 @@ func RemoveSpecialCharacters(s string) string {
 // AdvancedStringSimilarity is like StringSimilarity but boosts the value if a appears directly in b.
 func AdvancedStringSimilarity(a string, b string) float64 {
 	if a == b {
+		return 10000000
+	}
+
+	if strings.Replace(a, " ", "", -1) == strings.Replace(b, " ", "", -1) {
 		return 1000000
 	}
 
 	s := StringSimilarity(a, b)
 
 	if strings.Contains(b, a) {
-		s += 0.5
+		s += 0.6
 
 		if strings.HasPrefix(b, a) {
 			s += 5.0
