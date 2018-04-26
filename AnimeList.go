@@ -73,6 +73,20 @@ func (list *AnimeList) Contains(animeID string) bool {
 	return false
 }
 
+// HasItemsWithStatus checks if the list contains an anime with the given status.
+func (list *AnimeList) HasItemsWithStatus(status string) bool {
+	list.Lock()
+	defer list.Unlock()
+
+	for _, item := range list.Items {
+		if item.Status == status {
+			return true
+		}
+	}
+
+	return false
+}
+
 // Find returns the list item with the specified anime ID, if available.
 func (list *AnimeList) Find(animeID string) *AnimeListItem {
 	list.Lock()
