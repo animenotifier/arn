@@ -68,6 +68,13 @@ func (quote *Quote) Publish() error {
 		return errors.New("Invalid anime ID")
 	}
 
+	// Invalid character ID
+	character := quote.Character()
+
+	if character == nil {
+		return errors.New("Invalid character ID")
+	}
+
 	// Invalid episode number
 	maxEpisodes := anime.EpisodeCount
 
