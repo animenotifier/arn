@@ -85,6 +85,11 @@ func (quote *Quote) Unpublish() error {
 
 // OnLike is called when the quote receives a like.
 func (quote *Quote) OnLike(likedBy *User) {
+	if !quote.IsValid() {
+		color.Red("Invalid quote: %s", quote.ID)
+		return
+	}
+
 	if likedBy.ID == quote.CreatedBy {
 		return
 	}
@@ -102,6 +107,11 @@ func (quote *Quote) OnLike(likedBy *User) {
 			Type:    NotificationTypeLike,
 		})
 	}()
+}
+
+// IsValid tests the field values and returns true if everything is okay.
+func (quote *Quote) IsValid() bool {
+	return quote.Character() != nil && quote.Anime() != nil && quote.Creator() != nil
 }
 
 // String implements the default string serialization.
