@@ -2,6 +2,7 @@ package arn
 
 import (
 	"errors"
+	"reflect"
 
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
@@ -26,6 +27,12 @@ func LikeAction() *api.Action {
 	return &api.Action{
 		Route: "/like",
 		Run: func(obj interface{}, ctx *aero.Context) error {
+			field := reflect.ValueOf(obj).Elem().FieldByName("IsDraft")
+
+			if field.IsValid() && field.Bool() {
+				return errors.New("Drafts need to be published before they can be liked")
+			}
+
 			likeable := obj.(Likeable)
 			user := GetUserFromContext(ctx)
 
