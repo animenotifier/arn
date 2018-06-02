@@ -3,6 +3,7 @@ package arn
 import (
 	"errors"
 	"fmt"
+	"reflect"
 
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
@@ -41,7 +42,7 @@ func (post *Post) Authorize(ctx *aero.Context, action string) error {
 	if action == "edit" {
 		user := GetUserFromContext(ctx)
 
-		if post.CreatedBy != user.ID {
+		if post.CreatedBy != user.ID && user.Role != "admin" {
 			return errors.New("Can't edit the posts of other users")
 		}
 	}
@@ -153,6 +154,31 @@ func (post *Post) Create(ctx *aero.Context) error {
 	logEntry.Save()
 
 	return nil
+}
+
+// Edit saves a log entry for the edit.
+func (post *Post) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
+	user := GetUserFromContext(ctx)
+
+	// Write log entry
+	logEntry := NewEditLogEntry(user.ID, "edit", "Post", post.ID, key, fmt.Sprint(value.Interface()), fmt.Sprint(newValue.Interface()))
+	logEntry.Save()
+
+	return false, nil
+}
+
+// OnAppend saves a log entry.
+func (post *Post) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
+	user := GetUserFromContext(ctx)
+	logEntry := NewEditLogEntry(user.ID, "arrayAppend", "Post", post.ID, fmt.Sprintf("%s[%d]", key, index), "", fmt.Sprint(obj))
+	logEntry.Save()
+}
+
+// OnRemove saves a log entry.
+func (post *Post) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
+	user := GetUserFromContext(ctx)
+	logEntry := NewEditLogEntry(user.ID, "arrayRemove", "Post", post.ID, fmt.Sprintf("%s[%d]", key, index), fmt.Sprint(obj), "")
+	logEntry.Save()
 }
 
 // DeleteInContext deletes the post in the given context.

@@ -9,9 +9,9 @@ import (
 
 // Post is a forum post.
 type Post struct {
-	Text     string   `json:"text" editable:"true"`
+	Text     string   `json:"text" editable:"true" type:"textarea"`
 	ThreadID string   `json:"threadId"`
-	Tags     []string `json:"tags"`
+	Tags     []string `json:"tags" editable:"true"`
 	Edited   string   `json:"edited"`
 
 	HasID

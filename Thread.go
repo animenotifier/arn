@@ -11,8 +11,8 @@ import (
 type Thread struct {
 	Title  string   `json:"title" editable:"true"`
 	Text   string   `json:"text" editable:"true"`
-	Sticky int      `json:"sticky"`
-	Tags   []string `json:"tags"`
+	Sticky int      `json:"sticky" editable:"true"`
+	Tags   []string `json:"tags" editable:"true"`
 	Posts  []string `json:"posts"`
 	Edited string   `json:"edited"`
 

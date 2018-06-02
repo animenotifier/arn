@@ -3,6 +3,7 @@ package arn
 import (
 	"errors"
 	"fmt"
+	"reflect"
 
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
@@ -49,7 +50,7 @@ func (thread *Thread) Authorize(ctx *aero.Context, action string) error {
 	if action == "edit" {
 		user := GetUserFromContext(ctx)
 
-		if thread.CreatedBy != user.ID {
+		if thread.CreatedBy != user.ID && user.Role != "admin" {
 			return errors.New("Can't edit the threads of other users")
 		}
 	}
@@ -116,6 +117,31 @@ func (thread *Thread) Create(ctx *aero.Context) error {
 	logEntry.Save()
 
 	return nil
+}
+
+// Edit saves a log entry for the edit.
+func (thread *Thread) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
+	user := GetUserFromContext(ctx)
+
+	// Write log entry
+	logEntry := NewEditLogEntry(user.ID, "edit", "Thread", thread.ID, key, fmt.Sprint(value.Interface()), fmt.Sprint(newValue.Interface()))
+	logEntry.Save()
+
+	return false, nil
+}
+
+// OnAppend saves a log entry.
+func (thread *Thread) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
+	user := GetUserFromContext(ctx)
+	logEntry := NewEditLogEntry(user.ID, "arrayAppend", "Thread", thread.ID, fmt.Sprintf("%s[%d]", key, index), "", fmt.Sprint(obj))
+	logEntry.Save()
+}
+
+// OnRemove saves a log entry.
+func (thread *Thread) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
+	user := GetUserFromContext(ctx)
+	logEntry := NewEditLogEntry(user.ID, "arrayRemove", "Thread", thread.ID, fmt.Sprintf("%s[%d]", key, index), fmt.Sprint(obj), "")
+	logEntry.Save()
 }
 
 // AfterEdit sets the edited date on the thread object.
