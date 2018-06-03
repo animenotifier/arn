@@ -11,9 +11,6 @@ matrix:
     - go: master
   fast_finish: true
 
-notifications:
-  email: false
-
 before_script:
   - GO_FILES=$(find . -iname '*.go' -type f | grep -v /vendor/)                  # All the .go files, excluding vendor/
   - go get github.com/golang/lint/golint                                         # Linter
