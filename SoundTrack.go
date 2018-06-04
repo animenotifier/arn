@@ -34,7 +34,7 @@ func (track *SoundTrack) Link() string {
 	return "/soundtrack/" + track.ID
 }
 
-// MediaByService ...
+// MediaByService returns a slice of all media by the given service.
 func (track *SoundTrack) MediaByService(service string) []*ExternalMedia {
 	filtered := []*ExternalMedia{}
 
@@ -45,6 +45,17 @@ func (track *SoundTrack) MediaByService(service string) []*ExternalMedia {
 	}
 
 	return filtered
+}
+
+// HasMediaByService returns true if the track has media by the given service.
+func (track *SoundTrack) HasMediaByService(service string) bool {
+	for _, media := range track.Media {
+		if media.Service == service {
+			return true
+		}
+	}
+
+	return false
 }
 
 // HasTag returns true if it contains the given tag.
