@@ -16,11 +16,23 @@ import (
 // Force interface implementations
 var (
 	_ fmt.Stringer           = (*Anime)(nil)
+	_ Likeable               = (*Anime)(nil)
 	_ api.Deletable          = (*Anime)(nil)
 	_ api.Editable           = (*Anime)(nil)
 	_ api.CustomEditable     = (*Anime)(nil)
 	_ api.ArrayEventListener = (*Anime)(nil)
 )
+
+// Actions
+func init() {
+	API.RegisterActions("Anime", []*api.Action{
+		// Like anime
+		LikeAction(),
+
+		// Unlike anime
+		UnlikeAction(),
+	})
+}
 
 // Edit creates an edit log entry.
 func (anime *Anime) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {

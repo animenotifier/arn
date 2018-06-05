@@ -83,6 +83,7 @@ type Anime struct {
 	// Mixins
 	HasID
 	HasMappings
+	HasLikes
 	HasCreator
 	HasEditor
 	HasDraft
