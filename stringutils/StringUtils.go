@@ -1,12 +1,12 @@
 package stringutils
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 	"unicode"
 	"unicode/utf8"
 
+	jsoniter "github.com/json-iterator/go"
 	"github.com/xrash/smetrics"
 )
 
@@ -84,6 +84,6 @@ func ContainsUnicodeLetters(s string) bool {
 
 // PrettyPrint prints the object as indented JSON data on the console.
 func PrettyPrint(obj interface{}) {
-	pretty, _ := json.MarshalIndent(obj, "", "\t")
+	pretty, _ := jsoniter.MarshalIndent(obj, "", "\t")
 	fmt.Println(string(pretty))
 }

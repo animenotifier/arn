@@ -1,13 +1,13 @@
 package arn
 
 import (
-	"encoding/json"
 	"io/ioutil"
 	"os"
 	"path"
 
 	"github.com/animenotifier/anilist"
 	"github.com/animenotifier/osu"
+	jsoniter "github.com/json-iterator/go"
 )
 
 // Root is the full path to the root directory of notify.moe repository.
@@ -92,7 +92,7 @@ func init() {
 	}
 
 	data, _ := ioutil.ReadFile(apiKeysPath)
-	err := json.Unmarshal(data, &APIKeys)
+	err := jsoniter.Unmarshal(data, &APIKeys)
 
 	if err != nil {
 		panic(err)

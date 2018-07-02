@@ -1,7 +1,6 @@
 package arn
 
 import (
-	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
@@ -15,6 +14,7 @@ import (
 	"github.com/aerogo/mirror"
 	"github.com/animenotifier/kitsu"
 	"github.com/animenotifier/mal"
+	jsoniter "github.com/json-iterator/go"
 	shortid "github.com/ventu-io/go-shortid"
 )
 
@@ -118,7 +118,7 @@ func FilterIDTags(tags []string, idType string) []string {
 
 // JSON turns the object into a JSON string.
 func JSON(obj interface{}) string {
-	data, err := json.Marshal(obj)
+	data, err := jsoniter.Marshal(obj)
 
 	if err == nil {
 		return string(data)

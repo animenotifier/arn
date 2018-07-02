@@ -35,7 +35,7 @@ func GetYoutubeMedia(url string) (*ExternalMedia, error) {
 // 	}
 
 // 	var soundcloud SoundCloudTrack
-// 	err = json.Unmarshal(body, &soundcloud)
+// 	err = jsoniter.Unmarshal(body, &soundcloud)
 
 // 	if err != nil {
 // 		return nil, err

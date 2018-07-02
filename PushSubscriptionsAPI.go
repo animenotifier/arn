@@ -1,11 +1,11 @@
 package arn
 
 import (
-	"encoding/json"
 	"errors"
 
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
+	jsoniter "github.com/json-iterator/go"
 )
 
 // Force interface implementations
@@ -31,7 +31,7 @@ func init() {
 				}
 
 				var subscription *PushSubscription
-				err = json.Unmarshal(body, &subscription)
+				err = jsoniter.Unmarshal(body, &subscription)
 
 				if err != nil {
 					return err
@@ -64,7 +64,7 @@ func init() {
 				}
 
 				var subscription *PushSubscription
-				err = json.Unmarshal(body, &subscription)
+				err = jsoniter.Unmarshal(body, &subscription)
 
 				if err != nil {
 					return err

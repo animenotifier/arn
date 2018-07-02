@@ -1,10 +1,10 @@
 package arn
 
 import (
-	"encoding/json"
 	"net/http"
 
 	webpush "github.com/blitzprog/webpush-go"
+	jsoniter "github.com/json-iterator/go"
 )
 
 // PushSubscription ...
@@ -39,7 +39,7 @@ func (sub *PushSubscription) SendNotification(notification *PushNotification) (*
 	}
 
 	// Create notification
-	data, err := json.Marshal(notification)
+	data, err := jsoniter.Marshal(notification)
 
 	if err != nil {
 		return nil, err

@@ -1,10 +1,9 @@
 package arn
 
 import (
-	"encoding/json"
-
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
+	jsoniter "github.com/json-iterator/go"
 )
 
 // Force interface implementations
@@ -25,7 +24,7 @@ func (analytics *Analytics) Create(ctx *aero.Context) error {
 		return err
 	}
 
-	err = json.Unmarshal(body, analytics)
+	err = jsoniter.Unmarshal(body, analytics)
 
 	if err != nil {
 		return err

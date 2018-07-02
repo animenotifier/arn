@@ -43,7 +43,7 @@ func (media *ExternalMedia) EmbedLink() string {
 // 		}
 
 // 		var soundcloud SoundCloudTrack
-// 		err := json.Unmarshal(body, &soundcloud)
+// 		err := jsoniter.Unmarshal(body, &soundcloud)
 
 // 		if err != nil {
 // 			color.Red(err.Error())
@@ -64,7 +64,7 @@ func (media *ExternalMedia) EmbedLink() string {
 // 		}
 
 // 		var response youtube.VideoListResponse
-// 		json.Unmarshal(body, &response)
+// 		jsoniter.Unmarshal(body, &response)
 
 // 		if len(response.Items) == 0 {
 // 			color.Red("Youtube: Items field is empty")
