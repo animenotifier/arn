@@ -414,11 +414,11 @@ func (user *User) ForceSetNick(newName string) {
 }
 
 // SetEmail changes the user's email safely.
-func (user *User) SetEmail(newName string) error {
+func (user *User) SetEmail(newEmail string) error {
 	setEmailMutex.Lock()
 	defer setEmailMutex.Unlock()
 
-	if !validate.Email(user.Email) {
+	if !validate.Email(newEmail) {
 		return errors.New("Invalid email address")
 	}
 
@@ -426,7 +426,7 @@ func (user *User) SetEmail(newName string) error {
 	DB.Delete("EmailToUser", user.Email)
 
 	// Set new email
-	user.Email = newName
+	user.Email = newEmail
 
 	DB.Set("EmailToUser", user.Email, &EmailToUser{
 		Email:  user.Email,
