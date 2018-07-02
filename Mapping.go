@@ -5,6 +5,7 @@ func init() {
 	DataLists["mapping-services"] = []*Option{
 		&Option{"anidb/anime", "anidb/anime"},
 		&Option{"anilist/anime", "anilist/anime"},
+		&Option{"anilist/studio", "anilist/studio"},
 		&Option{"ann/company", "ann/company"},
 		&Option{"imdb/anime", "imdb/anime"},
 		&Option{"kitsu/anime", "kitsu/anime"},
