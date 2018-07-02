@@ -91,6 +91,11 @@ func (user *User) Edit(ctx *aero.Context, key string, value reflect.Value, newVa
 		err := user.SetNick(newNick)
 		return true, err
 
+	case "Email":
+		newEmail := newValue.String()
+		err := user.SetEmail(newEmail)
+		return true, err
+
 	case "Website":
 		newSite := newValue.String()
 
