@@ -23,17 +23,17 @@ func (episodes *AnimeEpisodes) Link() string {
 }
 
 // Find finds the given episode number.
-func (episodes *AnimeEpisodes) Find(episodeNumber int) *AnimeEpisode {
+func (episodes *AnimeEpisodes) Find(episodeNumber int) (*AnimeEpisode, int) {
 	episodes.Lock()
 	defer episodes.Unlock()
 
-	for _, episode := range episodes.Items {
+	for index, episode := range episodes.Items {
 		if episode.Number == episodeNumber {
-			return episode
+			return episode, index
 		}
 	}
 
-	return nil
+	return nil, -1
 }
 
 // Merge combines the data of both episode slices to one.
