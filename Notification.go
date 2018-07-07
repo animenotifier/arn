@@ -1,6 +1,10 @@
 package arn
 
-import "github.com/aerogo/nano"
+import (
+	"time"
+
+	"github.com/aerogo/nano"
+)
 
 // Notification represents a user-associated notification.
 type Notification struct {
@@ -15,6 +19,12 @@ type Notification struct {
 func (notification *Notification) User() *User {
 	user, _ := GetUser(notification.UserID)
 	return user
+}
+
+// CreatedTime returns the created date as a time object.
+func (notification *Notification) CreatedTime() time.Time {
+	t, _ := time.Parse(time.RFC3339, notification.Created)
+	return t
 }
 
 // NewNotification creates a new notification.
