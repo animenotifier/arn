@@ -238,6 +238,94 @@ func (list *AnimeList) Top(count int) []*AnimeListItem {
 	return tmp
 }
 
+// SortByTile sorts the anime list by anime title.
+func (list *AnimeList) SortByAlgo(algo string, user *User) {
+	list.Lock()
+	defer list.Unlock()
+
+	sort.Slice(list.Items, func(i, j int) bool {
+		anime := list.Items[i].Anime()
+		otherAnime := list.Items[j].Anime()
+		switch algo {
+		case "Title":
+			return CompareAnimeByTile(anime, otherAnime, user)
+		case "StartDate":
+			return CompareAnimeByStartDate(anime, otherAnime)
+		case "EpisodeCount":
+			return CompareAnimeByEpisodeCount(anime, otherAnime)
+		case "StartEpisodeLength":
+			return CompareAnimeByEpisodeLength(anime, otherAnime)
+		default:
+			a := list.Items[i]
+			b := list.Items[j]
+
+			if a.Rating.Overall == b.Rating.Overall {
+				return a.Anime().Title.Canonical < b.Anime().Title.Canonical
+			}
+
+			return a.Rating.Overall > b.Rating.Overall
+		}
+	})
+}
+
+// SortByTile sorts the anime list by anime title.
+func (list *AnimeList) sortByTile(user *User) {
+	sort.Slice(list.Items, func(i, j int) bool {
+		item := list.Items[i]
+		otherItem := list.Items[j]
+		anime := item.Anime()
+		otherAnime := otherItem.Anime()
+
+		if anime.Title.ByUser(user) == otherAnime.Title.ByUser(user) {
+			return item.Rating.Overall < otherItem.Rating.Overall
+		}
+
+		return anime.Title.ByUser(user) < otherAnime.Title.ByUser(user)
+	})
+}
+
+// sortByStartDate sorts the anime list by anime title.
+func (list *AnimeList) sortByStartDate() {
+	sort.Slice(list.Items, func(i, j int) bool {
+		anime := list.Items[i].Anime()
+		otherAnime := list.Items[j].Anime()
+
+		if anime.StartDate == otherAnime.StartDate {
+			return anime.Title.Canonical < otherAnime.Title.Canonical
+		}
+
+		return anime.StartDate > otherAnime.StartDate
+	})
+}
+
+// sortByEpisodeCount sorts the anime list by anime title.
+func (list *AnimeList) sortByEpisodeCount() {
+	sort.Slice(list.Items, func(i, j int) bool {
+		anime := list.Items[i].Anime()
+		otherAnime := list.Items[j].Anime()
+
+		if anime.EpisodeCount == otherAnime.EpisodeCount {
+			return anime.Title.Canonical < otherAnime.Title.Canonical
+		}
+
+		return anime.EpisodeCount > otherAnime.EpisodeCount
+	})
+}
+
+// SortByTile sorts the anime list by anime title.
+func (list *AnimeList) sortByEpisodeLength() {
+	sort.Slice(list.Items, func(i, j int) bool {
+		anime := list.Items[i].Anime()
+		otherAnime := list.Items[j].Anime()
+
+		if anime.EpisodeLength == otherAnime.EpisodeLength {
+			return anime.EpisodeLength < otherAnime.EpisodeLength
+		}
+
+		return anime.EpisodeLength > otherAnime.EpisodeLength
+	})
+}
+
 // Watching ...
 func (list *AnimeList) Watching() *AnimeList {
 	return list.FilterStatus(AnimeListStatusWatching)

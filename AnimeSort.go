@@ -70,6 +70,42 @@ func SortAnimeByQualityDetailed(animes []*Anime, filterStatus string) {
 	})
 }
 
+// CompareAnimeByTile sorts the anime list by anime title.
+func CompareAnimeByTile(anime *Anime, otherAnime *Anime, user *User) bool {
+	if anime.Title.ByUser(user) == otherAnime.Title.ByUser(user) {
+		return anime.Rating.Overall < otherAnime.Rating.Overall
+	}
+
+	return anime.Title.ByUser(user) < otherAnime.Title.ByUser(user)
+}
+
+// sortByStartDate sorts the anime list by anime title.
+func CompareAnimeByStartDate(anime *Anime, otherAnime *Anime) bool {
+	if anime.StartDate == otherAnime.StartDate {
+		return anime.Title.Canonical < otherAnime.Title.Canonical
+	}
+
+	return anime.StartDate > otherAnime.StartDate
+}
+
+// sortByEpisodeCount sorts the anime list by anime title.
+func CompareAnimeByEpisodeCount(anime *Anime, otherAnime *Anime) bool {
+	if anime.EpisodeCount == otherAnime.EpisodeCount {
+		return anime.Title.Canonical < otherAnime.Title.Canonical
+	}
+
+	return anime.EpisodeCount > otherAnime.EpisodeCount
+}
+
+// SortByTile sorts the anime list by anime title.
+func CompareAnimeByEpisodeLength(anime *Anime, otherAnime *Anime) bool {
+	if anime.EpisodeLength == otherAnime.EpisodeLength {
+		return anime.EpisodeLength < otherAnime.EpisodeLength
+	}
+
+	return anime.EpisodeLength > otherAnime.EpisodeLength
+}
+
 // Score returns the score used for the anime ranking.
 func (anime *Anime) Score() float64 {
 	score := anime.Rating.Overall
