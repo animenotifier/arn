@@ -1,6 +1,7 @@
 package arn
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/aerogo/nano"
@@ -25,6 +26,11 @@ func (notification *Notification) User() *User {
 func (notification *Notification) CreatedTime() time.Time {
 	t, _ := time.Parse(time.RFC3339, notification.Created)
 	return t
+}
+
+// String returns a string representation of the notification.
+func (notification *Notification) String() string {
+	return fmt.Sprintf("[%s] %s", notification.Type, notification.Title)
 }
 
 // NewNotification creates a new notification.
