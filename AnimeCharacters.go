@@ -80,6 +80,18 @@ func (characters *AnimeCharacters) Contains(characterID string) bool {
 	return false
 }
 
+// First gives you the first "count" anime characters.
+func (characters *AnimeCharacters) First(count int) []*AnimeCharacter {
+	characters.Lock()
+	defer characters.Unlock()
+
+	if count > len(characters.Items) {
+		count = len(characters.Items)
+	}
+
+	return characters.Items[:count]
+}
+
 // GetAnimeCharacters ...
 func GetAnimeCharacters(animeID string) (*AnimeCharacters, error) {
 	obj, err := DB.Get("AnimeCharacters", animeID)
