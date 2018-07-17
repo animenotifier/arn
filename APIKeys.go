@@ -80,8 +80,10 @@ type APIKeysData struct {
 }
 
 func init() {
+	// Path for API keys
 	apiKeysPath := path.Join(Root, "security/api-keys.json")
 
+	// If the API keys file is not available, create a symlink to the default API keys
 	if _, err := os.Stat(apiKeysPath); os.IsNotExist(err) {
 		defaultAPIKeysPath := path.Join(Root, "security/default/api-keys.json")
 		err := os.Link(defaultAPIKeysPath, apiKeysPath)
@@ -91,8 +93,15 @@ func init() {
 		}
 	}
 
-	data, _ := ioutil.ReadFile(apiKeysPath)
-	err := jsoniter.Unmarshal(data, &APIKeys)
+	// Load API keys
+	data, err := ioutil.ReadFile(apiKeysPath)
+
+	if err != nil {
+		panic(err)
+	}
+
+	// Parse JSON
+	err = jsoniter.Unmarshal(data, &APIKeys)
 
 	if err != nil {
 		panic(err)
