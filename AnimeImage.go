@@ -6,7 +6,7 @@ import (
 	"path"
 	"time"
 
-	"github.com/animenotifier/arn/imageoutput"
+	"github.com/blitzprog/imageoutput"
 )
 
 const (

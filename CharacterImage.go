@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/aerogo/http/client"
-	"github.com/animenotifier/arn/imageoutput"
+	"github.com/blitzprog/imageoutput"
 )
 
 const (
