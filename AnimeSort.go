@@ -70,7 +70,7 @@ func SortAnimeByQualityDetailed(animes []*Anime, filterStatus string) {
 	})
 }
 
-// CompareAnimeByTile sorts the anime list by anime title.
+// CompareAnimeByTile compare 2 Animes by their title. Use the user preferred title if a user is passed; otherwise, it uses the canonical one.
 func CompareAnimeByTile(anime *Anime, otherAnime *Anime, user *User) bool {
 	if anime.Title.ByUser(user) == otherAnime.Title.ByUser(user) {
 		return anime.Rating.Overall < otherAnime.Rating.Overall
@@ -79,7 +79,7 @@ func CompareAnimeByTile(anime *Anime, otherAnime *Anime, user *User) bool {
 	return anime.Title.ByUser(user) < otherAnime.Title.ByUser(user)
 }
 
-// sortByStartDate sorts the anime list by anime title.
+// CompareAnimeByStartDate compare 2 Animes by their start date. return true if the first anime was aired strictly before the second.
 func CompareAnimeByStartDate(anime *Anime, otherAnime *Anime) bool {
 	if anime.StartDate == otherAnime.StartDate {
 		return anime.Title.Canonical < otherAnime.Title.Canonical
@@ -88,7 +88,7 @@ func CompareAnimeByStartDate(anime *Anime, otherAnime *Anime) bool {
 	return anime.StartDate > otherAnime.StartDate
 }
 
-// sortByEpisodeCount sorts the anime list by anime title.
+// CompareAnimeByEpisodeCount compare 2 Animes by their episode counts. return true if the first anime has strictly more episodes the second.
 func CompareAnimeByEpisodeCount(anime *Anime, otherAnime *Anime) bool {
 	if anime.EpisodeCount == otherAnime.EpisodeCount {
 		return anime.Title.Canonical < otherAnime.Title.Canonical
@@ -97,7 +97,7 @@ func CompareAnimeByEpisodeCount(anime *Anime, otherAnime *Anime) bool {
 	return anime.EpisodeCount > otherAnime.EpisodeCount
 }
 
-// SortByTile sorts the anime list by anime title.
+// CompareAnimeByEpisodeLength compare 2 Animes by their episode length. return true if the first anime episode are strictly longer the second.
 func CompareAnimeByEpisodeLength(anime *Anime, otherAnime *Anime) bool {
 	if anime.EpisodeLength == otherAnime.EpisodeLength {
 		return anime.EpisodeLength < otherAnime.EpisodeLength
