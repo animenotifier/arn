@@ -3,6 +3,7 @@ package arn
 import (
 	"errors"
 	"fmt"
+	"github.com/aerogo/markdown"
 	"sort"
 	"strconv"
 	"strings"
@@ -98,6 +99,20 @@ type Anime struct {
 
 	// SynopsisSource string        `json:"synopsisSource" editable:"true"`
 	// Hashtag        string        `json:"hashtag"`
+
+	html string
+}
+
+// HTML returns the HTML representation of the post.
+func (anime *Anime) HTML() string {
+	/*if anime.html != "" {
+		return anime.html
+	}*/
+
+	anime.html = markdown.Render(anime.Summary)
+	fmt.Print(anime.Summary)
+	fmt.Print(anime.html)
+	return anime.html
 }
 
 // NewAnime creates a new anime.
