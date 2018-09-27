@@ -63,12 +63,6 @@ func (anime *Anime) Edit(ctx *aero.Context, key string, value reflect.Value, new
 		}
 	}
 
-	if key == "Summary" {
-		if value.String() != newValue.String() {
-			anime.html = markdown.Render(anime.Summary)
-		}
-	}
-
 	// Write log entry
 	logEntry := NewEditLogEntry(user.ID, "edit", "Anime", anime.ID, key, fmt.Sprint(value.Interface()), fmt.Sprint(newValue.Interface()))
 	logEntry.Save()
@@ -105,6 +99,7 @@ func (anime *Anime) Authorize(ctx *aero.Context, action string) error {
 func (anime *Anime) AfterEdit(ctx *aero.Context) error {
 	anime.Edited = DateTimeUTC()
 	anime.EditedBy = GetUserFromContext(ctx).ID
+	anime.html = markdown.Render(anime.Summary)
 	return nil
 }
 
