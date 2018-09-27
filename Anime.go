@@ -3,6 +3,7 @@ package arn
 import (
 	"errors"
 	"fmt"
+	"github.com/aerogo/markdown"
 	"sort"
 	"strconv"
 	"strings"
@@ -98,6 +99,8 @@ type Anime struct {
 
 	// SynopsisSource string        `json:"synopsisSource" editable:"true"`
 	// Hashtag        string        `json:"hashtag"`
+
+	html string
 }
 
 // NewAnime creates a new anime.
@@ -786,6 +789,16 @@ func FilterAnime(filter func(*Anime) bool) []*Anime {
 	}
 
 	return filtered
+}
+
+// HTML returns the HTML representation of the anime summary.
+func (anime *Anime) HTML() string {
+	if anime.html != "" {
+		return anime.html
+	}
+
+	anime.html = markdown.Render(anime.Summary)
+	return anime.html
 }
 
 // // SetID performs a database-wide ID change.
