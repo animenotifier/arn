@@ -3,6 +3,7 @@ package arn
 import (
 	"errors"
 	"fmt"
+	"github.com/aerogo/markdown"
 	"os"
 	"path"
 	"reflect"
@@ -59,6 +60,12 @@ func (anime *Anime) Edit(ctx *aero.Context, key string, value reflect.Value, new
 					})
 				}
 			}()
+		}
+	}
+
+	if key == "Summary" {
+		if value.String() != newValue.String() {
+			anime.html = markdown.Render(anime.Summary)
 		}
 	}
 

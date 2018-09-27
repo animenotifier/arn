@@ -105,13 +105,11 @@ type Anime struct {
 
 // HTML returns the HTML representation of the post.
 func (anime *Anime) HTML() string {
-	/*if anime.html != "" {
+	if anime.html != "" {
 		return anime.html
-	}*/
+	}
 
 	anime.html = markdown.Render(anime.Summary)
-	fmt.Print(anime.Summary)
-	fmt.Print(anime.html)
 	return anime.html
 }
 
