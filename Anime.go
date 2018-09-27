@@ -103,16 +103,6 @@ type Anime struct {
 	html string
 }
 
-// HTML returns the HTML representation of the post.
-func (anime *Anime) HTML() string {
-	if anime.html != "" {
-		return anime.html
-	}
-
-	anime.html = markdown.Render(anime.Summary)
-	return anime.html
-}
-
 // NewAnime creates a new anime.
 func NewAnime() *Anime {
 	return &Anime{
@@ -799,6 +789,16 @@ func FilterAnime(filter func(*Anime) bool) []*Anime {
 	}
 
 	return filtered
+}
+
+// HTML returns the HTML representation of the anime summary.
+func (anime *Anime) HTML() string {
+	if anime.html != "" {
+		return anime.html
+	}
+
+	anime.html = markdown.Render(anime.Summary)
+	return anime.html
 }
 
 // // SetID performs a database-wide ID change.
