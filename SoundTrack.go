@@ -266,8 +266,11 @@ func (track *SoundTrack) Download() error {
 
 	filePath := path.Join(audioDirectory, baseName)
 
+	// Use full URL to avoid problems with Youtube IDs that start with a hyphen
+	url := "https://youtube.com/watch?v=" + youtubeID
+
 	// Download
-	cmd := exec.Command("youtube-dl", "--extract-audio", "--audio-quality", "0", "--output", filePath+".%(ext)s", youtubeID)
+	cmd := exec.Command("youtube-dl", "--extract-audio", "--audio-quality", "0", "--output", filePath+".%(ext)s", url)
 	err := cmd.Start()
 
 	if err != nil {
