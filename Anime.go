@@ -119,7 +119,7 @@ func NewAnime() *Anime {
 	}
 }
 
-// GetAnime ...
+// GetAnime gets the anime with the given ID.
 func GetAnime(id string) (*Anime, error) {
 	obj, err := DB.Get("Anime", id)
 
@@ -684,13 +684,37 @@ func (anime *Anime) StatusHumanReadable() string {
 		return "Airing"
 	case "upcoming":
 		return "Upcoming"
-	case "unannounced":
-		return "Unannounced"
 	case "tba":
 		return "To be announced"
 	default:
 		return anime.Status
 	}
+}
+
+// CalculatedStatus returns the status of the anime inferred by the start and end date.
+func (anime *Anime) CalculatedStatus() string {
+	// If we are past the end date, the anime is finished.
+	if validate.Date(anime.EndDate) {
+		end := anime.EndDateTime()
+
+		if time.Since(end) > 0 {
+			return "finished"
+		}
+	}
+
+	// If we have a start date and we didn't reach the end date, it's either current or upcoming.
+	if validate.Date(anime.StartDate) {
+		start := anime.StartDateTime()
+
+		if time.Since(start) > 0 {
+			return "current"
+		}
+
+		return "upcoming"
+	}
+
+	// If we have no date information it's to be announced.
+	return "tba"
 }
 
 // EpisodeByNumber returns the episode with the given number.
