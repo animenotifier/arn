@@ -84,6 +84,9 @@ func ContainsUnicodeLetters(s string) bool {
 
 // PrettyPrint prints the object as indented JSON data on the console.
 func PrettyPrint(obj interface{}) {
-	pretty, _ := jsoniter.MarshalIndent(obj, "", "\t")
+	// Currently, MarshalIndent doesn't support tabs.
+	// Change this back to using \t when it's implemented.
+	// See: https://github.com/json-iterator/go/pull/273
+	pretty, _ := jsoniter.MarshalIndent(obj, "", "    ")
 	fmt.Println(string(pretty))
 }
