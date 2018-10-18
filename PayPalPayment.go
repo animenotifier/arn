@@ -1,6 +1,10 @@
 package arn
 
-import "strconv"
+import (
+	"strconv"
+
+	"github.com/aerogo/nano"
+)
 
 // PayPalPayment is an approved and exeucted PayPal payment.
 type PayPalPayment struct {
@@ -24,7 +28,52 @@ func (payment *PayPalPayment) Gems() int {
 	return int(amount)
 }
 
+// User returns the user who made the payment.
+func (payment *PayPalPayment) User() *User {
+	user, _ := GetUser(payment.UserID)
+	return user
+}
+
 // Save saves the paypal payment in the database.
 func (payment *PayPalPayment) Save() {
 	DB.Set("PayPalPayment", payment.ID, payment)
+}
+
+// StreamPayPalPayments returns a stream of all paypal payments.
+func StreamPayPalPayments() chan *PayPalPayment {
+	channel := make(chan *PayPalPayment, nano.ChannelBufferSize)
+
+	go func() {
+		for obj := range DB.All("PayPalPayment") {
+			channel <- obj.(*PayPalPayment)
+		}
+
+		close(channel)
+	}()
+
+	return channel
+}
+
+// AllPayPalPayments returns a slice of all paypal payments.
+func AllPayPalPayments() ([]*PayPalPayment, error) {
+	var all []*PayPalPayment
+
+	for obj := range StreamPayPalPayments() {
+		all = append(all, obj)
+	}
+
+	return all, nil
+}
+
+// FilterPayPalPayments filters all paypal payments by a custom function.
+func FilterPayPalPayments(filter func(*PayPalPayment) bool) ([]*PayPalPayment, error) {
+	var filtered []*PayPalPayment
+
+	for obj := range StreamPayPalPayments() {
+		if filter(obj) {
+			filtered = append(filtered, obj)
+		}
+	}
+
+	return filtered, nil
 }
