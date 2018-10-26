@@ -28,6 +28,13 @@ type UserAccounts struct {
 		Tier        string `json:"tier"`
 	} `json:"overwatch"`
 
+	FinalFantasyXIV struct {
+		Name      string `json:"name" editable:"true"`
+		Server    string `json:"server" editable:"true"`
+		Class     string `json:"class"`
+		ItemLevel int    `json:"itemLevel"`
+	} `json:"ffxiv"`
+
 	AniList struct {
 		Nick string `json:"nick" editable:"true"`
 	} `json:"anilist"`
