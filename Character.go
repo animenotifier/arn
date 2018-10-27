@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"sort"
 
 	"github.com/aerogo/nano"
 	"github.com/fatih/color"
@@ -209,6 +210,20 @@ func (character *Character) DeleteImages() {
 func (character *Character) Quotes() []*Quote {
 	return FilterQuotes(func(quote *Quote) bool {
 		return !quote.IsDraft && quote.CharacterID == character.ID
+	})
+}
+
+// SortCharactersByLikes sorts the given slice of characters by the amount of likes.
+func SortCharactersByLikes(characters []*Character) {
+	sort.Slice(characters, func(i, j int) bool {
+		aLikes := len(characters[i].Likes)
+		bLikes := len(characters[j].Likes)
+
+		if aLikes == bLikes {
+			return characters[i].Name.Canonical < characters[j].Name.Canonical
+		}
+
+		return aLikes > bLikes
 	})
 }
 
