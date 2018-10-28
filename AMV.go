@@ -7,17 +7,19 @@ import (
 	"path"
 
 	"github.com/aerogo/nano"
+	"github.com/animenotifier/arn/video"
 )
 
 // AMV is an anime music video.
 type AMV struct {
-	File           string   `json:"file" editable:"true" type:"upload" filetype:"video" endpoint:"/api/upload/amv/:id/file"`
-	Title          AMVTitle `json:"title" editable:"true"`
-	MainAnimeID    string   `json:"mainAnimeId" editable:"true"`
-	ExtraAnimeIDs  []string `json:"extraAnimeIds" editable:"true"`
-	VideoEditorIDs []string `json:"videoEditorIds" editable:"true"`
-	Links          []Link   `json:"links" editable:"true"`
-	Tags           []string `json:"tags" editable:"true"`
+	File           string     `json:"file" editable:"true" type:"upload" filetype:"video" endpoint:"/api/upload/amv/:id/file"`
+	Title          AMVTitle   `json:"title" editable:"true"`
+	MainAnimeID    string     `json:"mainAnimeId" editable:"true"`
+	ExtraAnimeIDs  []string   `json:"extraAnimeIds" editable:"true"`
+	VideoEditorIDs []string   `json:"videoEditorIds" editable:"true"`
+	Links          []Link     `json:"links" editable:"true"`
+	Tags           []string   `json:"tags" editable:"true"`
+	Info           video.Info `json:"info"`
 
 	HasID
 	HasCreator
