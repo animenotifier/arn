@@ -45,14 +45,14 @@ func (postable *PostPostable) Link() string {
 	return postable.post.Link()
 }
 
-// Thread returns the thread the post belongs to.
-func (postable *PostPostable) Thread() *Thread {
-	return postable.post.Thread()
+// Parent returns the parent object the post belongs to.
+func (postable *PostPostable) Parent() PostParent {
+	return postable.post.Parent()
 }
 
-// ThreadID returns the thread the post belongs to.
-func (postable *PostPostable) ThreadID() string {
-	return postable.post.ThreadID
+// ParentID returns the parent ID the post belongs to.
+func (postable *PostPostable) ParentID() string {
+	return postable.post.ParentID
 }
 
 // Created returns the date the post has been created.

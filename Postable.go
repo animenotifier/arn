@@ -13,8 +13,8 @@ type Postable interface {
 	HTML() string
 	Likes() []string
 	LikedBy(userID string) bool
-	Thread() *Thread
-	ThreadID() string
+	Parent() PostParent
+	ParentID() string
 	Link() string
 	Type() string
 	Creator() *User
@@ -52,25 +52,25 @@ func SortPostablesLatestFirst(posts []Postable) {
 	})
 }
 
-// FilterPostablesWithUniqueThreads removes posts with the same thread until we have enough posts.
-func FilterPostablesWithUniqueThreads(posts []Postable, limit int) []Postable {
-	filtered := []Postable{}
-	threadsProcessed := map[string]bool{}
+// // FilterPostablesWithUniqueThreads removes posts with the same thread until we have enough posts.
+// func FilterPostablesWithUniqueThreads(posts []Postable, limit int) []Postable {
+// 	filtered := []Postable{}
+// 	threadsProcessed := map[string]bool{}
 
-	for _, post := range posts {
-		if len(filtered) >= limit {
-			return filtered
-		}
+// 	for _, post := range posts {
+// 		if len(filtered) >= limit {
+// 			return filtered
+// 		}
 
-		_, found := threadsProcessed[post.ThreadID()]
+// 		_, found := threadsProcessed[post.ThreadID()]
 
-		if found {
-			continue
-		}
+// 		if found {
+// 			continue
+// 		}
 
-		threadsProcessed[post.ThreadID()] = true
-		filtered = append(filtered, post)
-	}
+// 		threadsProcessed[post.ThreadID()] = true
+// 		filtered = append(filtered, post)
+// 	}
 
-	return filtered
-}
+// 	return filtered
+// }

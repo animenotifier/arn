@@ -1,18 +1,22 @@
 package arn
 
 import (
+	"fmt"
 	"sort"
+	"strings"
 
 	"github.com/aerogo/markdown"
 	"github.com/aerogo/nano"
 )
 
-// Post is a forum post.
+// Post is a comment related to any parent type in the database.
 type Post struct {
-	Text     string   `json:"text" editable:"true" type:"textarea"`
-	ThreadID string   `json:"threadId"`
-	Tags     []string `json:"tags" editable:"true"`
-	Edited   string   `json:"edited"`
+	Text       string   `json:"text" editable:"true" type:"textarea"`
+	Tags       []string `json:"tags" editable:"true"`
+	ThreadID   string   `json:"threadId"` // DEPRECATED
+	ParentID   string   `json:"parentId"`
+	ParentType string   `json:"parentType"`
+	Edited     string   `json:"edited"`
 
 	HasID
 	HasCreator
@@ -22,9 +26,16 @@ type Post struct {
 }
 
 // Thread returns the thread this post was posted in.
+// DEPRECATED
 func (post *Post) Thread() *Thread {
 	thread, _ := GetThread(post.ThreadID)
 	return thread
+}
+
+// Parent returns the object this post was posted in.
+func (post *Post) Parent() PostParent {
+	obj, _ := DB.Get(post.ParentType, post.ParentID)
+	return obj.(PostParent)
 }
 
 // Link returns the relative URL of the post.
@@ -62,7 +73,7 @@ func (post *Post) OnLike(likedBy *User) {
 	go func() {
 		post.Creator().SendNotification(&PushNotification{
 			Title:   likedBy.Nick + " liked your post",
-			Message: likedBy.Nick + " liked your post in the thread \"" + post.Thread().Title + "\"",
+			Message: fmt.Sprintf(`%s liked your post in the %s "%s"`, likedBy.Nick, strings.ToLower(post.ParentType), post.Parent().TitleByUser(post.Creator())),
 			Icon:    "https:" + likedBy.AvatarLink("large"),
 			Link:    "https://notify.moe" + likedBy.Link(),
 			Type:    NotificationTypeLike,

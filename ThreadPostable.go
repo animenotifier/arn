@@ -45,13 +45,13 @@ func (postable *ThreadPostable) Link() string {
 	return postable.thread.Link()
 }
 
-// Thread returns the internal thread object.
-func (postable *ThreadPostable) Thread() *Thread {
+// Parent returns the internal thread object.
+func (postable *ThreadPostable) Parent() PostParent {
 	return postable.thread
 }
 
-// ThreadID returns the thread ID.
-func (postable *ThreadPostable) ThreadID() string {
+// ParentID returns the thread ID.
+func (postable *ThreadPostable) ParentID() string {
 	return postable.thread.ID
 }
 

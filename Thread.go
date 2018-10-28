@@ -85,6 +85,13 @@ func (thread *Thread) Remove(postID string) bool {
 	return false
 }
 
+// TitleByUser returns the title of the thread,
+// regardless of the user language settings
+// because threads are bound to one language.
+func (thread *Thread) TitleByUser(user *User) string {
+	return thread.Title
+}
+
 // ToPostable converts a thread into an object that implements the Postable interface.
 func (thread *Thread) ToPostable() Postable {
 	return &ThreadPostable{thread}
