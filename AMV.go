@@ -2,6 +2,7 @@ package arn
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -44,6 +45,23 @@ func (amv *AMV) SetVideoBytes(data []byte) error {
 	}
 
 	amv.File = fileName
+	amv.RefreshInfo()
+	return nil
+}
+
+// RefreshInfo refreshes the information about the video file.
+func (amv *AMV) RefreshInfo() error {
+	if amv.File == "" {
+		return fmt.Errorf("Video file has not been uploaded yet for AMV %s", amv.ID)
+	}
+
+	info, err := video.GetInfo(path.Join(Root, "videos", "amvs", amv.File))
+
+	if err != nil {
+		return err
+	}
+
+	amv.Info = *info
 	return nil
 }
 
