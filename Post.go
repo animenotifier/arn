@@ -13,7 +13,6 @@ import (
 type Post struct {
 	Text       string   `json:"text" editable:"true" type:"textarea"`
 	Tags       []string `json:"tags" editable:"true"`
-	ThreadID   string   `json:"threadId"` // DEPRECATED
 	ParentID   string   `json:"parentId"`
 	ParentType string   `json:"parentType"`
 	Edited     string   `json:"edited"`
@@ -23,13 +22,6 @@ type Post struct {
 	HasLikes
 
 	html string
-}
-
-// Thread returns the thread this post was posted in.
-// DEPRECATED
-func (post *Post) Thread() *Thread {
-	thread, _ := GetThread(post.ParentID)
-	return thread
 }
 
 // Parent returns the object this post was posted in.
