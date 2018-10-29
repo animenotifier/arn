@@ -16,6 +16,7 @@ var (
 	_ Publishable            = (*AMV)(nil)
 	_ Likeable               = (*AMV)(nil)
 	_ LikeEventReceiver      = (*AMV)(nil)
+	_ PostParent             = (*AMV)(nil)
 	_ fmt.Stringer           = (*AMV)(nil)
 	_ api.Newable            = (*AMV)(nil)
 	_ api.Editable           = (*AMV)(nil)
@@ -110,6 +111,12 @@ func (amv *AMV) Delete() error {
 		draftIndex.Save()
 	}
 
+	// Remove posts
+	for _, post := range amv.Posts() {
+		post.Delete()
+	}
+
+	// Remove file
 	if amv.File != "" {
 		err := os.Remove(path.Join(Root, "videos", "amvs", amv.File))
 

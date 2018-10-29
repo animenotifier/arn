@@ -23,6 +23,8 @@ type AMV struct {
 	Info           video.Info `json:"info"`
 
 	HasID
+	HasPosts
+	HasLocked
 	HasCreator
 	HasEditor
 	HasLikes
@@ -32,6 +34,11 @@ type AMV struct {
 // Link returns the permalink for the AMV.
 func (amv *AMV) Link() string {
 	return "/amv/" + amv.ID
+}
+
+// TitleByUser returns the preferred title for the given user.
+func (amv *AMV) TitleByUser(user *User) string {
+	return amv.Title.ByUser(user)
 }
 
 // SetVideoBytes sets the bytes for the video file.

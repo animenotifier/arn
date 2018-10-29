@@ -37,3 +37,8 @@ func (obj *HasPosts) Posts() []*Post {
 
 	return posts
 }
+
+// CountPosts returns the number of posts written for this object.
+func (obj *HasPosts) CountPosts() int {
+	return len(obj.PostIDs)
+}

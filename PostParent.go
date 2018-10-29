@@ -7,6 +7,7 @@ type PostParent interface {
 	GetID() string
 	TitleByUser(*User) string
 	Posts() []*Post
+	CountPosts() int
 	Creator() *User
 	CreatorID() string
 	AddPost(string)
