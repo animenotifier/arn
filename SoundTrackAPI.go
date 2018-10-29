@@ -133,6 +133,10 @@ func (soundtrack *SoundTrack) Delete() error {
 		draftIndex.Save()
 	}
 
+	for _, post := range soundtrack.Posts() {
+		post.Delete()
+	}
+
 	DB.Delete("SoundTrack", soundtrack.ID)
 	return nil
 }

@@ -14,6 +14,7 @@ var (
 	_ Likeable          = (*Quote)(nil)
 	_ LikeEventReceiver = (*Quote)(nil)
 	_ Publishable       = (*Quote)(nil)
+	_ PostParent        = (*Quote)(nil)
 	_ fmt.Stringer      = (*Quote)(nil)
 	_ api.Newable       = (*Quote)(nil)
 	_ api.Editable      = (*Quote)(nil)
@@ -99,6 +100,11 @@ func (quote *Quote) Delete() error {
 		draftIndex := quote.Creator().DraftIndex()
 		draftIndex.QuoteID = ""
 		draftIndex.Save()
+	}
+
+	// Remove posts
+	for _, post := range quote.Posts() {
+		post.Delete()
 	}
 
 	// Remove main quote reference

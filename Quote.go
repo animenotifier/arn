@@ -2,6 +2,7 @@ package arn
 
 import (
 	"errors"
+	"fmt"
 
 	"sort"
 
@@ -18,6 +19,8 @@ type Quote struct {
 	Time          int       `json:"time" editable:"true"`
 
 	HasID
+	HasPosts
+	HasLocked
 	HasCreator
 	HasEditor
 	HasLikes
@@ -27,6 +30,11 @@ type Quote struct {
 // IsMainQuote returns true if the quote is the main quote of the character.
 func (quote *Quote) IsMainQuote() bool {
 	return quote.CharacterID != "" && quote.Character().MainQuoteID == quote.ID
+}
+
+// TitleByUser returns the preferred title for the given user.
+func (quote *Quote) TitleByUser(user *User) string {
+	return fmt.Sprintf("%s's quote in %s", quote.Character().Name.ByUser(user), quote.Anime().Title.ByUser(user))
 }
 
 // Link returns a single quote.
