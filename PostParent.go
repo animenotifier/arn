@@ -4,6 +4,7 @@ package arn
 type PostParent interface {
 	Linkable
 	Lockable
+	GetID() string
 	TitleByUser(*User) string
 	Posts() []*Post
 	Creator() *User
