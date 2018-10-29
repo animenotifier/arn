@@ -194,18 +194,18 @@ func (post *Post) DeleteInContext(ctx *aero.Context) error {
 
 // Delete deletes the post from the database.
 func (post *Post) Delete() error {
-	thread, err := GetThread(post.ParentID)
+	parent := post.Parent()
 
-	if err != nil {
-		return err
+	if parent == nil {
+		return fmt.Errorf("Invalid %s parent ID: %s", post.ParentType, post.ParentID)
 	}
 
 	// Remove the reference of the post in the thread that contains it
-	if !thread.RemovePost(post.ID) {
-		return errors.New("This post does not exist in the thread")
+	if !parent.RemovePost(post.ID) {
+		return fmt.Errorf("This post does not exist in the %s", strings.ToLower(post.ParentType))
 	}
 
-	thread.Save()
+	parent.Save()
 	DB.Delete("Post", post.ID)
 	return nil
 }

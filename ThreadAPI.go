@@ -17,6 +17,7 @@ var (
 	_ LikeEventReceiver = (*Thread)(nil)
 	_ Lockable          = (*Thread)(nil)
 	_ LockEventReceiver = (*Thread)(nil)
+	_ PostParent        = (*Thread)(nil)
 	_ fmt.Stringer      = (*Thread)(nil)
 	_ api.Newable       = (*Thread)(nil)
 	_ api.Editable      = (*Thread)(nil)

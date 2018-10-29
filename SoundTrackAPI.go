@@ -15,6 +15,7 @@ var (
 	_ Publishable            = (*SoundTrack)(nil)
 	_ Likeable               = (*SoundTrack)(nil)
 	_ LikeEventReceiver      = (*SoundTrack)(nil)
+	_ PostParent             = (*SoundTrack)(nil)
 	_ fmt.Stringer           = (*SoundTrack)(nil)
 	_ api.Newable            = (*SoundTrack)(nil)
 	_ api.Editable           = (*SoundTrack)(nil)

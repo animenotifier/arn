@@ -23,6 +23,8 @@ type SoundTrack struct {
 	File   string           `json:"file"`
 
 	HasID
+	HasPosts
+	HasLocked
 	HasCreator
 	HasEditor
 	HasLikes
@@ -32,6 +34,11 @@ type SoundTrack struct {
 // Link returns the permalink for the track.
 func (track *SoundTrack) Link() string {
 	return "/soundtrack/" + track.ID
+}
+
+// TitleByUser returns the preferred title for the given user.
+func (track *SoundTrack) TitleByUser(user *User) string {
+	return track.Title.ByUser(user)
 }
 
 // MediaByService returns a slice of all media by the given service.
