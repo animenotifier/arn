@@ -13,10 +13,10 @@ type Thread struct {
 	Text   string   `json:"text" editable:"true" type:"textarea"`
 	Sticky int      `json:"sticky" editable:"true"`
 	Tags   []string `json:"tags" editable:"true"`
-	Posts  []string `json:"posts"`
 	Edited string   `json:"edited"`
 
 	HasID
+	HasPosts
 	HasCreator
 	HasLikes
 	HasLocked
@@ -71,18 +71,6 @@ func (thread *Thread) OnLock(user *User) {
 func (thread *Thread) OnUnlock(user *User) {
 	logEntry := NewEditLogEntry(user.ID, "edit", "Thread", thread.ID, "Locked", "true", "false")
 	logEntry.Save()
-}
-
-// Remove post from the post list.
-func (thread *Thread) Remove(postID string) bool {
-	for index, item := range thread.Posts {
-		if item == postID {
-			thread.Posts = append(thread.Posts[:index], thread.Posts[index+1:]...)
-			return true
-		}
-	}
-
-	return false
 }
 
 // TitleByUser returns the title of the thread,

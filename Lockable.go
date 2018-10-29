@@ -11,6 +11,7 @@ import (
 type Lockable interface {
 	Lock(userID string)
 	Unlock(userID string)
+	IsLocked() bool
 	Save()
 }
 

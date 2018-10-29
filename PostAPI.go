@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"strings"
 
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
@@ -67,10 +68,16 @@ func (post *Post) Create(ctx *aero.Context) error {
 	post.ID = GenerateID("Post")
 	post.Text, _ = data["text"].(string)
 	post.CreatedBy = user.ID
-	post.ThreadID, _ = data["threadId"].(string)
+	post.ParentID, _ = data["parentId"].(string)
+	post.ParentType, _ = data["parentType"].(string)
 	post.Likes = []string{}
 	post.Created = DateTimeUTC()
 	post.Edited = ""
+
+	// Check parent type
+	if !DB.HasType(post.ParentType) {
+		return errors.New("Invalid parent type: " + post.ParentType)
+	}
 
 	// Post-process text
 	post.Text = autocorrect.PostText(post.Text)
@@ -88,66 +95,59 @@ func (post *Post) Create(ctx *aero.Context) error {
 	}
 
 	// Thread
-	thread, threadErr := GetThread(post.ThreadID)
+	parent := post.Parent()
 
-	if threadErr != nil {
-		return errors.New("Thread does not exist")
+	if parent == nil {
+		return errors.New(post.ParentType + " does not exist")
 	}
 
-	// Is the thread locked?
-	if thread.Locked {
-		return errors.New("Thread is locked")
+	// Is the parent locked?
+	if parent.IsLocked() {
+		return errors.New(post.ParentType + " is locked")
 	}
 
 	// Bind to local variable for the upcoming goroutine.
-	oldPosts := thread.Posts
+	posts := parent.Posts()
 
 	// Notifications
 	go func() {
-		postsObj := DB.GetMany("Post", oldPosts)
-		posts := make([]*Post, len(postsObj), len(postsObj))
+		// Build a list of users to notify
+		notifyUsers := map[string]bool{}
 
-		for i, obj := range postsObj {
-			posts[i] = obj.(*Post)
+		// Mark the creator of the parent
+		notifyUsers[parent.CreatorID()] = true
+
+		// Mark every user who participated in the discussion
+		for _, post := range posts {
+			notifyUsers[post.CreatedBy] = true
 		}
 
-		if err == nil {
-			notifyUsers := map[string]bool{}
-			notifyUsers[thread.CreatedBy] = true
+		// Exclude author of the new post
+		delete(notifyUsers, post.CreatedBy)
 
-			for _, post := range posts {
-				notifyUsers[post.CreatedBy] = true
+		// Notify
+		for notifyUserID := range notifyUsers {
+			notifyUser, err := GetUser(notifyUserID)
+
+			if notifyUser == nil || err != nil {
+				continue
 			}
 
-			// Exclude author of the new post
-			delete(notifyUsers, post.CreatedBy)
-
-			// Notify
-			notification := &PushNotification{
+			notifyUser.SendNotification(&PushNotification{
 				Title:   user.Nick + " replied",
-				Message: fmt.Sprintf("%s replied in the thread \"%s\".", user.Nick, thread.Title),
+				Message: fmt.Sprintf("%s replied in the %s \"%s\".", user.Nick, strings.ToLower(post.ParentType), parent.TitleByUser(notifyUser)),
 				Icon:    "https:" + user.AvatarLink("large"),
 				Link:    post.Link(),
 				Type:    NotificationTypeForumReply,
-			}
-
-			for notifyUserID := range notifyUsers {
-				notifyUser, err := GetUser(notifyUserID)
-
-				if notifyUser == nil || err != nil {
-					continue
-				}
-
-				notifyUser.SendNotification(notification)
-			}
+			})
 		}
 	}()
 
 	// Append to posts
-	thread.Posts = append(thread.Posts, post.ID)
+	parent.AddPost(post.ID)
 
 	// Save the parent thread
-	thread.Save()
+	parent.Save()
 
 	// Write log entry
 	logEntry := NewEditLogEntry(user.ID, "create", "Post", post.ID, "", "", "")
@@ -194,14 +194,14 @@ func (post *Post) DeleteInContext(ctx *aero.Context) error {
 
 // Delete deletes the post from the database.
 func (post *Post) Delete() error {
-	thread, err := GetThread(post.ThreadID)
+	thread, err := GetThread(post.ParentID)
 
 	if err != nil {
 		return err
 	}
 
 	// Remove the reference of the post in the thread that contains it
-	if !thread.Remove(post.ID) {
+	if !thread.RemovePost(post.ID) {
 		return errors.New("This post does not exist in the thread")
 	}
 

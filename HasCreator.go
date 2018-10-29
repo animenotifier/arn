@@ -12,6 +12,11 @@ func (obj *HasCreator) Creator() *User {
 	return user
 }
 
+// CreatorID returns the ID of the user who created this object.
+func (obj *HasCreator) CreatorID() string {
+	return obj.CreatedBy
+}
+
 // GetCreatedBy returns the ID of the user who created this object.
 func (obj *HasCreator) GetCreatedBy() string {
 	return obj.CreatedBy

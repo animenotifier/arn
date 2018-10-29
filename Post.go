@@ -28,7 +28,7 @@ type Post struct {
 // Thread returns the thread this post was posted in.
 // DEPRECATED
 func (post *Post) Thread() *Thread {
-	thread, _ := GetThread(post.ThreadID)
+	thread, _ := GetThread(post.ParentID)
 	return thread
 }
 
@@ -147,13 +147,13 @@ func FilterPostsWithUniqueThreads(posts []*Post, limit int) []*Post {
 			return filtered
 		}
 
-		_, found := threadsProcessed[post.ThreadID]
+		_, found := threadsProcessed[post.ParentID]
 
 		if found {
 			continue
 		}
 
-		threadsProcessed[post.ThreadID] = true
+		threadsProcessed[post.ParentID] = true
 		filtered = append(filtered, post)
 	}
 

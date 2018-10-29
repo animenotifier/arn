@@ -84,7 +84,7 @@ func (thread *Thread) Create(ctx *aero.Context) error {
 	thread.CreatedBy = user.ID
 	thread.Sticky, _ = data["sticky"].(int)
 	thread.Likes = []string{}
-	thread.Posts = []string{}
+	thread.PostIDs = []string{}
 	thread.Created = DateTimeUTC()
 	thread.Edited = ""
 
@@ -170,7 +170,7 @@ func (thread *Thread) DeleteInContext(ctx *aero.Context) error {
 // Delete deletes the thread and its posts from the database.
 func (thread *Thread) Delete() error {
 	// Delete all the posts contained in the thread
-	for _, postID := range thread.Posts {
+	for _, postID := range thread.PostIDs {
 		// We don't use the Post.Delete function since it would
 		// call unnecessary code for the thread deletion
 		DB.Delete("Post", postID)

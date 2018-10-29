@@ -12,7 +12,7 @@ func (postable *PostPostable) ID() string {
 
 // Title returns the title of thread this post belongs to.
 func (postable *PostPostable) Title() string {
-	return postable.post.Thread().Title
+	return postable.post.Parent().TitleByUser(nil)
 }
 
 // Text returns the Markdown text.

@@ -14,3 +14,8 @@ func (obj *HasLocked) Lock(userID string) {
 func (obj *HasLocked) Unlock(userID string) {
 	obj.Locked = false
 }
+
+// IsLocked implements the Lockable interface.
+func (obj *HasLocked) IsLocked() bool {
+	return obj.Locked
+}
