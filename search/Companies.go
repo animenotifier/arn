@@ -45,7 +45,7 @@ func Companies(originalTerm string, maxLength int) []*arn.Company {
 	}
 
 	// Final list
-	final := make([]*arn.Company, len(results), len(results))
+	final := make([]*arn.Company, len(results))
 
 	for i, result := range results {
 		final[i] = result.obj.(*arn.Company)

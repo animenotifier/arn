@@ -82,7 +82,7 @@ func (list *UserFollows) Contains(userID string) bool {
 // Users returns a slice of all the users you are following.
 func (list *UserFollows) Users() []*User {
 	followsObj := DB.GetMany("User", list.Items)
-	follows := make([]*User, len(followsObj), len(followsObj))
+	follows := make([]*User, len(followsObj))
 
 	for i, obj := range followsObj {
 		follows[i] = obj.(*User)

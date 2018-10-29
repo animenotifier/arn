@@ -59,7 +59,7 @@ func (user *User) Followers() []*User {
 	}
 
 	usersObj := DB.GetMany("User", followerIDs)
-	users := make([]*User, len(usersObj), len(usersObj))
+	users := make([]*User, len(usersObj))
 
 	for i, obj := range usersObj {
 		users[i] = obj.(*User)

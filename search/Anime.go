@@ -92,7 +92,7 @@ func Anime(originalTerm string, maxLength int) []*arn.Anime {
 	}
 
 	// Final list
-	final := make([]*arn.Anime, len(results), len(results))
+	final := make([]*arn.Anime, len(results))
 
 	for i, result := range results {
 		final[i] = result.obj.(*arn.Anime)

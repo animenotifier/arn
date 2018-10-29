@@ -57,7 +57,7 @@ func SoundTracks(originalTerm string, maxLength int) []*arn.SoundTrack {
 	}
 
 	// Final list
-	final := make([]*arn.SoundTrack, len(results), len(results))
+	final := make([]*arn.SoundTrack, len(results))
 
 	for i, result := range results {
 		final[i] = result.obj.(*arn.SoundTrack)

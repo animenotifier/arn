@@ -66,7 +66,7 @@ func (inventory *Inventory) SwapSlots(a, b int) error {
 func NewInventory(userID string) *Inventory {
 	inventory := &Inventory{
 		UserID: userID,
-		Slots:  make([]*InventorySlot, DefaultInventorySlotCount, DefaultInventorySlotCount),
+		Slots:  make([]*InventorySlot, DefaultInventorySlotCount),
 	}
 
 	for i := 0; i < len(inventory.Slots); i++ {

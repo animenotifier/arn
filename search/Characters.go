@@ -103,7 +103,7 @@ func Characters(originalTerm string, maxLength int) []*arn.Character {
 	}
 
 	// Final list
-	final := make([]*arn.Character, len(results), len(results))
+	final := make([]*arn.Character, len(results))
 
 	for i, result := range results {
 		final[i] = result.obj.(*arn.Character)

@@ -45,7 +45,7 @@ func Users(originalTerm string, maxLength int) []*arn.User {
 	}
 
 	// Final list
-	final := make([]*arn.User, len(results), len(results))
+	final := make([]*arn.User, len(results))
 
 	for i, result := range results {
 		final[i] = result.obj.(*arn.User)

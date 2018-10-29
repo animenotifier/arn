@@ -389,7 +389,7 @@ func (anime *Anime) RefreshEpisodes() error {
 	oldAvailableCount := episodes.AvailableCount()
 
 	// Create blank episode templates
-	episodes.Items = make([]*AnimeEpisode, anime.EpisodeCount, anime.EpisodeCount)
+	episodes.Items = make([]*AnimeEpisode, anime.EpisodeCount)
 
 	for i := 0; i < len(episodes.Items); i++ {
 		episodes.Items[i] = NewAnimeEpisode()
