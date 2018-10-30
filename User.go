@@ -13,6 +13,7 @@ import (
 	"github.com/aerogo/http/client"
 	"github.com/animenotifier/arn/autocorrect"
 	"github.com/animenotifier/arn/validate"
+	"github.com/animenotifier/ffxiv"
 	"github.com/animenotifier/osu"
 	gravatar "github.com/ungerik/go-gravatar"
 )
@@ -451,6 +452,31 @@ func (user *User) RefreshOsuInfo() error {
 	user.Accounts.Osu.PP, _ = strconv.ParseFloat(osu.PPRaw, 64)
 	user.Accounts.Osu.Level, _ = strconv.ParseFloat(osu.Level, 64)
 	user.Accounts.Osu.Accuracy, _ = strconv.ParseFloat(osu.Accuracy, 64)
+
+	return nil
+}
+
+// RefreshFFXIVInfo refreshes a user's FFXIV information.
+func (user *User) RefreshFFXIVInfo() error {
+	if user.Accounts.FinalFantasyXIV.Nick == "" || user.Accounts.FinalFantasyXIV.Server == "" {
+		return nil
+	}
+
+	characterID, err := ffxiv.GetCharacterID(user.Accounts.FinalFantasyXIV.Nick, user.Accounts.FinalFantasyXIV.Server)
+
+	if err != nil {
+		return err
+	}
+
+	character, err := ffxiv.GetCharacter(characterID)
+
+	if err != nil {
+		return err
+	}
+
+	user.Accounts.FinalFantasyXIV.Class = character.Class
+	user.Accounts.FinalFantasyXIV.Level = character.Level
+	user.Accounts.FinalFantasyXIV.ItemLevel = character.ItemLevel
 
 	return nil
 }
