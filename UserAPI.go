@@ -5,6 +5,8 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/animenotifier/ffxiv"
+
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
 	"github.com/animenotifier/arn/autocorrect"
@@ -78,6 +80,41 @@ func (user *User) Edit(ctx *aero.Context, key string, value reflect.Value, newVa
 				skillRating, tier := stats.HighestSkillRating()
 				user.Accounts.Overwatch.SkillRating = skillRating
 				user.Accounts.Overwatch.Tier = tier
+				user.Save()
+			}()
+		}
+
+		return true, nil
+	}
+
+	// Refresh FinalFantasyXIV info if the name or server changed
+	if key == "Accounts.FinalFantasyXIV.Nick" || key == "Accounts.FinalFantasyXIV.Server" {
+		newValue := newValue.String()
+		value.SetString(newValue)
+
+		if newValue == "" {
+			user.Accounts.FinalFantasyXIV.Class = ""
+			user.Accounts.FinalFantasyXIV.Level = 0
+			user.Accounts.FinalFantasyXIV.ItemLevel = 0
+		} else if user.Accounts.FinalFantasyXIV.Nick != "" && user.Accounts.FinalFantasyXIV.Server != "" {
+			go func() {
+				characterID, err := ffxiv.GetCharacterID(user.Accounts.FinalFantasyXIV.Nick, user.Accounts.FinalFantasyXIV.Server)
+
+				if err != nil {
+					color.Red("Error getting FinalFantasy XIV character ID of user '%s' with nick '%s' on server '%s': %v", user.Nick, user.Accounts.FinalFantasyXIV.Nick, user.Accounts.FinalFantasyXIV.Server, err)
+					return
+				}
+
+				character, err := ffxiv.GetCharacter(characterID)
+
+				if err != nil {
+					color.Red("Error refreshing FinalFantasy XIV info of user '%s' with nick '%s' on server '%s': %v", user.Nick, user.Accounts.FinalFantasyXIV.Nick, user.Accounts.FinalFantasyXIV.Server, err)
+					return
+				}
+
+				user.Accounts.FinalFantasyXIV.Class = character.Class
+				user.Accounts.FinalFantasyXIV.Level = character.Level
+				user.Accounts.FinalFantasyXIV.ItemLevel = character.ItemLevel
 				user.Save()
 			}()
 		}

@@ -277,7 +277,15 @@ func (track *SoundTrack) Download() error {
 	url := "https://youtube.com/watch?v=" + youtubeID
 
 	// Download
-	cmd := exec.Command("youtube-dl", "--extract-audio", "--audio-quality", "0", "--output", filePath+".%(ext)s", url)
+	cmd := exec.Command(
+		"youtube-dl",
+		"--no-check-certificate",
+		"--extract-audio",
+		"--audio-quality", "0",
+		"--output", filePath+".%(ext)s",
+		url,
+	)
+
 	err := cmd.Start()
 
 	if err != nil {
