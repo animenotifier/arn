@@ -228,9 +228,9 @@ func (user *User) IsActive() bool {
 		return false
 	}
 
-	// if !user.AnimeList().HasItemsWithStatus(AnimeListStatusWatching) {
-	// 	return false
-	// }
+	if len(user.AnimeList().Items) == 0 {
+		return false
+	}
 
 	return true
 }
