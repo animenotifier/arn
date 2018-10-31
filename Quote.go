@@ -34,7 +34,7 @@ func (quote *Quote) IsMainQuote() bool {
 
 // TitleByUser returns the preferred title for the given user.
 func (quote *Quote) TitleByUser(user *User) string {
-	return fmt.Sprintf("%s's quote in %s", quote.Character().Name.ByUser(user), quote.Anime().Title.ByUser(user))
+	return fmt.Sprintf("%s's quote", quote.Character().Name.ByUser(user))
 }
 
 // Link returns a single quote.

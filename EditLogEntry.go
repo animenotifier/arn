@@ -41,6 +41,12 @@ func (entry *EditLogEntry) User() *User {
 	return user
 }
 
+// Object returns the object the log entry refers to.
+func (entry *EditLogEntry) Object() interface{} {
+	obj, _ := DB.Get(entry.ObjectType, entry.ObjectID)
+	return obj
+}
+
 // EditorScore returns the editing score for this log entry.
 func (entry *EditLogEntry) EditorScore() int {
 	switch entry.Action {
