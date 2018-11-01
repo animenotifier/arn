@@ -15,6 +15,7 @@ import (
 	"github.com/animenotifier/arn/validate"
 	"github.com/animenotifier/ffxiv"
 	"github.com/animenotifier/osu"
+	"github.com/animenotifier/overwatch"
 	gravatar "github.com/ungerik/go-gravatar"
 )
 
@@ -477,6 +478,29 @@ func (user *User) RefreshFFXIVInfo() error {
 	user.Accounts.FinalFantasyXIV.Class = character.Class
 	user.Accounts.FinalFantasyXIV.Level = character.Level
 	user.Accounts.FinalFantasyXIV.ItemLevel = character.ItemLevel
+
+	return nil
+}
+
+// RefreshOverwatchInfo refreshes a user's Overwatch information.
+func (user *User) RefreshOverwatchInfo() error {
+	if user.Accounts.Overwatch.BattleTag == "" {
+		return nil
+	}
+
+	stats, err := overwatch.GetPlayerStats(user.Accounts.Overwatch.BattleTag)
+
+	if err != nil {
+		return err
+	}
+
+	skillRating, tier := stats.HighestSkillRating()
+
+	// Only show career highest skill rating
+	if skillRating > user.Accounts.Overwatch.SkillRating {
+		user.Accounts.Overwatch.SkillRating = skillRating
+		user.Accounts.Overwatch.Tier = tier
+	}
 
 	return nil
 }

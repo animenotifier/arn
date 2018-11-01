@@ -8,7 +8,6 @@ import (
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
 	"github.com/animenotifier/arn/autocorrect"
-	"github.com/animenotifier/overwatch"
 	"github.com/fatih/color"
 )
 
@@ -42,17 +41,23 @@ func (user *User) Edit(ctx *aero.Context, key string, value reflect.Value, newVa
 
 		// Refresh osu info if the name changed
 		if key == "Accounts.Osu.Nick" {
-			go func() {
-				err := user.RefreshOsuInfo()
+			if newNick == "" {
+				user.Accounts.Osu.PP = 0
+				user.Accounts.Osu.Level = 0
+				user.Accounts.Osu.Accuracy = 0
+			} else {
+				go func() {
+					err := user.RefreshOsuInfo()
 
-				if err != nil {
-					color.Red("Error refreshing osu info of user '%s' with osu nick '%s': %v", user.Nick, newNick, err)
-					return
-				}
+					if err != nil {
+						color.Red("Error refreshing osu info of user '%s' with osu nick '%s': %v", user.Nick, newNick, err)
+						return
+					}
 
-				color.Green("Refreshed osu info of user '%s' with osu nick '%s': %v", user.Nick, newNick, user.Accounts.Osu.PP)
-				user.Save()
-			}()
+					color.Green("Refreshed osu info of user '%s' with osu nick '%s': %v", user.Nick, newNick, user.Accounts.Osu.PP)
+					user.Save()
+				}()
+			}
 		}
 
 		return true, nil
@@ -68,16 +73,14 @@ func (user *User) Edit(ctx *aero.Context, key string, value reflect.Value, newVa
 			user.Accounts.Overwatch.Tier = ""
 		} else {
 			go func() {
-				stats, err := overwatch.GetPlayerStats(newBattleTag)
+				err := user.RefreshOverwatchInfo()
 
 				if err != nil {
-					color.Red("Error refreshing Overwatch info of user '%s' with battletag '%s': %v", user.Nick, newBattleTag, err)
+					color.Red("Error refreshing Overwatch info of user '%s' with Overwatch battle tag '%s': %v", user.Nick, newBattleTag, err)
 					return
 				}
 
-				skillRating, tier := stats.HighestSkillRating()
-				user.Accounts.Overwatch.SkillRating = skillRating
-				user.Accounts.Overwatch.Tier = tier
+				color.Green("Refreshed Overwatch info of user '%s' with Overwatch battle tag '%s': %v", user.Nick, newBattleTag, user.Accounts.Overwatch.SkillRating)
 				user.Save()
 			}()
 		}
