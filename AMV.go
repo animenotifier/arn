@@ -24,7 +24,6 @@ type AMV struct {
 
 	HasID
 	HasPosts
-	HasLocked
 	HasCreator
 	HasEditor
 	HasLikes

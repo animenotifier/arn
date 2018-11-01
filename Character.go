@@ -21,6 +21,7 @@ type Character struct {
 	Attributes  []*CharacterAttribute `json:"attributes" editable:"true"`
 
 	HasID
+	HasPosts
 	HasMappings
 	HasCreator
 	HasEditor
@@ -43,6 +44,11 @@ func NewCharacter() *Character {
 // Link ...
 func (character *Character) Link() string {
 	return "/character/" + character.ID
+}
+
+// TitleByUser returns the preferred title for the given user.
+func (character *Character) TitleByUser(user *User) string {
+	return character.Name.ByUser(user)
 }
 
 // String returns the canonical name of the character.

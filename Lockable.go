@@ -74,3 +74,9 @@ func UnlockAction() *api.Action {
 		},
 	}
 }
+
+// IsLocked returns true if the given object is locked.
+func IsLocked(obj interface{}) bool {
+	lockable, isLockable := obj.(Lockable)
+	return isLockable && lockable.IsLocked()
+}

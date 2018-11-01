@@ -16,6 +16,7 @@ import (
 var (
 	_ Likeable          = (*Post)(nil)
 	_ LikeEventReceiver = (*Post)(nil)
+	_ PostParent        = (*Post)(nil)
 	_ fmt.Stringer      = (*Post)(nil)
 	_ api.Newable       = (*Post)(nil)
 	_ api.Editable      = (*Post)(nil)
@@ -102,7 +103,7 @@ func (post *Post) Create(ctx *aero.Context) error {
 	}
 
 	// Is the parent locked?
-	if parent.IsLocked() {
+	if IsLocked(parent) {
 		return errors.New(post.ParentType + " is locked")
 	}
 

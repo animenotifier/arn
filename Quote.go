@@ -20,7 +20,6 @@ type Quote struct {
 
 	HasID
 	HasPosts
-	HasLocked
 	HasCreator
 	HasEditor
 	HasLikes

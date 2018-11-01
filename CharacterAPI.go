@@ -13,6 +13,7 @@ import (
 var (
 	_ Likeable      = (*Character)(nil)
 	_ Publishable   = (*Character)(nil)
+	_ PostParent    = (*Character)(nil)
 	_ fmt.Stringer  = (*Character)(nil)
 	_ api.Newable   = (*Character)(nil)
 	_ api.Editable  = (*Character)(nil)

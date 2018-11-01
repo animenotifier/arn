@@ -84,7 +84,6 @@ type Anime struct {
 	HasID
 	HasMappings
 	HasPosts
-	HasLocked
 	HasLikes
 	HasCreator
 	HasEditor

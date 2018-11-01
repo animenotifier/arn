@@ -18,6 +18,7 @@ type Post struct {
 	Edited     string   `json:"edited"`
 
 	HasID
+	HasPosts
 	HasCreator
 	HasLikes
 
@@ -33,6 +34,11 @@ func (post *Post) Parent() PostParent {
 // Link returns the relative URL of the post.
 func (post *Post) Link() string {
 	return "/post/" + post.ID
+}
+
+// TitleByUser returns the preferred title for the given user.
+func (post *Post) TitleByUser(user *User) string {
+	return post.Creator().Nick + "'s comment"
 }
 
 // HTML returns the HTML representation of the post.

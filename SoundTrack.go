@@ -24,7 +24,6 @@ type SoundTrack struct {
 
 	HasID
 	HasPosts
-	HasLocked
 	HasCreator
 	HasEditor
 	HasLikes
