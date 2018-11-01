@@ -13,6 +13,7 @@ import (
 
 // Force interface implementations
 var (
+	_ Postable          = (*Thread)(nil)
 	_ Likeable          = (*Thread)(nil)
 	_ LikeEventReceiver = (*Thread)(nil)
 	_ Lockable          = (*Thread)(nil)

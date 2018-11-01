@@ -13,6 +13,7 @@ type Likeable interface {
 	Like(userID string)
 	Unlike(userID string)
 	LikedBy(userID string) bool
+	CountLikes() int
 	Link() string
 	Save()
 }

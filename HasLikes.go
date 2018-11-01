@@ -36,3 +36,8 @@ func (obj *HasLikes) LikedBy(userID string) bool {
 
 	return false
 }
+
+// CountLikes returns the number of likes the object has received.
+func (obj *HasLikes) CountLikes() int {
+	return len(obj.Likes)
+}

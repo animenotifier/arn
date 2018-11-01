@@ -11,13 +11,13 @@ import (
 
 // Post is a comment related to any parent type in the database.
 type Post struct {
-	Text       string   `json:"text" editable:"true" type:"textarea"`
 	Tags       []string `json:"tags" editable:"true"`
 	ParentID   string   `json:"parentId"`
 	ParentType string   `json:"parentType"`
 	Edited     string   `json:"edited"`
 
 	HasID
+	HasText
 	HasPosts
 	HasCreator
 	HasLikes
@@ -31,9 +31,19 @@ func (post *Post) Parent() PostParent {
 	return obj.(PostParent)
 }
 
+// GetParentID returns the object ID of the parent.
+func (post *Post) GetParentID() string {
+	return post.ParentID
+}
+
 // Link returns the relative URL of the post.
 func (post *Post) Link() string {
 	return "/post/" + post.ID
+}
+
+// Type returns the type name.
+func (post *Post) Type() string {
+	return "Post"
 }
 
 // TitleByUser returns the preferred title for the given user.
@@ -77,11 +87,6 @@ func (post *Post) OnLike(likedBy *User) {
 			Type:    NotificationTypeLike,
 		})
 	}()
-}
-
-// ToPostable converts a post into an object that implements the Postable interface.
-func (post *Post) ToPostable() Postable {
-	return &PostPostable{post}
 }
 
 // GetPost ...

@@ -14,6 +14,7 @@ import (
 
 // Force interface implementations
 var (
+	_ Postable          = (*Post)(nil)
 	_ Likeable          = (*Post)(nil)
 	_ LikeEventReceiver = (*Post)(nil)
 	_ PostParent        = (*Post)(nil)

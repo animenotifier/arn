@@ -16,6 +16,7 @@ type Thread struct {
 	Edited string   `json:"edited"`
 
 	HasID
+	HasText
 	HasPosts
 	HasCreator
 	HasLikes
@@ -42,6 +43,21 @@ func (thread *Thread) HTML() string {
 // String implements the default string serialization.
 func (thread *Thread) String() string {
 	return thread.Title
+}
+
+// Parent always returns nil for threads.
+func (thread *Thread) Parent() PostParent {
+	return nil
+}
+
+// GetParentID always returns an empty string for threads.
+func (thread *Thread) GetParentID() string {
+	return ""
+}
+
+// Type returns the type name.
+func (thread *Thread) Type() string {
+	return "Thread"
 }
 
 // OnLike is called when the thread receives a like.
@@ -78,11 +94,6 @@ func (thread *Thread) OnUnlock(user *User) {
 // because threads are bound to one language.
 func (thread *Thread) TitleByUser(user *User) string {
 	return thread.Title
-}
-
-// ToPostable converts a thread into an object that implements the Postable interface.
-func (thread *Thread) ToPostable() Postable {
-	return &ThreadPostable{thread}
 }
 
 // GetThread ...
