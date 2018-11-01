@@ -10,7 +10,6 @@ import (
 // Thread is a forum thread.
 type Thread struct {
 	Title  string   `json:"title" editable:"true"`
-	Text   string   `json:"text" editable:"true" type:"textarea"`
 	Sticky int      `json:"sticky" editable:"true"`
 	Tags   []string `json:"tags" editable:"true"`
 	Edited string   `json:"edited"`
