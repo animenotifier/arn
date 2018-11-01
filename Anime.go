@@ -83,6 +83,8 @@ type Anime struct {
 	// Mixins
 	HasID
 	HasMappings
+	HasPosts
+	HasLocked
 	HasLikes
 	HasCreator
 	HasEditor
@@ -128,6 +130,11 @@ func GetAnime(id string) (*Anime, error) {
 	}
 
 	return obj.(*Anime), nil
+}
+
+// TitleByUser returns the preferred title for the given user.
+func (anime *Anime) TitleByUser(user *User) string {
+	return anime.Title.ByUser(user)
 }
 
 // AddStudio adds the company ID to the studio ID list if it doesn't exist already.

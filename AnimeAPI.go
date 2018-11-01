@@ -17,6 +17,7 @@ import (
 var (
 	_ fmt.Stringer           = (*Anime)(nil)
 	_ Likeable               = (*Anime)(nil)
+	_ PostParent             = (*Anime)(nil)
 	_ api.Deletable          = (*Anime)(nil)
 	_ api.Editable           = (*Anime)(nil)
 	_ api.CustomEditable     = (*Anime)(nil)
