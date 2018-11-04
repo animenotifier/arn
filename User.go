@@ -303,7 +303,7 @@ func (user *User) AvatarLink(size string) string {
 
 // CoverLink ...
 func (user *User) CoverLink(size string) string {
-	if user.Cover.Extension != "" {
+	if user.Cover.Extension != "" && user.IsPro() {
 		return fmt.Sprintf("//%s/images/covers/%s/%s%s?%v", MediaHost, size, user.ID, user.Cover.Extension, user.Cover.LastModified)
 	}
 
