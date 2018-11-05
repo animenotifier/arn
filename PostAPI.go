@@ -149,13 +149,27 @@ func (post *Post) Create(ctx *aero.Context) error {
 
 // Edit saves a log entry for the edit.
 func (post *Post) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
+	consumed := false
 	user := GetUserFromContext(ctx)
+
+	switch key {
+	case "ParentID":
+		newParentID := newValue.String()
+		newParent, err := GetPost(newParentID)
+
+		if err != nil {
+			return false, err
+		}
+
+		post.SetParent(newParent)
+		consumed = true
+	}
 
 	// Write log entry
 	logEntry := NewEditLogEntry(user.ID, "edit", "Post", post.ID, key, fmt.Sprint(value.Interface()), fmt.Sprint(newValue.Interface()))
 	logEntry.Save()
 
-	return false, nil
+	return consumed, nil
 }
 
 // OnAppend saves a log entry.

@@ -2,6 +2,7 @@ package arn
 
 import (
 	"fmt"
+	"reflect"
 	"sort"
 	"strings"
 
@@ -12,7 +13,7 @@ import (
 // Post is a comment related to any parent type in the database.
 type Post struct {
 	Tags       []string `json:"tags" editable:"true"`
-	ParentID   string   `json:"parentId"`
+	ParentID   string   `json:"parentId" editable:"true"`
 	ParentType string   `json:"parentType"`
 	Edited     string   `json:"edited"`
 
@@ -34,6 +35,22 @@ func (post *Post) Parent() PostParent {
 // GetParentID returns the object ID of the parent.
 func (post *Post) GetParentID() string {
 	return post.ParentID
+}
+
+// SetParent sets a new parent.
+func (post *Post) SetParent(newParent PostParent) {
+	// Remove from old parent
+	oldParent := post.Parent()
+	oldParent.RemovePost(post.ID)
+	oldParent.Save()
+
+	// Update own fields
+	post.ParentID = newParent.GetID()
+	post.ParentType = reflect.TypeOf(newParent).Elem().Name()
+
+	// Add to new parent
+	newParent.AddPost(post.ID)
+	newParent.Save()
 }
 
 // Link returns the relative URL of the post.
