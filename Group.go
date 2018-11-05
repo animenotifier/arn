@@ -23,9 +23,23 @@ type Group struct {
 	HasDraft
 }
 
-// Link ...
+// Link returns the URI to the group page.
 func (group *Group) Link() string {
 	return "/group/" + group.ID
+}
+
+// TitleByUser returns the preferred title for the given user.
+func (group *Group) TitleByUser(user *User) string {
+	if group.Name == "" {
+		return "untitled"
+	}
+
+	return group.Name
+}
+
+// String is the default text representation of the group.
+func (group *Group) String() string {
+	return group.TitleByUser(nil)
 }
 
 // ImageURL ...

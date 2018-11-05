@@ -2,6 +2,8 @@ package arn
 
 import (
 	"errors"
+	"fmt"
+	"reflect"
 
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
@@ -9,10 +11,12 @@ import (
 
 // Force interface implementations
 var (
-	_ api.Newable   = (*SoundTrack)(nil)
-	_ api.Editable  = (*SoundTrack)(nil)
-	_ api.Deletable = (*SoundTrack)(nil)
-	_ Publishable   = (*SoundTrack)(nil)
+	_ PostParent    = (*Group)(nil)
+	_ Publishable   = (*Group)(nil)
+	_ fmt.Stringer  = (*Group)(nil)
+	_ api.Newable   = (*Group)(nil)
+	_ api.Editable  = (*Group)(nil)
+	_ api.Deletable = (*Group)(nil)
 )
 
 // Actions
@@ -50,7 +54,36 @@ func (group *Group) Create(ctx *aero.Context) error {
 		},
 	}
 
+	// Write log entry
+	logEntry := NewEditLogEntry(user.ID, "create", "Group", group.ID, "", "", "")
+	logEntry.Save()
+
 	return group.Unpublish()
+}
+
+// Edit creates an edit log entry.
+func (group *Group) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {
+	user := GetUserFromContext(ctx)
+
+	// Write log entry
+	logEntry := NewEditLogEntry(user.ID, "edit", "Group", group.ID, key, fmt.Sprint(value.Interface()), fmt.Sprint(newValue.Interface()))
+	logEntry.Save()
+
+	return false, nil
+}
+
+// OnAppend saves a log entry.
+func (group *Group) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
+	user := GetUserFromContext(ctx)
+	logEntry := NewEditLogEntry(user.ID, "arrayAppend", "Group", group.ID, fmt.Sprintf("%s[%d]", key, index), "", fmt.Sprint(obj))
+	logEntry.Save()
+}
+
+// OnRemove saves a log entry.
+func (group *Group) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
+	user := GetUserFromContext(ctx)
+	logEntry := NewEditLogEntry(user.ID, "arrayRemove", "Group", group.ID, fmt.Sprintf("%s[%d]", key, index), fmt.Sprint(obj), "")
+	logEntry.Save()
 }
 
 // AfterEdit updates the metadata.
@@ -70,6 +103,17 @@ func (group *Group) Delete() error {
 
 	DB.Delete("Group", group.ID)
 	return nil
+}
+
+// DeleteInContext deletes the amv in the given context.
+func (group *Group) DeleteInContext(ctx *aero.Context) error {
+	user := GetUserFromContext(ctx)
+
+	// Write log entry
+	logEntry := NewEditLogEntry(user.ID, "delete", "Group", group.ID, "", fmt.Sprint(group), "")
+	logEntry.Save()
+
+	return group.Delete()
 }
 
 // Authorize returns an error if the given API POST request is not authorized.
