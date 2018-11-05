@@ -154,11 +154,16 @@ func (post *Post) Edit(ctx *aero.Context, key string, value reflect.Value, newVa
 
 	switch key {
 	case "ParentID":
+		var newParent PostParent
 		newParentID := newValue.String()
 		newParent, err := GetPost(newParentID)
 
 		if err != nil {
-			return false, err
+			newParent, err = GetThread(newParentID)
+
+			if err != nil {
+				return false, err
+			}
 		}
 
 		post.SetParent(newParent)
