@@ -9,16 +9,19 @@ import (
 type Postable interface {
 	Likeable
 
-	GetID() string
 	TitleByUser(*User) string
-	GetText() string
 	HTML() string
 	Parent() PostParent
 	Posts() []*Post
-	GetParentID() string
 	Type() string
 	Creator() *User
+
+	// Use Get prefix for these to avoid a
+	// name clash with the internal fields.
+	GetID() string
+	GetText() string
 	GetCreated() string
+	GetParentID() string
 }
 
 // ToPostables converts a slice of specific types to a slice of generic postables.
