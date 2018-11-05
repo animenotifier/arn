@@ -108,48 +108,31 @@ func (post *Post) Create(ctx *aero.Context) error {
 		return errors.New(post.ParentType + " is locked")
 	}
 
-	// Bind to local variable for the upcoming goroutine.
-	posts := parent.Posts()
-
-	// Notifications
-	go func() {
-		// Build a list of users to notify
-		notifyUsers := map[string]bool{}
-
-		// Mark the creator of the parent
-		notifyUsers[parent.CreatorID()] = true
-
-		// Mark every user who participated in the discussion
-		for _, post := range posts {
-			notifyUsers[post.CreatedBy] = true
-		}
-
-		// Exclude author of the new post
-		delete(notifyUsers, post.CreatedBy)
-
-		// Notify
-		for notifyUserID := range notifyUsers {
-			notifyUser, err := GetUser(notifyUserID)
-
-			if notifyUser == nil || err != nil {
-				continue
-			}
-
-			notifyUser.SendNotification(&PushNotification{
-				Title:   user.Nick + " replied",
-				Message: fmt.Sprintf("%s replied in the %s \"%s\".", user.Nick, strings.ToLower(post.ParentType), parent.TitleByUser(notifyUser)),
-				Icon:    "https:" + user.AvatarLink("large"),
-				Link:    post.Link(),
-				Type:    NotificationTypeForumReply,
-			})
-		}
-	}()
-
 	// Append to posts
 	parent.AddPost(post.ID)
 
 	// Save the parent thread
 	parent.Save()
+
+	// Send notification to the author of the parent post
+	go func() {
+		notifyUser := parent.Creator()
+		message := ""
+
+		if post.ParentType == "Post" {
+			message = fmt.Sprintf("%s replied to your comment in \"%s\".", user.Nick, parent.(*Post).Parent().TitleByUser(notifyUser))
+		} else {
+			message = fmt.Sprintf("%s replied in the %s \"%s\".", user.Nick, strings.ToLower(post.ParentType), parent.TitleByUser(notifyUser))
+		}
+
+		notifyUser.SendNotification(&PushNotification{
+			Title:   user.Nick + " replied",
+			Message: message,
+			Icon:    "https:" + user.AvatarLink("large"),
+			Link:    post.Link(),
+			Type:    NotificationTypeForumReply,
+		})
+	}()
 
 	// Write log entry
 	logEntry := NewEditLogEntry(user.ID, "create", "Post", post.ID, "", "", "")

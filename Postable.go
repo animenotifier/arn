@@ -13,6 +13,7 @@ type Postable interface {
 	HTML() string
 	Parent() PostParent
 	Posts() []*Post
+	CountPosts() int
 	Type() string
 	Creator() *User
 
