@@ -150,6 +150,11 @@ func (anime *Anime) Delete() error {
 		}
 	}
 
+	// Remove posts
+	for _, post := range anime.Posts() {
+		post.Delete()
+	}
+
 	// Delete soundtrack tags
 	for track := range StreamSoundTracks() {
 		newTags := []string{}

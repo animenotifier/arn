@@ -14,6 +14,7 @@ type Postable interface {
 	GetText() string
 	HTML() string
 	Parent() PostParent
+	Posts() []*Post
 	GetParentID() string
 	Type() string
 	Creator() *User

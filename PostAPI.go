@@ -196,6 +196,11 @@ func (post *Post) DeleteInContext(ctx *aero.Context) error {
 
 // Delete deletes the post from the database.
 func (post *Post) Delete() error {
+	// Remove child posts first
+	for _, post := range post.Posts() {
+		post.Delete()
+	}
+
 	parent := post.Parent()
 
 	if parent == nil {
