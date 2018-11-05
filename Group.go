@@ -17,11 +17,10 @@ type Group struct {
 
 	// Mixins
 	HasID
+	HasPosts
 	HasCreator
 	HasEditor
 	HasDraft
-
-	posts []*GroupPost
 }
 
 // Link ...
@@ -37,17 +36,6 @@ func (group *Group) ImageURL() string {
 
 	return "https://media.kitsu.io/groups/avatars/2138/medium.png"
 	// return "/images/brand/144.png"
-}
-
-// Posts ...
-func (group *Group) Posts() []*GroupPost {
-	if group.posts == nil {
-		group.posts, _ = FilterGroupPosts(func(post *GroupPost) bool {
-			return post.GroupID == group.ID
-		})
-	}
-
-	return group.posts
 }
 
 // Creator ...
