@@ -117,6 +117,12 @@ func (post *Post) Create(ctx *aero.Context) error {
 	// Send notification to the author of the parent post
 	go func() {
 		notifyUser := parent.Creator()
+
+		// Don't notify the author himself
+		if notifyUser.ID == post.CreatedBy {
+			return
+		}
+
 		message := ""
 
 		if post.ParentType == "Post" {
