@@ -131,6 +131,9 @@ func NewSettings(user *User) *Settings {
 		Format: FormatSettings{
 			RatingsPrecision: 1,
 		},
+		Privacy: PrivacySettings{
+			ShowLocation: true,
+		},
 		Notification: DefaultNotificationSettings(),
 		Theme:        "light",
 	}
