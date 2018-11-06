@@ -116,6 +116,24 @@ func FilterIDTags(tags []string, idType string) []string {
 	return idList
 }
 
+// AgeInYears returns the person's age in years.
+func AgeInYears(birthDayString string) int {
+	birthDay, err := time.Parse("2006-01-02", birthDayString)
+
+	if err != nil {
+		return 0
+	}
+
+	now := time.Now()
+	years := now.Year() - birthDay.Year()
+
+	if now.YearDay() < birthDay.YearDay() {
+		years--
+	}
+
+	return years
+}
+
 // JSON turns the object into a JSON string.
 func JSON(obj interface{}) string {
 	data, err := jsoniter.Marshal(obj)

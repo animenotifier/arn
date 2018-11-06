@@ -134,6 +134,16 @@ func (user *User) Edit(ctx *aero.Context, key string, value reflect.Value, newVa
 		user.Website = autocorrect.Website(newSite)
 		return true, nil
 
+	case "BirthDay":
+		newBirthDay := newValue.String()
+
+		if AgeInYears(newBirthDay) <= 0 {
+			return true, errors.New("Invalid birthday (make sure to use YYYY-MM-DD format, e.g. 2000-01-17)")
+		}
+
+		user.BirthDay = newBirthDay
+		return true, nil
+
 	case "ProExpires":
 		user := GetUserFromContext(ctx)
 

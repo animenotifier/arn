@@ -213,6 +213,11 @@ func (user *User) LastSeenTime() time.Time {
 	return lastSeen
 }
 
+// AgeInYears returns the user's age in years.
+func (user *User) AgeInYears() int {
+	return AgeInYears(user.BirthDay)
+}
+
 // IsActive tells you whether the user is active.
 func (user *User) IsActive() bool {
 	lastSeen, _ := time.Parse(time.RFC3339, user.LastSeen)
