@@ -22,6 +22,15 @@ import (
 var setNickMutex sync.Mutex
 var setEmailMutex sync.Mutex
 
+// Register data lists.
+func init() {
+	DataLists["genders"] = []*Option{
+		// &Option{"", "Prefer not to say"},
+		&Option{"male", "Male"},
+		&Option{"female", "Female"},
+	}
+}
+
 // User is a registered person.
 type User struct {
 	ID           string       `json:"id"`
@@ -34,37 +43,21 @@ type User struct {
 	LastLogin    string       `json:"lastLogin" private:"true"`
 	LastSeen     string       `json:"lastSeen" private:"true"`
 	ProExpires   string       `json:"proExpires" editable:"true"`
-	Gender       string       `json:"gender" private:"true"`
+	Gender       string       `json:"gender" editable:"true" private:"true" datalist:"genders"`
 	Language     string       `json:"language"`
 	Tagline      string       `json:"tagline" editable:"true"`
 	Introduction string       `json:"introduction" editable:"true" type:"textarea"`
 	Website      string       `json:"website" editable:"true"`
+	BirthDay     string       `json:"birthDay" editable:"true" private:"true"`
 	IP           string       `json:"ip" private:"true"`
 	UserAgent    string       `json:"agent" private:"true"`
 	Balance      int          `json:"balance" private:"true"`
 	Avatar       UserAvatar   `json:"avatar"`
 	Cover        UserCover    `json:"cover"`
-	AgeRange     UserAgeRange `json:"ageRange" private:"true"`
 	Accounts     UserAccounts `json:"accounts" private:"true"`
 	Browser      UserBrowser  `json:"browser" private:"true"`
 	OS           UserOS       `json:"os" private:"true"`
 	Location     *Location    `json:"location" private:"true"`
-
-	// user.Email = ""
-	// user.Gender = ""
-	// user.FirstName = ""
-	// user.LastName = ""
-	// user.IP = ""
-	// user.UserAgent = ""
-	// user.LastLogin = ""
-	// user.LastSeen = ""
-	// user.Accounts.Facebook.ID = ""
-	// user.Accounts.Google.ID = ""
-	// user.Accounts.Twitter.ID = ""
-	// user.AgeRange = UserAgeRange{}
-	// user.Location = &Location{}
-	// user.Browser = UserBrowser{}
-	// user.OS = UserOS{}
 }
 
 // NewUser creates an empty user object with a unique ID.

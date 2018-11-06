@@ -1,11 +1,5 @@
 package arn
 
-// UserAgeRange ...
-type UserAgeRange struct {
-	Min int `json:"min"`
-	Max int `json:"max"`
-}
-
 // UserBrowser ...
 type UserBrowser struct {
 	Name     string `json:"name"`

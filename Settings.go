@@ -37,7 +37,15 @@ type Settings struct {
 	Format        FormatSettings       `json:"format"`
 	Notification  NotificationSettings `json:"notification"`
 	Editor        EditorSettings       `json:"editor"`
+	Privacy       PrivacySettings      `json:"privacy"`
 	Theme         string               `json:"theme" editable:"true"`
+}
+
+// PrivacySettings ...
+type PrivacySettings struct {
+	ShowAge      bool `json:"showAge" editable:"true"`
+	ShowGender   bool `json:"showGender" editable:"true"`
+	ShowLocation bool `json:"showLocation" editable:"true"`
 }
 
 // NotificationSettings ...
