@@ -123,3 +123,23 @@ func SortUsersLastSeen(users []*User) {
 		return users[i].LastSeen > users[j].LastSeen
 	})
 }
+
+// SortUsersFollowers sorts a list of users by their number of followers.
+func SortUsersFollowers(users []*User) {
+	followCount := UserFollowerCountMap()
+
+	sort.Slice(users, func(i, j int) bool {
+		if users[i].HasAvatar() != users[j].HasAvatar() {
+			return users[i].HasAvatar()
+		}
+
+		followersA := followCount[users[i].ID]
+		followersB := followCount[users[j].ID]
+
+		if followersA == followersB {
+			return users[i].Nick < users[j].Nick
+		}
+
+		return followersA > followersB
+	})
+}
