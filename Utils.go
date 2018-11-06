@@ -256,7 +256,7 @@ func IsIPv6(ip string) bool {
 }
 
 // MyAnimeListStatusToARNStatus ...
-func MyAnimeListStatusToARNStatus(status string) string {
+func MyAnimeListStatusToARNStatus(status int) string {
 	switch status {
 	case mal.AnimeListStatusCompleted:
 		return AnimeListStatusCompleted
