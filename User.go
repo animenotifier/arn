@@ -10,6 +10,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/aerogo/aero"
+
 	"github.com/aerogo/http/client"
 	"github.com/animenotifier/arn/autocorrect"
 	"github.com/animenotifier/arn/validate"
@@ -58,6 +60,11 @@ type User struct {
 	Browser      UserBrowser  `json:"browser" private:"true"`
 	OS           UserOS       `json:"os" private:"true"`
 	Location     *Location    `json:"location" private:"true"`
+
+	eventStreams struct {
+		sync.Mutex
+		value []*aero.EventStream
+	}
 }
 
 // NewUser creates an empty user object with a unique ID.
@@ -186,6 +193,12 @@ func (user *User) SendNotification(pushNotification *PushNotification) {
 
 	// Save changes
 	subs.Save()
+
+	// Send an event to the user's open tabs
+	user.BroadcastEvent(&aero.Event{
+		Name: "notificationCount",
+		Data: userNotifications.CountUnseen(),
+	})
 }
 
 // RealName returns the real name of the user.
