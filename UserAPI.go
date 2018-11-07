@@ -5,6 +5,8 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/animenotifier/arn/validate"
+
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
 	"github.com/animenotifier/arn/autocorrect"
@@ -33,86 +35,6 @@ func (user *User) Authorize(ctx *aero.Context, action string) error {
 
 // Edit updates the user object.
 func (user *User) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
-	// Automatically correct account nicks
-	if strings.HasPrefix(key, "Accounts.") && strings.HasSuffix(key, ".Nick") {
-		newNick := newValue.String()
-		newNick = autocorrect.AccountNick(newNick)
-		value.SetString(newNick)
-
-		// Refresh osu info if the name changed
-		if key == "Accounts.Osu.Nick" {
-			if newNick == "" {
-				user.Accounts.Osu.PP = 0
-				user.Accounts.Osu.Level = 0
-				user.Accounts.Osu.Accuracy = 0
-			} else {
-				go func() {
-					err := user.RefreshOsuInfo()
-
-					if err != nil {
-						color.Red("Error refreshing osu info of user '%s' with osu nick '%s': %v", user.Nick, newNick, err)
-						return
-					}
-
-					color.Green("Refreshed osu info of user '%s' with osu nick '%s': %v", user.Nick, newNick, user.Accounts.Osu.PP)
-					user.Save()
-				}()
-			}
-		}
-
-		return true, nil
-	}
-
-	// Refresh Overwatch info if the battletag changed
-	if key == "Accounts.Overwatch.BattleTag" {
-		newBattleTag := newValue.String()
-		value.SetString(newBattleTag)
-
-		if newBattleTag == "" {
-			user.Accounts.Overwatch.SkillRating = 0
-			user.Accounts.Overwatch.Tier = ""
-		} else {
-			go func() {
-				err := user.RefreshOverwatchInfo()
-
-				if err != nil {
-					color.Red("Error refreshing Overwatch info of user '%s' with Overwatch battle tag '%s': %v", user.Nick, newBattleTag, err)
-					return
-				}
-
-				color.Green("Refreshed Overwatch info of user '%s' with Overwatch battle tag '%s': %v", user.Nick, newBattleTag, user.Accounts.Overwatch.SkillRating)
-				user.Save()
-			}()
-		}
-
-		return true, nil
-	}
-
-	// Refresh FinalFantasyXIV info if the name or server changed
-	if key == "Accounts.FinalFantasyXIV.Nick" || key == "Accounts.FinalFantasyXIV.Server" {
-		newValue := newValue.String()
-		value.SetString(newValue)
-
-		if newValue == "" {
-			user.Accounts.FinalFantasyXIV.Class = ""
-			user.Accounts.FinalFantasyXIV.Level = 0
-			user.Accounts.FinalFantasyXIV.ItemLevel = 0
-		} else if user.Accounts.FinalFantasyXIV.Nick != "" && user.Accounts.FinalFantasyXIV.Server != "" {
-			go func() {
-				err := user.RefreshFFXIVInfo()
-
-				if err != nil {
-					color.Red("Error refreshing FinalFantasy XIV info of user '%s' with nick '%s' on server '%s': %v", user.Nick, user.Accounts.FinalFantasyXIV.Nick, user.Accounts.FinalFantasyXIV.Server, err)
-					return
-				}
-
-				user.Save()
-			}()
-		}
-
-		return true, nil
-	}
-
 	switch key {
 	case "Nick":
 		newNick := newValue.String()
@@ -150,6 +72,105 @@ func (user *User) Edit(ctx *aero.Context, key string, value reflect.Value, newVa
 		if user == nil || user.Role != "admin" {
 			return true, errors.New("Not authorized to edit")
 		}
+
+	case "Accounts.Discord.Nick":
+		newNick := newValue.String()
+
+		if newNick == "" {
+			value.SetString(newNick)
+			return true, nil
+		}
+
+		if !validate.DiscordNick(newNick) {
+			return true, errors.New("Discord username must include your name and the 4-digit Discord tag (e.g. Yandere#1234)")
+		}
+
+		// Trim spaces
+		parts := strings.Split(newNick, "#")
+		parts[0] = strings.TrimSpace(parts[0])
+		parts[1] = strings.TrimSpace(parts[1])
+		newNick = strings.Join(parts, "#")
+
+		value.SetString(newNick)
+		return true, nil
+
+	case "Accounts.Overwatch.BattleTag":
+		newBattleTag := newValue.String()
+		value.SetString(newBattleTag)
+
+		if newBattleTag == "" {
+			user.Accounts.Overwatch.SkillRating = 0
+			user.Accounts.Overwatch.Tier = ""
+		} else {
+			// Refresh Overwatch info if the battletag changed
+			go func() {
+				err := user.RefreshOverwatchInfo()
+
+				if err != nil {
+					color.Red("Error refreshing Overwatch info of user '%s' with Overwatch battle tag '%s': %v", user.Nick, newBattleTag, err)
+					return
+				}
+
+				color.Green("Refreshed Overwatch info of user '%s' with Overwatch battle tag '%s': %v", user.Nick, newBattleTag, user.Accounts.Overwatch.SkillRating)
+				user.Save()
+			}()
+		}
+
+		return true, nil
+
+	case "Accounts.FinalFantasyXIV.Nick", "Accounts.FinalFantasyXIV.Server":
+		newValue := newValue.String()
+		value.SetString(newValue)
+
+		if newValue == "" {
+			user.Accounts.FinalFantasyXIV.Class = ""
+			user.Accounts.FinalFantasyXIV.Level = 0
+			user.Accounts.FinalFantasyXIV.ItemLevel = 0
+		} else if user.Accounts.FinalFantasyXIV.Nick != "" && user.Accounts.FinalFantasyXIV.Server != "" {
+			// Refresh FinalFantasyXIV info if the name or server changed
+			go func() {
+				err := user.RefreshFFXIVInfo()
+
+				if err != nil {
+					color.Red("Error refreshing FinalFantasy XIV info of user '%s' with nick '%s' on server '%s': %v", user.Nick, user.Accounts.FinalFantasyXIV.Nick, user.Accounts.FinalFantasyXIV.Server, err)
+					return
+				}
+
+				user.Save()
+			}()
+		}
+
+		return true, nil
+	}
+
+	// Automatically correct account nicks
+	if strings.HasPrefix(key, "Accounts.") && strings.HasSuffix(key, ".Nick") {
+		newNick := newValue.String()
+		newNick = autocorrect.AccountNick(newNick)
+		value.SetString(newNick)
+
+		// Refresh osu info if the name changed
+		if key == "Accounts.Osu.Nick" {
+			if newNick == "" {
+				user.Accounts.Osu.PP = 0
+				user.Accounts.Osu.Level = 0
+				user.Accounts.Osu.Accuracy = 0
+			} else {
+				go func() {
+					err := user.RefreshOsuInfo()
+
+					if err != nil {
+						color.Red("Error refreshing osu info of user '%s' with osu nick '%s': %v", user.Nick, newNick, err)
+						return
+					}
+
+					color.Green("Refreshed osu info of user '%s' with osu nick '%s': %v", user.Nick, newNick, user.Accounts.Osu.PP)
+					user.Save()
+				}()
+			}
+		}
+
+		return true, nil
 	}
 
 	return false, nil

@@ -1,6 +1,7 @@
 package validate
 
 import (
+	"regexp"
 	"strings"
 	"time"
 
@@ -15,6 +16,8 @@ const (
 	DateTimeFormat = time.RFC3339
 )
 
+var discordNickRegex = regexp.MustCompile(`^([^#]{2,32})#(\d{4})$`)
+
 // Nick tests if the given nickname is valid.
 func Nick(nick string) bool {
 	if len(nick) < 2 {
@@ -22,6 +25,11 @@ func Nick(nick string) bool {
 	}
 
 	return nick == autocorrect.UserNick(nick)
+}
+
+// DiscordNick tests if the given Discord nickname is valid.
+func DiscordNick(nick string) bool {
+	return discordNickRegex.MatchString(nick)
 }
 
 // DateTime tells you whether the datetime is valid.

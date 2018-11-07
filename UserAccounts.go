@@ -88,6 +88,10 @@ type UserAccounts struct {
 		Nick string `json:"nick"`
 	} `json:"twitter"`
 
+	Discord struct {
+		Nick string `json:"nick" editable:"true"`
+	} `json:"discord"`
+
 	Osu struct {
 		Nick     string  `json:"nick" editable:"true"`
 		PP       float64 `json:"pp"`
