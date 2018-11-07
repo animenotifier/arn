@@ -47,7 +47,6 @@ type User struct {
 	ProExpires   string       `json:"proExpires" editable:"true"`
 	Gender       string       `json:"gender" editable:"true" private:"true" datalist:"genders"`
 	Language     string       `json:"language"`
-	Tagline      string       `json:"tagline" editable:"true"`
 	Introduction string       `json:"introduction" editable:"true" type:"textarea"`
 	Website      string       `json:"website" editable:"true"`
 	BirthDay     string       `json:"birthDay" editable:"true" private:"true"`
