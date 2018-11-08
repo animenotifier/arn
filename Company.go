@@ -54,12 +54,6 @@ func (company *Company) Link() string {
 	return "/company/" + company.ID
 }
 
-// Creator returns the user who created this company.
-func (company *Company) Creator() *User {
-	user, _ := GetUser(company.CreatedBy)
-	return user
-}
-
 // Anime returns the anime connected with this company.
 func (company *Company) Anime() (studioAnime []*Anime, producedAnime []*Anime, licensedAnime []*Anime) {
 	for anime := range StreamAnime() {

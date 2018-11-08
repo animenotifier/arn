@@ -52,12 +52,6 @@ func (group *Group) ImageURL() string {
 	// return "/images/brand/144.png"
 }
 
-// Creator ...
-func (group *Group) Creator() *User {
-	creator, _ := GetUser(group.CreatedBy)
-	return creator
-}
-
 // FindMember returns the group member by user ID, if available.
 func (group *Group) FindMember(userID string) *GroupMember {
 	for _, member := range group.Members {
