@@ -63,6 +63,10 @@ func (amv *AMV) SetVideoBytes(data []byte) error {
 		optimizedFile,
 	)
 
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Stdin = os.Stdin
+
 	err = cmd.Start()
 
 	if err != nil {
