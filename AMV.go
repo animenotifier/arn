@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"path"
 
 	"github.com/aerogo/nano"
@@ -50,6 +51,44 @@ func (amv *AMV) SetVideoBytes(data []byte) error {
 		return err
 	}
 
+	// Run mkclean
+	optimizedFile := filePath + ".optimized"
+
+	cmd := exec.Command(
+		"mkclean",
+		"--doctype", "4",
+		"--keep-cues",
+		"--optimize",
+		filePath,
+		optimizedFile,
+	)
+
+	err = cmd.Start()
+
+	if err != nil {
+		return err
+	}
+
+	err = cmd.Wait()
+
+	if err != nil {
+		return err
+	}
+
+	// Now delete the original file and replace it with the optimized file
+	err = os.Remove(filePath)
+
+	if err != nil {
+		return err
+	}
+
+	err = os.Rename(optimizedFile, filePath)
+
+	if err != nil {
+		return err
+	}
+
+	// Refresh video file info
 	amv.File = fileName
 	amv.RefreshInfo()
 	return nil
