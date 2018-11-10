@@ -47,10 +47,6 @@ func (company *Company) Create(ctx *aero.Context) error {
 	company.ID = GenerateID("Company")
 	company.Created = DateTimeUTC()
 	company.CreatedBy = user.ID
-	company.Mappings = []*Mapping{}
-	company.Links = []*Link{}
-	company.Tags = []string{}
-	company.Likes = []string{}
 	company.Location = &Location{}
 
 	// Write log entry

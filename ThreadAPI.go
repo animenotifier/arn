@@ -85,8 +85,6 @@ func (thread *Thread) Create(ctx *aero.Context) error {
 	thread.Text, _ = data["text"].(string)
 	thread.CreatedBy = user.ID
 	thread.Sticky, _ = data["sticky"].(int)
-	thread.Likes = []string{}
-	thread.PostIDs = []string{}
 	thread.Created = DateTimeUTC()
 	thread.Edited = ""
 

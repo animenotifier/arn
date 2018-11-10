@@ -72,7 +72,6 @@ func (post *Post) Create(ctx *aero.Context) error {
 	post.CreatedBy = user.ID
 	post.ParentID, _ = data["parentId"].(string)
 	post.ParentType, _ = data["parentType"].(string)
-	post.Likes = []string{}
 	post.Created = DateTimeUTC()
 	post.Edited = ""
 

@@ -40,9 +40,6 @@ func NewCompany() *Company {
 		HasCreator: HasCreator{
 			Created: DateTimeUTC(),
 		},
-		HasLikes: HasLikes{
-			Likes: []string{},
-		},
 		HasMappings: HasMappings{
 			Mappings: []*Mapping{},
 		},

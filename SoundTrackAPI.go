@@ -49,11 +49,8 @@ func (soundtrack *SoundTrack) Create(ctx *aero.Context) error {
 	}
 
 	soundtrack.ID = GenerateID("SoundTrack")
-	soundtrack.Likes = []string{}
 	soundtrack.Created = DateTimeUTC()
 	soundtrack.CreatedBy = user.ID
-	soundtrack.Media = []*ExternalMedia{}
-	soundtrack.Tags = []string{}
 
 	// Write log entry
 	logEntry := NewEditLogEntry(user.ID, "create", "SoundTrack", soundtrack.ID, "", "", "")
