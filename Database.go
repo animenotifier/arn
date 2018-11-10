@@ -13,6 +13,7 @@ var Node = nano.New(5000)
 // DB is the main database client.
 var DB = Node.Namespace("arn").RegisterTypes(
 	(*AMV)(nil),
+	(*Activity)(nil),
 	(*Analytics)(nil),
 	(*Anime)(nil),
 	(*AnimeCharacters)(nil),
