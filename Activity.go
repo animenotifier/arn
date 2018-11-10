@@ -26,6 +26,21 @@ type Activity struct {
 	HasLikes
 }
 
+// NewActivity creates a new activity.
+func NewActivity(typ string, objectType string, objectID string, meta map[string]string, userID string) *Activity {
+	return &Activity{
+		HasID: HasID{
+			ID: GenerateID("Activity"),
+		},
+		ObjectType: objectType,
+		ObjectID:   objectID,
+		HasCreator: HasCreator{
+			Created:   DateTimeUTC(),
+			CreatedBy: userID,
+		},
+	}
+}
+
 // Link returns the permalink for the Activity.
 func (activity *Activity) Link() string {
 	return "/activity/" + activity.ID
