@@ -4,8 +4,19 @@ const (
 	// ActivityTypeCreate when new objects are created.
 	ActivityTypeCreate = "create"
 
+	// type ActivityCreate struct {
+	// 	ObjectID   string `json:"objectId"`
+	// 	ObjectType string `json:"objectType"`
+	// }
+
 	// ActivityTypeConsume when media is consumed (anime episodes watched).
 	ActivityTypeConsume = "consume"
+
+	// type ActivityConsumeAnime struct {
+	// 	AnimeID     string `json:"animeId"`
+	// 	FromEpisode int    `json:"fromEpisode"`
+	// 	ToEpisode   int    `json:"toEpisode"`
+	// }
 
 	// ActivityTypeComplete when media is completed.
 	ActivityTypeComplete = "complete"
@@ -16,10 +27,8 @@ const (
 
 // Activity is a user activity that appears in the follower's feeds.
 type Activity struct {
-	Type       string            `json:"type"`
-	ObjectType string            `json:"objectType"`
-	ObjectID   string            `json:"objectId"`
-	Meta       map[string]string `json:"meta"`
+	Type string                 `json:"type"`
+	Meta map[string]interface{} `json:"meta"`
 
 	HasID
 	HasCreator
@@ -27,17 +36,17 @@ type Activity struct {
 }
 
 // NewActivity creates a new activity.
-func NewActivity(typ string, objectType string, objectID string, meta map[string]string, userID string) *Activity {
+func NewActivity(typ string, meta map[string]interface{}, userID string) *Activity {
 	return &Activity{
 		HasID: HasID{
 			ID: GenerateID("Activity"),
 		},
-		ObjectType: objectType,
-		ObjectID:   objectID,
 		HasCreator: HasCreator{
 			Created:   DateTimeUTC(),
 			CreatedBy: userID,
 		},
+		Type: typ,
+		Meta: meta,
 	}
 }
 
