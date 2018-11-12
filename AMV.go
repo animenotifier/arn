@@ -246,9 +246,7 @@ func AllAMVs() []*AMV {
 func FilterAMVs(filter func(*AMV) bool) []*AMV {
 	var filtered []*AMV
 
-	channel := DB.All("AMV")
-
-	for obj := range channel {
+	for obj := range DB.All("AMV") {
 		realObject := obj.(*AMV)
 
 		if filter(realObject) {

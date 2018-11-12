@@ -1,5 +1,7 @@
 package arn
 
+import "sort"
+
 // ActivityConsumeAnime is a user activity that consumes anime.
 type ActivityConsumeAnime struct {
 	AnimeID     string `json:"animeId"`
@@ -11,7 +13,7 @@ type ActivityConsumeAnime struct {
 }
 
 // NewActivityConsumeAnime creates a new activity.
-func NewActivityConsumeAnime(objectType string, objectID string, userID string) *ActivityConsumeAnime {
+func NewActivityConsumeAnime(animeID string, fromEpisode int, toEpisode int, userID string) *ActivityConsumeAnime {
 	return &ActivityConsumeAnime{
 		HasID: HasID{
 			ID: GenerateID("ActivityConsumeAnime"),
@@ -20,12 +22,53 @@ func NewActivityConsumeAnime(objectType string, objectID string, userID string) 
 			Created:   DateTimeUTC(),
 			CreatedBy: userID,
 		},
+		AnimeID:     animeID,
+		FromEpisode: fromEpisode,
+		ToEpisode:   toEpisode,
 	}
+}
+
+// Anime returns the anime.
+func (activity *ActivityConsumeAnime) Anime() *Anime {
+	anime, _ := GetAnime(activity.AnimeID)
+	return anime
 }
 
 // Type returns the type name.
 func (activity *ActivityConsumeAnime) Type() string {
 	return "ActivityConsumeAnime"
+}
+
+// LastActivityConsumeAnime returns the last activity for the given anime.
+func (user *User) LastActivityConsumeAnime(animeID string) *ActivityConsumeAnime {
+	activities := FilterActivitiesConsumeAnime(func(activity *ActivityConsumeAnime) bool {
+		return activity.AnimeID == animeID && activity.CreatedBy == user.ID
+	})
+
+	if len(activities) == 0 {
+		return nil
+	}
+
+	sort.Slice(activities, func(i, j int) bool {
+		return activities[i].Created > activities[j].Created
+	})
+
+	return activities[0]
+}
+
+// FilterActivitiesConsumeAnime filters all anime consumption activities by a custom function.
+func FilterActivitiesConsumeAnime(filter func(*ActivityConsumeAnime) bool) []*ActivityConsumeAnime {
+	var filtered []*ActivityConsumeAnime
+
+	for obj := range DB.All("ActivityConsumeAnime") {
+		realObject := obj.(*ActivityConsumeAnime)
+
+		if filter(realObject) {
+			filtered = append(filtered, realObject)
+		}
+	}
+
+	return filtered
 }
 
 // // OnLike is called when the activity receives a like.

@@ -1,5 +1,9 @@
 package arn
 
+import (
+	"time"
+)
+
 // HasCreator includes user ID and date for the creation of this object.
 type HasCreator struct {
 	Created   string `json:"created"`
@@ -25,4 +29,10 @@ func (obj *HasCreator) GetCreated() string {
 // GetCreatedBy returns the ID of the user who created this object.
 func (obj *HasCreator) GetCreatedBy() string {
 	return obj.CreatedBy
+}
+
+// GetCreatedTime returns the creation time of the object as a time struct.
+func (obj *HasCreator) GetCreatedTime() time.Time {
+	t, _ := time.Parse(time.RFC3339, obj.Created)
+	return t
 }
