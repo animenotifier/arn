@@ -14,9 +14,3 @@ var (
 func (activity *ActivityCreate) Save() {
 	DB.Set("ActivityCreate", activity.ID, activity)
 }
-
-// Delete deletes the object from the database.
-func (activity *ActivityCreate) Delete() error {
-	DB.Delete("ActivityCreate", activity.ID)
-	return nil
-}
