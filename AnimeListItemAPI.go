@@ -28,21 +28,22 @@ func (item *AnimeListItem) Edit(ctx *aero.Context, key string, value reflect.Val
 		fromEpisode := item.Episodes
 		toEpisode := int(newValue.Float())
 
-		// Create or update activity if new episode amount is higher
-		if toEpisode > fromEpisode {
-			lastActivity := user.LastActivityConsumeAnime(item.AnimeID)
+		// Fetch last activity
+		lastActivity := user.LastActivityConsumeAnime(item.AnimeID)
 
-			if lastActivity == nil || time.Since(lastActivity.GetCreatedTime()) > 1*time.Hour {
-				// If there is no last activity for the given anime,
-				// or if the last activity happened more than an hour ago,
-				// create a new activity.
+		if lastActivity == nil || time.Since(lastActivity.GetCreatedTime()) > 1*time.Hour {
+			// If there is no last activity for the given anime,
+			// or if the last activity happened more than an hour ago,
+			// create a new activity.
+			if toEpisode > fromEpisode {
 				activity := NewActivityConsumeAnime(item.AnimeID, fromEpisode, toEpisode, user.ID)
 				activity.Save()
-			} else if toEpisode > lastActivity.ToEpisode {
-				// Otherwise, update the last activity if episode count is higher.
-				lastActivity.ToEpisode = toEpisode
-				lastActivity.Save()
 			}
+		} else if toEpisode >= lastActivity.FromEpisode {
+			// Otherwise, update the last activity.
+			lastActivity.ToEpisode = toEpisode
+			lastActivity.Created = DateTimeUTC()
+			lastActivity.Save()
 		}
 
 		item.Episodes = toEpisode
