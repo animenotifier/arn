@@ -116,6 +116,10 @@ func (thread *Thread) Create(ctx *aero.Context) error {
 	logEntry := NewEditLogEntry(user.ID, "create", "Thread", thread.ID, "", "", "")
 	logEntry.Save()
 
+	// Create activity
+	activity := NewActivityCreate("Thread", thread.ID, user.ID)
+	activity.Save()
+
 	return nil
 }
 

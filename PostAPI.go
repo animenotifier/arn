@@ -148,6 +148,10 @@ func (post *Post) Create(ctx *aero.Context) error {
 	logEntry := NewEditLogEntry(user.ID, "create", "Post", post.ID, "", "", "")
 	logEntry.Save()
 
+	// Create activity
+	activity := NewActivityCreate("Post", post.ID, user.ID)
+	activity.Save()
+
 	return nil
 }
 

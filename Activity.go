@@ -1,78 +1,79 @@
 package arn
 
-const (
-	// ActivityTypeCreate when new objects are created.
-	ActivityTypeCreate = "create"
+import (
+	"sort"
+	"sync"
 
-	// type ActivityCreate struct {
-	// 	ObjectID   string `json:"objectId"`
-	// 	ObjectType string `json:"objectType"`
-	// }
-
-	// ActivityTypeConsume when media is consumed (anime episodes watched).
-	ActivityTypeConsume = "consume"
-
-	// type ActivityConsumeAnime struct {
-	// 	AnimeID     string `json:"animeId"`
-	// 	FromEpisode int    `json:"fromEpisode"`
-	// 	ToEpisode   int    `json:"toEpisode"`
-	// }
-
-	// ActivityTypeComplete when media is completed.
-	ActivityTypeComplete = "complete"
-
-	// ActivityTypeDrop when media is dropped.
-	ActivityTypeDrop = "drop"
+	"github.com/aerogo/nano"
 )
 
 // Activity is a user activity that appears in the follower's feeds.
-type Activity struct {
-	Type string                 `json:"type"`
-	Meta map[string]interface{} `json:"meta"`
-
-	HasID
-	HasCreator
-	HasLikes
+type Activity interface {
+	Creator() *User
+	Type() string
+	GetID() string
+	GetCreated() string
 }
 
-// NewActivity creates a new activity.
-func NewActivity(typ string, meta map[string]interface{}, userID string) *Activity {
-	return &Activity{
-		HasID: HasID{
-			ID: GenerateID("Activity"),
-		},
-		HasCreator: HasCreator{
-			Created:   DateTimeUTC(),
-			CreatedBy: userID,
-		},
-		Type: typ,
-		Meta: meta,
-	}
+// SortActivitiesLatestFirst puts the latest entries on top.
+func SortActivitiesLatestFirst(entries []Activity) {
+	sort.Slice(entries, func(i, j int) bool {
+		return entries[i].GetCreated() > entries[j].GetCreated()
+	})
 }
 
-// Link returns the permalink for the Activity.
-func (activity *Activity) Link() string {
-	return "/activity/" + activity.ID
-}
-
-// Text returns the textual representation of the activity.
-func (activity *Activity) Text() string {
-	return "Watched episode 123"
-}
-
-// OnLike is called when the activity receives a like.
-func (activity *Activity) OnLike(likedBy *User) {
-	if likedBy.ID == activity.CreatedBy {
-		return
-	}
+// StreamActivities returns a stream of all activities.
+func StreamActivities() chan Activity {
+	channel := make(chan Activity, nano.ChannelBufferSize)
+	wg := sync.WaitGroup{}
+	wg.Add(2)
 
 	go func() {
-		activity.Creator().SendNotification(&PushNotification{
-			Title:   likedBy.Nick + " liked your activity",
-			Message: activity.Text(),
-			Icon:    "https:" + likedBy.AvatarLink("large"),
-			Link:    "https://notify.moe" + likedBy.Link(),
-			Type:    NotificationTypeLike,
-		})
+		for obj := range DB.All("ActivityCreate") {
+			channel <- obj.(Activity)
+		}
+
+		wg.Done()
 	}()
+
+	go func() {
+		for obj := range DB.All("ActivityConsumeAnime") {
+			channel <- obj.(Activity)
+		}
+
+		wg.Done()
+	}()
+
+	go func() {
+		wg.Wait()
+		close(channel)
+	}()
+
+	return channel
+}
+
+// AllActivities returns a slice of all activities.
+func AllActivities() []Activity {
+	var all []Activity
+
+	stream := StreamActivities()
+
+	for obj := range stream {
+		all = append(all, obj)
+	}
+
+	return all
+}
+
+// FilterActivities filters all Activities by a custom function.
+func FilterActivities(filter func(Activity) bool) []Activity {
+	var filtered []Activity
+
+	for obj := range StreamActivities() {
+		if filter(obj) {
+			filtered = append(filtered, obj)
+		}
+	}
+
+	return filtered
 }
