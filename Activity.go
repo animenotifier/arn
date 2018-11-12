@@ -13,6 +13,7 @@ type Activity interface {
 	Type() string
 	GetID() string
 	GetCreated() string
+	GetCreatedBy() string
 }
 
 // SortActivitiesLatestFirst puts the latest entries on top.

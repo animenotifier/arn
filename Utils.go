@@ -224,6 +224,13 @@ func DateToSeason(date time.Time) string {
 	return ""
 }
 
+// BroadcastEvent sends the given event to the event streams of all users.
+func BroadcastEvent(event *aero.Event) {
+	for user := range StreamUsers() {
+		user.BroadcastEvent(event)
+	}
+}
+
 // AnimeRatingStars displays the rating in Unicode stars.
 func AnimeRatingStars(rating float64) string {
 	stars := int(rating/20 + 0.5)
