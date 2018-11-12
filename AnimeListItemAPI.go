@@ -2,6 +2,7 @@ package arn
 
 import (
 	"errors"
+	"fmt"
 	"reflect"
 	"time"
 
@@ -66,9 +67,17 @@ func (item *AnimeListItem) Edit(ctx *aero.Context, key string, value reflect.Val
 		return true, nil
 
 	case "Status":
-		item.Status = newValue.String()
-		item.OnStatusChange()
-		return true, nil
+		newStatus := newValue.String()
+
+		switch newStatus {
+		case AnimeListStatusWatching, AnimeListStatusCompleted, AnimeListStatusPlanned, AnimeListStatusHold, AnimeListStatusDropped:
+			item.Status = newStatus
+			item.OnStatusChange()
+			return true, nil
+
+		default:
+			return true, fmt.Errorf("Invalid anime list item status: %s", newStatus)
+		}
 	}
 
 	return false, nil
