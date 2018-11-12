@@ -25,8 +25,8 @@ func (item *AnimeListItem) Edit(ctx *aero.Context, key string, value reflect.Val
 
 	switch key {
 	case "Episodes":
-		fromEpisode := item.Episodes
-		toEpisode := int(newValue.Float())
+		oldEpisodes := item.Episodes
+		newEpisodes := int(newValue.Float())
 
 		// Fetch last activity
 		lastActivity := user.LastActivityConsumeAnime(item.AnimeID)
@@ -35,18 +35,18 @@ func (item *AnimeListItem) Edit(ctx *aero.Context, key string, value reflect.Val
 			// If there is no last activity for the given anime,
 			// or if the last activity happened more than an hour ago,
 			// create a new activity.
-			if toEpisode > fromEpisode {
-				activity := NewActivityConsumeAnime(item.AnimeID, fromEpisode, toEpisode, user.ID)
+			if newEpisodes > oldEpisodes {
+				activity := NewActivityConsumeAnime(item.AnimeID, newEpisodes, newEpisodes, user.ID)
 				activity.Save()
 			}
-		} else if toEpisode >= lastActivity.FromEpisode {
+		} else if newEpisodes >= lastActivity.FromEpisode {
 			// Otherwise, update the last activity.
-			lastActivity.ToEpisode = toEpisode
+			lastActivity.ToEpisode = newEpisodes
 			lastActivity.Created = DateTimeUTC()
 			lastActivity.Save()
 		}
 
-		item.Episodes = toEpisode
+		item.Episodes = newEpisodes
 
 		if item.Episodes < 0 {
 			item.Episodes = 0
