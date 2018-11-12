@@ -18,9 +18,9 @@ type Result struct {
 }
 
 // All is a fuzzy search.
-func All(term string, maxUsers, maxAnime, maxPosts, maxThreads, maxTracks, maxCharacters, maxCompanies int) ([]*arn.User, []*arn.Anime, []*arn.Post, []*arn.Thread, []*arn.SoundTrack, []*arn.Character, []*arn.Company) {
+func All(term string, maxUsers, maxAnime, maxPosts, maxThreads, maxTracks, maxCharacters, maxAMVs, maxCompanies int) ([]*arn.User, []*arn.Anime, []*arn.Post, []*arn.Thread, []*arn.SoundTrack, []*arn.Character, []*arn.AMV, []*arn.Company) {
 	if term == "" {
-		return nil, nil, nil, nil, nil, nil, nil
+		return nil, nil, nil, nil, nil, nil, nil, nil
 	}
 
 	var userResults []*arn.User
@@ -29,6 +29,7 @@ func All(term string, maxUsers, maxAnime, maxPosts, maxThreads, maxTracks, maxCh
 	var threadResults []*arn.Thread
 	var trackResults []*arn.SoundTrack
 	var characterResults []*arn.Character
+	var amvResults []*arn.AMV
 	var companyResults []*arn.Company
 
 	flow.Parallel(func() {
@@ -44,8 +45,10 @@ func All(term string, maxUsers, maxAnime, maxPosts, maxThreads, maxTracks, maxCh
 	}, func() {
 		characterResults = Characters(term, maxCharacters)
 	}, func() {
+		amvResults = AMVs(term, maxAMVs)
+	}, func() {
 		companyResults = Companies(term, maxCompanies)
 	})
 
-	return userResults, animeResults, postResults, threadResults, trackResults, characterResults, companyResults
+	return userResults, animeResults, postResults, threadResults, trackResults, characterResults, amvResults, companyResults
 }
