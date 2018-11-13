@@ -46,6 +46,8 @@ func (mapping *Mapping) Name() string {
 		return "TVDB"
 	case "trakt/anime":
 		return "Trakt"
+	case "trakt/season":
+		return "Trakt"
 	default:
 		return mapping.Service
 	}
@@ -60,6 +62,10 @@ func (mapping *Mapping) Link() string {
 		return "http://cal.syoboi.jp/tid/" + mapping.ServiceID
 	case "anilist/anime":
 		return "https://anilist.co/anime/" + mapping.ServiceID
+	case "anilist/character":
+		return "https://anilist.co/character/" + mapping.ServiceID
+	case "anilist/studio":
+		return "https://anilist.co/studio/" + mapping.ServiceID
 	case "imdb/anime":
 		return "https://www.imdb.com/title/" + mapping.ServiceID
 	case "myanimelist/anime":
@@ -70,6 +76,8 @@ func (mapping *Mapping) Link() string {
 		return "https://anidb.net/perl-bin/animedb.pl?show=anime&aid=" + mapping.ServiceID
 	case "trakt/anime":
 		return "https://trakt.tv/shows/" + mapping.ServiceID
+	case "trakt/season":
+		return "https://trakt.tv/seasons/" + mapping.ServiceID
 	default:
 		return ""
 	}
