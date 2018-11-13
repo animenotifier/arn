@@ -2,6 +2,7 @@ package arn
 
 import (
 	"bytes"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -20,6 +21,16 @@ type AnimeEpisodes struct {
 // Link returns the link for that object.
 func (episodes *AnimeEpisodes) Link() string {
 	return "/anime/" + episodes.AnimeID + "/episodes"
+}
+
+// Sort sorts the episodes by episode number.
+func (episodes *AnimeEpisodes) Sort() {
+	episodes.Lock()
+	defer episodes.Unlock()
+
+	sort.Slice(episodes.Items, func(i, j int) bool {
+		return episodes.Items[i].Number < episodes.Items[j].Number
+	})
 }
 
 // Find finds the given episode number.
@@ -54,18 +65,9 @@ func (episodes *AnimeEpisodes) Merge(b []*AnimeEpisode) {
 	}
 }
 
-// LastReversed returns the last n items in reversed order.
-func (episodes *AnimeEpisodes) LastReversed(count int) []*AnimeEpisode {
-	episodes.Lock()
-	defer episodes.Unlock()
-
-	items := episodes.Items[len(episodes.Items)-count:]
-
-	for i, j := 0, len(items)-1; i < j; i, j = i+1, j-1 {
-		items[i], items[j] = items[j], items[i]
-	}
-
-	return items
+// Last returns the last n items.
+func (episodes *AnimeEpisodes) Last(count int) []*AnimeEpisode {
+	return episodes.Items[len(episodes.Items)-count:]
 }
 
 // AvailableCount counts the number of available episodes.
