@@ -78,6 +78,7 @@ func (user *User) Edit(ctx *aero.Context, key string, value reflect.Value, newVa
 
 		if newNick == "" {
 			value.SetString(newNick)
+			user.Accounts.Discord.Verified = false
 			return true, nil
 		}
 
@@ -91,7 +92,11 @@ func (user *User) Edit(ctx *aero.Context, key string, value reflect.Value, newVa
 		parts[1] = strings.TrimSpace(parts[1])
 		newNick = strings.Join(parts, "#")
 
-		value.SetString(newNick)
+		if value.String() != newNick {
+			value.SetString(newNick)
+			user.Accounts.Discord.Verified = false
+		}
+
 		return true, nil
 
 	case "Accounts.Overwatch.BattleTag":
