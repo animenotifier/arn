@@ -89,7 +89,8 @@ type UserAccounts struct {
 	} `json:"twitter"`
 
 	Discord struct {
-		Nick string `json:"nick" editable:"true"`
+		Nick     string `json:"nick" editable:"true"`
+		Verified bool   `json:"verified"`
 	} `json:"discord"`
 
 	Osu struct {
