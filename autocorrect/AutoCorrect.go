@@ -115,5 +115,5 @@ func Website(url string) string {
 
 // IsTrackerLink returns true if the URL is a tracker link.
 func IsTrackerLink(url string) bool {
-	return strings.Contains(url, "myanimelist.net/") || strings.Contains(url, "anilist.co/") || strings.Contains(url, "kitsu.io/")
+	return strings.Contains(url, "myanimelist.net/") || strings.Contains(url, "anilist.co/") || strings.Contains(url, "kitsu.io/") || strings.Contains(url, "kissanime.")
 }

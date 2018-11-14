@@ -36,3 +36,13 @@ func TestIsValidDate(t *testing.T) {
 	assert.False(t, validate.DateTime("292277026596-12-04T15:30:07Z"))
 	assert.True(t, validate.DateTime("2017-03-09T10:25:00Z"))
 }
+
+func TestIsValidURI(t *testing.T) {
+	assert.False(t, validate.URI(""))
+	assert.False(t, validate.URI("a"))
+	assert.False(t, validate.URI("google.com"))
+	assert.True(t, validate.URI("https://google.com"))
+	assert.True(t, validate.URI("https://google.com/"))
+	assert.True(t, validate.URI("https://google.com/images"))
+	assert.True(t, validate.URI("https://google.com/images/"))
+}

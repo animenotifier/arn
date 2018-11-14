@@ -2,6 +2,7 @@ package arn
 
 import (
 	"errors"
+	"fmt"
 	"reflect"
 	"strings"
 
@@ -9,6 +10,7 @@ import (
 
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
+	"github.com/aerogo/http/client"
 	"github.com/animenotifier/arn/autocorrect"
 	"github.com/fatih/color"
 )
@@ -49,11 +51,28 @@ func (user *User) Edit(ctx *aero.Context, key string, value reflect.Value, newVa
 	case "Website":
 		newSite := newValue.String()
 
-		if autocorrect.IsTrackerLink(newSite) {
-			return true, errors.New("Not an actual website or homepage")
+		if newSite == "" {
+			user.Website = newSite
+			return true, nil
 		}
 
-		user.Website = autocorrect.Website(newSite)
+		if autocorrect.IsTrackerLink(newSite) {
+			return true, errors.New("Not an actual personal website or homepage")
+		}
+
+		newSite = autocorrect.Website(newSite)
+
+		if !validate.URI("https://" + newSite) {
+			return true, errors.New("Not a valid website link")
+		}
+
+		response, err := client.Get("https://" + newSite).End()
+
+		if err != nil || response.StatusCode() >= 400 {
+			return true, fmt.Errorf("https://%s seems to be inaccessible", newSite)
+		}
+
+		user.Website = newSite
 		return true, nil
 
 	case "BirthDay":

@@ -1,6 +1,7 @@
 package validate
 
 import (
+	"net/url"
 	"regexp"
 	"strings"
 	"time"
@@ -16,7 +17,9 @@ const (
 	DateTimeFormat = time.RFC3339
 )
 
-var discordNickRegex = regexp.MustCompile(`^([^#]{2,32})#(\d{4})$`)
+var (
+	discordNickRegex = regexp.MustCompile(`^([^#]{2,32})#(\d{4})$`)
+)
 
 // Nick tests if the given nickname is valid.
 func Nick(nick string) bool {
@@ -56,4 +59,10 @@ func Date(date string) bool {
 func Email(email string) bool {
 	// TODO: Add email check
 	return email != ""
+}
+
+// URI validates a URI.
+func URI(uri string) bool {
+	_, err := url.ParseRequestURI(uri)
+	return err == nil
 }
