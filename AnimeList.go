@@ -264,13 +264,13 @@ func (list *AnimeList) FilterStatus(status string) *AnimeList {
 
 // WithoutPrivateItems returns a new anime list with the private items removed.
 func (list *AnimeList) WithoutPrivateItems() *AnimeList {
-	newList := &AnimeList{
-		UserID: list.UserID,
-		Items:  []*AnimeListItem{},
-	}
-
 	list.Lock()
 	defer list.Unlock()
+
+	newList := &AnimeList{
+		UserID: list.UserID,
+		Items:  make([]*AnimeListItem, 0, len(list.Items)),
+	}
 
 	for _, item := range list.Items {
 		if !item.Private {
