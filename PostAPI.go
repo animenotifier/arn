@@ -127,16 +127,20 @@ func (post *Post) Create(ctx *aero.Context) error {
 			return
 		}
 
+		title := user.Nick + " replied"
 		message := ""
 
 		if post.ParentType == "Post" {
 			message = fmt.Sprintf("%s replied to your comment in \"%s\".", user.Nick, parent.(*Post).Parent().TitleByUser(notifyUser))
+		} else if post.ParentType == "User" {
+			title = fmt.Sprintf("%s wrote a comment on your profile.", user.Nick)
+			message = post.Text
 		} else {
 			message = fmt.Sprintf("%s replied in the %s \"%s\".", user.Nick, strings.ToLower(post.ParentType), parent.TitleByUser(notifyUser))
 		}
 
 		notifyUser.SendNotification(&PushNotification{
-			Title:   user.Nick + " replied",
+			Title:   title,
 			Message: message,
 			Icon:    "https:" + user.AvatarLink("large"),
 			Link:    post.Link(),
