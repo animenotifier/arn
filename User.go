@@ -126,7 +126,7 @@ func RegisterUser(user *User) {
 	NewUserNotifications(user.ID).Save()
 
 	// Fetch gravatar
-	if user.Email != "" {
+	if user.Email != "" && !IsDevelopment() {
 		gravatarURL := gravatar.Url(user.Email) + "?s=" + fmt.Sprint(AvatarMaxSize) + "&d=404&r=pg"
 		gravatarURL = strings.Replace(gravatarURL, "http://", "https://", 1)
 
@@ -425,6 +425,15 @@ func (user *User) ForceSetNick(newName string) {
 	})
 }
 
+// CleanNick only returns the nickname if it was set by user, otherwise empty string.
+func (user *User) CleanNick() string {
+	if user.HasNick() {
+		return user.Nick
+	}
+
+	return ""
+}
+
 // SetEmail changes the user's email safely.
 func (user *User) SetEmail(newEmail string) error {
 	setEmailMutex.Lock()
@@ -446,6 +455,11 @@ func (user *User) SetEmail(newEmail string) error {
 	})
 
 	return nil
+}
+
+// HasBasicInfo returns true if the user has a username, an avatar and an introduction.
+func (user *User) HasBasicInfo() bool {
+	return user.HasAvatar() && user.HasNick() && user.Introduction != ""
 }
 
 // RefreshOsuInfo refreshes a user's Osu information.
