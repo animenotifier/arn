@@ -63,6 +63,11 @@ func (group *Group) FindMember(userID string) *GroupMember {
 	return nil
 }
 
+// TypeName returns the type name.
+func (group *Group) TypeName() string {
+	return "Group"
+}
+
 // Publish ...
 func (group *Group) Publish() error {
 	return publish(group)

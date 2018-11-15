@@ -122,6 +122,11 @@ func (track *SoundTrack) MainAnime() *Anime {
 	return allAnime[0]
 }
 
+// TypeName returns the type name.
+func (track *SoundTrack) TypeName() string {
+	return "SoundTrack"
+}
+
 // EditedByUser returns the user who edited this track last.
 func (track *SoundTrack) EditedByUser() *User {
 	user, _ := GetUser(track.EditedBy)

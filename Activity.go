@@ -10,7 +10,7 @@ import (
 // Activity is a user activity that appears in the follower's feeds.
 type Activity interface {
 	Creator() *User
-	Type() string
+	TypeName() string
 	GetID() string
 	GetCreated() string
 	GetCreatedBy() string

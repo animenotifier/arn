@@ -14,7 +14,7 @@ type Postable interface {
 	Parent() PostParent
 	Posts() []*Post
 	CountPosts() int
-	Type() string
+	TypeName() string
 	Creator() *User
 
 	// Use Get prefix for these to avoid a

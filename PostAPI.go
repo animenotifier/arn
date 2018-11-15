@@ -229,6 +229,14 @@ func (post *Post) Delete() error {
 	}
 
 	parent.Save()
+
+	// Remove activities
+	for activity := range StreamActivityCreates() {
+		if activity.ObjectID == post.ID && activity.ObjectType == "Post" {
+			activity.Delete()
+		}
+	}
+
 	DB.Delete("Post", post.ID)
 	return nil
 }

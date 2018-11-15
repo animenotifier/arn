@@ -177,6 +177,13 @@ func (thread *Thread) Delete() error {
 		post.Delete()
 	}
 
+	// Remove activities
+	for activity := range StreamActivityCreates() {
+		if activity.ObjectID == thread.ID && activity.ObjectType == "Thread" {
+			activity.Delete()
+		}
+	}
+
 	DB.Delete("Thread", thread.ID)
 	return nil
 }

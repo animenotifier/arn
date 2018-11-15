@@ -34,8 +34,8 @@ func (activity *ActivityConsumeAnime) Anime() *Anime {
 	return anime
 }
 
-// Type returns the type name.
-func (activity *ActivityConsumeAnime) Type() string {
+// TypeName returns the type name.
+func (activity *ActivityConsumeAnime) TypeName() string {
 	return "ActivityConsumeAnime"
 }
 

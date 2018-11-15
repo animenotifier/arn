@@ -213,6 +213,31 @@ func (list *AnimeList) SortByRating() {
 	})
 }
 
+// Top returns the top entries.
+func (list *AnimeList) Top(count int) []*AnimeListItem {
+	list.Lock()
+	defer list.Unlock()
+
+	sort.Slice(list.Items, func(i, j int) bool {
+		a := list.Items[i]
+		b := list.Items[j]
+
+		if a.Rating.Overall == b.Rating.Overall {
+			return a.Anime().Title.Canonical < b.Anime().Title.Canonical
+		}
+
+		return a.Rating.Overall > b.Rating.Overall
+	})
+
+	if count > len(list.Items) {
+		count = len(list.Items)
+	}
+
+	tmp := make([]*AnimeListItem, count)
+	copy(tmp, list.Items[:count])
+	return tmp
+}
+
 // Watching ...
 func (list *AnimeList) Watching() *AnimeList {
 	return list.FilterStatus(AnimeListStatusWatching)
@@ -343,6 +368,11 @@ func (list *AnimeList) NormalizeRatings() {
 	}
 }
 
+// TypeName returns the type name.
+func (list *AnimeList) TypeName() string {
+	return "AnimeList"
+}
+
 // Genres returns a map of genre names mapped to the list items that belong to that genre.
 func (list *AnimeList) Genres() map[string][]*AnimeListItem {
 	genreToListItems := map[string][]*AnimeListItem{}
@@ -354,6 +384,53 @@ func (list *AnimeList) Genres() map[string][]*AnimeListItem {
 	}
 
 	return genreToListItems
+}
+
+// TopGenres returns the most liked genres for the user's anime list.
+func (list *AnimeList) TopGenres(count int) []string {
+	genreItems := list.Genres()
+	genreAffinity := map[string]float64{}
+	bestGenres := []string{}
+
+	for genre, animeListItems := range genreItems {
+		if genre == "Action" || genre == "Comedy" {
+			continue
+		}
+
+		affinity := 0.0
+
+		for _, item := range animeListItems {
+			if item.Status != AnimeListStatusCompleted {
+				continue
+			}
+
+			if item.Rating.Overall != 0 {
+				affinity += item.Rating.Overall
+			} else {
+				affinity += 5.0
+			}
+		}
+
+		genreAffinity[genre] = affinity
+		bestGenres = append(bestGenres, genre)
+	}
+
+	sort.Slice(bestGenres, func(i, j int) bool {
+		aAffinity := genreAffinity[bestGenres[i]]
+		bAffinity := genreAffinity[bestGenres[j]]
+
+		if aAffinity == bAffinity {
+			return bestGenres[i] < bestGenres[j]
+		}
+
+		return aAffinity > bAffinity
+	})
+
+	if len(bestGenres) > count {
+		bestGenres = bestGenres[:count]
+	}
+
+	return bestGenres
 }
 
 // RemoveDuplicates removes duplicate entries.

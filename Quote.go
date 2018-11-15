@@ -103,6 +103,11 @@ func (quote *Quote) Unpublish() error {
 	return unpublish(quote)
 }
 
+// TypeName returns the type name.
+func (quote *Quote) TypeName() string {
+	return "Quote"
+}
+
 // OnLike is called when the quote receives a like.
 func (quote *Quote) OnLike(likedBy *User) {
 	if !quote.IsValid() {

@@ -56,6 +56,11 @@ func (character *Character) String() string {
 	return character.Name.Canonical
 }
 
+// TypeName returns the type name.
+func (character *Character) TypeName() string {
+	return "Character"
+}
+
 // MainQuote ...
 func (character *Character) MainQuote() *Quote {
 	quote, _ := GetQuote(character.MainQuoteID)

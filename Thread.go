@@ -54,8 +54,8 @@ func (thread *Thread) GetParentID() string {
 	return ""
 }
 
-// Type returns the type name.
-func (thread *Thread) Type() string {
+// TypeName returns the type name.
+func (thread *Thread) TypeName() string {
 	return "Thread"
 }
 

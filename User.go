@@ -35,7 +35,6 @@ func init() {
 
 // User is a registered person.
 type User struct {
-	ID           string       `json:"id"`
 	Nick         string       `json:"nick" editable:"true"`
 	FirstName    string       `json:"firstName" private:"true"`
 	LastName     string       `json:"lastName" private:"true"`
@@ -60,6 +59,9 @@ type User struct {
 	OS           UserOS       `json:"os" private:"true"`
 	Location     *Location    `json:"location" private:"true"`
 
+	HasID
+	HasPosts
+
 	eventStreams struct {
 		sync.Mutex
 		value []*aero.EventStream
@@ -69,7 +71,9 @@ type User struct {
 // NewUser creates an empty user object with a unique ID.
 func NewUser() *User {
 	user := &User{
-		ID: GenerateID("User"),
+		HasID: HasID{
+			ID: GenerateID("User"),
+		},
 
 		// Avoid nil value fields
 		Location: &Location{},
@@ -434,6 +438,21 @@ func (user *User) CleanNick() string {
 	return ""
 }
 
+// Creator needs to be implemented for the PostParent interface.
+func (user *User) Creator() *User {
+	return user
+}
+
+// CreatorID needs to be implemented for the PostParent interface.
+func (user *User) CreatorID() string {
+	return user.ID
+}
+
+// TitleByUser returns the username.
+func (user *User) TitleByUser(viewUser *User) string {
+	return user.Nick
+}
+
 // SetEmail changes the user's email safely.
 func (user *User) SetEmail(newEmail string) error {
 	setEmailMutex.Lock()
@@ -460,6 +479,11 @@ func (user *User) SetEmail(newEmail string) error {
 // HasBasicInfo returns true if the user has a username, an avatar and an introduction.
 func (user *User) HasBasicInfo() bool {
 	return user.HasAvatar() && user.HasNick() && user.Introduction != ""
+}
+
+// TypeName returns the type name.
+func (user *User) TypeName() string {
+	return "User"
 }
 
 // RefreshOsuInfo refreshes a user's Osu information.

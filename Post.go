@@ -58,8 +58,8 @@ func (post *Post) Link() string {
 	return "/post/" + post.ID
 }
 
-// Type returns the type name.
-func (post *Post) Type() string {
+// TypeName returns the type name.
+func (post *Post) TypeName() string {
 	return "Post"
 }
 

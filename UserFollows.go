@@ -91,6 +91,22 @@ func (list *UserFollows) Users() []*User {
 	return follows
 }
 
+// UsersWhoFollowBack returns a slice of all the users you are following that also follow you.
+func (list *UserFollows) UsersWhoFollowBack() []*User {
+	followsObj := DB.GetMany("User", list.Items)
+	friends := make([]*User, 0, len(followsObj))
+
+	for _, obj := range followsObj {
+		friend := obj.(*User)
+
+		if Contains(friend.Follows().Items, list.UserID) {
+			friends = append(friends, friend)
+		}
+	}
+
+	return friends
+}
+
 // UserFollowerCountMap returns a map of user ID keys and their corresping number of followers as the value.
 func UserFollowerCountMap() map[string]int {
 	followCount := map[string]int{}

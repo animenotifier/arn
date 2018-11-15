@@ -773,6 +773,11 @@ func (anime *Anime) String() string {
 	return anime.Title.Canonical
 }
 
+// TypeName returns the type name.
+func (anime *Anime) TypeName() string {
+	return "Anime"
+}
+
 // StreamAnime returns a stream of all anime.
 func StreamAnime() chan *Anime {
 	channel := make(chan *Anime, nano.ChannelBufferSize)

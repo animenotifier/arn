@@ -6,11 +6,11 @@ func (user *User) Threads() []*Thread {
 	return threads
 }
 
-// Posts ...
-func (user *User) Posts() []*Post {
-	posts, _ := GetPostsByUser(user)
-	return posts
-}
+// // Posts ...
+// func (user *User) Posts() []*Post {
+// 	posts, _ := GetPostsByUser(user)
+// 	return posts
+// }
 
 // Settings ...
 func (user *User) Settings() *Settings {

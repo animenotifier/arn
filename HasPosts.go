@@ -1,5 +1,9 @@
 package arn
 
+import (
+	"sort"
+)
+
 // HasPosts includes a list of Post IDs.
 type HasPosts struct {
 	PostIDs []string `json:"posts"`
@@ -36,6 +40,23 @@ func (obj *HasPosts) Posts() []*Post {
 	}
 
 	return posts
+}
+
+// PostsRelevantFirst returns a slice of all posts sorted by relevance.
+func (obj *HasPosts) PostsRelevantFirst(count int) []*Post {
+	original := obj.Posts()
+	newPosts := make([]*Post, len(original))
+	copy(newPosts, original)
+
+	sort.Slice(newPosts, func(i, j int) bool {
+		return newPosts[i].Created > newPosts[j].Created
+	})
+
+	if count >= 0 && len(newPosts) > count {
+		newPosts = newPosts[:count]
+	}
+
+	return newPosts
 }
 
 // CountPosts returns the number of posts written for this object.

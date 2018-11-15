@@ -17,6 +17,7 @@ import (
 
 // Force interface implementations
 var (
+	_ PostParent   = (*User)(nil)
 	_ api.Editable = (*User)(nil)
 )
 

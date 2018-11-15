@@ -9,8 +9,10 @@ type PostParent interface {
 	Linkable
 	api.Savable
 	GetID() string
+	TypeName() string
 	TitleByUser(*User) string
 	Posts() []*Post
+	PostsRelevantFirst(count int) []*Post
 	CountPosts() int
 	Creator() *User
 	CreatorID() string

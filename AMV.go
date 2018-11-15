@@ -203,6 +203,11 @@ func (amv *AMV) String() string {
 	return amv.Title.ByUser(nil)
 }
 
+// TypeName returns the type name.
+func (amv *AMV) TypeName() string {
+	return "AMV"
+}
+
 // GetAMV returns the AMV with the given ID.
 func GetAMV(id string) (*AMV, error) {
 	obj, err := DB.Get("AMV", id)

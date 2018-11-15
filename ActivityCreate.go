@@ -1,5 +1,7 @@
 package arn
 
+import "github.com/aerogo/nano"
+
 // ActivityCreate is a user activity that creates something.
 type ActivityCreate struct {
 	ObjectType string `json:"objectType"`
@@ -35,7 +37,22 @@ func (activity *ActivityCreate) Postable() Postable {
 	return activity.Object().(Postable)
 }
 
-// Type returns the type name.
-func (activity *ActivityCreate) Type() string {
+// TypeName returns the type name.
+func (activity *ActivityCreate) TypeName() string {
 	return "ActivityCreate"
+}
+
+// StreamActivityCreates returns a stream of all ActivityCreate objects.
+func StreamActivityCreates() chan *ActivityCreate {
+	channel := make(chan *ActivityCreate, nano.ChannelBufferSize)
+
+	go func() {
+		for obj := range DB.All("ActivityCreate") {
+			channel <- obj.(*ActivityCreate)
+		}
+
+		close(channel)
+	}()
+
+	return channel
 }
