@@ -96,9 +96,24 @@ func (post *Post) OnLike(likedBy *User) {
 	}
 
 	go func() {
-		post.Creator().SendNotification(&PushNotification{
+		message := ""
+		notifyUser := post.Creator()
+
+		if post.ParentType == "User" {
+			if post.ParentID == notifyUser.ID {
+				// Somebody liked your post on your own profile
+				message = fmt.Sprintf(`%s liked your profile post.`, likedBy.Nick)
+			} else {
+				// Somebody liked your post on someone else's profile
+				message = fmt.Sprintf(`%s liked your post on %s's profile.`, likedBy.Nick, post.Parent().TitleByUser(notifyUser))
+			}
+		} else {
+			message = fmt.Sprintf(`%s liked your post in the %s "%s".`, likedBy.Nick, strings.ToLower(post.ParentType), post.Parent().TitleByUser(notifyUser))
+		}
+
+		notifyUser.SendNotification(&PushNotification{
 			Title:   likedBy.Nick + " liked your post",
-			Message: fmt.Sprintf(`%s liked your post in the %s "%s"`, likedBy.Nick, strings.ToLower(post.ParentType), post.Parent().TitleByUser(post.Creator())),
+			Message: message,
 			Icon:    "https:" + likedBy.AvatarLink("large"),
 			Link:    "https://notify.moe" + likedBy.Link(),
 			Type:    NotificationTypeLike,

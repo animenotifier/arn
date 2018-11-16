@@ -27,9 +27,9 @@ func NewActivityCreate(objectType string, objectID string, userID string) *Activ
 }
 
 // Object returns the object that was created.
-func (activity *ActivityCreate) Object() interface{} {
+func (activity *ActivityCreate) Object() Likeable {
 	obj, _ := DB.Get(activity.ObjectType, activity.ObjectID)
-	return obj
+	return obj.(Likeable)
 }
 
 // Postable casts the object to the Postable interface.

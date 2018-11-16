@@ -10,6 +10,7 @@ type ActivityConsumeAnime struct {
 
 	HasID
 	HasCreator
+	HasLikes
 }
 
 // NewActivityConsumeAnime creates a new activity.

@@ -68,7 +68,7 @@ func (thread *Thread) OnLike(likedBy *User) {
 	go func() {
 		thread.Creator().SendNotification(&PushNotification{
 			Title:   likedBy.Nick + " liked your thread",
-			Message: likedBy.Nick + " liked your thread \"" + thread.Title + "\"",
+			Message: likedBy.Nick + " liked your thread \"" + thread.Title + "\".",
 			Icon:    "https:" + likedBy.AvatarLink("large"),
 			Link:    "https://notify.moe" + likedBy.Link(),
 			Type:    NotificationTypeLike,
