@@ -18,6 +18,12 @@ func (user *User) Settings() *Settings {
 	return settings
 }
 
+// Analytics ...
+func (user *User) Analytics() *Analytics {
+	analytics, _ := GetAnalytics(user.ID)
+	return analytics
+}
+
 // AnimeList ...
 func (user *User) AnimeList() *AnimeList {
 	animeList, _ := GetAnimeList(user.ID)

@@ -38,6 +38,17 @@ type ConnectionAnalytics struct {
 	EffectiveType string  `json:"effectiveType"`
 }
 
+// GetAnalytics returns the analytics for the given user ID.
+func GetAnalytics(userID string) (*Analytics, error) {
+	obj, err := DB.Get("Analytics", userID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return obj.(*Analytics), nil
+}
+
 // StreamAnalytics returns a stream of all analytics.
 func StreamAnalytics() chan *Analytics {
 	channel := make(chan *Analytics, nano.ChannelBufferSize)

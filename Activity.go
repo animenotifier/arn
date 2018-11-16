@@ -3,6 +3,7 @@ package arn
 import (
 	"sort"
 	"sync"
+	"time"
 
 	"github.com/aerogo/nano"
 )
@@ -14,6 +15,7 @@ type Activity interface {
 	GetID() string
 	GetCreated() string
 	GetCreatedBy() string
+	GetCreatedTime() time.Time
 }
 
 // SortActivitiesLatestFirst puts the latest entries on top.

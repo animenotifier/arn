@@ -71,10 +71,17 @@ func Capitalize(s string) string {
 // Plural returns the number concatenated to the proper pluralization of the word.
 func Plural(count int, singular string) string {
 	if count == 1 || count == -1 {
-		return fmt.Sprint(count) + " " + singular
+		return fmt.Sprintf("%d %s", count, singular)
 	}
 
-	return fmt.Sprint(count) + " " + singular + "s"
+	switch singular {
+	case "activity":
+		singular = "activitie"
+	case "company":
+		singular = "companie"
+	}
+
+	return fmt.Sprintf("%d %ss", count, singular)
 }
 
 // ContainsUnicodeLetters tells you if unicode characters are inside the string.
