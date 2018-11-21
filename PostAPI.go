@@ -95,7 +95,7 @@ func (post *Post) Create(ctx *aero.Context) error {
 		post.Tags[i] = tags[i].(string)
 	}
 
-	// Thread
+	// Parent
 	parent := post.Parent()
 
 	if parent == nil {
@@ -105,6 +105,18 @@ func (post *Post) Create(ctx *aero.Context) error {
 	// Is the parent locked?
 	if IsLocked(parent) {
 		return errors.New(post.ParentType + " is locked")
+	}
+
+	// Don't allow posting when you're not a group member
+	topMostParent := post.TopMostParent()
+
+	if topMostParent.TypeName() == "Group" {
+		group := topMostParent.(*Group)
+		member := group.FindMember(user.ID)
+
+		if member == nil {
+			return errors.New("Only group members can post in groups")
+		}
 	}
 
 	// Append to posts

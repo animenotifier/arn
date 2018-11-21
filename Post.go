@@ -32,6 +32,25 @@ func (post *Post) Parent() PostParent {
 	return obj.(PostParent)
 }
 
+// TopMostParent returns the first non-post object this post was posted in.
+func (post *Post) TopMostParent() PostParent {
+	topMostParent := post.Parent()
+
+	for {
+		if topMostParent.TypeName() != "Post" {
+			return topMostParent
+		}
+
+		newParent := topMostParent.(*Post).Parent()
+
+		if newParent == nil {
+			return topMostParent
+		}
+
+		topMostParent = newParent
+	}
+}
+
 // GetParentID returns the object ID of the parent.
 func (post *Post) GetParentID() string {
 	return post.ParentID
