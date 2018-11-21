@@ -49,6 +49,16 @@ func (user *User) Edit(ctx *aero.Context, key string, value reflect.Value, newVa
 		err := user.SetEmail(newEmail)
 		return true, err
 
+	case "Gender":
+		newGender := newValue.String()
+
+		if newGender != "male" && newGender != "female" {
+			return true, errors.New("Invalid gender")
+		}
+
+		user.Gender = newGender
+		return true, nil
+
 	case "Website":
 		newSite := newValue.String()
 
