@@ -11,8 +11,9 @@ import (
 
 // Force interface implementations
 var (
-	_ PostParent    = (*Group)(nil)
+	_ Joinable      = (*Group)(nil)
 	_ Publishable   = (*Group)(nil)
+	_ PostParent    = (*Group)(nil)
 	_ fmt.Stringer  = (*Group)(nil)
 	_ api.Newable   = (*Group)(nil)
 	_ api.Editable  = (*Group)(nil)
@@ -27,6 +28,12 @@ func init() {
 
 		// Unpublish
 		UnpublishAction(),
+
+		// Join
+		JoinAction(),
+
+		// Leave
+		LeaveAction(),
 	})
 }
 

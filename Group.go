@@ -1,6 +1,9 @@
 package arn
 
 import (
+	"errors"
+	"sync"
+
 	"github.com/aerogo/nano"
 )
 
@@ -21,6 +24,9 @@ type Group struct {
 	HasCreator
 	HasEditor
 	HasDraft
+
+	// Mutex
+	membersMutex sync.Mutex
 }
 
 // Link returns the URI to the group page.
@@ -54,6 +60,9 @@ func (group *Group) ImageURL() string {
 
 // FindMember returns the group member by user ID, if available.
 func (group *Group) FindMember(userID string) *GroupMember {
+	group.membersMutex.Lock()
+	defer group.membersMutex.Unlock()
+
 	for _, member := range group.Members {
 		if member.UserID == userID {
 			return member
@@ -70,12 +79,64 @@ func (group *Group) TypeName() string {
 
 // Publish ...
 func (group *Group) Publish() error {
+	if len(group.Name) < 2 {
+		return errors.New("Name too short: Should be at least 2 characters")
+	}
+
+	if len(group.Name) > 35 {
+		return errors.New("Name too long: Should not be more than 35 characters")
+	}
+
+	if len(group.Tagline) < 5 {
+		return errors.New("Tagline too short: Should be at least 5 characters")
+	}
+
+	if len(group.Tagline) > 60 {
+		return errors.New("Tagline too long: Should not be more than 60 characters")
+	}
+
 	return publish(group)
 }
 
 // Unpublish ...
 func (group *Group) Unpublish() error {
 	return unpublish(group)
+}
+
+// Join makes the given user join the group.
+func (group *Group) Join(user *User) error {
+	group.membersMutex.Lock()
+	defer group.membersMutex.Unlock()
+
+	// Check if the user is already a member
+	member := group.FindMember(user.ID)
+
+	if member != nil {
+		return errors.New("Already a member of this group")
+	}
+
+	// Add user to the members list
+	group.Members = append(group.Members, &GroupMember{
+		UserID: user.ID,
+		Joined: DateTimeUTC(),
+	})
+
+	return nil
+}
+
+// Leave makes the given user leave the group.
+func (group *Group) Leave(user *User) error {
+	group.membersMutex.Lock()
+	defer group.membersMutex.Unlock()
+
+	for index, member := range group.Members {
+		if member.UserID == user.ID {
+			group.Members = append(group.Members[:index], group.Members[index+1:]...)
+			return nil
+		}
+	}
+
+	return nil
 }
 
 // GetGroup ...
