@@ -78,8 +78,8 @@ func (group *Group) Publish() error {
 		return errors.New("Name too long: Should not be more than 35 characters")
 	}
 
-	if len(group.Tagline) < 5 {
-		return errors.New("Tagline too short: Should be at least 5 characters")
+	if len(group.Tagline) < 4 {
+		return errors.New("Tagline too short: Should be at least 4 characters")
 	}
 
 	if len(group.Tagline) > 60 {
@@ -123,6 +123,10 @@ func (group *Group) Leave(user *User) error {
 
 	for index, member := range group.Members {
 		if member.UserID == user.ID {
+			if member.UserID == group.CreatedBy {
+				return errors.New("The founder can not leave the group, please contact a staff member")
+			}
+
 			group.Members = append(group.Members[:index], group.Members[index+1:]...)
 			return nil
 		}
