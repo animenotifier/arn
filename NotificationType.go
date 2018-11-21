@@ -10,4 +10,5 @@ const (
 	NotificationTypeLike          = "like"
 	NotificationTypePurchase      = "purchase"
 	NotificationTypePackageTest   = "package-test"
+	NotificationTypeGroupJoin     = "group-join"
 )

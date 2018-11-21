@@ -2,6 +2,7 @@ package arn
 
 import (
 	"errors"
+	"fmt"
 	"sync"
 
 	"github.com/aerogo/nano"
@@ -11,7 +12,7 @@ import (
 type Group struct {
 	Name        string         `json:"name" editable:"true"`
 	Tagline     string         `json:"tagline" editable:"true"`
-	Image       string         `json:"image" editable:"true"`
+	Image       GroupImage     `json:"image"`
 	Description string         `json:"description" editable:"true" type:"textarea"`
 	Rules       string         `json:"rules" editable:"true" type:"textarea"`
 	Tags        []string       `json:"tags" editable:"true"`
@@ -46,16 +47,6 @@ func (group *Group) TitleByUser(user *User) string {
 // String is the default text representation of the group.
 func (group *Group) String() string {
 	return group.TitleByUser(nil)
-}
-
-// ImageURL ...
-func (group *Group) ImageURL() string {
-	if group.Image != "" {
-		return group.Image
-	}
-
-	return "https://media.kitsu.io/groups/avatars/2138/medium.png"
-	// return "/images/brand/144.png"
 }
 
 // FindMember returns the group member by user ID, if available.
@@ -121,6 +112,7 @@ func (group *Group) Join(user *User) error {
 		Joined: DateTimeUTC(),
 	})
 
+	group.OnJoin(user)
 	return nil
 }
 
@@ -137,6 +129,45 @@ func (group *Group) Leave(user *User) error {
 	}
 
 	return nil
+}
+
+// OnJoin sends notifications to the creator.
+func (group *Group) OnJoin(user *User) {
+	go func() {
+		group.Creator().SendNotification(&PushNotification{
+			Title:   "Someone joined your group!",
+			Message: fmt.Sprintf(`%s has joined your group "%s"`, user.Nick, group.Name),
+			Icon:    user.AvatarLink("medium"),
+			Link:    "https://notify.moe" + group.Link() + "/members",
+			Type:    NotificationTypeGroupJoin,
+		})
+	}()
+}
+
+// AverageColor returns the average color of the image.
+func (group *Group) AverageColor() string {
+	color := group.Image.AverageColor
+
+	if color.Hue == 0 && color.Saturation == 0 && color.Lightness == 0 {
+		return ""
+	}
+
+	return color.String()
+}
+
+// ImageLink returns a link to the group image.
+func (group *Group) ImageLink(size string) string {
+	if !group.HasImage() {
+		return fmt.Sprintf("//%s/images/elements/no-group-image.svg", MediaHost)
+	}
+
+	extension := ".jpg"
+
+	if size == "original" {
+		extension = group.Image.Extension
+	}
+
+	return fmt.Sprintf("//%s/images/groups/%s/%s%s?%v", MediaHost, size, group.ID, extension, group.Image.LastModified)
 }
 
 // GetGroup ...
