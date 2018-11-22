@@ -45,6 +45,10 @@ func (group *Group) Create(ctx *aero.Context) error {
 		return errors.New("Not logged in")
 	}
 
+	if !user.IsPro() {
+		return errors.New("Not available for normal users during the BETA phase")
+	}
+
 	group.ID = GenerateID("Group")
 	group.Created = DateTimeUTC()
 	group.CreatedBy = user.ID
