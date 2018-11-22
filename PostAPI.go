@@ -146,17 +146,30 @@ func (post *Post) Create(ctx *aero.Context) error {
 		} else if post.ParentType == "User" {
 			title = fmt.Sprintf("%s wrote a comment on your profile.", user.Nick)
 			message = post.Text
+		} else if post.ParentType == "Group" {
+			title = fmt.Sprintf(`%s wrote a new post in the group "%s".`, user.Nick, parent.TitleByUser(nil))
+			message = post.Text
 		} else {
-			message = fmt.Sprintf("%s replied in the %s \"%s\".", user.Nick, strings.ToLower(post.ParentType), parent.TitleByUser(notifyUser))
+			message = fmt.Sprintf(`%s replied in the %s "%s".`, user.Nick, strings.ToLower(post.ParentType), parent.TitleByUser(notifyUser))
 		}
 
-		notifyUser.SendNotification(&PushNotification{
+		notification := &PushNotification{
 			Title:   title,
 			Message: message,
 			Icon:    "https:" + user.AvatarLink("large"),
 			Link:    post.Link(),
 			Type:    NotificationTypeForumReply,
-		})
+		}
+
+		// If you're posting to a group,
+		// all members except the author will receive a notification.
+		if post.ParentType == "Group" {
+			group := parent.(*Group)
+			group.SendNotification(notification, user.ID)
+			return
+		}
+
+		notifyUser.SendNotification(notification)
 	}()
 
 	// Write log entry

@@ -68,6 +68,19 @@ func (group *Group) HasMember(userID string) bool {
 	return group.FindMember(userID) != nil
 }
 
+// Users returns a slice of all users in the group.
+func (group *Group) Users() []*User {
+	group.membersMutex.Lock()
+	defer group.membersMutex.Unlock()
+	users := make([]*User, len(group.Members))
+
+	for index, member := range group.Members {
+		users[index] = member.User()
+	}
+
+	return users
+}
+
 // TypeName returns the type name.
 func (group *Group) TypeName() string {
 	return "Group"
@@ -161,6 +174,17 @@ func (group *Group) OnJoin(user *User) {
 			Type:    NotificationTypeGroupJoin,
 		})
 	}()
+}
+
+// SendNotification sends a notification to all group members except for the excluded user ID.
+func (group *Group) SendNotification(notification *PushNotification, excludeUserID string) {
+	for _, user := range group.Users() {
+		if user.ID == excludeUserID {
+			continue
+		}
+
+		user.SendNotification(notification)
+	}
 }
 
 // AverageColor returns the average color of the image.
