@@ -90,7 +90,10 @@ func (track *SoundTrack) Anime() []*Anime {
 			anime, err := GetAnime(animeID)
 
 			if err != nil {
-				color.Red("Error fetching anime: %v", err)
+				if !track.IsDraft {
+					color.Red("Error fetching anime: %v", err)
+				}
+
 				continue
 			}
 

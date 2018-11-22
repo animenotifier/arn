@@ -193,7 +193,7 @@ func (quote *Quote) Character() *Character {
 func (quote *Quote) Anime() *Anime {
 	anime, err := GetAnime(quote.AnimeID)
 
-	if err != nil {
+	if err != nil && !quote.IsDraft {
 		color.Red("Error fetching anime: %v", err)
 	}
 
