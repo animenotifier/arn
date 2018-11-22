@@ -113,6 +113,10 @@ func (group *Group) Publish() error {
 		return errors.New("Your group needs a description (at least 10 characters)")
 	}
 
+	if len(group.Tags) < 1 {
+		return errors.New("At least one tag is required")
+	}
+
 	if !group.HasImage() {
 		return errors.New("Group image required")
 	}
