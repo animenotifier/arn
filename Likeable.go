@@ -26,6 +26,7 @@ type LikeEventReceiver interface {
 // LikeAction ...
 func LikeAction() *api.Action {
 	return &api.Action{
+		Name:  "like",
 		Route: "/like",
 		Run: func(obj interface{}, ctx *aero.Context) error {
 			field := reflect.ValueOf(obj).Elem().FieldByName("IsDraft")
@@ -59,6 +60,7 @@ func LikeAction() *api.Action {
 // UnlikeAction ...
 func UnlikeAction() *api.Action {
 	return &api.Action{
+		Name:  "unlike",
 		Route: "/unlike",
 		Run: func(obj interface{}, ctx *aero.Context) error {
 			likeable := obj.(Likeable)

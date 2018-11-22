@@ -24,6 +24,7 @@ type LockEventReceiver interface {
 // LockAction ...
 func LockAction() *api.Action {
 	return &api.Action{
+		Name:  "lock",
 		Route: "/lock",
 		Run: func(obj interface{}, ctx *aero.Context) error {
 			lockable := obj.(Lockable)
@@ -51,6 +52,7 @@ func LockAction() *api.Action {
 // UnlockAction ...
 func UnlockAction() *api.Action {
 	return &api.Action{
+		Name:  "unlock",
 		Route: "/unlock",
 		Run: func(obj interface{}, ctx *aero.Context) error {
 			lockable := obj.(Lockable)

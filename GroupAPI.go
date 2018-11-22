@@ -106,6 +106,10 @@ func (group *Group) Delete() error {
 		draftIndex.Save()
 	}
 
+	// Delete image files
+	group.DeleteImages()
+
+	// Delete group
 	DB.Delete("Group", group.ID)
 	return nil
 }
@@ -131,6 +135,10 @@ func (group *Group) Authorize(ctx *aero.Context, action string) error {
 
 	if action == "edit" && group.CreatedBy != user.ID {
 		return errors.New("Can't edit groups from other people")
+	}
+
+	if action == "join" && group.Restricted {
+		return errors.New("Can't join restricted groups")
 	}
 
 	return nil

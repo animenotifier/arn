@@ -3,9 +3,12 @@ package arn
 import (
 	"errors"
 	"fmt"
+	"os"
+	"path"
 	"sync"
 
 	"github.com/aerogo/nano"
+	"github.com/fatih/color"
 )
 
 // Group represents a group of users.
@@ -15,9 +18,11 @@ type Group struct {
 	Image       GroupImage     `json:"image"`
 	Description string         `json:"description" editable:"true" type:"textarea"`
 	Rules       string         `json:"rules" editable:"true" type:"textarea"`
+	Restricted  bool           `json:"restricted" editable:"true" tooltip:"Restricted groups can only be joined with the founder's permission."`
 	Tags        []string       `json:"tags" editable:"true"`
 	Members     []*GroupMember `json:"members"`
 	Neighbors   []string       `json:"neighbors"`
+	// Applications []UserApplication `json:"applications"`
 
 	// Mixins
 	HasID
@@ -211,6 +216,27 @@ func (group *Group) ImageLink(size string) string {
 	}
 
 	return fmt.Sprintf("//%s/images/groups/%s/%s%s?%v", MediaHost, size, group.ID, extension, group.Image.LastModified)
+}
+
+// DeleteImages deletes all images for the group.
+func (group *Group) DeleteImages() {
+	if group.Image.Extension == "" {
+		return
+	}
+
+	err := os.Remove(path.Join(Root, "images/groups/original/", group.ID+group.Image.Extension))
+
+	if err != nil {
+		// Don't return the error.
+		// It's too late to stop the process at this point.
+		// Instead, log the error.
+		color.Red(err.Error())
+	}
+
+	os.Remove(path.Join(Root, "images/groups/small/", group.ID+".jpg"))
+	os.Remove(path.Join(Root, "images/groups/small/", group.ID+"@2.jpg"))
+	os.Remove(path.Join(Root, "images/groups/small/", group.ID+".webp"))
+	os.Remove(path.Join(Root, "images/groups/small/", group.ID+"@2.webp"))
 }
 
 // GetGroup ...

@@ -17,6 +17,7 @@ type IDCollection interface {
 // AddAction returns an API action that adds a new item to the IDCollection.
 func AddAction() *api.Action {
 	return &api.Action{
+		Name:  "add",
 		Route: "/add/:item-id",
 		Run: func(obj interface{}, ctx *aero.Context) error {
 			list := obj.(IDCollection)
@@ -36,6 +37,7 @@ func AddAction() *api.Action {
 // RemoveAction returns an API action that removes an item from the IDCollection.
 func RemoveAction() *api.Action {
 	return &api.Action{
+		Name:  "remove",
 		Route: "/remove/:item-id",
 		Run: func(obj interface{}, ctx *aero.Context) error {
 			list := obj.(IDCollection)

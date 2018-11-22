@@ -65,7 +65,7 @@ func (character *Character) Authorize(ctx *aero.Context, action string) error {
 	}
 
 	// Allow custom actions (like, unlike) for normal users
-	if action == "action" {
+	if action == "like" || action == "unlike" {
 		return nil
 	}
 

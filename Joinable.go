@@ -15,6 +15,7 @@ type Joinable interface {
 // JoinAction returns an API action that lets the user join the object.
 func JoinAction() *api.Action {
 	return &api.Action{
+		Name:  "join",
 		Route: "/join",
 		Run: func(obj interface{}, ctx *aero.Context) error {
 			user := GetUserFromContext(ctx)
@@ -34,6 +35,7 @@ func JoinAction() *api.Action {
 // LeaveAction returns an API action that unpublishes the object.
 func LeaveAction() *api.Action {
 	return &api.Action{
+		Name:  "leave",
 		Route: "/leave",
 		Run: func(obj interface{}, ctx *aero.Context) error {
 			user := GetUserFromContext(ctx)

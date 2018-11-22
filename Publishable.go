@@ -22,6 +22,7 @@ type Publishable interface {
 // PublishAction returns an API action that publishes the object.
 func PublishAction() *api.Action {
 	return &api.Action{
+		Name:  "publish",
 		Route: "/publish",
 		Run: func(obj interface{}, ctx *aero.Context) error {
 			draft := obj.(Publishable)
@@ -40,6 +41,7 @@ func PublishAction() *api.Action {
 // UnpublishAction returns an API action that unpublishes the object.
 func UnpublishAction() *api.Action {
 	return &api.Action{
+		Name:  "unpublish",
 		Route: "/unpublish",
 		Run: func(obj interface{}, ctx *aero.Context) error {
 			draft := obj.(Publishable)
