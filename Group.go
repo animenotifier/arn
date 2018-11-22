@@ -96,9 +96,6 @@ func (group *Group) Unpublish() error {
 
 // Join makes the given user join the group.
 func (group *Group) Join(user *User) error {
-	group.membersMutex.Lock()
-	defer group.membersMutex.Unlock()
-
 	// Check if the user is already a member
 	member := group.FindMember(user.ID)
 
@@ -107,11 +104,16 @@ func (group *Group) Join(user *User) error {
 	}
 
 	// Add user to the members list
+	group.membersMutex.Lock()
+
 	group.Members = append(group.Members, &GroupMember{
 		UserID: user.ID,
 		Joined: DateTimeUTC(),
 	})
 
+	group.membersMutex.Unlock()
+
+	// Trigger notifications
 	group.OnJoin(user)
 	return nil
 }
@@ -139,9 +141,9 @@ func (group *Group) Leave(user *User) error {
 func (group *Group) OnJoin(user *User) {
 	go func() {
 		group.Creator().SendNotification(&PushNotification{
-			Title:   "Someone joined your group!",
+			Title:   fmt.Sprintf(`%s joined your group!`, user.Nick),
 			Message: fmt.Sprintf(`%s has joined your group "%s"`, user.Nick, group.Name),
-			Icon:    user.AvatarLink("medium"),
+			Icon:    "https:" + user.AvatarLink("large"),
 			Link:    "https://notify.moe" + group.Link() + "/members",
 			Type:    NotificationTypeGroupJoin,
 		})
