@@ -201,20 +201,19 @@ func StreamGroups() chan *Group {
 }
 
 // AllGroups returns a slice of all groups.
-func AllGroups() ([]*Group, error) {
+func AllGroups() []*Group {
 	var all []*Group
-
 	stream := StreamGroups()
 
 	for obj := range stream {
 		all = append(all, obj)
 	}
 
-	return all, nil
+	return all
 }
 
 // FilterGroups filters all groups by a custom function.
-func FilterGroups(filter func(*Group) bool) ([]*Group, error) {
+func FilterGroups(filter func(*Group) bool) []*Group {
 	var filtered []*Group
 
 	for obj := range DB.All("Group") {
@@ -225,5 +224,5 @@ func FilterGroups(filter func(*Group) bool) ([]*Group, error) {
 		}
 	}
 
-	return filtered, nil
+	return filtered
 }
