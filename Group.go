@@ -63,6 +63,11 @@ func (group *Group) FindMember(userID string) *GroupMember {
 	return nil
 }
 
+// HasMember returns true if the user is a member of the group.
+func (group *Group) HasMember(userID string) bool {
+	return group.FindMember(userID) != nil
+}
+
 // TypeName returns the type name.
 func (group *Group) TypeName() string {
 	return "Group"
@@ -84,6 +89,14 @@ func (group *Group) Publish() error {
 
 	if len(group.Tagline) > 60 {
 		return errors.New("Tagline too long: Should not be more than 60 characters")
+	}
+
+	if len(group.Description) < 10 {
+		return errors.New("Your group needs a description (at least 10 characters)")
+	}
+
+	if !group.HasImage() {
+		return errors.New("Group image required")
 	}
 
 	return publish(group)

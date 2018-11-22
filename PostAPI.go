@@ -112,9 +112,8 @@ func (post *Post) Create(ctx *aero.Context) error {
 
 	if topMostParent.TypeName() == "Group" {
 		group := topMostParent.(*Group)
-		member := group.FindMember(user.ID)
 
-		if member == nil {
+		if !group.HasMember(user.ID) {
 			return errors.New("Only group members can post in groups")
 		}
 	}
