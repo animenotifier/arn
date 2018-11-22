@@ -16,6 +16,12 @@ const (
 	// GroupImageSmallHeight is the minimum height in pixels of a small group image.
 	GroupImageSmallHeight = 70
 
+	// GroupImageLargeWidth is the minimum width in pixels of a large group image.
+	GroupImageLargeWidth = 280
+
+	// GroupImageLargeHeight is the minimum height in pixels of a large group image.
+	GroupImageLargeHeight = 280
+
 	// GroupImageWebPQuality is the WebP quality of group images.
 	GroupImageWebPQuality = 70
 
@@ -27,9 +33,6 @@ const (
 
 	// GroupImageQualityBonusLarge ...
 	GroupImageQualityBonusLarge = 10
-
-	// GroupImageQualityBonusMedium ...
-	GroupImageQualityBonusMedium = 15
 
 	// GroupImageQualityBonusSmall ...
 	GroupImageQualityBonusSmall = 15
@@ -52,12 +55,28 @@ var groupImageOutputs = []imageoutput.Output{
 		Quality:   GroupImageJPEGQuality + GroupImageQualityBonusLowDPI + GroupImageQualityBonusSmall,
 	},
 
+	// JPEG - Large
+	&imageoutput.JPEGFile{
+		Directory: path.Join(Root, "images/groups/large/"),
+		Width:     GroupImageLargeWidth,
+		Height:    GroupImageLargeHeight,
+		Quality:   GroupImageJPEGQuality + GroupImageQualityBonusLowDPI + GroupImageQualityBonusLarge,
+	},
+
 	// WebP - Small
 	&imageoutput.WebPFile{
 		Directory: path.Join(Root, "images/groups/small/"),
 		Width:     GroupImageSmallWidth,
 		Height:    GroupImageSmallHeight,
 		Quality:   GroupImageWebPQuality + GroupImageQualityBonusLowDPI + GroupImageQualityBonusSmall,
+	},
+
+	// WebP - Large
+	&imageoutput.WebPFile{
+		Directory: path.Join(Root, "images/groups/large/"),
+		Width:     GroupImageLargeWidth,
+		Height:    GroupImageLargeHeight,
+		Quality:   GroupImageWebPQuality + GroupImageQualityBonusLowDPI + GroupImageQualityBonusLarge,
 	},
 }
 
@@ -71,12 +90,28 @@ var groupImageOutputsHighDPI = []imageoutput.Output{
 		Quality:   GroupImageJPEGQuality + GroupImageQualityBonusSmall,
 	},
 
+	// JPEG - Large
+	&imageoutput.JPEGFile{
+		Directory: path.Join(Root, "images/groups/large/"),
+		Width:     GroupImageLargeWidth * 2,
+		Height:    GroupImageLargeHeight * 2,
+		Quality:   GroupImageJPEGQuality + GroupImageQualityBonusLarge,
+	},
+
 	// WebP - Small
 	&imageoutput.WebPFile{
 		Directory: path.Join(Root, "images/groups/small/"),
 		Width:     GroupImageSmallWidth * 2,
 		Height:    GroupImageSmallHeight * 2,
 		Quality:   GroupImageWebPQuality + GroupImageQualityBonusSmall,
+	},
+
+	// WebP - Large
+	&imageoutput.WebPFile{
+		Directory: path.Join(Root, "images/groups/large/"),
+		Width:     GroupImageLargeWidth * 2,
+		Height:    GroupImageLargeHeight * 2,
+		Quality:   GroupImageWebPQuality + GroupImageQualityBonusLarge,
 	},
 }
 

@@ -228,6 +228,7 @@ func (group *Group) DeleteImages() {
 		return
 	}
 
+	// Original
 	err := os.Remove(path.Join(Root, "images/groups/original/", group.ID+group.Image.Extension))
 
 	if err != nil {
@@ -237,10 +238,17 @@ func (group *Group) DeleteImages() {
 		color.Red(err.Error())
 	}
 
+	// Small
 	os.Remove(path.Join(Root, "images/groups/small/", group.ID+".jpg"))
 	os.Remove(path.Join(Root, "images/groups/small/", group.ID+"@2.jpg"))
 	os.Remove(path.Join(Root, "images/groups/small/", group.ID+".webp"))
 	os.Remove(path.Join(Root, "images/groups/small/", group.ID+"@2.webp"))
+
+	// Large
+	os.Remove(path.Join(Root, "images/groups/large/", group.ID+".jpg"))
+	os.Remove(path.Join(Root, "images/groups/large/", group.ID+"@2.jpg"))
+	os.Remove(path.Join(Root, "images/groups/large/", group.ID+".webp"))
+	os.Remove(path.Join(Root, "images/groups/large/", group.ID+"@2.webp"))
 }
 
 // GetGroup ...
