@@ -29,7 +29,7 @@ func (obj *HasPosts) RemovePost(postID string) bool {
 // Posts returns a slice of all posts.
 func (obj *HasPosts) Posts() []*Post {
 	objects := DB.GetMany("Post", obj.PostIDs)
-	posts := []*Post{}
+	posts := make([]*Post, 0, len(objects))
 
 	for _, post := range objects {
 		if post == nil {
