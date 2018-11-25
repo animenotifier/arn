@@ -411,8 +411,10 @@ func (list *AnimeList) TopGenres(count int) []string {
 			}
 		}
 
-		genreAffinity[genre] = affinity
-		bestGenres = append(bestGenres, genre)
+		if affinity > 0 {
+			genreAffinity[genre] = affinity
+			bestGenres = append(bestGenres, genre)
+		}
 	}
 
 	sort.Slice(bestGenres, func(i, j int) bool {
