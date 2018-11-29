@@ -405,9 +405,10 @@ func (list *AnimeList) TopGenres(count int) []string {
 			}
 
 			if item.Rating.Overall != 0 {
-				affinity += item.Rating.Overall
+				affinity += item.Rating.Overall - AverageRating
 			} else {
-				affinity += 5.0
+				// Add 0.1 to avoid all affinities being 0 when a user doesn't have any rated anime.
+				affinity += 0.1
 			}
 		}
 
