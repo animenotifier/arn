@@ -43,11 +43,6 @@ type APIKeysData struct {
 		Key string `json:"key"`
 	} `json:"googleAPI"`
 
-	// FCM struct {
-	// 	Key      string `json:"serverKey"`
-	// 	SenderID string `json:"senderId"`
-	// } `json:"fcm"`
-
 	IPInfoDB struct {
 		ID string `json:"id"`
 	} `json:"ipInfoDB"`
@@ -77,6 +72,11 @@ type APIKeysData struct {
 		Address  string `json:"address"`
 		Password string `json:"password"`
 	} `json:"smtp"`
+
+	S3 struct {
+		ID     string `json:"id"`
+		Secret string `json:"secret"`
+	} `json:"s3"`
 }
 
 func init() {
