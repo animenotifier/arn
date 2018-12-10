@@ -4,14 +4,14 @@ import (
 	"time"
 )
 
-// AnimeAiringDate represents the airing date of an anime.
-type AnimeAiringDate struct {
+// AiringDate represents the airing date of an anime.
+type AiringDate struct {
 	Start string `json:"start" editable:"true"`
 	End   string `json:"end" editable:"true"`
 }
 
 // StartDateHuman returns the start date of the anime in human readable form.
-func (airing *AnimeAiringDate) StartDateHuman() string {
+func (airing *AiringDate) StartDateHuman() string {
 	t, _ := time.Parse(time.RFC3339, airing.Start)
 	humanReadable := t.Format(time.RFC1123)
 
@@ -19,7 +19,7 @@ func (airing *AnimeAiringDate) StartDateHuman() string {
 }
 
 // EndDateHuman returns the end date of the anime in human readable form.
-func (airing *AnimeAiringDate) EndDateHuman() string {
+func (airing *AiringDate) EndDateHuman() string {
 	t, _ := time.Parse(time.RFC3339, airing.End)
 	humanReadable := t.Format(time.RFC1123)
 
@@ -27,7 +27,7 @@ func (airing *AnimeAiringDate) EndDateHuman() string {
 }
 
 // StartTimeHuman returns the start time of the anime in human readable form.
-func (airing *AnimeAiringDate) StartTimeHuman() string {
+func (airing *AiringDate) StartTimeHuman() string {
 	t, _ := time.Parse(time.RFC3339, airing.Start)
 	humanReadable := t.Format(time.RFC1123)
 
@@ -35,7 +35,7 @@ func (airing *AnimeAiringDate) StartTimeHuman() string {
 }
 
 // EndTimeHuman returns the end time of the anime in human readable form.
-func (airing *AnimeAiringDate) EndTimeHuman() string {
+func (airing *AiringDate) EndTimeHuman() string {
 	t, _ := time.Parse(time.RFC3339, airing.End)
 	humanReadable := t.Format(time.RFC1123)
 

@@ -6,7 +6,7 @@ import "github.com/animenotifier/arn/validate"
 type AnimeEpisode struct {
 	Number     int               `json:"number" editable:"true"`
 	Title      EpisodeTitle      `json:"title" editable:"true"`
-	AiringDate AnimeAiringDate   `json:"airingDate" editable:"true"`
+	AiringDate AiringDate        `json:"airingDate" editable:"true"`
 	Links      map[string]string `json:"links"`
 }
 
@@ -72,7 +72,7 @@ func NewAnimeEpisode() *AnimeEpisode {
 	return &AnimeEpisode{
 		Number:     -1,
 		Title:      EpisodeTitle{},
-		AiringDate: AnimeAiringDate{},
+		AiringDate: AiringDate{},
 		Links:      map[string]string{},
 	}
 }

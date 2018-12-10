@@ -394,13 +394,6 @@ func (anime *Anime) RefreshEpisodes() error {
 	// Save number of available episodes for comparison later
 	oldAvailableCount := episodes.AvailableCount()
 
-	// Create blank episode templates
-	episodes.Items = make([]*AnimeEpisode, anime.EpisodeCount)
-
-	for i := 0; i < len(episodes.Items); i++ {
-		episodes.Items[i] = NewAnimeEpisode()
-	}
-
 	// Shoboi
 	shoboiEpisodes, err := anime.ShoboiEpisodes()
 
