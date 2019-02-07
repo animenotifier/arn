@@ -9,13 +9,6 @@ import (
 	"github.com/aerogo/nano"
 )
 
-const (
-	sortByTitle              = "Title"
-	sortByStartDate          = "StartDate"
-	sortByEpisodeCount       = "EpisodeCount"
-	sortByStartEpisodeLength = "StartEpisodeLength"
-)
-
 // AnimeList is a list of anime list items.
 type AnimeList struct {
 	UserID string           `json:"userId"`
@@ -271,7 +264,7 @@ func (list *AnimeList) SortByAlgo(algo string, user *User) {
 			return CompareAnimeByStartDate(anime, otherAnime)
 		case sortByEpisodeCount:
 			return CompareAnimeByEpisodeCount(anime, otherAnime)
-		case sortByStartEpisodeLength:
+		case sortByEpisodeLength:
 			return CompareAnimeByEpisodeLength(anime, otherAnime)
 		default:
 			item := list.Items[i]

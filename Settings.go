@@ -71,6 +71,7 @@ type EditorFilterSettings struct {
 	Season string `json:"season" editable:"true"`
 	Status string `json:"status" editable:"true"`
 	Type   string `json:"type" editable:"true"`
+	Sort   string `json:"sort" editable:"true"`
 }
 
 // Suffix returns the URL suffix.
@@ -79,6 +80,7 @@ func (filter *EditorFilterSettings) Suffix() string {
 	status := filter.Status
 	season := filter.Season
 	typ := filter.Type
+	sort := filter.Sort
 
 	if year == "" {
 		year = "any"
@@ -96,7 +98,11 @@ func (filter *EditorFilterSettings) Suffix() string {
 		typ = "any"
 	}
 
-	return fmt.Sprintf("/%s/%s/%s/%s", year, season, status, typ)
+	if sort == "" {
+		sort = "Popularity"
+	}
+
+	return fmt.Sprintf("/%s/%s/%s/%s/%s", year, season, status, typ, sort)
 }
 
 // FormatSettings ...

@@ -21,6 +21,10 @@ const (
 	movieBonus                = 0.28
 	agePenalty                = 11.0
 	ageThreshold              = 6 * 30 * 24 * time.Hour
+	sortByTitle               = "Title"
+	sortByStartDate           = "StartDate"
+	sortByEpisodeCount        = "EpisodeCount"
+	sortByEpisodeLength       = "EpisodeLength"
 )
 
 // SortAnimeByPopularity sorts the given slice of anime by popularity.
@@ -47,26 +51,28 @@ func SortAnimeByQualityDetailed(animes []*Anime, filterStatus string) {
 	sort.Slice(animes, func(i, j int) bool {
 		a := animes[i]
 		b := animes[j]
+		return CompareAnimeByQualityDetailed(a, b, filterStatus)
+	})
+}
 
-		scoreA := a.Score()
-		scoreB := b.Score()
+// SortAnimeByQuality sorts the given slice of anime by quality.
+func SortAnimeWithAlgo(animes []*Anime, filterStatus string, algo string, user *User) {
+	sort.Slice(animes, func(i, j int) bool {
+		anime := animes[i]
+		otherAnime := animes[j]
 
-		// If we show currently running shows, rank shows that started a long time ago a bit lower
-		if filterStatus == "current" {
-			if a.StartDate != "" && time.Since(a.StartDateTime()) > ageThreshold {
-				scoreA -= agePenalty
-			}
-
-			if b.StartDate != "" && time.Since(b.StartDateTime()) > ageThreshold {
-				scoreB -= agePenalty
-			}
+		switch algo {
+		case sortByTitle:
+			return CompareAnimeByTile(anime, otherAnime, user)
+		case sortByStartDate:
+			return CompareAnimeByStartDate(anime, otherAnime)
+		case sortByEpisodeCount:
+			return CompareAnimeByEpisodeCount(anime, otherAnime)
+		case sortByEpisodeLength:
+			return CompareAnimeByEpisodeLength(anime, otherAnime)
+		default:
+			return CompareAnimeByQualityDetailed(anime, otherAnime, filterStatus)
 		}
-
-		if scoreA == scoreB {
-			return a.Title.Canonical < b.Title.Canonical
-		}
-
-		return scoreA > scoreB
 	})
 }
 
@@ -104,6 +110,29 @@ func CompareAnimeByEpisodeLength(anime *Anime, otherAnime *Anime) bool {
 	}
 
 	return anime.EpisodeLength > otherAnime.EpisodeLength
+}
+
+// CompareAnimeByEpisodeLength compare 2 Anime by their episode length. return true if the first anime episode are strictly longer the second.
+func CompareAnimeByQualityDetailed(anime *Anime, otherAnime *Anime, filterStatus string) bool {
+	scoreA := anime.Score()
+	scoreB := otherAnime.Score()
+
+	// If we show currently running shows, rank shows that started a long time ago a bit lower
+	if filterStatus == "current" {
+		if anime.StartDate != "" && time.Since(anime.StartDateTime()) > ageThreshold {
+			scoreA -= agePenalty
+		}
+
+		if otherAnime.StartDate != "" && time.Since(otherAnime.StartDateTime()) > ageThreshold {
+			scoreB -= agePenalty
+		}
+	}
+
+	if scoreA == scoreB {
+		return anime.Title.Canonical < otherAnime.Title.Canonical
+	}
+
+	return scoreA > scoreB
 }
 
 // Score returns the score used for the anime ranking.
