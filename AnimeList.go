@@ -239,7 +239,6 @@ func (list *AnimeList) Top(count int) []*AnimeListItem {
 	return tmp
 }
 
-// SortByTile sorts the anime list by anime title.
 // CompareAnimeListItemByRating compare 2 AnimeListItems by their overall rating. return true if the first item has a strictly higher rating than the second.
 func CompareAnimeListItemByRating(item *AnimeListItem, otherItem *AnimeListItem) bool {
 	if item.Rating.Overall == otherItem.Rating.Overall {

@@ -55,7 +55,7 @@ func SortAnimeByQualityDetailed(animes []*Anime, filterStatus string) {
 	})
 }
 
-// SortAnimeByQuality sorts the given slice of anime by quality.
+// SortAnimeWithAlgo sorts the given slice of anime by the specified algo.
 func SortAnimeWithAlgo(animes []*Anime, filterStatus string, algo string, user *User) {
 	sort.Slice(animes, func(i, j int) bool {
 		anime := animes[i]
@@ -112,7 +112,7 @@ func CompareAnimeByEpisodeLength(anime *Anime, otherAnime *Anime) bool {
 	return anime.EpisodeLength > otherAnime.EpisodeLength
 }
 
-// CompareAnimeByEpisodeLength compare 2 Anime by their episode length. return true if the first anime episode are strictly longer the second.
+// CompareAnimeByQualityDetailed compare 2 Anime by their quality. return true if the first anime has a strictly better score than second.
 func CompareAnimeByQualityDetailed(anime *Anime, otherAnime *Anime, filterStatus string) bool {
 	scoreA := anime.Score()
 	scoreB := otherAnime.Score()
