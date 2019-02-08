@@ -64,6 +64,20 @@ func GetUserByFacebookID(facebookID string) (*User, error) {
 	return user, err
 }
 
+// GetUserByTwitterID fetches the user with the given Twitter ID from the database.
+func GetUserByTwitterID(twitterID string) (*User, error) {
+	obj, err := DB.Get("TwitterToUser", twitterID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	userID := obj.(*TwitterToUser).UserID
+	user, err := GetUser(userID)
+
+	return user, err
+}
+
 // GetUserByGoogleID fetches the user with the given Google ID from the database.
 func GetUserByGoogleID(googleID string) (*User, error) {
 	obj, err := DB.Get("GoogleToUser", googleID)

@@ -28,6 +28,11 @@ type APIKeysData struct {
 		Secret string `json:"secret"`
 	} `json:"facebook"`
 
+	Twitter struct {
+		ID     string `json:"id"`
+		Secret string `json:"secret"`
+	} `json:"twitter"`
+
 	Discord struct {
 		ID     string `json:"id"`
 		Secret string `json:"secret"`
