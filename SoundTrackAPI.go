@@ -40,31 +40,31 @@ func init() {
 	})
 }
 
-// Create sets the data for a new soundtrack with data we received from the API request.
-func (soundtrack *SoundTrack) Create(ctx *aero.Context) error {
+// Create sets the data for a new track with data we received from the API request.
+func (track *SoundTrack) Create(ctx *aero.Context) error {
 	user := GetUserFromContext(ctx)
 
 	if user == nil {
 		return errors.New("Not logged in")
 	}
 
-	soundtrack.ID = GenerateID("SoundTrack")
-	soundtrack.Created = DateTimeUTC()
-	soundtrack.CreatedBy = user.ID
+	track.ID = GenerateID("SoundTrack")
+	track.Created = DateTimeUTC()
+	track.CreatedBy = user.ID
 
 	// Write log entry
-	logEntry := NewEditLogEntry(user.ID, "create", "SoundTrack", soundtrack.ID, "", "", "")
+	logEntry := NewEditLogEntry(user.ID, "create", "SoundTrack", track.ID, "", "", "")
 	logEntry.Save()
 
-	return soundtrack.Unpublish()
+	return track.Unpublish()
 }
 
 // Edit updates the external media object.
-func (soundtrack *SoundTrack) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
+func (track *SoundTrack) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
 	user := GetUserFromContext(ctx)
 
 	// Write log entry
-	logEntry := NewEditLogEntry(user.ID, "edit", "SoundTrack", soundtrack.ID, key, fmt.Sprint(value.Interface()), fmt.Sprint(newValue.Interface()))
+	logEntry := NewEditLogEntry(user.ID, "edit", "SoundTrack", track.ID, key, fmt.Sprint(value.Interface()), fmt.Sprint(newValue.Interface()))
 	logEntry.Save()
 
 	// Verify service name
@@ -91,55 +91,55 @@ func (soundtrack *SoundTrack) Edit(ctx *aero.Context, key string, value reflect.
 }
 
 // OnAppend saves a log entry.
-func (soundtrack *SoundTrack) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
+func (track *SoundTrack) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
 	user := GetUserFromContext(ctx)
-	logEntry := NewEditLogEntry(user.ID, "arrayAppend", "SoundTrack", soundtrack.ID, fmt.Sprintf("%s[%d]", key, index), "", fmt.Sprint(obj))
+	logEntry := NewEditLogEntry(user.ID, "arrayAppend", "SoundTrack", track.ID, fmt.Sprintf("%s[%d]", key, index), "", fmt.Sprint(obj))
 	logEntry.Save()
 }
 
 // OnRemove saves a log entry.
-func (soundtrack *SoundTrack) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
+func (track *SoundTrack) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
 	user := GetUserFromContext(ctx)
-	logEntry := NewEditLogEntry(user.ID, "arrayRemove", "SoundTrack", soundtrack.ID, fmt.Sprintf("%s[%d]", key, index), fmt.Sprint(obj), "")
+	logEntry := NewEditLogEntry(user.ID, "arrayRemove", "SoundTrack", track.ID, fmt.Sprintf("%s[%d]", key, index), fmt.Sprint(obj), "")
 	logEntry.Save()
 }
 
 // AfterEdit updates the metadata.
-func (soundtrack *SoundTrack) AfterEdit(ctx *aero.Context) error {
-	soundtrack.Edited = DateTimeUTC()
-	soundtrack.EditedBy = GetUserFromContext(ctx).ID
+func (track *SoundTrack) AfterEdit(ctx *aero.Context) error {
+	track.Edited = DateTimeUTC()
+	track.EditedBy = GetUserFromContext(ctx).ID
 	return nil
 }
 
-// DeleteInContext deletes the soundtrack in the given context.
-func (soundtrack *SoundTrack) DeleteInContext(ctx *aero.Context) error {
+// DeleteInContext deletes the track in the given context.
+func (track *SoundTrack) DeleteInContext(ctx *aero.Context) error {
 	user := GetUserFromContext(ctx)
 
 	// Write log entry
-	logEntry := NewEditLogEntry(user.ID, "delete", "SoundTrack", soundtrack.ID, "", fmt.Sprint(soundtrack), "")
+	logEntry := NewEditLogEntry(user.ID, "delete", "SoundTrack", track.ID, "", fmt.Sprint(track), "")
 	logEntry.Save()
 
-	return soundtrack.Delete()
+	return track.Delete()
 }
 
 // Delete deletes the object from the database.
-func (soundtrack *SoundTrack) Delete() error {
-	if soundtrack.IsDraft {
-		draftIndex := soundtrack.Creator().DraftIndex()
+func (track *SoundTrack) Delete() error {
+	if track.IsDraft {
+		draftIndex := track.Creator().DraftIndex()
 		draftIndex.SoundTrackID = ""
 		draftIndex.Save()
 	}
 
-	for _, post := range soundtrack.Posts() {
+	for _, post := range track.Posts() {
 		post.Delete()
 	}
 
-	DB.Delete("SoundTrack", soundtrack.ID)
+	DB.Delete("SoundTrack", track.ID)
 	return nil
 }
 
 // Authorize returns an error if the given API POST request is not authorized.
-func (soundtrack *SoundTrack) Authorize(ctx *aero.Context, action string) error {
+func (track *SoundTrack) Authorize(ctx *aero.Context, action string) error {
 	user := GetUserFromContext(ctx)
 
 	if user == nil {
@@ -156,6 +156,6 @@ func (soundtrack *SoundTrack) Authorize(ctx *aero.Context, action string) error 
 }
 
 // Save saves the soundtrack object in the database.
-func (soundtrack *SoundTrack) Save() {
-	DB.Set("SoundTrack", soundtrack.ID, soundtrack)
+func (track *SoundTrack) Save() {
+	DB.Set("SoundTrack", track.ID, track)
 }
