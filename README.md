@@ -2,7 +2,9 @@
 
 [![Godoc reference][godoc-image]][godoc-url]
 [![Go report card][goreportcard-image]][goreportcard-url]
-[![Build status][travis-image]][travis-url]
+[![Tests][travis-image]][travis-url]
+[![Code coverage][codecov-image]][codecov-url]
+[![License][license-image]][license-url]
 
 This library provides direct access to the Anime Notifier database. It is not an API client.
 
@@ -12,3 +14,7 @@ This library provides direct access to the Anime Notifier database. It is not an
 [goreportcard-url]: https://goreportcard.com/report/github.com/animenotifier/arn
 [travis-image]: https://travis-ci.org/animenotifier/arn.svg?branch=go
 [travis-url]: https://travis-ci.org/animenotifier/arn
+[codecov-image]: https://codecov.io/gh/animenotifier/arn/branch/go/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/animenotifier/arn
+[license-image]: https://img.shields.io/badge/license-MIT-blue.svg
+[license-url]: https://github.com/animenotifier/arn/blob/go/LICENSE
