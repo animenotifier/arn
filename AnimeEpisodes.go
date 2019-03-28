@@ -97,6 +97,16 @@ func (episodes *AnimeEpisodes) String() string {
 	return episodes.Anime().String()
 }
 
+// GetID returns the anime ID.
+func (episodes *AnimeEpisodes) GetID() string {
+	return episodes.AnimeID
+}
+
+// TypeName returns the type name.
+func (episodes *AnimeEpisodes) TypeName() string {
+	return "AnimeEpisodes"
+}
+
 // ListString returns a text representation of the anime episodes.
 func (episodes *AnimeEpisodes) ListString() string {
 	episodes.Lock()

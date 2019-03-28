@@ -66,6 +66,16 @@ func (characters *AnimeCharacters) String() string {
 	return characters.Anime().String()
 }
 
+// GetID returns the anime ID.
+func (characters *AnimeCharacters) GetID() string {
+	return characters.AnimeID
+}
+
+// TypeName returns the type name.
+func (characters *AnimeCharacters) TypeName() string {
+	return "AnimeCharacters"
+}
+
 // Contains tells you whether the given character ID exists.
 func (characters *AnimeCharacters) Contains(characterID string) bool {
 	characters.Lock()

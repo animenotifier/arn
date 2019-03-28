@@ -92,23 +92,12 @@ func (track *SoundTrack) Edit(ctx *aero.Context, key string, value reflect.Value
 
 // OnAppend saves a log entry.
 func (track *SoundTrack) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
-	user := GetUserFromContext(ctx)
-	logEntry := NewEditLogEntry(user.ID, "arrayAppend", "SoundTrack", track.ID, fmt.Sprintf("%s[%d]", key, index), "", fmt.Sprint(obj))
-	logEntry.Save()
+	onAppend(track, ctx, key, index, obj)
 }
 
 // OnRemove saves a log entry.
 func (track *SoundTrack) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
-	user := GetUserFromContext(ctx)
-	logEntry := NewEditLogEntry(user.ID, "arrayRemove", "SoundTrack", track.ID, fmt.Sprintf("%s[%d]", key, index), fmt.Sprint(obj), "")
-	logEntry.Save()
-}
-
-// AfterEdit updates the metadata.
-func (track *SoundTrack) AfterEdit(ctx *aero.Context) error {
-	track.Edited = DateTimeUTC()
-	track.EditedBy = GetUserFromContext(ctx).ID
-	return nil
+	onRemove(track, ctx, key, index, obj)
 }
 
 // DeleteInContext deletes the track in the given context.

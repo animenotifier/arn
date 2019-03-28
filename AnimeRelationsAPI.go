@@ -27,29 +27,19 @@ func (relations *AnimeRelations) Authorize(ctx *aero.Context, action string) err
 	return nil
 }
 
-// Edit saves a log entry for the edit.
-func (relations *AnimeRelations) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
-	user := GetUserFromContext(ctx)
-
-	// Write log entry
-	logEntry := NewEditLogEntry(user.ID, "edit", "AnimeRelations", relations.AnimeID, key, fmt.Sprint(value.Interface()), fmt.Sprint(newValue.Interface()))
-	logEntry.Save()
-
-	return false, nil
+// Edit creates an edit log entry.
+func (relations *AnimeRelations) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {
+	return edit(relations, ctx, key, value, newValue)
 }
 
 // OnAppend saves a log entry.
 func (relations *AnimeRelations) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
-	user := GetUserFromContext(ctx)
-	logEntry := NewEditLogEntry(user.ID, "arrayAppend", "AnimeRelations", relations.AnimeID, fmt.Sprintf("%s[%d]", key, index), "", fmt.Sprint(obj))
-	logEntry.Save()
+	onAppend(relations, ctx, key, index, obj)
 }
 
 // OnRemove saves a log entry.
 func (relations *AnimeRelations) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
-	user := GetUserFromContext(ctx)
-	logEntry := NewEditLogEntry(user.ID, "arrayRemove", "AnimeRelations", relations.AnimeID, fmt.Sprintf("%s[%d]", key, index), fmt.Sprint(obj), "")
-	logEntry.Save()
+	onRemove(relations, ctx, key, index, obj)
 }
 
 // Save saves the anime relations object in the database.

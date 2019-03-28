@@ -8,7 +8,6 @@ import (
 
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
-	"github.com/aerogo/markdown"
 	"github.com/animenotifier/arn/autocorrect"
 )
 
@@ -215,16 +214,12 @@ func (post *Post) Edit(ctx *aero.Context, key string, value reflect.Value, newVa
 
 // OnAppend saves a log entry.
 func (post *Post) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
-	user := GetUserFromContext(ctx)
-	logEntry := NewEditLogEntry(user.ID, "arrayAppend", "Post", post.ID, fmt.Sprintf("%s[%d]", key, index), "", fmt.Sprint(obj))
-	logEntry.Save()
+	onAppend(post, ctx, key, index, obj)
 }
 
 // OnRemove saves a log entry.
 func (post *Post) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
-	user := GetUserFromContext(ctx)
-	logEntry := NewEditLogEntry(user.ID, "arrayRemove", "Post", post.ID, fmt.Sprintf("%s[%d]", key, index), fmt.Sprint(obj), "")
-	logEntry.Save()
+	onRemove(post, ctx, key, index, obj)
 }
 
 // DeleteInContext deletes the post in the given context.
@@ -266,13 +261,6 @@ func (post *Post) Delete() error {
 	}
 
 	DB.Delete("Post", post.ID)
-	return nil
-}
-
-// AfterEdit updates the date it has been edited.
-func (post *Post) AfterEdit(ctx *aero.Context) error {
-	post.Edited = DateTimeUTC()
-	post.html = markdown.Render(post.Text)
 	return nil
 }
 

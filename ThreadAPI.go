@@ -123,29 +123,19 @@ func (thread *Thread) Create(ctx *aero.Context) error {
 	return nil
 }
 
-// Edit saves a log entry for the edit.
-func (thread *Thread) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
-	user := GetUserFromContext(ctx)
-
-	// Write log entry
-	logEntry := NewEditLogEntry(user.ID, "edit", "Thread", thread.ID, key, fmt.Sprint(value.Interface()), fmt.Sprint(newValue.Interface()))
-	logEntry.Save()
-
-	return false, nil
+// Edit creates an edit log entry.
+func (thread *Thread) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {
+	return edit(thread, ctx, key, value, newValue)
 }
 
 // OnAppend saves a log entry.
 func (thread *Thread) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
-	user := GetUserFromContext(ctx)
-	logEntry := NewEditLogEntry(user.ID, "arrayAppend", "Thread", thread.ID, fmt.Sprintf("%s[%d]", key, index), "", fmt.Sprint(obj))
-	logEntry.Save()
+	onAppend(thread, ctx, key, index, obj)
 }
 
 // OnRemove saves a log entry.
 func (thread *Thread) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
-	user := GetUserFromContext(ctx)
-	logEntry := NewEditLogEntry(user.ID, "arrayRemove", "Thread", thread.ID, fmt.Sprintf("%s[%d]", key, index), fmt.Sprint(obj), "")
-	logEntry.Save()
+	onRemove(thread, ctx, key, index, obj)
 }
 
 // AfterEdit sets the edited date on the thread object.

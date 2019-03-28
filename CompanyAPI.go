@@ -56,29 +56,19 @@ func (company *Company) Create(ctx *aero.Context) error {
 	return company.Unpublish()
 }
 
-// Edit saves a log entry for the edit.
-func (company *Company) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
-	user := GetUserFromContext(ctx)
-
-	// Write log entry
-	logEntry := NewEditLogEntry(user.ID, "edit", "Company", company.ID, key, fmt.Sprint(value.Interface()), fmt.Sprint(newValue.Interface()))
-	logEntry.Save()
-
-	return false, nil
+// Edit creates an edit log entry.
+func (company *Company) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {
+	return edit(company, ctx, key, value, newValue)
 }
 
 // OnAppend saves a log entry.
 func (company *Company) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
-	user := GetUserFromContext(ctx)
-	logEntry := NewEditLogEntry(user.ID, "arrayAppend", "Company", company.ID, fmt.Sprintf("%s[%d]", key, index), "", fmt.Sprint(obj))
-	logEntry.Save()
+	onAppend(company, ctx, key, index, obj)
 }
 
 // OnRemove saves a log entry.
 func (company *Company) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
-	user := GetUserFromContext(ctx)
-	logEntry := NewEditLogEntry(user.ID, "arrayRemove", "Company", company.ID, fmt.Sprintf("%s[%d]", key, index), fmt.Sprint(obj), "")
-	logEntry.Save()
+	onRemove(company, ctx, key, index, obj)
 }
 
 // AfterEdit updates the metadata.

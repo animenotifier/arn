@@ -56,6 +56,16 @@ func (relations *AnimeRelations) String() string {
 	return relations.Anime().String()
 }
 
+// GetID returns the anime ID.
+func (relations *AnimeRelations) GetID() string {
+	return relations.AnimeID
+}
+
+// TypeName returns the type name.
+func (relations *AnimeRelations) TypeName() string {
+	return "AnimeRelations"
+}
+
 // Find returns the relation with the specified anime ID, if available.
 func (relations *AnimeRelations) Find(animeID string) *AnimeRelation {
 	relations.Lock()

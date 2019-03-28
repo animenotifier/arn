@@ -78,34 +78,17 @@ func (character *Character) Authorize(ctx *aero.Context, action string) error {
 
 // Edit creates an edit log entry.
 func (character *Character) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {
-	user := GetUserFromContext(ctx)
-
-	// Write log entry
-	logEntry := NewEditLogEntry(user.ID, "edit", "Character", character.ID, key, fmt.Sprint(value.Interface()), fmt.Sprint(newValue.Interface()))
-	logEntry.Save()
-
-	return false, nil
+	return edit(character, ctx, key, value, newValue)
 }
 
 // OnAppend saves a log entry.
 func (character *Character) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
-	user := GetUserFromContext(ctx)
-	logEntry := NewEditLogEntry(user.ID, "arrayAppend", "Character", character.ID, fmt.Sprintf("%s[%d]", key, index), "", fmt.Sprint(obj))
-	logEntry.Save()
+	onAppend(character, ctx, key, index, obj)
 }
 
 // OnRemove saves a log entry.
 func (character *Character) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
-	user := GetUserFromContext(ctx)
-	logEntry := NewEditLogEntry(user.ID, "arrayRemove", "Character", character.ID, fmt.Sprintf("%s[%d]", key, index), fmt.Sprint(obj), "")
-	logEntry.Save()
-}
-
-// AfterEdit updates the metadata.
-func (character *Character) AfterEdit(ctx *aero.Context) error {
-	character.Edited = DateTimeUTC()
-	character.EditedBy = GetUserFromContext(ctx).ID
-	return nil
+	onRemove(character, ctx, key, index, obj)
 }
 
 // DeleteInContext deletes the character in the given context.

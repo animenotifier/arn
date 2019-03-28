@@ -94,6 +94,11 @@ func (company *Company) String() string {
 	return company.Name.English
 }
 
+// TypeName returns the type name.
+func (company *Company) TypeName() string {
+	return "Company"
+}
+
 // GetCompany returns a single company.
 func GetCompany(id string) (*Company, error) {
 	obj, err := DB.Get("Company", id)

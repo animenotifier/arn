@@ -72,34 +72,17 @@ func (group *Group) Create(ctx *aero.Context) error {
 
 // Edit creates an edit log entry.
 func (group *Group) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {
-	user := GetUserFromContext(ctx)
-
-	// Write log entry
-	logEntry := NewEditLogEntry(user.ID, "edit", "Group", group.ID, key, fmt.Sprint(value.Interface()), fmt.Sprint(newValue.Interface()))
-	logEntry.Save()
-
-	return false, nil
+	return edit(group, ctx, key, value, newValue)
 }
 
 // OnAppend saves a log entry.
 func (group *Group) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
-	user := GetUserFromContext(ctx)
-	logEntry := NewEditLogEntry(user.ID, "arrayAppend", "Group", group.ID, fmt.Sprintf("%s[%d]", key, index), "", fmt.Sprint(obj))
-	logEntry.Save()
+	onAppend(group, ctx, key, index, obj)
 }
 
 // OnRemove saves a log entry.
 func (group *Group) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
-	user := GetUserFromContext(ctx)
-	logEntry := NewEditLogEntry(user.ID, "arrayRemove", "Group", group.ID, fmt.Sprintf("%s[%d]", key, index), fmt.Sprint(obj), "")
-	logEntry.Save()
-}
-
-// AfterEdit updates the metadata.
-func (group *Group) AfterEdit(ctx *aero.Context) error {
-	group.Edited = DateTimeUTC()
-	group.EditedBy = GetUserFromContext(ctx).ID
-	return nil
+	onRemove(group, ctx, key, index, obj)
 }
 
 // Delete deletes the object from the database.

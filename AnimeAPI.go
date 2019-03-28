@@ -72,16 +72,12 @@ func (anime *Anime) Edit(ctx *aero.Context, key string, value reflect.Value, new
 
 // OnAppend saves a log entry.
 func (anime *Anime) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
-	user := GetUserFromContext(ctx)
-	logEntry := NewEditLogEntry(user.ID, "arrayAppend", "Anime", anime.ID, fmt.Sprintf("%s[%d]", key, index), "", fmt.Sprint(obj))
-	logEntry.Save()
+	onAppend(anime, ctx, key, index, obj)
 }
 
 // OnRemove saves a log entry.
 func (anime *Anime) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
-	user := GetUserFromContext(ctx)
-	logEntry := NewEditLogEntry(user.ID, "arrayRemove", "Anime", anime.ID, fmt.Sprintf("%s[%d]", key, index), fmt.Sprint(obj), "")
-	logEntry.Save()
+	onRemove(anime, ctx, key, index, obj)
 }
 
 // Authorize returns an error if the given API POST request is not authorized.

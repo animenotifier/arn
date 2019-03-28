@@ -27,29 +27,19 @@ func (episodes *AnimeEpisodes) Authorize(ctx *aero.Context, action string) error
 	return nil
 }
 
-// Edit saves a log entry for the edit.
-func (episodes *AnimeEpisodes) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
-	user := GetUserFromContext(ctx)
-
-	// Write log entry
-	logEntry := NewEditLogEntry(user.ID, "edit", "AnimeEpisodes", episodes.AnimeID, key, fmt.Sprint(value.Interface()), fmt.Sprint(newValue.Interface()))
-	logEntry.Save()
-
-	return false, nil
+// Edit creates an edit log entry.
+func (episodes *AnimeEpisodes) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {
+	return edit(episodes, ctx, key, value, newValue)
 }
 
 // OnAppend saves a log entry.
 func (episodes *AnimeEpisodes) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
-	user := GetUserFromContext(ctx)
-	logEntry := NewEditLogEntry(user.ID, "arrayAppend", "AnimeEpisodes", episodes.AnimeID, fmt.Sprintf("%s[%d]", key, index), "", fmt.Sprint(obj))
-	logEntry.Save()
+	onAppend(episodes, ctx, key, index, obj)
 }
 
 // OnRemove saves a log entry.
 func (episodes *AnimeEpisodes) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
-	user := GetUserFromContext(ctx)
-	logEntry := NewEditLogEntry(user.ID, "arrayRemove", "AnimeEpisodes", episodes.AnimeID, fmt.Sprintf("%s[%d]", key, index), fmt.Sprint(obj), "")
-	logEntry.Save()
+	onRemove(episodes, ctx, key, index, obj)
 }
 
 // Save saves the episodes in the database.
