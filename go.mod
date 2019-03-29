@@ -4,15 +4,15 @@ go 1.12
 
 require (
 	github.com/PuerkitoBio/goquery v1.5.0 // indirect
-	github.com/aerogo/aero v0.0.0-20190317230610-002df37963de
-	github.com/aerogo/api v0.0.0-20190310235049-403cc29275db
-	github.com/aerogo/cluster v0.0.0-20190305233322-868ff14c5f10 // indirect
-	github.com/aerogo/flow v0.0.0-20171102061202-e6f8e102dde8
+	github.com/aerogo/aero v1.0.0
+	github.com/aerogo/api v0.1.0
+	github.com/aerogo/cluster v0.1.0 // indirect
+	github.com/aerogo/flow v0.1.0
 	github.com/aerogo/http v0.0.0-20180702004711-b85543a85b31
-	github.com/aerogo/markdown v0.0.0-20190328134403-48007a0f59d1
-	github.com/aerogo/mirror v0.0.0-20180702004733-62dba2e2c4c1
-	github.com/aerogo/nano v0.0.0-20190311125158-4afb5ae923e8
-	github.com/aerogo/packet v0.0.0-20190317234656-8328f3b074e9 // indirect
+	github.com/aerogo/markdown v0.1.0
+	github.com/aerogo/mirror v0.1.0
+	github.com/aerogo/nano v0.1.0
+	github.com/aerogo/packet v0.1.0 // indirect
 	github.com/animenotifier/anilist v0.0.0-20190305235615-d1d5baf3760a
 	github.com/animenotifier/ffxiv v0.0.0-20181026222628-4707c5739ff1
 	github.com/animenotifier/japanese v0.0.0-20180702005159-9ae021c00c3c
@@ -28,17 +28,23 @@ require (
 	github.com/chai2010/webp v1.1.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/disintegration/imaging v1.6.0 // indirect
+	github.com/elazarl/goproxy v0.0.0-20181111060418-2ce16c963a8a // indirect
 	github.com/fatih/color v1.7.0
 	github.com/json-iterator/go v1.1.6
-	github.com/logpacker/PayPal-Go-SDK v1.1.4
+	github.com/logpacker/PayPal-Go-SDK v1.1.4+incompatible
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 // indirect
 	github.com/moul/http2curl v1.0.0 // indirect
 	github.com/parnurzeal/gorequest v0.2.15 // indirect
 	github.com/pkg/errors v0.8.1 // indirect
+	github.com/smartystreets/goconvey v0.0.0-20190306220146-200a235640ff // indirect
 	github.com/stretchr/testify v1.3.0
+	github.com/tdewolff/parse v2.3.4+incompatible // indirect
+	github.com/tdewolff/test v1.0.0 // indirect
+	github.com/teris-io/shortid v0.0.0-20171029131806-771a37caa5cf // indirect
 	github.com/ungerik/go-gravatar v0.0.0-20120802094239-6ab22628222a
 	github.com/ventu-io/go-shortid v0.0.0-20171029131806-771a37caa5cf
 	github.com/xrash/smetrics v0.0.0-20170218160415-a3153f7040e9
 	golang.org/x/crypto v0.0.0-20190325154230-a5d413f7728c // indirect
+	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 )
