@@ -11,7 +11,7 @@ import (
 )
 
 // Root is the full path to the root directory of notify.moe repository.
-var Root = path.Join(os.Getenv("GOPATH"), "src/github.com/animenotifier/notify.moe")
+var Root = os.Getenv("ARN_ROOT")
 
 // APIKeys are global API keys for several services
 var APIKeys APIKeysData
