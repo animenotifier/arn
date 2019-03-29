@@ -11,11 +11,14 @@ matrix:
     - go: master
   fast_finish: true
 
+env:
+  - ARN_ROOT=$HOME/notify.moe
+
 before_script:
   - bash <(curl -s https://raw.githubusercontent.com/blitzprog/gotravis/master/before-script.sh)
 
   # Download main repo to access API keys
-  - git clone --depth=1 https://github.com/animenotifier/notify.moe $GOPATH/src/github.com/animenotifier/notify.moe
+  - git clone --depth=1 https://github.com/animenotifier/notify.moe $ARN_ROOT
 
   # Database
   - git clone --depth=1 https://github.com/animenotifier/database ~/.aero/db/arn
