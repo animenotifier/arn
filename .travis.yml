@@ -12,6 +12,7 @@ matrix:
   fast_finish: true
 
 env:
+  - GO111MODULE=on
   - ARN_ROOT=$HOME/notify.moe
 
 before_script:
