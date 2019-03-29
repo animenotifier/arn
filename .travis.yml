@@ -12,8 +12,9 @@ matrix:
   fast_finish: true
 
 env:
-  - GO111MODULE=on
-  - ARN_ROOT=$HOME/notify.moe
+  global:
+    - GO111MODULE=on
+    - ARN_ROOT=$HOME/notify.moe
 
 before_script:
   - bash <(curl -s https://raw.githubusercontent.com/blitzprog/gotravis/master/before-script.sh)
