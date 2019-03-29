@@ -8,7 +8,7 @@ require (
 	github.com/aerogo/api v0.1.0
 	github.com/aerogo/cluster v0.1.0 // indirect
 	github.com/aerogo/flow v0.1.0
-	github.com/aerogo/http v0.0.0-20180702004711-b85543a85b31
+	github.com/aerogo/http v0.1.0
 	github.com/aerogo/markdown v0.1.0
 	github.com/aerogo/mirror v0.1.0
 	github.com/aerogo/nano v0.1.0
