@@ -48,14 +48,15 @@ func TestAllAnime(t *testing.T) {
 	allAnime := arn.AllAnime()
 
 	for _, anime := range allAnime {
+
 		assert.NotEmpty(t, anime.ID)
-		assert.Contains(t, validAnimeStatus, anime.Status)
-		assert.Contains(t, validAnimeType, anime.Type)
-		assert.Contains(t, validAnimeStatus, anime.CalculatedStatus())
-		assert.NotEmpty(t, anime.StatusHumanReadable())
-		assert.NotEmpty(t, anime.TypeHumanReadable())
-		assert.NotEmpty(t, anime.Link())
-		assert.NotEmpty(t, anime.EpisodeCountString())
+		assert.Contains(t, validAnimeStatus, anime.Status, "[%s] %s", anime.ID, anime.String())
+		assert.Contains(t, validAnimeType, anime.Type, "[%s] %s", anime.ID, anime.String())
+		assert.Contains(t, validAnimeStatus, anime.CalculatedStatus(), "[%s] %s", anime.ID, anime.String())
+		assert.NotEmpty(t, anime.StatusHumanReadable(), "[%s] %s", anime.ID, anime.String())
+		assert.NotEmpty(t, anime.TypeHumanReadable(), "[%s] %s", anime.ID, anime.String())
+		assert.NotEmpty(t, anime.Link(), "[%s] %s", anime.ID, anime.String())
+		assert.NotEmpty(t, anime.EpisodeCountString(), "[%s] %s", anime.ID, anime.String())
 
 		anime.Episodes()
 		anime.Characters()
