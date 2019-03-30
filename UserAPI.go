@@ -12,7 +12,7 @@ import (
 	"github.com/aerogo/api"
 	"github.com/aerogo/http/client"
 	"github.com/animenotifier/arn/autocorrect"
-	"github.com/fatih/color"
+	"github.com/blitzprog/color"
 )
 
 // Force interface implementations

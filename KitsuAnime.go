@@ -7,7 +7,7 @@ import (
 	"github.com/aerogo/http/client"
 	"github.com/aerogo/nano"
 	"github.com/animenotifier/kitsu"
-	"github.com/fatih/color"
+	"github.com/blitzprog/color"
 )
 
 // NewAnimeFromKitsuAnime ...

@@ -10,7 +10,7 @@ import (
 
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
-	"github.com/fatih/color"
+	"github.com/blitzprog/color"
 )
 
 // Force interface implementations

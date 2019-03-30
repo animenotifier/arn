@@ -7,7 +7,7 @@ import (
 	"sort"
 
 	"github.com/aerogo/nano"
-	"github.com/fatih/color"
+	"github.com/blitzprog/color"
 )
 
 // Quote is a quote made by a character in an anime.

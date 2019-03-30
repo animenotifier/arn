@@ -4,11 +4,11 @@ go 1.12
 
 require (
 	github.com/PuerkitoBio/goquery v1.5.0 // indirect
-	github.com/aerogo/aero v1.0.0
+	github.com/aerogo/aero v1.0.1
 	github.com/aerogo/api v0.1.0
 	github.com/aerogo/cluster v0.1.0 // indirect
 	github.com/aerogo/flow v0.1.0
-	github.com/aerogo/http v0.1.0
+	github.com/aerogo/http v0.1.1
 	github.com/aerogo/markdown v0.1.0
 	github.com/aerogo/mirror v0.1.0
 	github.com/aerogo/nano v0.1.0
@@ -22,6 +22,7 @@ require (
 	github.com/animenotifier/overwatch v0.0.0-20181101032032-0488df184336
 	github.com/animenotifier/shoboi v0.0.0-20180321032539-68de8dd8046b
 	github.com/animenotifier/twist v0.0.0-20171021152718-743481a0ebff
+	github.com/blitzprog/color v1.8.0
 	github.com/blitzprog/go-matroska v0.0.0-20181027234721-1748ad65794d
 	github.com/blitzprog/imageoutput v0.0.0-20180723015600-be0e2c52cd9e
 	github.com/blitzprog/webpush-go v0.0.0-20180307222614-704de5d30bcc
@@ -29,17 +30,14 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/disintegration/imaging v1.6.0 // indirect
 	github.com/elazarl/goproxy v0.0.0-20181111060418-2ce16c963a8a // indirect
-	github.com/fatih/color v1.7.0
 	github.com/json-iterator/go v1.1.6
 	github.com/logpacker/PayPal-Go-SDK v1.1.4+incompatible
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 // indirect
 	github.com/moul/http2curl v1.0.0 // indirect
 	github.com/parnurzeal/gorequest v0.2.15 // indirect
 	github.com/pkg/errors v0.8.1 // indirect
-	github.com/smartystreets/goconvey v0.0.0-20190306220146-200a235640ff // indirect
+	github.com/smartystreets/goconvey v0.0.0-20190330032615-68dc04aab96a // indirect
 	github.com/stretchr/testify v1.3.0
-	github.com/tdewolff/parse v2.3.4+incompatible // indirect
-	github.com/tdewolff/test v1.0.0 // indirect
 	github.com/teris-io/shortid v0.0.0-20171029131806-771a37caa5cf // indirect
 	github.com/ungerik/go-gravatar v0.0.0-20120802094239-6ab22628222a
 	github.com/ventu-io/go-shortid v0.0.0-20171029131806-771a37caa5cf

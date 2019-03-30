@@ -8,7 +8,7 @@ import (
 	"sort"
 
 	"github.com/aerogo/nano"
-	"github.com/fatih/color"
+	"github.com/blitzprog/color"
 )
 
 // Person represents a person in real life.

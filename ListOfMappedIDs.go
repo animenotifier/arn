@@ -1,7 +1,7 @@
 package arn
 
 // import (
-// 	"github.com/fatih/color"
+// 	"github.com/blitzprog/color"
 // )
 
 // // ListOfMappedIDs ...
