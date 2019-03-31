@@ -9,7 +9,7 @@ require (
 	github.com/aerogo/cluster v0.1.0 // indirect
 	github.com/aerogo/flow v0.1.0
 	github.com/aerogo/http v0.1.1
-	github.com/aerogo/markdown v0.1.0
+	github.com/aerogo/markdown v0.1.1
 	github.com/aerogo/mirror v0.1.0
 	github.com/aerogo/nano v0.1.0
 	github.com/aerogo/packet v0.1.0 // indirect
@@ -20,17 +20,19 @@ require (
 	github.com/animenotifier/mal v0.0.0-20190306012317-15db3840fd60
 	github.com/animenotifier/osu v0.0.0-20171021153311-7e2f02912910
 	github.com/animenotifier/overwatch v0.0.0-20181101032032-0488df184336
-	github.com/animenotifier/shoboi v0.0.0-20180321032539-68de8dd8046b
+	github.com/animenotifier/shoboi v0.0.0-20190331140329-ad885767c824
 	github.com/animenotifier/twist v0.0.0-20171021152718-743481a0ebff
 	github.com/blitzprog/color v1.8.0
 	github.com/blitzprog/go-matroska v0.0.0-20181027234721-1748ad65794d
 	github.com/blitzprog/imageoutput v0.0.0-20180723015600-be0e2c52cd9e
 	github.com/blitzprog/webpush-go v0.0.0-20180307222614-704de5d30bcc
 	github.com/chai2010/webp v1.1.0 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/disintegration/imaging v1.6.0 // indirect
 	github.com/elazarl/goproxy v0.0.0-20181111060418-2ce16c963a8a // indirect
 	github.com/json-iterator/go v1.1.6
+	github.com/klauspost/compress v1.4.1 // indirect
 	github.com/logpacker/PayPal-Go-SDK v1.1.4+incompatible
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 // indirect
 	github.com/moul/http2curl v1.0.0 // indirect
