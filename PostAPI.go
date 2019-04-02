@@ -8,6 +8,7 @@ import (
 
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
+	"github.com/aerogo/markdown"
 	"github.com/animenotifier/arn/autocorrect"
 )
 
@@ -220,6 +221,13 @@ func (post *Post) OnAppend(ctx *aero.Context, key string, index int, obj interfa
 // OnRemove saves a log entry.
 func (post *Post) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
 	onRemove(post, ctx, key, index, obj)
+}
+
+// AfterEdit sets the edited date on the post object.
+func (post *Post) AfterEdit(ctx *aero.Context) error {
+	post.Edited = DateTimeUTC()
+	post.html = markdown.Render(post.Text)
+	return nil
 }
 
 // DeleteInContext deletes the post in the given context.
