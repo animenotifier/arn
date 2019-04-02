@@ -91,13 +91,6 @@ func (anime *Anime) Authorize(ctx *aero.Context, action string) error {
 	return nil
 }
 
-// AfterEdit updates the metadata.
-func (anime *Anime) AfterEdit(ctx *aero.Context) error {
-	anime.Edited = DateTimeUTC()
-	anime.EditedBy = GetUserFromContext(ctx).ID
-	return nil
-}
-
 // DeleteInContext deletes the anime in the given context.
 func (anime *Anime) DeleteInContext(ctx *aero.Context) error {
 	user := GetUserFromContext(ctx)

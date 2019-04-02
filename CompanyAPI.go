@@ -71,13 +71,6 @@ func (company *Company) OnRemove(ctx *aero.Context, key string, index int, obj i
 	onRemove(company, ctx, key, index, obj)
 }
 
-// AfterEdit updates the metadata.
-func (company *Company) AfterEdit(ctx *aero.Context) error {
-	company.Edited = DateTimeUTC()
-	company.EditedBy = GetUserFromContext(ctx).ID
-	return nil
-}
-
 // Save saves the company in the database.
 func (company *Company) Save() {
 	DB.Set("Company", company.ID, company)

@@ -70,13 +70,6 @@ func (quote *Quote) Edit(ctx *aero.Context, key string, value reflect.Value, new
 	return false, nil
 }
 
-// AfterEdit updates the metadata.
-func (quote *Quote) AfterEdit(ctx *aero.Context) error {
-	quote.Edited = DateTimeUTC()
-	quote.EditedBy = GetUserFromContext(ctx).ID
-	return nil
-}
-
 // Save saves the quote in the database.
 func (quote *Quote) Save() {
 	DB.Set("Quote", quote.ID, quote)
