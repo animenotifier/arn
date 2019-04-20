@@ -4,7 +4,7 @@ go 1.12
 
 require (
 	github.com/PuerkitoBio/goquery v1.5.0 // indirect
-	github.com/aerogo/aero v1.0.1
+	github.com/aerogo/aero v1.0.2
 	github.com/aerogo/api v0.1.0
 	github.com/aerogo/cluster v0.1.0 // indirect
 	github.com/aerogo/flow v0.1.0
