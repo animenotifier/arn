@@ -5,10 +5,10 @@ go 1.12
 require (
 	github.com/PuerkitoBio/goquery v1.5.0 // indirect
 	github.com/aerogo/aero v1.0.5
-	github.com/aerogo/api v0.1.2
+	github.com/aerogo/api v0.1.3
 	github.com/aerogo/flow v0.1.1
 	github.com/aerogo/http v0.1.2
-	github.com/aerogo/markdown v0.1.2
+	github.com/aerogo/markdown v0.1.3
 	github.com/aerogo/mirror v0.1.2
 	github.com/aerogo/nano v0.1.2
 	github.com/aerogo/packet v0.1.2 // indirect
@@ -25,8 +25,9 @@ require (
 	github.com/animenotifier/overwatch v0.1.0
 	github.com/animenotifier/shoboi v0.1.0
 	github.com/animenotifier/twist v0.1.0
-	github.com/elazarl/goproxy v0.0.0-20181111060418-2ce16c963a8a // indirect
-	github.com/gopherjs/gopherjs v0.0.0-20190328170749-bb2674552d8f // indirect
+	github.com/elazarl/goproxy v0.0.0-20190421051319-9d40249d3c2f // indirect
+	github.com/elazarl/goproxy/ext v0.0.0-20190421051319-9d40249d3c2f // indirect
+	github.com/gopherjs/gopherjs v0.0.0-20190411002643-bd77b112433e // indirect
 	github.com/json-iterator/go v1.1.6
 	github.com/logpacker/PayPal-Go-SDK v1.1.4+incompatible
 	github.com/moul/http2curl v1.0.0 // indirect
@@ -39,7 +40,7 @@ require (
 	github.com/ungerik/go-gravatar v0.0.0-20120802094239-6ab22628222a
 	github.com/ventu-io/go-shortid v0.0.0-20171029131806-771a37caa5cf
 	github.com/xrash/smetrics v0.0.0-20170218160415-a3153f7040e9
-	golang.org/x/image v0.0.0-20190321063152-3fc05d484e9f // indirect
+	golang.org/x/image v0.0.0-20190417020941-4e30a6eb7d9a // indirect
 	golang.org/x/net v0.0.0-20190420063019-afa5a82059c6 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
