@@ -11,8 +11,8 @@ import (
 	"github.com/aerogo/aero"
 	"github.com/aerogo/api"
 	"github.com/aerogo/http/client"
-	"github.com/animenotifier/arn/autocorrect"
 	"github.com/akyoto/color"
+	"github.com/animenotifier/arn/autocorrect"
 )
 
 // Force interface implementations

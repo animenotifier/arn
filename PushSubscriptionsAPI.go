@@ -18,7 +18,7 @@ var (
 func init() {
 	API.RegisterActions("PushSubscriptions", []*api.Action{
 		// Add subscription
-		&api.Action{
+		{
 			Name:  "add",
 			Route: "/add",
 			Run: func(obj interface{}, ctx *aero.Context) error {
@@ -52,7 +52,7 @@ func init() {
 		},
 
 		// Remove subscription
-		&api.Action{
+		{
 			Name:  "remove",
 			Route: "/remove",
 			Run: func(obj interface{}, ctx *aero.Context) error {

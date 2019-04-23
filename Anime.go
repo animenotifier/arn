@@ -12,9 +12,9 @@ import (
 	"github.com/animenotifier/arn/validate"
 	"github.com/animenotifier/twist"
 
+	"github.com/akyoto/color"
 	"github.com/animenotifier/kitsu"
 	"github.com/animenotifier/shoboi"
-	"github.com/akyoto/color"
 )
 
 // AnimeDateFormat describes the anime date format for the date conversion.
@@ -26,35 +26,35 @@ var AnimeSourceHumanReadable = map[string]string{}
 // Register a list of supported anime status and source types.
 func init() {
 	DataLists["anime-types"] = []*Option{
-		&Option{"tv", "TV"},
-		&Option{"movie", "Movie"},
-		&Option{"ova", "OVA"},
-		&Option{"ona", "ONA"},
-		&Option{"special", "Special"},
-		&Option{"music", "Music"},
+		{"tv", "TV"},
+		{"movie", "Movie"},
+		{"ova", "OVA"},
+		{"ona", "ONA"},
+		{"special", "Special"},
+		{"music", "Music"},
 	}
 
 	DataLists["anime-status"] = []*Option{
-		&Option{"current", "Current"},
-		&Option{"finished", "Finished"},
-		&Option{"upcoming", "Upcoming"},
-		&Option{"tba", "To be announced"},
+		{"current", "Current"},
+		{"finished", "Finished"},
+		{"upcoming", "Upcoming"},
+		{"tba", "To be announced"},
 	}
 
 	DataLists["anime-sources"] = []*Option{
-		&Option{"", "Unknown"},
-		&Option{"original", "Original"},
-		&Option{"manga", "Manga"},
-		&Option{"novel", "Novel"},
-		&Option{"light novel", "Light novel"},
-		&Option{"visual novel", "Visual novel"},
-		&Option{"game", "Game"},
-		&Option{"book", "Book"},
-		&Option{"4-koma manga", "4-koma Manga"},
-		&Option{"music", "Music"},
-		&Option{"picture book", "Picture book"},
-		&Option{"web manga", "Web manga"},
-		&Option{"other", "Other"},
+		{"", "Unknown"},
+		{"original", "Original"},
+		{"manga", "Manga"},
+		{"novel", "Novel"},
+		{"light novel", "Light novel"},
+		{"visual novel", "Visual novel"},
+		{"game", "Game"},
+		{"book", "Book"},
+		{"4-koma manga", "4-koma Manga"},
+		{"music", "Music"},
+		{"picture book", "Picture book"},
+		{"web manga", "Web manga"},
+		{"other", "Other"},
 	}
 
 	for _, option := range DataLists["anime-sources"] {

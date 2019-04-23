@@ -3,16 +3,16 @@ package arn
 // Register a list of supported anime relation types.
 func init() {
 	DataLists["anime-relation-types"] = []*Option{
-		&Option{"prequel", HumanReadableAnimeRelation("prequel")},
-		&Option{"sequel", HumanReadableAnimeRelation("sequel")},
-		&Option{"alternative version", "Alternative version"},
-		&Option{"alternative setting", "Alternative setting"},
-		&Option{"side story", HumanReadableAnimeRelation("side story")},
-		&Option{"parent story", HumanReadableAnimeRelation("parent story")},
-		&Option{"full story", HumanReadableAnimeRelation("full story")},
-		&Option{"spinoff", HumanReadableAnimeRelation("spinoff")},
-		&Option{"summary", HumanReadableAnimeRelation("summary")},
-		&Option{"other", HumanReadableAnimeRelation("other")},
+		{"prequel", HumanReadableAnimeRelation("prequel")},
+		{"sequel", HumanReadableAnimeRelation("sequel")},
+		{"alternative version", "Alternative version"},
+		{"alternative setting", "Alternative setting"},
+		{"side story", HumanReadableAnimeRelation("side story")},
+		{"parent story", HumanReadableAnimeRelation("parent story")},
+		{"full story", HumanReadableAnimeRelation("full story")},
+		{"spinoff", HumanReadableAnimeRelation("spinoff")},
+		{"summary", HumanReadableAnimeRelation("summary")},
+		{"other", HumanReadableAnimeRelation("other")},
 	}
 }
 

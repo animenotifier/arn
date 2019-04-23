@@ -3,8 +3,8 @@ package arn
 // Register a list of supported character roles.
 func init() {
 	DataLists["anime-character-roles"] = []*Option{
-		&Option{"main", "Main character"},
-		&Option{"supporting", "Supporting character"},
+		{"main", "Main character"},
+		{"supporting", "Supporting character"},
 	}
 }
 

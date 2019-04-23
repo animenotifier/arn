@@ -6,8 +6,8 @@ import (
 
 	"github.com/aerogo/http/client"
 	"github.com/aerogo/nano"
-	"github.com/animenotifier/kitsu"
 	"github.com/akyoto/color"
+	"github.com/animenotifier/kitsu"
 )
 
 // NewAnimeFromKitsuAnime ...

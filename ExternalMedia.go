@@ -3,9 +3,9 @@ package arn
 // Register a list of supported media services.
 func init() {
 	DataLists["media-services"] = []*Option{
-		&Option{"Youtube", "Youtube"},
-		&Option{"SoundCloud", "SoundCloud"},
-		&Option{"DailyMotion", "DailyMotion"},
+		{"Youtube", "Youtube"},
+		{"SoundCloud", "SoundCloud"},
+		{"DailyMotion", "DailyMotion"},
 	}
 }
 

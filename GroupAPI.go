@@ -56,7 +56,7 @@ func (group *Group) Create(ctx *aero.Context) error {
 	group.EditedBy = group.CreatedBy
 
 	group.Members = []*GroupMember{
-		&GroupMember{
+		{
 			UserID: user.ID,
 			Role:   "founder",
 			Joined: group.Created,

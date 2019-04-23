@@ -28,8 +28,8 @@ var setEmailMutex sync.Mutex
 func init() {
 	DataLists["genders"] = []*Option{
 		// &Option{"", "Prefer not to say"},
-		&Option{"male", "Male"},
-		&Option{"female", "Female"},
+		{"male", "Male"},
+		{"female", "Female"},
 	}
 }
 

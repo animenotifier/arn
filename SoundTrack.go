@@ -9,8 +9,8 @@ import (
 	"strings"
 
 	"github.com/aerogo/nano"
-	"github.com/animenotifier/arn/autocorrect"
 	"github.com/akyoto/color"
+	"github.com/animenotifier/arn/autocorrect"
 )
 
 // SoundTrack is a soundtrack used in one or multiple anime.

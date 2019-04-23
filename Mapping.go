@@ -3,21 +3,21 @@ package arn
 // Register a list of supported services.
 func init() {
 	DataLists["mapping-services"] = []*Option{
-		&Option{"anidb/anime", "anidb/anime"},
-		&Option{"anilist/anime", "anilist/anime"},
-		&Option{"anilist/character", "anilist/character"},
-		&Option{"anilist/studio", "anilist/studio"},
-		&Option{"ann/company", "ann/company"},
-		&Option{"imdb/anime", "imdb/anime"},
-		&Option{"kitsu/anime", "kitsu/anime"},
-		&Option{"kitsu/character", "kitsu/character"},
-		&Option{"myanimelist/anime", "myanimelist/anime"},
-		&Option{"myanimelist/character", "myanimelist/character"},
-		&Option{"myanimelist/producer", "myanimelist/producer"},
-		&Option{"shoboi/anime", "shoboi/anime"},
-		&Option{"thetvdb/anime", "thetvdb/anime"},
-		&Option{"trakt/anime", "trakt/anime"},
-		&Option{"trakt/season", "trakt/season"},
+		{"anidb/anime", "anidb/anime"},
+		{"anilist/anime", "anilist/anime"},
+		{"anilist/character", "anilist/character"},
+		{"anilist/studio", "anilist/studio"},
+		{"ann/company", "ann/company"},
+		{"imdb/anime", "imdb/anime"},
+		{"kitsu/anime", "kitsu/anime"},
+		{"kitsu/character", "kitsu/character"},
+		{"myanimelist/anime", "myanimelist/anime"},
+		{"myanimelist/character", "myanimelist/character"},
+		{"myanimelist/producer", "myanimelist/producer"},
+		{"shoboi/anime", "shoboi/anime"},
+		{"thetvdb/anime", "thetvdb/anime"},
+		{"trakt/anime", "trakt/anime"},
+		{"trakt/season", "trakt/season"},
 	}
 }
 
