@@ -17,7 +17,7 @@ env:
     - ARN_ROOT=$HOME/notify.moe
 
 before_script:
-  - bash <(curl -s https://raw.githubusercontent.com/blitzprog/gotravis/master/before-script.sh)
+  - bash <(curl -s https://raw.githubusercontent.com/akyoto/gotravis/master/before-script.sh)
 
   # Download main repo to access API keys
   - git clone --depth=1 https://github.com/animenotifier/notify.moe $ARN_ROOT
@@ -26,7 +26,7 @@ before_script:
   - git clone --depth=1 https://github.com/animenotifier/database ~/.aero/db/arn
 
 script:
-  - bash <(curl -s https://raw.githubusercontent.com/blitzprog/gotravis/master/script.sh)
+  - bash <(curl -s https://raw.githubusercontent.com/akyoto/gotravis/master/script.sh)
 
 after_success:
-  - bash <(curl -s https://raw.githubusercontent.com/blitzprog/gotravis/master/after-success.sh)
+  - bash <(curl -s https://raw.githubusercontent.com/akyoto/gotravis/master/after-success.sh)

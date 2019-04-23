@@ -8,7 +8,7 @@ import (
 	"sync"
 
 	"github.com/aerogo/nano"
-	"github.com/blitzprog/color"
+	"github.com/akyoto/color"
 )
 
 // Group represents a group of users.

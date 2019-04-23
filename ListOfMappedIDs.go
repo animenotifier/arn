@@ -1,7 +1,7 @@
 package arn
 
 // import (
-// 	"github.com/blitzprog/color"
+// 	"github.com/akyoto/color"
 // )
 
 // // ListOfMappedIDs ...

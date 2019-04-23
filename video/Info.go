@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/blitzprog/go-matroska/matroska"
+	"github.com/akyoto/go-matroska/matroska"
 )
 
 // Info includes some general information about the video file.

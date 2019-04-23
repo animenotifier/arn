@@ -6,7 +6,7 @@ import (
 	"path"
 	"time"
 
-	"github.com/blitzprog/imageoutput"
+	"github.com/akyoto/imageoutput"
 )
 
 const (

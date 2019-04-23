@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/aerogo/http/client"
-	"github.com/blitzprog/imageoutput"
+	"github.com/akyoto/imageoutput"
 )
 
 const (

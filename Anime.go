@@ -14,7 +14,7 @@ import (
 
 	"github.com/animenotifier/kitsu"
 	"github.com/animenotifier/shoboi"
-	"github.com/blitzprog/color"
+	"github.com/akyoto/color"
 )
 
 // AnimeDateFormat describes the anime date format for the date conversion.

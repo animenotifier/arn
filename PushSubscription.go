@@ -3,7 +3,7 @@ package arn
 import (
 	"net/http"
 
-	webpush "github.com/blitzprog/webpush-go"
+	webpush "github.com/akyoto/webpush-go"
 	jsoniter "github.com/json-iterator/go"
 )
 

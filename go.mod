@@ -22,19 +22,16 @@ require (
 	github.com/animenotifier/overwatch v0.0.0-20181101032032-0488df184336
 	github.com/animenotifier/shoboi v0.0.0-20190331140329-ad885767c824
 	github.com/animenotifier/twist v0.0.0-20171021152718-743481a0ebff
-	github.com/blitzprog/color v1.8.0
-	github.com/blitzprog/go-matroska v0.0.0-20181027234721-1748ad65794d
-	github.com/blitzprog/imageoutput v0.0.0-20180723015600-be0e2c52cd9e
-	github.com/blitzprog/webpush-go v0.0.0-20180307222614-704de5d30bcc
+	github.com/akyoto/color v1.8.0
+	github.com/akyoto/go-matroska v0.0.0-20181027234721-1748ad65794d
+	github.com/akyoto/imageoutput v0.0.0-20180723015600-be0e2c52cd9e
+	github.com/akyoto/webpush-go v0.0.0-20180307222614-704de5d30bcc
 	github.com/chai2010/webp v1.1.0 // indirect
-	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/disintegration/imaging v1.6.0 // indirect
 	github.com/elazarl/goproxy v0.0.0-20181111060418-2ce16c963a8a // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20190328170749-bb2674552d8f // indirect
 	github.com/json-iterator/go v1.1.6
-	github.com/klauspost/compress v1.4.1 // indirect
-	github.com/klauspost/cpuid v1.2.0 // indirect
 	github.com/logpacker/PayPal-Go-SDK v1.1.4+incompatible
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 // indirect
 	github.com/moul/http2curl v1.0.0 // indirect
@@ -47,10 +44,7 @@ require (
 	github.com/ungerik/go-gravatar v0.0.0-20120802094239-6ab22628222a
 	github.com/ventu-io/go-shortid v0.0.0-20171029131806-771a37caa5cf
 	github.com/xrash/smetrics v0.0.0-20170218160415-a3153f7040e9
-	golang.org/x/crypto v0.0.0-20190325154230-a5d413f7728c // indirect
 	golang.org/x/image v0.0.0-20190321063152-3fc05d484e9f // indirect
-	golang.org/x/net v0.0.0-20190328230028-74de082e2cca // indirect
-	golang.org/x/sys v0.0.0-20190329044733-9eb1bfa1ce65 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 )

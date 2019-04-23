@@ -5,7 +5,7 @@ import (
 	"sync"
 
 	"github.com/aerogo/nano"
-	"github.com/blitzprog/color"
+	"github.com/akyoto/color"
 )
 
 // AnimeCharacters is a list of characters for an anime.
