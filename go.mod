@@ -10,7 +10,7 @@ require (
 	github.com/aerogo/http v0.1.2
 	github.com/aerogo/markdown v0.1.3
 	github.com/aerogo/mirror v0.1.2
-	github.com/aerogo/nano v0.1.2
+	github.com/aerogo/nano v0.1.3
 	github.com/aerogo/packet v0.1.2 // indirect
 	github.com/akyoto/color v1.8.1
 	github.com/akyoto/go-matroska v0.1.0
