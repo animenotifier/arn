@@ -4,7 +4,7 @@ go 1.12
 
 require (
 	github.com/PuerkitoBio/goquery v1.5.0 // indirect
-	github.com/aerogo/aero v1.0.5
+	github.com/aerogo/aero v1.0.6
 	github.com/aerogo/api v0.1.3
 	github.com/aerogo/flow v0.1.1
 	github.com/aerogo/http v0.1.2
@@ -29,7 +29,6 @@ require (
 	github.com/elazarl/goproxy/ext v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20190411002643-bd77b112433e // indirect
 	github.com/json-iterator/go v1.1.6
-	github.com/klauspost/compress v1.5.0 // indirect
 	github.com/logpacker/PayPal-Go-SDK v1.1.4
 	github.com/moul/http2curl v1.0.0 // indirect
 	github.com/parnurzeal/gorequest v0.2.15 // indirect
