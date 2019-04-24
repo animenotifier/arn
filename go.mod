@@ -29,7 +29,8 @@ require (
 	github.com/elazarl/goproxy/ext v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20190411002643-bd77b112433e // indirect
 	github.com/json-iterator/go v1.1.6
-	github.com/logpacker/PayPal-Go-SDK v1.1.4+incompatible
+	github.com/klauspost/compress v1.5.0 // indirect
+	github.com/logpacker/PayPal-Go-SDK v1.1.4
 	github.com/moul/http2curl v1.0.0 // indirect
 	github.com/parnurzeal/gorequest v0.2.15 // indirect
 	github.com/pkg/errors v0.8.1 // indirect
@@ -41,7 +42,9 @@ require (
 	github.com/ventu-io/go-shortid v0.0.0-20171029131806-771a37caa5cf
 	github.com/xrash/smetrics v0.0.0-20170218160415-a3153f7040e9
 	golang.org/x/image v0.0.0-20190417020941-4e30a6eb7d9a // indirect
-	golang.org/x/net v0.0.0-20190420063019-afa5a82059c6 // indirect
+	golang.org/x/net v0.0.0-20190424024845-afe8014c977f // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 )
+
+exclude github.com/logpacker/PayPal-Go-SDK v2.0.0+incompatible
