@@ -3,15 +3,13 @@ module github.com/animenotifier/arn
 go 1.12
 
 require (
-	github.com/PuerkitoBio/goquery v1.5.0 // indirect
 	github.com/aerogo/aero v1.0.6
 	github.com/aerogo/api v0.1.3
-	github.com/aerogo/cluster v0.1.3 // indirect
 	github.com/aerogo/flow v0.1.1
 	github.com/aerogo/http v0.1.2
-	github.com/aerogo/markdown v0.1.3
+	github.com/aerogo/markdown v0.1.4
 	github.com/aerogo/mirror v0.1.2
-	github.com/aerogo/nano v0.1.3
+	github.com/aerogo/nano v0.1.4
 	github.com/akyoto/color v1.8.1
 	github.com/akyoto/go-matroska v0.1.0
 	github.com/akyoto/imageoutput v0.1.0
@@ -20,7 +18,7 @@ require (
 	github.com/animenotifier/ffxiv v0.1.0
 	github.com/animenotifier/japanese v0.1.0
 	github.com/animenotifier/kitsu v0.1.0
-	github.com/animenotifier/mal v0.1.0
+	github.com/animenotifier/mal v0.1.2
 	github.com/animenotifier/osu v0.1.0
 	github.com/animenotifier/overwatch v0.1.0
 	github.com/animenotifier/shoboi v0.1.0
@@ -40,8 +38,9 @@ require (
 	github.com/ungerik/go-gravatar v0.0.0-20120802094239-6ab22628222a
 	github.com/ventu-io/go-shortid v0.0.0-20171029131806-771a37caa5cf
 	github.com/xrash/smetrics v0.0.0-20170218160415-a3153f7040e9
-	golang.org/x/image v0.0.0-20190417020941-4e30a6eb7d9a // indirect
-	golang.org/x/net v0.0.0-20190424024845-afe8014c977f // indirect
+	golang.org/x/crypto v0.0.0-20190424203555-c05e17bb3b2d // indirect
+	golang.org/x/image v0.0.0-20190424155947-59b11bec70c7 // indirect
+	golang.org/x/sys v0.0.0-20190425045458-9f0b1ff7b46a // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 )
