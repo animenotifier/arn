@@ -3,9 +3,8 @@ package search_test
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
 	"github.com/animenotifier/arn/search"
+	"github.com/stretchr/testify/assert"
 )
 
 // Run these search terms and expect the
@@ -20,6 +19,7 @@ var tests = map[string]string{
 	"kimi":           "7VjCpFiiR", // Kimi no Na wa.
 	"working":        "0iIgtFimg", // Working!!
 	"k on":           "LP8j5Kmig", // K-On!
+	"ko n":           "LP8j5Kmig", // K-On!
 	"kon":            "LP8j5Kmig", // K-On!
 	"danmachi":       "LTTPtKmiR", // Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka
 	"sword oratoria": "ifGetFmig", // Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka Gaiden: Sword Oratoria
@@ -27,12 +27,29 @@ var tests = map[string]string{
 	"k":              "EDSOtKmig", // K
 	"champloo":       "0ER25Fiig", // Samurai Champloo
 	"one peace":      "jdZp5KmiR", // One Piece
+	"howl":           "CpmTcFmig", // Howl's Moving Castle
+	"howl's":         "CpmTcFmig", // Howl's Moving Castle
+	"howls":          "CpmTcFmig", // Howl's Moving Castle
+	"fate stay":      "74y2cFiiR", // Fate/stay night
+	"fate night":     "74y2cFiiR", // Fate/stay night
+	"stay night":     "74y2cFiiR", // Fate/stay night
+	"re zero":        "Un9XpFimg", // Re:Zero kara Hajimeru Isekai Seikatsu
 }
 
 func TestAnimeSearch(t *testing.T) {
 	for term, expectedAnimeID := range tests {
 		results := search.Anime(term, 1)
-		assert.Len(t, results, 1)
-		assert.Equal(t, expectedAnimeID, results[0].ID)
+		assert.Len(t, results, 1, "%s -> %s", term, expectedAnimeID)
+		assert.Equal(t, expectedAnimeID, results[0].ID, "%s -> %s", term, expectedAnimeID)
 	}
+}
+
+func BenchmarkAnimeSearch(b *testing.B) {
+	b.ReportAllocs()
+
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			search.Anime("drgon bll", 1)
+		}
+	})
 }

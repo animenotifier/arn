@@ -36,13 +36,16 @@ func AdvancedStringSimilarity(a string, b string) float64 {
 		return 10000000
 	}
 
-	if strings.Replace(a, " ", "", -1) == strings.Replace(b, " ", "", -1) {
-		return 1000000
+	normalizedA := strings.Map(keepLettersAndDigits, a)
+	normalizedB := strings.Map(keepLettersAndDigits, b)
+
+	if normalizedA == normalizedB {
+		return 100000
 	}
 
 	s := StringSimilarity(a, b)
 
-	if strings.Contains(b, a) {
+	if strings.Contains(normalizedB, normalizedA) {
 		s += 0.6
 
 		if strings.HasPrefix(b, a) {
@@ -96,4 +99,13 @@ func PrettyPrint(obj interface{}) {
 	// See: https://github.com/json-iterator/go/pull/273
 	pretty, _ := jsoniter.MarshalIndent(obj, "", "    ")
 	fmt.Println(string(pretty))
+}
+
+// keepLettersAndDigits removes everything but letters and digits when used in strings.Map.
+func keepLettersAndDigits(r rune) rune {
+	if !unicode.IsLetter(r) && !unicode.IsDigit(r) {
+		return -1
+	}
+
+	return r
 }
