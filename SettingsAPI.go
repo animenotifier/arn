@@ -42,6 +42,10 @@ func (settings *Settings) Edit(ctx *aero.Context, key string, value reflect.Valu
 		}
 
 		return true, nil
+
+	case "CalendarSettings.ShowUserList":
+		settings.CalendarSettings.ShowUserList = newValue.Bool()
+		return true, nil
 	}
 
 	return false, nil

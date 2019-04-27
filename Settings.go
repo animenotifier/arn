@@ -29,16 +29,17 @@ const (
 
 // Settings represents user settings.
 type Settings struct {
-	UserID        string               `json:"userId"`
-	SortBy        string               `json:"sortBy"`
-	TitleLanguage string               `json:"titleLanguage" editable:"true"`
-	Providers     ServiceProviders     `json:"providers"`
-	Avatar        AvatarSettings       `json:"avatar"`
-	Format        FormatSettings       `json:"format"`
-	Notification  NotificationSettings `json:"notification"`
-	Editor        EditorSettings       `json:"editor"`
-	Privacy       PrivacySettings      `json:"privacy"`
-	Theme         string               `json:"theme" editable:"true"`
+	UserID           string               `json:"userId"`
+	SortBy           string               `json:"sortBy"`
+	TitleLanguage    string               `json:"titleLanguage" editable:"true"`
+	Providers        ServiceProviders     `json:"providers"`
+	Avatar           AvatarSettings       `json:"avatar"`
+	Format           FormatSettings       `json:"format"`
+	Notification     NotificationSettings `json:"notification"`
+	Editor           EditorSettings       `json:"editor"`
+	Privacy          PrivacySettings      `json:"privacy"`
+	Theme            string               `json:"theme" editable:"true"`
+	CalendarSettings CalendarSettings     `json:"calendar" editable:"true"`
 }
 
 // PrivacySettings ...
@@ -115,6 +116,11 @@ type AvatarSettings struct {
 	SourceURL string `json:"sourceUrl" editable:"true"`
 }
 
+// CalendarSettings ...
+type CalendarSettings struct {
+	ShowUserList bool `json:"showUserList" editable:"true"`
+}
+
 // NewSettings ...
 func NewSettings(user *User) *Settings {
 	return &Settings{
@@ -136,6 +142,9 @@ func NewSettings(user *User) *Settings {
 		},
 		Notification: DefaultNotificationSettings(),
 		Theme:        "light",
+		CalendarSettings: CalendarSettings{
+			ShowUserList: false,
+		},
 	}
 }
 
