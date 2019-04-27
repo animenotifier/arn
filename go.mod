@@ -16,13 +16,13 @@ require (
 	github.com/akyoto/webpush-go v0.1.0
 	github.com/animenotifier/anilist v0.2.0
 	github.com/animenotifier/ffxiv v0.1.0
-	github.com/animenotifier/japanese v0.1.1
+	github.com/animenotifier/japanese v0.2.0
 	github.com/animenotifier/kitsu v0.2.0
-	github.com/animenotifier/mal v0.1.2
+	github.com/animenotifier/mal v0.2.0
 	github.com/animenotifier/osu v0.1.0
 	github.com/animenotifier/overwatch v0.1.0
 	github.com/animenotifier/shoboi v0.2.0
-	github.com/animenotifier/twist v0.1.0
+	github.com/animenotifier/twist v0.2.0
 	github.com/json-iterator/go v1.1.6
 	github.com/logpacker/PayPal-Go-SDK v1.1.4
 	github.com/stretchr/testify v1.3.0
