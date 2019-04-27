@@ -6,7 +6,7 @@ require (
 	github.com/aerogo/aero v1.1.1
 	github.com/aerogo/api v0.1.3
 	github.com/aerogo/flow v0.1.1
-	github.com/aerogo/http v1.0.0
+	github.com/aerogo/http v1.0.1
 	github.com/aerogo/markdown v0.1.4
 	github.com/aerogo/mirror v0.1.2
 	github.com/aerogo/nano v0.1.4
@@ -16,7 +16,7 @@ require (
 	github.com/akyoto/webpush-go v0.1.0
 	github.com/animenotifier/anilist v0.2.0
 	github.com/animenotifier/ffxiv v0.1.0
-	github.com/animenotifier/japanese v0.2.0
+	github.com/animenotifier/japanese v0.2.1
 	github.com/animenotifier/kitsu v0.2.0
 	github.com/animenotifier/mal v0.2.0
 	github.com/animenotifier/osu v0.1.0
