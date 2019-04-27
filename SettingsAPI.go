@@ -22,18 +22,6 @@ func (settings *Settings) Authorize(ctx *aero.Context, action string) error {
 // Edit updates the settings object.
 func (settings *Settings) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
 	switch key {
-	// case "Avatar.Source":
-	// 	settings.Avatar.Source = newValue.String()
-	// 	settings.Save() // Save needed here because RefreshAvatar fetches the settings on a DIFFERENT server
-	// 	settings.User().RefreshAvatar()
-	// 	return true, nil
-
-	// case "Avatar.SourceURL":
-	// 	settings.Avatar.SourceURL = newValue.String()
-	// 	settings.Save() // Save needed here because RefreshAvatar fetches the settings on a DIFFERENT server
-	// 	settings.User().RefreshAvatar()
-	// 	return true, nil
-
 	case "Theme":
 		if settings.User().IsPro() {
 			settings.Theme = newValue.String()
@@ -41,10 +29,6 @@ func (settings *Settings) Edit(ctx *aero.Context, key string, value reflect.Valu
 			return true, errors.New("PRO accounts only")
 		}
 
-		return true, nil
-
-	case "CalendarSettings.ShowUserList":
-		settings.CalendarSettings.ShowUserList = newValue.Bool()
 		return true, nil
 	}
 

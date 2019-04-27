@@ -29,17 +29,17 @@ const (
 
 // Settings represents user settings.
 type Settings struct {
-	UserID           string               `json:"userId"`
-	SortBy           string               `json:"sortBy"`
-	TitleLanguage    string               `json:"titleLanguage" editable:"true"`
-	Providers        ServiceProviders     `json:"providers"`
-	Avatar           AvatarSettings       `json:"avatar"`
-	Format           FormatSettings       `json:"format"`
-	Notification     NotificationSettings `json:"notification"`
-	Editor           EditorSettings       `json:"editor"`
-	Privacy          PrivacySettings      `json:"privacy"`
-	Theme            string               `json:"theme" editable:"true"`
-	CalendarSettings CalendarSettings     `json:"calendar" editable:"true"`
+	UserID        string               `json:"userId"`
+	SortBy        string               `json:"sortBy"`
+	TitleLanguage string               `json:"titleLanguage" editable:"true"`
+	Providers     ServiceProviders     `json:"providers"`
+	Avatar        AvatarSettings       `json:"avatar"`
+	Format        FormatSettings       `json:"format"`
+	Notification  NotificationSettings `json:"notification"`
+	Editor        EditorSettings       `json:"editor"`
+	Privacy       PrivacySettings      `json:"privacy"`
+	Calendar      CalendarSettings     `json:"calendar" editable:"true"`
+	Theme         string               `json:"theme" editable:"true"`
 }
 
 // PrivacySettings ...
@@ -118,7 +118,7 @@ type AvatarSettings struct {
 
 // CalendarSettings ...
 type CalendarSettings struct {
-	ShowUserList bool `json:"showUserList" editable:"true"`
+	ShowAddedAnimeOnly bool `json:"showAddedAnimeOnly" editable:"true"`
 }
 
 // NewSettings ...
@@ -140,11 +140,11 @@ func NewSettings(user *User) *Settings {
 		Privacy: PrivacySettings{
 			ShowLocation: true,
 		},
+		Calendar: CalendarSettings{
+			ShowAddedAnimeOnly: false,
+		},
 		Notification: DefaultNotificationSettings(),
 		Theme:        "light",
-		CalendarSettings: CalendarSettings{
-			ShowUserList: false,
-		},
 	}
 }
 
