@@ -15,7 +15,10 @@ steps:
   - golangci-lint run
   - git clone --depth=1 https://github.com/animenotifier/notify.moe $ARN_ROOT
   - git clone --depth=1 https://github.com/animenotifier/database ~/.aero/db/arn
-  - go test -v -coverprofile=coverage.txt ./...
+  - go test -v -race -coverprofile=autocorrect.txt ./autocorrect
+  - go test -v -race -coverprofile=stringutils.txt ./stringutils
+  - go test -v -race -coverprofile=validate.txt ./validate
+  - go test -v -race -coverprofile=root.txt .
 
 - name: coverage
   image: plugins/codecov
@@ -23,7 +26,7 @@ steps:
     token:
       from_secret: codecov-token
     files:
-      - coverage.txt
+      - *.txt
 
 - name: discord
   image: appleboy/drone-discord
