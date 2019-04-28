@@ -6,7 +6,7 @@ steps:
   image: golang
   environment:
     GO111MODULE: on
-    ARN_ROOT: $HOME/notify.moe
+    ARN_ROOT: /notify.moe
   commands:
   - go version
   - go get
