@@ -245,7 +245,11 @@ func (post *Post) DeleteInContext(ctx *aero.Context) error {
 func (post *Post) Delete() error {
 	// Remove child posts first
 	for _, post := range post.Posts() {
-		post.Delete()
+		err := post.Delete()
+
+		if err != nil {
+			return err
+		}
 	}
 
 	parent := post.Parent()
@@ -264,7 +268,11 @@ func (post *Post) Delete() error {
 	// Remove activities
 	for activity := range StreamActivityCreates() {
 		if activity.ObjectID == post.ID && activity.ObjectType == "Post" {
-			activity.Delete()
+			err := activity.Delete()
+
+			if err != nil {
+				return err
+			}
 		}
 	}
 

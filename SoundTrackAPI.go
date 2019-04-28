@@ -120,7 +120,11 @@ func (track *SoundTrack) Delete() error {
 	}
 
 	for _, post := range track.Posts() {
-		post.Delete()
+		err := post.Delete()
+
+		if err != nil {
+			return err
+		}
 	}
 
 	DB.Delete("SoundTrack", track.ID)

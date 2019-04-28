@@ -96,7 +96,11 @@ func (amv *AMV) Delete() error {
 
 	// Remove posts
 	for _, post := range amv.Posts() {
-		post.Delete()
+		err := post.Delete()
+
+		if err != nil {
+			return err
+		}
 	}
 
 	// Remove file

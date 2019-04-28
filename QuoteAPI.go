@@ -96,7 +96,11 @@ func (quote *Quote) Delete() error {
 
 	// Remove posts
 	for _, post := range quote.Posts() {
-		post.Delete()
+		err := post.Delete()
+
+		if err != nil {
+			return err
+		}
 	}
 
 	// Remove main quote reference

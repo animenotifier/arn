@@ -128,7 +128,11 @@ func (character *Character) Delete() error {
 	// Delete from quotes
 	for quote := range StreamQuotes() {
 		if quote.CharacterID == character.ID {
-			quote.Delete()
+			err := quote.Delete()
+
+			if err != nil {
+				return err
+			}
 		}
 	}
 

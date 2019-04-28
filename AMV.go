@@ -94,8 +94,7 @@ func (amv *AMV) SetVideoBytes(data []byte) error {
 
 	// Refresh video file info
 	amv.File = fileName
-	amv.RefreshInfo()
-	return nil
+	return amv.RefreshInfo()
 }
 
 // RefreshInfo refreshes the information about the video file.

@@ -50,7 +50,11 @@ func NewAnimeFromKitsuAnime(kitsuAnime *kitsu.Anime) (*Anime, *AnimeCharacters, 
 	response, err := client.Get(attr.PosterImage.Original).End()
 
 	if err == nil && response.StatusCode() == http.StatusOK {
-		anime.SetImageBytes(response.Bytes())
+		err := anime.SetImageBytes(response.Bytes())
+
+		if err != nil {
+			color.Red("Couldn't set image for [%s] %s (%s)", anime.ID, anime, err.Error())
+		}
 	} else {
 		color.Red("No image for [%s] %s (%d)", anime.ID, anime, response.StatusCode())
 	}

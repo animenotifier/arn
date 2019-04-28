@@ -138,7 +138,11 @@ func RegisterUser(user *User) {
 
 		if err == nil && response.StatusCode() == http.StatusOK {
 			data := response.Bytes()
-			user.SetAvatarBytes(data)
+			err = user.SetAvatarBytes(data)
+
+			if err != nil {
+				fmt.Println(err)
+			}
 		}
 	}
 }
@@ -156,7 +160,13 @@ func (user *User) SendNotification(pushNotification *PushNotification) {
 	notification.Save()
 
 	userNotifications := user.Notifications()
-	userNotifications.Add(notification.ID)
+	err := userNotifications.Add(notification.ID)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
 	userNotifications.Save()
 
 	// Send push notification

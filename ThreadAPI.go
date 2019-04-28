@@ -164,13 +164,21 @@ func (thread *Thread) DeleteInContext(ctx *aero.Context) error {
 // Delete deletes the thread and its posts from the database.
 func (thread *Thread) Delete() error {
 	for _, post := range thread.Posts() {
-		post.Delete()
+		err := post.Delete()
+
+		if err != nil {
+			return err
+		}
 	}
 
 	// Remove activities
 	for activity := range StreamActivityCreates() {
 		if activity.ObjectID == thread.ID && activity.ObjectType == "Thread" {
-			activity.Delete()
+			err := activity.Delete()
+
+			if err != nil {
+				return err
+			}
 		}
 	}
 

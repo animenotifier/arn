@@ -14,6 +14,7 @@ func TestInventory(t *testing.T) {
 	assert.Len(t, inventory.Slots, arn.DefaultInventorySlotCount)
 	assert.False(t, inventory.ContainsItem("pro-account-3"))
 
-	inventory.AddItem("pro-account-3", 1)
+	err := inventory.AddItem("pro-account-3", 1)
+	assert.NoError(t, err)
 	assert.True(t, inventory.ContainsItem("pro-account-3"))
 }

@@ -141,7 +141,11 @@ func (anime *Anime) Delete() error {
 
 	// Remove posts
 	for _, post := range anime.Posts() {
-		post.Delete()
+		err := post.Delete()
+
+		if err != nil {
+			return err
+		}
 	}
 
 	// Delete soundtrack tags

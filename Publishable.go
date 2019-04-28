@@ -86,7 +86,12 @@ func publish(draft Publishable) error {
 
 	// Publish the object
 	draft.SetIsDraft(false)
-	draftIndex.SetID(typ.Name(), "")
+	err = draftIndex.SetID(typ.Name(), "")
+
+	if err != nil {
+		return err
+	}
+
 	draftIndex.Save()
 
 	return nil
@@ -115,7 +120,12 @@ func unpublish(draft Publishable) error {
 	}
 
 	draft.SetIsDraft(true)
-	draftIndex.SetID(typ.Name(), draft.GetID())
+	err = draftIndex.SetID(typ.Name(), draft.GetID())
+
+	if err != nil {
+		return err
+	}
+
 	draftIndex.Save()
 	return nil
 }

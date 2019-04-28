@@ -78,7 +78,12 @@ func init() {
 					return err
 				}
 
-				inventory.SwapSlots(a, b)
+				err = inventory.SwapSlots(a, b)
+
+				if err != nil {
+					return err
+				}
+
 				inventory.Save()
 
 				return nil
