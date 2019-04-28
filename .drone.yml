@@ -26,7 +26,10 @@ steps:
     token:
       from_secret: codecov-token
     files:
-      - *.txt
+      - root.txt
+      - autocorrect.txt
+      - stringutils.txt
+      - validate.txt
 
 - name: discord
   image: appleboy/drone-discord
