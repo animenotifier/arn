@@ -9,7 +9,7 @@ steps:
     ARN_ROOT: /notify.moe
   commands:
   - go version
-  - go get
+  - go get ./...
   - go build ./...
   - curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(go env GOPATH)/bin v1.16.0
   - golangci-lint run
