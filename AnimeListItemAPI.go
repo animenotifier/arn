@@ -26,6 +26,10 @@ func (item *AnimeListItem) Edit(ctx *aero.Context, key string, value reflect.Val
 
 	switch key {
 	case "Episodes":
+		if !newValue.IsValid() {
+			return true, errors.New("Invalid episode number")
+		}
+
 		oldEpisodes := item.Episodes
 		newEpisodes := int(newValue.Float())
 
