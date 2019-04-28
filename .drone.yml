@@ -15,7 +15,7 @@ steps:
   - golangci-lint run
   - git clone --depth=1 https://github.com/animenotifier/notify.moe $ARN_ROOT
   - git clone --depth=1 https://github.com/animenotifier/database ~/.aero/db/arn
-  - go test -v -race -coverprofile=coverage.txt ./...
+  - go test -v -coverprofile=coverage.txt ./...
 
 - name: coverage
   image: plugins/codecov
