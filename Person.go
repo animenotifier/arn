@@ -3,12 +3,9 @@ package arn
 import (
 	"errors"
 	"fmt"
-	"os"
-	"path"
 	"sort"
 
 	"github.com/aerogo/nano"
-	"github.com/akyoto/color"
 )
 
 // Person represents a person in real life.
@@ -105,31 +102,7 @@ func GetPerson(id string) (*Person, error) {
 
 // DeleteImages deletes all images for the person.
 func (person *Person) DeleteImages() {
-	if person.Image.Extension == "" {
-		return
-	}
-
-	err := os.Remove(path.Join(Root, "images/persons/original/", person.ID+person.Image.Extension))
-
-	if err != nil {
-		// Don't return the error.
-		// It's too late to stop the process at this point.
-		// Instead, log the error.
-		color.Red(err.Error())
-	}
-
-	os.Remove(path.Join(Root, "images/persons/large/", person.ID+".jpg"))
-	os.Remove(path.Join(Root, "images/persons/large/", person.ID+"@2.jpg"))
-	os.Remove(path.Join(Root, "images/persons/large/", person.ID+".webp"))
-	os.Remove(path.Join(Root, "images/persons/large/", person.ID+"@2.webp"))
-	os.Remove(path.Join(Root, "images/persons/medium/", person.ID+".jpg"))
-	os.Remove(path.Join(Root, "images/persons/medium/", person.ID+"@2.jpg"))
-	os.Remove(path.Join(Root, "images/persons/medium/", person.ID+".webp"))
-	os.Remove(path.Join(Root, "images/persons/medium/", person.ID+"@2.webp"))
-	os.Remove(path.Join(Root, "images/persons/small/", person.ID+".jpg"))
-	os.Remove(path.Join(Root, "images/persons/small/", person.ID+"@2.jpg"))
-	os.Remove(path.Join(Root, "images/persons/small/", person.ID+".webp"))
-	os.Remove(path.Join(Root, "images/persons/small/", person.ID+"@2.webp"))
+	deleteImages("persons", person.ID, person.Image.Extension)
 }
 
 // SortPersonsByLikes sorts the given slice of persons by the amount of likes.

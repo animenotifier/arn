@@ -22,7 +22,7 @@ require (
 	github.com/animenotifier/kitsu v0.2.1
 	github.com/animenotifier/mal v0.2.1
 	github.com/animenotifier/osu v0.1.0
-	github.com/animenotifier/overwatch v0.1.0
+	github.com/animenotifier/overwatch v0.1.1
 	github.com/animenotifier/shoboi v0.2.1
 	github.com/animenotifier/twist v0.2.1
 	github.com/json-iterator/go v1.1.6
@@ -32,7 +32,7 @@ require (
 	github.com/ungerik/go-gravatar v0.0.0-20120802094239-6ab22628222a
 	github.com/ventu-io/go-shortid v0.0.0-20171029131806-771a37caa5cf
 	github.com/xrash/smetrics v0.0.0-20170218160415-a3153f7040e9
-	golang.org/x/sys v0.0.0-20190429094411-2cc0cad0ac78 // indirect
+	golang.org/x/sys v0.0.0-20190429190828-d89cdac9e872 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 )

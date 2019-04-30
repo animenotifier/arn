@@ -64,8 +64,8 @@ github.com/animenotifier/mal v0.2.1 h1:x65EcBc84AHB6okvCXiIQxiz8MrhkgUqz6eU0/BG0
 github.com/animenotifier/mal v0.2.1/go.mod h1:HF/6kT5D9ZqEBNvIXnicMs4PfRK1LdF9lEurmXctlfQ=
 github.com/animenotifier/osu v0.1.0 h1:hohUvID0x2c7Yy5IAgikDG/V3GavuNORNlK7eHgtRe0=
 github.com/animenotifier/osu v0.1.0/go.mod h1:Q8ALGMj+LHrGGDjq0a2hZd3QtHDKlE2HHmsyKxUYlPQ=
-github.com/animenotifier/overwatch v0.1.0 h1:GGt/4iZdR15j9TBO6YyG06zIflnlAS1Y4yigTwyNQ5Y=
-github.com/animenotifier/overwatch v0.1.0/go.mod h1:mVw/QAd1Kvy0umdBarb/fO9l3aA6OUMvam3CehpwCqU=
+github.com/animenotifier/overwatch v0.1.1 h1:1Vjr+pymQ9sojcbfzdLNJsGJo0zLTOgk9Kq5YXuaEt4=
+github.com/animenotifier/overwatch v0.1.1/go.mod h1:hK5VChIAmmb24ogITqHVfgzk9993x3+Lxrdw/5Unldw=
 github.com/animenotifier/shoboi v0.2.1 h1:EtDAV3Yw0Q0ZpeSTV4GDO3KlIhS0+EBT/pL+Q8GabmQ=
 github.com/animenotifier/shoboi v0.2.1/go.mod h1:ogHe4CXlTbNHYgxEwa8Cpt7K+undsSU5q+O7OXkssqY=
 github.com/animenotifier/twist v0.2.1 h1:/meb8VkoB1gPWUeHhwvU+uEmOhT/Uj2SrxDiPTkoYac=
@@ -148,8 +148,8 @@ golang.org/x/sys v0.0.0-20190426135247-a129542de9ae h1:mQLHiymj/JXKnnjc62tb7nD5p
 golang.org/x/sys v0.0.0-20190426135247-a129542de9ae/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20190428183149-804c0c7841b5 h1:m0i9YywO9THhxmJvLEwKJDD/pD8ljCB+EaT/wYS41Is=
 golang.org/x/sys v0.0.0-20190428183149-804c0c7841b5/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
-golang.org/x/sys v0.0.0-20190429094411-2cc0cad0ac78 h1:ddnrbGOgFiC0zV+uaYoSkl0f47vnII6Zu426zWQrWkg=
-golang.org/x/sys v0.0.0-20190429094411-2cc0cad0ac78/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.0.0-20190429190828-d89cdac9e872 h1:cGjJzUd8RgBw428LXP65YXni0aiGNA4Bl+ls8SmLOm8=
+golang.org/x/sys v0.0.0-20190429190828-d89cdac9e872/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
 gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc h1:2gGKlE2+asNV9m7xrywl36YYNnBG5ZQ0r/BOOxqPpmk=
 gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc/go.mod h1:m7x9LTH6d71AHyAX77c9yqWCCa3UKHcVEj9y7hAtKDk=

@@ -4,6 +4,8 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"os"
+	"path"
 	"reflect"
 	"regexp"
 	"strconv"
@@ -12,6 +14,7 @@ import (
 
 	"github.com/aerogo/aero"
 	"github.com/aerogo/mirror"
+	"github.com/akyoto/color"
 	"github.com/animenotifier/kitsu"
 	"github.com/animenotifier/mal"
 	jsoniter "github.com/json-iterator/go"
@@ -344,4 +347,33 @@ func PanicOnError(err error) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+// deleteImages deletes images in the given folder.
+func deleteImages(folderName string, id string, originalExtension string) {
+	if originalExtension == "" {
+		return
+	}
+
+	err := os.Remove(path.Join(Root, "images", folderName, "original", id+originalExtension))
+
+	if err != nil {
+		// Don't return the error.
+		// It's too late to stop the process at this point.
+		// Instead, log the error.
+		color.Red(err.Error())
+	}
+
+	os.Remove(path.Join(Root, "images", folderName, "large", id+".jpg"))
+	os.Remove(path.Join(Root, "images", folderName, "large", id+"@2.jpg"))
+	os.Remove(path.Join(Root, "images", folderName, "large", id+".webp"))
+	os.Remove(path.Join(Root, "images", folderName, "large", id+"@2.webp"))
+	os.Remove(path.Join(Root, "images", folderName, "medium", id+".jpg"))
+	os.Remove(path.Join(Root, "images", folderName, "medium", id+"@2.jpg"))
+	os.Remove(path.Join(Root, "images", folderName, "medium", id+".webp"))
+	os.Remove(path.Join(Root, "images", folderName, "medium", id+"@2.webp"))
+	os.Remove(path.Join(Root, "images", folderName, "small", id+".jpg"))
+	os.Remove(path.Join(Root, "images", folderName, "small", id+"@2.jpg"))
+	os.Remove(path.Join(Root, "images", folderName, "small", id+".webp"))
+	os.Remove(path.Join(Root, "images", folderName, "small", id+"@2.webp"))
 }

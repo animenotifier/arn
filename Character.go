@@ -3,12 +3,9 @@ package arn
 import (
 	"errors"
 	"fmt"
-	"os"
-	"path"
 	"sort"
 
 	"github.com/aerogo/nano"
-	"github.com/akyoto/color"
 )
 
 // Character represents an anime or manga character.
@@ -190,31 +187,7 @@ func (character *Character) Merge(target *Character) {
 
 // DeleteImages deletes all images for the character.
 func (character *Character) DeleteImages() {
-	if character.Image.Extension == "" {
-		return
-	}
-
-	err := os.Remove(path.Join(Root, "images/characters/original/", character.ID+character.Image.Extension))
-
-	if err != nil {
-		// Don't return the error.
-		// It's too late to stop the process at this point.
-		// Instead, log the error.
-		color.Red(err.Error())
-	}
-
-	os.Remove(path.Join(Root, "images/characters/large/", character.ID+".jpg"))
-	os.Remove(path.Join(Root, "images/characters/large/", character.ID+"@2.jpg"))
-	os.Remove(path.Join(Root, "images/characters/large/", character.ID+".webp"))
-	os.Remove(path.Join(Root, "images/characters/large/", character.ID+"@2.webp"))
-	os.Remove(path.Join(Root, "images/characters/medium/", character.ID+".jpg"))
-	os.Remove(path.Join(Root, "images/characters/medium/", character.ID+"@2.jpg"))
-	os.Remove(path.Join(Root, "images/characters/medium/", character.ID+".webp"))
-	os.Remove(path.Join(Root, "images/characters/medium/", character.ID+"@2.webp"))
-	os.Remove(path.Join(Root, "images/characters/small/", character.ID+".jpg"))
-	os.Remove(path.Join(Root, "images/characters/small/", character.ID+"@2.jpg"))
-	os.Remove(path.Join(Root, "images/characters/small/", character.ID+".webp"))
-	os.Remove(path.Join(Root, "images/characters/small/", character.ID+"@2.webp"))
+	deleteImages("characters", character.ID, character.Image.Extension)
 }
 
 // Quotes returns the list of quotes for this character.
