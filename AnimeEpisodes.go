@@ -1,7 +1,6 @@
 package arn
 
 import (
-	"bytes"
 	"sort"
 	"strconv"
 	"strings"
@@ -112,7 +111,7 @@ func (episodes *AnimeEpisodes) ListString() string {
 	episodes.Lock()
 	defer episodes.Unlock()
 
-	b := bytes.Buffer{}
+	b := strings.Builder{}
 
 	for _, episode := range episodes.Items {
 		b.WriteString(strconv.Itoa(episode.Number))
