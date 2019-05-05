@@ -54,6 +54,7 @@ var animeImageOutputs = []imageserver.Output{
 		Directory: path.Join(Root, "images/anime/original/"),
 		Width:     0,
 		Height:    0,
+		Quality:   0,
 	},
 
 	// JPEG - Large

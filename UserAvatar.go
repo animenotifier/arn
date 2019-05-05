@@ -18,6 +18,9 @@ const (
 
 	// AvatarWebPQuality is the WebP quality of avatars.
 	AvatarWebPQuality = 80
+
+	// AvatarJPEGQuality is the JPEG quality of avatars.
+	AvatarJPEGQuality = 80
 )
 
 // Define the avatar outputs
@@ -27,6 +30,7 @@ var avatarOutputs = []imageserver.Output{
 		Directory: path.Join(Root, "images/avatars/large/"),
 		Width:     AvatarMaxSize,
 		Height:    AvatarMaxSize,
+		Quality:   AvatarJPEGQuality,
 	},
 
 	// Original - Small
@@ -34,6 +38,7 @@ var avatarOutputs = []imageserver.Output{
 		Directory: path.Join(Root, "images/avatars/small/"),
 		Width:     AvatarSmallSize,
 		Height:    AvatarSmallSize,
+		Quality:   AvatarJPEGQuality,
 	},
 
 	// WebP - Large
