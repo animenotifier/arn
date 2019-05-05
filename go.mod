@@ -12,7 +12,7 @@ require (
 	github.com/aerogo/nano v0.1.7
 	github.com/akyoto/color v1.8.3
 	github.com/akyoto/go-matroska v0.1.0
-	github.com/akyoto/imageserver v0.3.4
+	github.com/akyoto/imageserver v0.3.5
 	github.com/akyoto/webpush-go v0.1.1
 	github.com/animenotifier/anilist v0.2.2
 	github.com/animenotifier/ffxiv v0.1.0
