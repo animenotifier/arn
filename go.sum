@@ -58,6 +58,8 @@ github.com/akyoto/go-matroska v0.1.0 h1:efUbSmfeHHLqYxWBHkrllHSWX5JrxYaYNGkQ8CEr
 github.com/akyoto/go-matroska v0.1.0/go.mod h1:x+GUVwyby6HN/MKKNP4BvGqP9VrHuEznfBf288gehek=
 github.com/akyoto/imageserver v0.2.0 h1:siNK0R9vD/vUI77GFPQRHgQ0CYyVV3jSLETDSkAGBh8=
 github.com/akyoto/imageserver v0.2.0/go.mod h1:hgcpcjMEEOVqkRGjTw98/NgLminoie4R/XH+7OeY4HE=
+github.com/akyoto/imageserver v0.3.1 h1:0Vmv2VIzwPTHcPodlnnL4c/X0/r446lE+Vb3c1bDus4=
+github.com/akyoto/imageserver v0.3.1/go.mod h1:hgcpcjMEEOVqkRGjTw98/NgLminoie4R/XH+7OeY4HE=
 github.com/akyoto/webpush-go v0.1.1 h1:oQx87KF5uAKLArM0nOXG7Yy7PesrdlT8hDYcCM29TQA=
 github.com/akyoto/webpush-go v0.1.1/go.mod h1:DD2XwHePwpzsnzzPw9EifowMUvKUFhJ7FwRSBnbs+p8=
 github.com/andybalholm/cascadia v1.0.0 h1:hOCXnnZ5A+3eVDX8pvgl4kofXv2ELss0bKcqRySc45o=
