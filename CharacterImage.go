@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/aerogo/http/client"
-	"github.com/akyoto/imageoutput"
+	"github.com/akyoto/imageserver"
 )
 
 const (
@@ -53,16 +53,16 @@ const (
 )
 
 // Define the character image outputs
-var characterImageOutputs = []imageoutput.Output{
+var characterImageOutputs = []imageserver.Output{
 	// Original at full size
-	&imageoutput.OriginalFile{
+	&imageserver.OriginalFile{
 		Directory: path.Join(Root, "images/characters/original/"),
 		Width:     0,
 		Height:    0,
 	},
 
 	// JPEG - Large
-	&imageoutput.JPEGFile{
+	&imageserver.JPEGFile{
 		Directory: path.Join(Root, "images/characters/large/"),
 		Width:     CharacterImageLargeWidth,
 		Height:    CharacterImageLargeHeight,
@@ -70,7 +70,7 @@ var characterImageOutputs = []imageoutput.Output{
 	},
 
 	// JPEG - Medium
-	&imageoutput.JPEGFile{
+	&imageserver.JPEGFile{
 		Directory: path.Join(Root, "images/characters/medium/"),
 		Width:     CharacterImageMediumWidth,
 		Height:    CharacterImageMediumHeight,
@@ -78,7 +78,7 @@ var characterImageOutputs = []imageoutput.Output{
 	},
 
 	// JPEG - Small
-	&imageoutput.JPEGFile{
+	&imageserver.JPEGFile{
 		Directory: path.Join(Root, "images/characters/small/"),
 		Width:     CharacterImageSmallWidth,
 		Height:    CharacterImageSmallHeight,
@@ -86,7 +86,7 @@ var characterImageOutputs = []imageoutput.Output{
 	},
 
 	// WebP - Large
-	&imageoutput.WebPFile{
+	&imageserver.WebPFile{
 		Directory: path.Join(Root, "images/characters/large/"),
 		Width:     CharacterImageLargeWidth,
 		Height:    CharacterImageLargeHeight,
@@ -94,7 +94,7 @@ var characterImageOutputs = []imageoutput.Output{
 	},
 
 	// WebP - Medium
-	&imageoutput.WebPFile{
+	&imageserver.WebPFile{
 		Directory: path.Join(Root, "images/characters/medium/"),
 		Width:     CharacterImageMediumWidth,
 		Height:    CharacterImageMediumHeight,
@@ -102,7 +102,7 @@ var characterImageOutputs = []imageoutput.Output{
 	},
 
 	// WebP - Small
-	&imageoutput.WebPFile{
+	&imageserver.WebPFile{
 		Directory: path.Join(Root, "images/characters/small/"),
 		Width:     CharacterImageSmallWidth,
 		Height:    CharacterImageSmallHeight,
@@ -111,11 +111,11 @@ var characterImageOutputs = []imageoutput.Output{
 }
 
 // Define the high DPI character image outputs
-var characterImageOutputsHighDPI = []imageoutput.Output{
+var characterImageOutputsHighDPI = []imageserver.Output{
 	// NOTE: We don't save "large" images in double size because that's usually the maximum size anyway.
 
 	// JPEG - Medium
-	&imageoutput.JPEGFile{
+	&imageserver.JPEGFile{
 		Directory: path.Join(Root, "images/characters/medium/"),
 		Width:     CharacterImageMediumWidth * 2,
 		Height:    CharacterImageMediumHeight * 2,
@@ -123,7 +123,7 @@ var characterImageOutputsHighDPI = []imageoutput.Output{
 	},
 
 	// JPEG - Small
-	&imageoutput.JPEGFile{
+	&imageserver.JPEGFile{
 		Directory: path.Join(Root, "images/characters/small/"),
 		Width:     CharacterImageSmallWidth * 2,
 		Height:    CharacterImageSmallHeight * 2,
@@ -131,7 +131,7 @@ var characterImageOutputsHighDPI = []imageoutput.Output{
 	},
 
 	// WebP - Medium
-	&imageoutput.WebPFile{
+	&imageserver.WebPFile{
 		Directory: path.Join(Root, "images/characters/medium/"),
 		Width:     CharacterImageMediumWidth * 2,
 		Height:    CharacterImageMediumHeight * 2,
@@ -139,7 +139,7 @@ var characterImageOutputsHighDPI = []imageoutput.Output{
 	},
 
 	// WebP - Small
-	&imageoutput.WebPFile{
+	&imageserver.WebPFile{
 		Directory: path.Join(Root, "images/characters/small/"),
 		Width:     CharacterImageSmallWidth * 2,
 		Height:    CharacterImageSmallHeight * 2,
@@ -159,7 +159,7 @@ func (character *Character) SetImageBytes(data []byte) error {
 		return err
 	}
 
-	return character.SetImage(&imageoutput.MetaImage{
+	return character.SetImage(&imageserver.MetaImage{
 		Image:  img,
 		Format: format,
 		Data:   data,
@@ -167,7 +167,7 @@ func (character *Character) SetImageBytes(data []byte) error {
 }
 
 // SetImage sets the character image to the given MetaImage.
-func (character *Character) SetImage(metaImage *imageoutput.MetaImage) error {
+func (character *Character) SetImage(metaImage *imageserver.MetaImage) error {
 	var lastError error
 
 	// Save the different image formats and sizes in low DPI

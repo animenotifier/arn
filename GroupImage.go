@@ -6,7 +6,7 @@ import (
 	"path"
 	"time"
 
-	"github.com/akyoto/imageoutput"
+	"github.com/akyoto/imageserver"
 )
 
 const (
@@ -39,16 +39,16 @@ const (
 )
 
 // Define the group image outputs
-var groupImageOutputs = []imageoutput.Output{
+var groupImageOutputs = []imageserver.Output{
 	// Original at full size
-	&imageoutput.OriginalFile{
+	&imageserver.OriginalFile{
 		Directory: path.Join(Root, "images/groups/original/"),
 		Width:     0,
 		Height:    0,
 	},
 
 	// JPEG - Small
-	&imageoutput.JPEGFile{
+	&imageserver.JPEGFile{
 		Directory: path.Join(Root, "images/groups/small/"),
 		Width:     GroupImageSmallWidth,
 		Height:    GroupImageSmallHeight,
@@ -56,7 +56,7 @@ var groupImageOutputs = []imageoutput.Output{
 	},
 
 	// JPEG - Large
-	&imageoutput.JPEGFile{
+	&imageserver.JPEGFile{
 		Directory: path.Join(Root, "images/groups/large/"),
 		Width:     GroupImageLargeWidth,
 		Height:    GroupImageLargeHeight,
@@ -64,7 +64,7 @@ var groupImageOutputs = []imageoutput.Output{
 	},
 
 	// WebP - Small
-	&imageoutput.WebPFile{
+	&imageserver.WebPFile{
 		Directory: path.Join(Root, "images/groups/small/"),
 		Width:     GroupImageSmallWidth,
 		Height:    GroupImageSmallHeight,
@@ -72,7 +72,7 @@ var groupImageOutputs = []imageoutput.Output{
 	},
 
 	// WebP - Large
-	&imageoutput.WebPFile{
+	&imageserver.WebPFile{
 		Directory: path.Join(Root, "images/groups/large/"),
 		Width:     GroupImageLargeWidth,
 		Height:    GroupImageLargeHeight,
@@ -81,9 +81,9 @@ var groupImageOutputs = []imageoutput.Output{
 }
 
 // Define the high DPI group image outputs
-var groupImageOutputsHighDPI = []imageoutput.Output{
+var groupImageOutputsHighDPI = []imageserver.Output{
 	// JPEG - Small
-	&imageoutput.JPEGFile{
+	&imageserver.JPEGFile{
 		Directory: path.Join(Root, "images/groups/small/"),
 		Width:     GroupImageSmallWidth * 2,
 		Height:    GroupImageSmallHeight * 2,
@@ -91,7 +91,7 @@ var groupImageOutputsHighDPI = []imageoutput.Output{
 	},
 
 	// JPEG - Large
-	&imageoutput.JPEGFile{
+	&imageserver.JPEGFile{
 		Directory: path.Join(Root, "images/groups/large/"),
 		Width:     GroupImageLargeWidth * 2,
 		Height:    GroupImageLargeHeight * 2,
@@ -99,7 +99,7 @@ var groupImageOutputsHighDPI = []imageoutput.Output{
 	},
 
 	// WebP - Small
-	&imageoutput.WebPFile{
+	&imageserver.WebPFile{
 		Directory: path.Join(Root, "images/groups/small/"),
 		Width:     GroupImageSmallWidth * 2,
 		Height:    GroupImageSmallHeight * 2,
@@ -107,7 +107,7 @@ var groupImageOutputsHighDPI = []imageoutput.Output{
 	},
 
 	// WebP - Large
-	&imageoutput.WebPFile{
+	&imageserver.WebPFile{
 		Directory: path.Join(Root, "images/groups/large/"),
 		Width:     GroupImageLargeWidth * 2,
 		Height:    GroupImageLargeHeight * 2,
@@ -127,7 +127,7 @@ func (group *Group) SetImageBytes(data []byte) error {
 		return err
 	}
 
-	return group.SetImage(&imageoutput.MetaImage{
+	return group.SetImage(&imageserver.MetaImage{
 		Image:  img,
 		Format: format,
 		Data:   data,
@@ -135,7 +135,7 @@ func (group *Group) SetImageBytes(data []byte) error {
 }
 
 // SetImage sets the group image to the given MetaImage.
-func (group *Group) SetImage(metaImage *imageoutput.MetaImage) error {
+func (group *Group) SetImage(metaImage *imageserver.MetaImage) error {
 	var lastError error
 
 	// Save the different image formats and sizes in low DPI

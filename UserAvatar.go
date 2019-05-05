@@ -6,7 +6,7 @@ import (
 	"path"
 	"time"
 
-	"github.com/akyoto/imageoutput"
+	"github.com/akyoto/imageserver"
 )
 
 const (
@@ -21,23 +21,23 @@ const (
 )
 
 // Define the avatar outputs
-var avatarOutputs = []imageoutput.Output{
+var avatarOutputs = []imageserver.Output{
 	// Original - Large
-	&imageoutput.OriginalFile{
+	&imageserver.OriginalFile{
 		Directory: path.Join(Root, "images/avatars/large/"),
 		Width:     AvatarMaxSize,
 		Height:    AvatarMaxSize,
 	},
 
 	// Original - Small
-	&imageoutput.OriginalFile{
+	&imageserver.OriginalFile{
 		Directory: path.Join(Root, "images/avatars/small/"),
 		Width:     AvatarSmallSize,
 		Height:    AvatarSmallSize,
 	},
 
 	// WebP - Large
-	&imageoutput.WebPFile{
+	&imageserver.WebPFile{
 		Directory: path.Join(Root, "images/avatars/large/"),
 		Width:     AvatarMaxSize,
 		Height:    AvatarMaxSize,
@@ -45,7 +45,7 @@ var avatarOutputs = []imageoutput.Output{
 	},
 
 	// WebP - Small
-	&imageoutput.WebPFile{
+	&imageserver.WebPFile{
 		Directory: path.Join(Root, "images/avatars/small/"),
 		Width:     AvatarSmallSize,
 		Height:    AvatarSmallSize,
@@ -69,7 +69,7 @@ func (user *User) SetAvatarBytes(data []byte) error {
 		return err
 	}
 
-	return user.SetAvatar(&imageoutput.MetaImage{
+	return user.SetAvatar(&imageserver.MetaImage{
 		Image:  img,
 		Format: format,
 		Data:   data,
@@ -77,7 +77,7 @@ func (user *User) SetAvatarBytes(data []byte) error {
 }
 
 // SetAvatar sets the avatar to the given MetaImage.
-func (user *User) SetAvatar(avatar *imageoutput.MetaImage) error {
+func (user *User) SetAvatar(avatar *imageserver.MetaImage) error {
 	var lastError error
 
 	// Save the different image formats and sizes

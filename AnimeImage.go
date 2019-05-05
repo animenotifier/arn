@@ -6,7 +6,7 @@ import (
 	"path"
 	"time"
 
-	"github.com/akyoto/imageoutput"
+	"github.com/akyoto/imageserver"
 )
 
 const (
@@ -48,16 +48,16 @@ const (
 )
 
 // Define the anime image outputs
-var animeImageOutputs = []imageoutput.Output{
+var animeImageOutputs = []imageserver.Output{
 	// Original at full size
-	&imageoutput.OriginalFile{
+	&imageserver.OriginalFile{
 		Directory: path.Join(Root, "images/anime/original/"),
 		Width:     0,
 		Height:    0,
 	},
 
 	// JPEG - Large
-	&imageoutput.JPEGFile{
+	&imageserver.JPEGFile{
 		Directory: path.Join(Root, "images/anime/large/"),
 		Width:     AnimeImageLargeWidth,
 		Height:    AnimeImageLargeHeight,
@@ -65,7 +65,7 @@ var animeImageOutputs = []imageoutput.Output{
 	},
 
 	// JPEG - Medium
-	&imageoutput.JPEGFile{
+	&imageserver.JPEGFile{
 		Directory: path.Join(Root, "images/anime/medium/"),
 		Width:     AnimeImageMediumWidth,
 		Height:    AnimeImageMediumHeight,
@@ -73,7 +73,7 @@ var animeImageOutputs = []imageoutput.Output{
 	},
 
 	// JPEG - Small
-	&imageoutput.JPEGFile{
+	&imageserver.JPEGFile{
 		Directory: path.Join(Root, "images/anime/small/"),
 		Width:     AnimeImageSmallWidth,
 		Height:    AnimeImageSmallHeight,
@@ -81,7 +81,7 @@ var animeImageOutputs = []imageoutput.Output{
 	},
 
 	// WebP - Large
-	&imageoutput.WebPFile{
+	&imageserver.WebPFile{
 		Directory: path.Join(Root, "images/anime/large/"),
 		Width:     AnimeImageLargeWidth,
 		Height:    AnimeImageLargeHeight,
@@ -89,7 +89,7 @@ var animeImageOutputs = []imageoutput.Output{
 	},
 
 	// WebP - Medium
-	&imageoutput.WebPFile{
+	&imageserver.WebPFile{
 		Directory: path.Join(Root, "images/anime/medium/"),
 		Width:     AnimeImageMediumWidth,
 		Height:    AnimeImageMediumHeight,
@@ -97,7 +97,7 @@ var animeImageOutputs = []imageoutput.Output{
 	},
 
 	// WebP - Small
-	&imageoutput.WebPFile{
+	&imageserver.WebPFile{
 		Directory: path.Join(Root, "images/anime/small/"),
 		Width:     AnimeImageSmallWidth,
 		Height:    AnimeImageSmallHeight,
@@ -106,9 +106,9 @@ var animeImageOutputs = []imageoutput.Output{
 }
 
 // Define the high DPI anime image outputs
-var animeImageOutputsHighDPI = []imageoutput.Output{
+var animeImageOutputsHighDPI = []imageserver.Output{
 	// JPEG - Large
-	&imageoutput.JPEGFile{
+	&imageserver.JPEGFile{
 		Directory: path.Join(Root, "images/anime/large/"),
 		Width:     AnimeImageLargeWidth * 2,
 		Height:    AnimeImageLargeHeight * 2,
@@ -116,7 +116,7 @@ var animeImageOutputsHighDPI = []imageoutput.Output{
 	},
 
 	// JPEG - Medium
-	&imageoutput.JPEGFile{
+	&imageserver.JPEGFile{
 		Directory: path.Join(Root, "images/anime/medium/"),
 		Width:     AnimeImageMediumWidth * 2,
 		Height:    AnimeImageMediumHeight * 2,
@@ -124,7 +124,7 @@ var animeImageOutputsHighDPI = []imageoutput.Output{
 	},
 
 	// JPEG - Small
-	&imageoutput.JPEGFile{
+	&imageserver.JPEGFile{
 		Directory: path.Join(Root, "images/anime/small/"),
 		Width:     AnimeImageSmallWidth * 2,
 		Height:    AnimeImageSmallHeight * 2,
@@ -132,7 +132,7 @@ var animeImageOutputsHighDPI = []imageoutput.Output{
 	},
 
 	// WebP - Large
-	&imageoutput.WebPFile{
+	&imageserver.WebPFile{
 		Directory: path.Join(Root, "images/anime/large/"),
 		Width:     AnimeImageLargeWidth * 2,
 		Height:    AnimeImageLargeHeight * 2,
@@ -140,7 +140,7 @@ var animeImageOutputsHighDPI = []imageoutput.Output{
 	},
 
 	// WebP - Medium
-	&imageoutput.WebPFile{
+	&imageserver.WebPFile{
 		Directory: path.Join(Root, "images/anime/medium/"),
 		Width:     AnimeImageMediumWidth * 2,
 		Height:    AnimeImageMediumHeight * 2,
@@ -148,7 +148,7 @@ var animeImageOutputsHighDPI = []imageoutput.Output{
 	},
 
 	// WebP - Small
-	&imageoutput.WebPFile{
+	&imageserver.WebPFile{
 		Directory: path.Join(Root, "images/anime/small/"),
 		Width:     AnimeImageSmallWidth * 2,
 		Height:    AnimeImageSmallHeight * 2,
@@ -174,7 +174,7 @@ func (anime *Anime) SetImageBytes(data []byte) error {
 		return err
 	}
 
-	return anime.SetImage(&imageoutput.MetaImage{
+	return anime.SetImage(&imageserver.MetaImage{
 		Image:  img,
 		Format: format,
 		Data:   data,
@@ -182,7 +182,7 @@ func (anime *Anime) SetImageBytes(data []byte) error {
 }
 
 // SetImage sets the anime image to the given MetaImage.
-func (anime *Anime) SetImage(metaImage *imageoutput.MetaImage) error {
+func (anime *Anime) SetImage(metaImage *imageserver.MetaImage) error {
 	var lastError error
 
 	// Save the different image formats and sizes in low DPI

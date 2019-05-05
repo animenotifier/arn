@@ -6,7 +6,7 @@ import (
 	"path"
 	"time"
 
-	"github.com/akyoto/imageoutput"
+	"github.com/akyoto/imageserver"
 )
 
 const (
@@ -30,9 +30,9 @@ const (
 )
 
 // Define the cover image outputs
-var coverImageOutputs = []imageoutput.Output{
+var coverImageOutputs = []imageserver.Output{
 	// JPEG - Large
-	&imageoutput.JPEGFile{
+	&imageserver.JPEGFile{
 		Directory: path.Join(Root, "images/covers/large/"),
 		Width:     CoverMaxWidth,
 		Height:    CoverMaxHeight,
@@ -40,7 +40,7 @@ var coverImageOutputs = []imageoutput.Output{
 	},
 
 	// JPEG - Small
-	&imageoutput.JPEGFile{
+	&imageserver.JPEGFile{
 		Directory: path.Join(Root, "images/covers/small/"),
 		Width:     CoverSmallWidth,
 		Height:    CoverSmallHeight,
@@ -48,7 +48,7 @@ var coverImageOutputs = []imageoutput.Output{
 	},
 
 	// WebP - Large
-	&imageoutput.WebPFile{
+	&imageserver.WebPFile{
 		Directory: path.Join(Root, "images/covers/large/"),
 		Width:     CoverMaxWidth,
 		Height:    CoverMaxHeight,
@@ -56,7 +56,7 @@ var coverImageOutputs = []imageoutput.Output{
 	},
 
 	// WebP - Small
-	&imageoutput.WebPFile{
+	&imageserver.WebPFile{
 		Directory: path.Join(Root, "images/covers/small/"),
 		Width:     CoverSmallWidth,
 		Height:    CoverSmallHeight,
@@ -79,7 +79,7 @@ func (user *User) SetCoverBytes(data []byte) error {
 		return err
 	}
 
-	return user.SetCover(&imageoutput.MetaImage{
+	return user.SetCover(&imageserver.MetaImage{
 		Image:  img,
 		Format: format,
 		Data:   data,
@@ -87,7 +87,7 @@ func (user *User) SetCoverBytes(data []byte) error {
 }
 
 // SetCover sets the cover image to the given MetaImage.
-func (user *User) SetCover(cover *imageoutput.MetaImage) error {
+func (user *User) SetCover(cover *imageserver.MetaImage) error {
 	var lastError error
 
 	// Save the different image formats and sizes
