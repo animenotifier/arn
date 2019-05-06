@@ -3,8 +3,8 @@ module github.com/animenotifier/arn
 go 1.12
 
 require (
-	github.com/aerogo/aero v1.1.6
-	github.com/aerogo/api v0.1.5
+	github.com/aerogo/aero v1.1.7
+	github.com/aerogo/api v0.1.6
 	github.com/aerogo/flow v0.1.2
 	github.com/aerogo/http v1.0.3
 	github.com/aerogo/markdown v0.1.5
