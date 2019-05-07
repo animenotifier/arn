@@ -15,7 +15,7 @@ require (
 	github.com/akyoto/imageserver v0.3.5
 	github.com/akyoto/webpush-go v0.1.1
 	github.com/animenotifier/anilist v0.2.2
-	github.com/animenotifier/ffxiv v0.1.0
+	github.com/animenotifier/ffxiv v0.2.0
 	github.com/animenotifier/japanese v0.2.2
 	github.com/animenotifier/kitsu v0.2.2
 	github.com/animenotifier/mal v0.2.2
@@ -30,7 +30,8 @@ require (
 	github.com/ungerik/go-gravatar v0.0.0-20120802094239-6ab22628222a
 	github.com/ventu-io/go-shortid v0.0.0-20171029131806-771a37caa5cf
 	github.com/xrash/smetrics v0.0.0-20170218160415-a3153f7040e9
-	golang.org/x/net v0.0.0-20190503192946-f4e77d36d62c // indirect
+	golang.org/x/crypto v0.0.0-20190506204251-e1dfcc566284 // indirect
+	golang.org/x/sys v0.0.0-20190507053917-2953c62de483 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 )
