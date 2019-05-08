@@ -3,7 +3,7 @@ package arn
 import (
 	"os"
 
-	"github.com/logpacker/PayPal-Go-SDK"
+	paypalsdk "github.com/logpacker/PayPal-Go-SDK"
 )
 
 var payPal *paypalsdk.Client
