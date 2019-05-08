@@ -72,7 +72,7 @@ func StreamNotifications() chan *Notification {
 
 // AllNotifications returns a slice of all notifications.
 func AllNotifications() ([]*Notification, error) {
-	var all []*Notification
+	all := make([]*Notification, 0, DB.Collection("Notification").Count())
 
 	for obj := range StreamNotifications() {
 		all = append(all, obj)

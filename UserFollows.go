@@ -148,7 +148,7 @@ func StreamUserFollows() chan *UserFollows {
 
 // AllUserFollows returns a slice of all user follows.
 func AllUserFollows() ([]*UserFollows, error) {
-	var all []*UserFollows
+	all := make([]*UserFollows, 0, DB.Collection("UserFollows").Count())
 
 	for obj := range StreamUserFollows() {
 		all = append(all, obj)

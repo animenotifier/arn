@@ -16,8 +16,7 @@ func Characters(originalTerm string, maxLength int) []*arn.Character {
 
 	term := strings.ToLower(stringutils.RemoveSpecialCharacters(originalTerm))
 	termHasUnicode := stringutils.ContainsUnicodeLetters(term)
-
-	var results []*Result
+	results := make([]*Result, 0, maxLength)
 
 	for character := range arn.StreamCharacters() {
 		if character.ID == originalTerm {

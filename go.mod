@@ -5,11 +5,12 @@ go 1.12
 require (
 	github.com/aerogo/aero v1.1.7
 	github.com/aerogo/api v0.1.6
+	github.com/aerogo/cluster v0.1.6 // indirect
 	github.com/aerogo/flow v0.1.2
 	github.com/aerogo/http v1.0.3
 	github.com/aerogo/markdown v0.1.5
-	github.com/aerogo/mirror v0.1.3
-	github.com/aerogo/nano v0.1.7
+	github.com/aerogo/mirror v0.1.5
+	github.com/aerogo/nano v0.2.0
 	github.com/akyoto/color v1.8.3
 	github.com/akyoto/go-matroska v0.1.0
 	github.com/akyoto/imageserver v0.3.5
@@ -31,7 +32,7 @@ require (
 	github.com/ventu-io/go-shortid v0.0.0-20171029131806-771a37caa5cf
 	github.com/xrash/smetrics v0.0.0-20170218160415-a3153f7040e9
 	golang.org/x/crypto v0.0.0-20190506204251-e1dfcc566284 // indirect
-	golang.org/x/sys v0.0.0-20190507053917-2953c62de483 // indirect
+	golang.org/x/sys v0.0.0-20190507160741-ecd444e8653b // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 )

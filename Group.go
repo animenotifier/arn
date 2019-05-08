@@ -284,7 +284,7 @@ func StreamGroups() chan *Group {
 
 // AllGroups returns a slice of all groups.
 func AllGroups() []*Group {
-	var all []*Group
+	all := make([]*Group, 0, DB.Collection("Group").Count())
 	stream := StreamGroups()
 
 	for obj := range stream {

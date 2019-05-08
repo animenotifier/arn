@@ -11,8 +11,7 @@ import (
 // Users searches all users.
 func Users(originalTerm string, maxLength int) []*arn.User {
 	term := strings.ToLower(stringutils.RemoveSpecialCharacters(originalTerm))
-
-	var results []*Result
+	results := make([]*Result, 0, maxLength)
 
 	for user := range arn.StreamUsers() {
 		if user.ID == originalTerm {

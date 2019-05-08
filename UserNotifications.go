@@ -111,7 +111,7 @@ func StreamUserNotifications() chan *UserNotifications {
 
 // AllUserNotifications returns a slice of all user notifications.
 func AllUserNotifications() ([]*UserNotifications, error) {
-	var all []*UserNotifications
+	all := make([]*UserNotifications, 0, DB.Collection("UserNotifications").Count())
 
 	for obj := range StreamUserNotifications() {
 		all = append(all, obj)

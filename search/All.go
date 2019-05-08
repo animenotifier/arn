@@ -23,14 +23,16 @@ func All(term string, maxUsers, maxAnime, maxPosts, maxThreads, maxTracks, maxCh
 		return nil, nil, nil, nil, nil, nil, nil, nil
 	}
 
-	var userResults []*arn.User
-	var animeResults []*arn.Anime
-	var postResults []*arn.Post
-	var threadResults []*arn.Thread
-	var trackResults []*arn.SoundTrack
-	var characterResults []*arn.Character
-	var amvResults []*arn.AMV
-	var companyResults []*arn.Company
+	var (
+		userResults      []*arn.User
+		animeResults     []*arn.Anime
+		postResults      []*arn.Post
+		threadResults    []*arn.Thread
+		trackResults     []*arn.SoundTrack
+		characterResults []*arn.Character
+		amvResults       []*arn.AMV
+		companyResults   []*arn.Company
+	)
 
 	flow.Parallel(func() {
 		userResults = Users(term, maxUsers)

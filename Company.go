@@ -149,7 +149,7 @@ func FilterCompanies(filter func(*Company) bool) []*Company {
 
 // AllCompanies returns a slice of all companies.
 func AllCompanies() []*Company {
-	var all []*Company
+	all := make([]*Company, 0, DB.Collection("Company").Count())
 
 	stream := StreamCompanies()
 

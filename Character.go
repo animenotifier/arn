@@ -250,7 +250,7 @@ func FilterCharacters(filter func(*Character) bool) []*Character {
 
 // AllCharacters returns a slice of all characters.
 func AllCharacters() []*Character {
-	var all []*Character
+	all := make([]*Character, 0, DB.Collection("Character").Count())
 
 	stream := StreamCharacters()
 

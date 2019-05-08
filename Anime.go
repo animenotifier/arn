@@ -793,7 +793,7 @@ func StreamAnime() chan *Anime {
 
 // AllAnime returns a slice of all anime.
 func AllAnime() []*Anime {
-	var all []*Anime
+	all := make([]*Anime, 0, DB.Collection("Anime").Count())
 
 	stream := StreamAnime()
 

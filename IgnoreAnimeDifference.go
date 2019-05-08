@@ -63,7 +63,7 @@ func StreamIgnoreAnimeDifferences() chan *IgnoreAnimeDifference {
 
 // AllIgnoreAnimeDifferences returns a slice of all ignored differences.
 func AllIgnoreAnimeDifferences() []*IgnoreAnimeDifference {
-	var all []*IgnoreAnimeDifference
+	all := make([]*IgnoreAnimeDifference, 0, DB.Collection("IgnoreAnimeDifference").Count())
 
 	stream := StreamIgnoreAnimeDifferences()
 

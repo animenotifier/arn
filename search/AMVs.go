@@ -11,8 +11,7 @@ import (
 // AMVs searches all anime music videos.
 func AMVs(originalTerm string, maxLength int) []*arn.AMV {
 	term := strings.ToLower(stringutils.RemoveSpecialCharacters(originalTerm))
-
-	var results []*Result
+	results := make([]*Result, 0, maxLength)
 
 	for amv := range arn.StreamAMVs() {
 		if amv.ID == originalTerm {

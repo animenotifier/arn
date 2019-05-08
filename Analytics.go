@@ -66,7 +66,7 @@ func StreamAnalytics() chan *Analytics {
 
 // AllAnalytics returns a slice of all analytics.
 func AllAnalytics() []*Analytics {
-	var all []*Analytics
+	all := make([]*Analytics, 0, DB.Collection("Analytics").Count())
 
 	stream := StreamAnalytics()
 

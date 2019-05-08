@@ -177,7 +177,7 @@ func StreamQuotes() chan *Quote {
 
 // AllQuotes returns a slice of all quotes.
 func AllQuotes() []*Quote {
-	var all []*Quote
+	all := make([]*Quote, 0, DB.Collection("Quote").Count())
 
 	stream := StreamQuotes()
 

@@ -55,7 +55,7 @@ func StreamPurchases() chan *Purchase {
 
 // AllPurchases returns a slice of all anime.
 func AllPurchases() ([]*Purchase, error) {
-	var all []*Purchase
+	all := make([]*Purchase, 0, DB.Collection("Purchase").Count())
 
 	for obj := range StreamPurchases() {
 		all = append(all, obj)

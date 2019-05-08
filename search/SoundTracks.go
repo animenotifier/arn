@@ -11,8 +11,7 @@ import (
 // SoundTracks searches all soundtracks.
 func SoundTracks(originalTerm string, maxLength int) []*arn.SoundTrack {
 	term := strings.ToLower(stringutils.RemoveSpecialCharacters(originalTerm))
-
-	var results []*Result
+	results := make([]*Result, 0, maxLength)
 
 	for track := range arn.StreamSoundTracks() {
 		if track.ID == originalTerm {

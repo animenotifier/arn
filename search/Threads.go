@@ -11,8 +11,7 @@ import (
 // Threads searches all threads.
 func Threads(originalTerm string, maxLength int) []*arn.Thread {
 	term := strings.ToLower(stringutils.RemoveSpecialCharacters(originalTerm))
-
-	var results []*arn.Thread
+	results := make([]*arn.Thread, 0, maxLength)
 
 	for thread := range arn.StreamThreads() {
 		if thread.ID == originalTerm {

@@ -11,8 +11,7 @@ import (
 // Anime searches all anime.
 func Anime(originalTerm string, maxLength int) []*arn.Anime {
 	term := strings.ToLower(stringutils.RemoveSpecialCharacters(originalTerm))
-
-	var results []*Result
+	results := make([]*Result, 0, maxLength)
 
 	check := func(text string) float64 {
 		if text == "" {

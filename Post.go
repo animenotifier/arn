@@ -173,7 +173,7 @@ func StreamPosts() chan *Post {
 
 // AllPosts returns a slice of all posts.
 func AllPosts() []*Post {
-	var all []*Post
+	all := make([]*Post, 0, DB.Collection("Post").Count())
 
 	for obj := range StreamPosts() {
 		all = append(all, obj)

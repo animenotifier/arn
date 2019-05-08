@@ -240,7 +240,7 @@ func StreamAMVs() chan *AMV {
 
 // AllAMVs returns a slice of all AMVs.
 func AllAMVs() []*AMV {
-	var all []*AMV
+	all := make([]*AMV, 0, DB.Collection("AMV").Count())
 
 	stream := StreamAMVs()
 

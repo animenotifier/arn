@@ -374,7 +374,7 @@ func StreamSoundTracks() chan *SoundTrack {
 
 // AllSoundTracks ...
 func AllSoundTracks() []*SoundTrack {
-	var all []*SoundTrack
+	all := make([]*SoundTrack, 0, DB.Collection("SoundTrack").Count())
 
 	for obj := range StreamSoundTracks() {
 		all = append(all, obj)

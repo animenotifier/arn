@@ -31,7 +31,7 @@ func StreamClientErrorReports() chan *ClientErrorReport {
 
 // AllClientErrorReports returns a slice of all characters.
 func AllClientErrorReports() []*ClientErrorReport {
-	var all []*ClientErrorReport
+	all := make([]*ClientErrorReport, 0, DB.Collection("ClientErrorReport").Count())
 
 	stream := StreamClientErrorReports()
 

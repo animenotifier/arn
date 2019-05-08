@@ -57,8 +57,7 @@ func StreamActivities() chan Activity {
 
 // AllActivities returns a slice of all activities.
 func AllActivities() []Activity {
-	var all []Activity
-
+	all := make([]Activity, 0, DB.Collection("ActivityCreate").Count()+DB.Collection("ActivityConsumeAnime").Count())
 	stream := StreamActivities()
 
 	for obj := range stream {
@@ -70,7 +69,7 @@ func AllActivities() []Activity {
 
 // FilterActivities filters all Activities by a custom function.
 func FilterActivities(filter func(Activity) bool) []Activity {
-	var filtered []Activity
+	filtered := make([]Activity, 0, 16)
 
 	for obj := range StreamActivities() {
 		if filter(obj) {

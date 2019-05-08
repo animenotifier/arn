@@ -132,7 +132,7 @@ func StreamEditLogEntries() chan *EditLogEntry {
 
 // AllEditLogEntries returns a slice of all log entries.
 func AllEditLogEntries() []*EditLogEntry {
-	var all []*EditLogEntry
+	all := make([]*EditLogEntry, 0, DB.Collection("EditLogEntry").Count())
 
 	stream := StreamEditLogEntries()
 

@@ -11,8 +11,7 @@ import (
 // Posts searches all posts.
 func Posts(originalTerm string, maxLength int) []*arn.Post {
 	term := strings.ToLower(stringutils.RemoveSpecialCharacters(originalTerm))
-
-	var results []*arn.Post
+	results := make([]*arn.Post, 0, maxLength)
 
 	for post := range arn.StreamPosts() {
 		if post.ID == originalTerm {

@@ -56,7 +56,7 @@ func StreamPayPalPayments() chan *PayPalPayment {
 
 // AllPayPalPayments returns a slice of all paypal payments.
 func AllPayPalPayments() ([]*PayPalPayment, error) {
-	var all []*PayPalPayment
+	all := make([]*PayPalPayment, 0, DB.Collection("PayPalPayment").Count())
 
 	for obj := range StreamPayPalPayments() {
 		all = append(all, obj)

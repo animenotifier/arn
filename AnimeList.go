@@ -327,7 +327,7 @@ func (list *AnimeList) NormalizeRatings() {
 	defer list.Unlock()
 
 	mapped := map[float64]float64{}
-	all := []float64{}
+	all := make([]float64, 0, len(list.Items))
 
 	for _, item := range list.Items {
 		// Zero rating counts as not rated
@@ -400,7 +400,7 @@ func (list *AnimeList) Genres() map[string][]*AnimeListItem {
 func (list *AnimeList) TopGenres(count int) []string {
 	genreItems := list.Genres()
 	genreAffinity := map[string]float64{}
-	var bestGenres []string
+	bestGenres := make([]string, 0, len(genreItems))
 
 	for genre, animeListItems := range genreItems {
 		if genre == "Action" || genre == "Comedy" {
@@ -484,7 +484,7 @@ func StreamAnimeLists() chan *AnimeList {
 
 // AllAnimeLists returns a slice of all anime.
 func AllAnimeLists() ([]*AnimeList, error) {
-	var all []*AnimeList
+	all := make([]*AnimeList, 0, DB.Collection("AnimeList").Count())
 
 	stream := StreamAnimeLists()
 

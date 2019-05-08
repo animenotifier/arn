@@ -109,7 +109,7 @@ func StreamUsers() chan *User {
 
 // AllUsers returns a slice of all users.
 func AllUsers() ([]*User, error) {
-	var all []*User
+	all := make([]*User, 0, DB.Collection("User").Count())
 
 	for obj := range StreamUsers() {
 		all = append(all, obj)

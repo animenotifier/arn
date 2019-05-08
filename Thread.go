@@ -155,7 +155,7 @@ func StreamThreads() chan *Thread {
 
 // AllThreads ...
 func AllThreads() []*Thread {
-	var all []*Thread
+	all := make([]*Thread, 0, DB.Collection("Thread").Count())
 
 	for obj := range StreamThreads() {
 		all = append(all, obj)

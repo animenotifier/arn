@@ -158,7 +158,7 @@ func FilterPersons(filter func(*Person) bool) []*Person {
 
 // AllPersons returns a slice of all persons.
 func AllPersons() []*Person {
-	var all []*Person
+	all := make([]*Person, 0, DB.Collection("Person").Count())
 
 	stream := StreamPersons()
 

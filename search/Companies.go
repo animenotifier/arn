@@ -11,8 +11,7 @@ import (
 // Companies searches all companies.
 func Companies(originalTerm string, maxLength int) []*arn.Company {
 	term := strings.ToLower(stringutils.RemoveSpecialCharacters(originalTerm))
-
-	var results []*Result
+	results := make([]*Result, 0, maxLength)
 
 	for company := range arn.StreamCompanies() {
 		if company.ID == originalTerm {

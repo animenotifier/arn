@@ -139,7 +139,7 @@ func FilterKitsuAnime(filter func(*kitsu.Anime) bool) []*kitsu.Anime {
 
 // AllKitsuAnime returns a slice of all Kitsu anime.
 func AllKitsuAnime() []*kitsu.Anime {
-	var all []*kitsu.Anime
+	all := make([]*kitsu.Anime, 0, DB.Collection("kitsu.Anime").Count())
 
 	stream := StreamKitsuAnime()
 

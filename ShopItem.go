@@ -59,7 +59,7 @@ func StreamShopItems() chan *ShopItem {
 
 // AllShopItems returns a slice of all items.
 func AllShopItems() ([]*ShopItem, error) {
-	var all []*ShopItem
+	all := make([]*ShopItem, 0, DB.Collection("ShopItem").Count())
 
 	for obj := range StreamShopItems() {
 		all = append(all, obj)
