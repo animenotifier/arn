@@ -66,6 +66,11 @@ func (relations *AnimeRelations) TypeName() string {
 	return "AnimeRelations"
 }
 
+// Self returns the object itself.
+func (relations *AnimeRelations) Self() Loggable {
+	return relations
+}
+
 // Find returns the relation with the specified anime ID, if available.
 func (relations *AnimeRelations) Find(animeID string) *AnimeRelation {
 	relations.Lock()

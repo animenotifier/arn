@@ -42,6 +42,11 @@ func (activity *ActivityCreate) TypeName() string {
 	return "ActivityCreate"
 }
 
+// Self returns the object itself.
+func (activity *ActivityCreate) Self() Loggable {
+	return activity
+}
+
 // StreamActivityCreates returns a stream of all ActivityCreate objects.
 func StreamActivityCreates() chan *ActivityCreate {
 	channel := make(chan *ActivityCreate, nano.ChannelBufferSize)

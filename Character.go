@@ -58,6 +58,11 @@ func (character *Character) TypeName() string {
 	return "Character"
 }
 
+// Self returns the object itself.
+func (character *Character) Self() Loggable {
+	return character
+}
+
 // MainQuote ...
 func (character *Character) MainQuote() *Quote {
 	quote, _ := GetQuote(character.MainQuoteID)

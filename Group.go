@@ -91,6 +91,11 @@ func (group *Group) TypeName() string {
 	return "Group"
 }
 
+// Self returns the object itself.
+func (group *Group) Self() Loggable {
+	return group
+}
+
 // Publish ...
 func (group *Group) Publish() error {
 	if len(group.Name) < 2 {

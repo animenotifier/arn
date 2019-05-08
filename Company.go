@@ -99,6 +99,11 @@ func (company *Company) TypeName() string {
 	return "Company"
 }
 
+// Self returns the object itself.
+func (company *Company) Self() Loggable {
+	return company
+}
+
 // GetCompany returns a single company.
 func GetCompany(id string) (*Company, error) {
 	obj, err := DB.Get("Company", id)

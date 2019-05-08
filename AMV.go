@@ -207,6 +207,11 @@ func (amv *AMV) TypeName() string {
 	return "AMV"
 }
 
+// Self returns the object itself.
+func (amv *AMV) Self() Loggable {
+	return amv
+}
+
 // GetAMV returns the AMV with the given ID.
 func GetAMV(id string) (*AMV, error) {
 	obj, err := DB.Get("AMV", id)

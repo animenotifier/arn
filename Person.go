@@ -53,6 +53,11 @@ func (person *Person) TypeName() string {
 	return "Person"
 }
 
+// Self returns the object itself.
+func (person *Person) Self() Loggable {
+	return person
+}
+
 // ImageLink ...
 func (person *Person) ImageLink(size string) string {
 	extension := ".jpg"

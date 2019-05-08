@@ -130,6 +130,11 @@ func (track *SoundTrack) TypeName() string {
 	return "SoundTrack"
 }
 
+// Self returns the object itself.
+func (track *SoundTrack) Self() Loggable {
+	return track
+}
+
 // EditedByUser returns the user who edited this track last.
 func (track *SoundTrack) EditedByUser() *User {
 	user, _ := GetUser(track.EditedBy)

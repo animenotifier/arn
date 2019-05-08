@@ -59,6 +59,11 @@ func (thread *Thread) TypeName() string {
 	return "Thread"
 }
 
+// Self returns the object itself.
+func (thread *Thread) Self() Loggable {
+	return thread
+}
+
 // OnLike is called when the thread receives a like.
 func (thread *Thread) OnLike(likedBy *User) {
 	if !thread.Creator().Settings().Notification.ForumLikes {

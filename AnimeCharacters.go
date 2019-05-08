@@ -76,6 +76,11 @@ func (characters *AnimeCharacters) TypeName() string {
 	return "AnimeCharacters"
 }
 
+// Self returns the object itself.
+func (characters *AnimeCharacters) Self() Loggable {
+	return characters
+}
+
 // Contains tells you whether the given character ID exists.
 func (characters *AnimeCharacters) Contains(characterID string) bool {
 	characters.Lock()

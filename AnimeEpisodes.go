@@ -106,6 +106,11 @@ func (episodes *AnimeEpisodes) TypeName() string {
 	return "AnimeEpisodes"
 }
 
+// Self returns the object itself.
+func (episodes *AnimeEpisodes) Self() Loggable {
+	return episodes
+}
+
 // ListString returns a text representation of the anime episodes.
 func (episodes *AnimeEpisodes) ListString() string {
 	episodes.Lock()

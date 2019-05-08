@@ -496,6 +496,11 @@ func (user *User) TypeName() string {
 	return "User"
 }
 
+// Self returns the object itself.
+func (user *User) Self() Loggable {
+	return user
+}
+
 // RefreshOsuInfo refreshes a user's Osu information.
 func (user *User) RefreshOsuInfo() error {
 	if user.Accounts.Osu.Nick == "" {

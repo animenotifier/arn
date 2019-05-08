@@ -11,6 +11,7 @@ import (
 type Loggable interface {
 	GetID() string
 	TypeName() string
+	Self() Loggable
 }
 
 // edit creates an edit log entry.

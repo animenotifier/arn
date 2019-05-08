@@ -108,6 +108,11 @@ func (quote *Quote) TypeName() string {
 	return "Quote"
 }
 
+// Self returns the object itself.
+func (quote *Quote) Self() Loggable {
+	return quote
+}
+
 // OnLike is called when the quote receives a like.
 func (quote *Quote) OnLike(likedBy *User) {
 	if !quote.IsValid() {

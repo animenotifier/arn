@@ -771,6 +771,11 @@ func (anime *Anime) TypeName() string {
 	return "Anime"
 }
 
+// Self returns the object itself.
+func (anime *Anime) Self() Loggable {
+	return anime
+}
+
 // StreamAnime returns a stream of all anime.
 func StreamAnime() chan *Anime {
 	channel := make(chan *Anime, nano.ChannelBufferSize)

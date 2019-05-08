@@ -40,6 +40,11 @@ func (activity *ActivityConsumeAnime) TypeName() string {
 	return "ActivityConsumeAnime"
 }
 
+// Self returns the object itself.
+func (activity *ActivityConsumeAnime) Self() Loggable {
+	return activity
+}
+
 // LastActivityConsumeAnime returns the last activity for the given anime.
 func (user *User) LastActivityConsumeAnime(animeID string) *ActivityConsumeAnime {
 	activities := FilterActivitiesConsumeAnime(func(activity *ActivityConsumeAnime) bool {

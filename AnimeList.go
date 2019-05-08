@@ -368,9 +368,19 @@ func (list *AnimeList) NormalizeRatings() {
 	}
 }
 
+// GetID returns the anime ID.
+func (list *AnimeList) GetID() string {
+	return list.UserID
+}
+
 // TypeName returns the type name.
 func (list *AnimeList) TypeName() string {
 	return "AnimeList"
+}
+
+// Self returns the object itself.
+func (list *AnimeList) Self() Loggable {
+	return list
 }
 
 // Genres returns a map of genre names mapped to the list items that belong to that genre.

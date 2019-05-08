@@ -82,6 +82,11 @@ func (post *Post) TypeName() string {
 	return "Post"
 }
 
+// Self returns the object itself.
+func (post *Post) Self() Loggable {
+	return post
+}
+
 // TitleByUser returns the preferred title for the given user.
 func (post *Post) TitleByUser(user *User) string {
 	return post.Creator().Nick + "'s comment"
