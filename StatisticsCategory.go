@@ -84,7 +84,7 @@ func ToPieChartSlices(data map[string]float64) []*PieChartSlice {
 	hueScaling := -30.0
 
 	for i, item := range dataSorted {
-		percentage := float64(item.Value) / sum
+		percentage := item.Value / sum
 
 		slices = append(slices, &PieChartSlice{
 			From:  current,
