@@ -21,6 +21,7 @@ func (settings *Settings) Authorize(ctx *aero.Context, action string) error {
 
 // Edit updates the settings object.
 func (settings *Settings) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
+	// nolint:gocritic (because this should stay as a switch statement)
 	switch key {
 	case "Theme":
 		if settings.User().IsPro() {

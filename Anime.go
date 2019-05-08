@@ -325,11 +325,12 @@ func (anime *Anime) Link() string {
 func (anime *Anime) StartDateTime() time.Time {
 	format := AnimeDateFormat
 
-	if len(anime.StartDate) >= len(AnimeDateFormat) {
+	switch {
+	case len(anime.StartDate) >= len(AnimeDateFormat):
 		// ...
-	} else if len(anime.StartDate) >= len("2006-01") {
+	case len(anime.StartDate) >= len("2006-01"):
 		format = "2006-01"
-	} else if len(anime.StartDate) >= len("2006") {
+	case len(anime.StartDate) >= len("2006"):
 		format = "2006"
 	}
 
@@ -341,11 +342,12 @@ func (anime *Anime) StartDateTime() time.Time {
 func (anime *Anime) EndDateTime() time.Time {
 	format := AnimeDateFormat
 
-	if len(anime.EndDate) >= len(AnimeDateFormat) {
+	switch {
+	case len(anime.EndDate) >= len(AnimeDateFormat):
 		// ...
-	} else if len(anime.EndDate) >= len("2006-01") {
+	case len(anime.EndDate) >= len("2006-01"):
 		format = "2006-01"
-	} else if len(anime.EndDate) >= len("2006") {
+	case len(anime.EndDate) >= len("2006"):
 		format = "2006"
 	}
 

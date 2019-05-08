@@ -141,15 +141,16 @@ func (post *Post) Create(ctx *aero.Context) error {
 		title := user.Nick + " replied"
 		message := ""
 
-		if post.ParentType == "Post" {
+		switch post.ParentType {
+		case "Post":
 			message = fmt.Sprintf("%s replied to your comment in \"%s\".", user.Nick, parent.(*Post).Parent().TitleByUser(notifyUser))
-		} else if post.ParentType == "User" {
+		case "User":
 			title = fmt.Sprintf("%s wrote a comment on your profile.", user.Nick)
 			message = post.Text
-		} else if post.ParentType == "Group" {
+		case "Group":
 			title = fmt.Sprintf(`%s wrote a new post in the group "%s".`, user.Nick, parent.TitleByUser(nil))
 			message = post.Text
-		} else {
+		default:
 			message = fmt.Sprintf(`%s replied in the %s "%s".`, user.Nick, strings.ToLower(post.ParentType), parent.TitleByUser(notifyUser))
 		}
 
@@ -188,6 +189,7 @@ func (post *Post) Edit(ctx *aero.Context, key string, value reflect.Value, newVa
 	consumed := false
 	user := GetUserFromContext(ctx)
 
+	// nolint:gocritic (because this should stay a switch statement)
 	switch key {
 	case "ParentID":
 		var newParent PostParent
