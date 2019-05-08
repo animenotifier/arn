@@ -69,7 +69,7 @@ func AllActivities() []Activity {
 
 // FilterActivities filters all Activities by a custom function.
 func FilterActivities(filter func(Activity) bool) []Activity {
-	filtered := make([]Activity, 0, 16)
+	var filtered []Activity
 
 	for obj := range StreamActivities() {
 		if filter(obj) {
