@@ -88,13 +88,13 @@ func RegisterUser(user *User) {
 	user.LastLogin = user.Registered
 	user.LastSeen = user.Registered
 
-	// Save nick in NickToUser table
+	// Save nick in NickToUser collection
 	DB.Set("NickToUser", user.Nick, &NickToUser{
 		Nick:   user.Nick,
 		UserID: user.ID,
 	})
 
-	// Save email in EmailToUser table
+	// Save email in EmailToUser collection
 	if user.Email != "" {
 		DB.Set("EmailToUser", user.Email, &EmailToUser{
 			Email:  user.Email,
