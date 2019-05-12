@@ -85,7 +85,7 @@ type UserAccounts struct {
 
 	Twitter struct {
 		ID   string `json:"id" private:"true"`
-		Nick string `json:"nick"`
+		Nick string `json:"nick" private:"true"`
 	} `json:"twitter"`
 
 	Discord struct {

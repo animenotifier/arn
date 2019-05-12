@@ -2,15 +2,15 @@ package arn
 
 // UserBrowser ...
 type UserBrowser struct {
-	Name     string `json:"name"`
-	Version  string `json:"version"`
-	IsMobile bool   `json:"isMobile"`
+	Name     string `json:"name" private:"true"`
+	Version  string `json:"version" private:"true"`
+	IsMobile bool   `json:"isMobile" private:"true"`
 }
 
 // UserOS ...
 type UserOS struct {
-	Name    string `json:"name"`
-	Version string `json:"version"`
+	Name    string `json:"name" private:"true"`
+	Version string `json:"version" private:"true"`
 }
 
 // UserListProviders ...
@@ -30,8 +30,8 @@ type ListProviderConfig struct {
 type PushEndpoint struct {
 	Registered string `json:"registered"`
 	Keys       struct {
-		P256DH string `json:"p256dh"`
-		Auth   string `json:"auth"`
+		P256DH string `json:"p256dh" private:"true"`
+		Auth   string `json:"auth" private:"true"`
 	} `json:"keys"`
 }
 
