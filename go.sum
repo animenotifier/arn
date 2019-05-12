@@ -4,8 +4,8 @@ github.com/PuerkitoBio/goquery v1.5.0 h1:uGvmFXOA73IKluu/F84Xd1tt/z07GYm8X49XKHP
 github.com/PuerkitoBio/goquery v1.5.0/go.mod h1:qD2PgZ9lccMbQlc7eEOjaeRlFQON7xY8kdmcsrnKqMg=
 github.com/aerogo/aero v1.1.7 h1:i53mdWf/Zx/inwATpRmCtCJ5jgYdiJgd2s4hxTgvKxo=
 github.com/aerogo/aero v1.1.7/go.mod h1:Ak2cdaWuZmfUDlbTdh07bXSXL6CbcmzkeHE4+ODk/ww=
-github.com/aerogo/aero v1.1.8 h1:bV87Q15IGJY4XZdZM6jBVBp/rnGjQGIMqUh+WTC4PAY=
-github.com/aerogo/aero v1.1.8/go.mod h1:Xpl5AFecG/cpx9As733/zM36UiPrpd4s12stfyx6i5w=
+github.com/aerogo/aero v1.1.9 h1:EB+oTljSIfQENZTVyvnZ24Pb2UsV+Ows04/HfzOJ/3c=
+github.com/aerogo/aero v1.1.9/go.mod h1:MvHPJcXZmZUu5mh4q6j5n3DijKmAMY6puhzCH1w22Vw=
 github.com/aerogo/api v0.1.6 h1:4aPEYDfvgR9LwuAaY41EM9yBfbjwnpkLMEneQqu5bKo=
 github.com/aerogo/api v0.1.6/go.mod h1:I/vbQmYBTUlbonDRdnP0bM4ybt0ZC9fM95LW0BrSrjQ=
 github.com/aerogo/cluster v0.1.5 h1:mOYQmaYRsvIi1inaGLICmeJgCYycBxiHnjcTFLtC6kc=
@@ -26,8 +26,8 @@ github.com/aerogo/markdown v0.1.6 h1:Hc4A9z/wNhl85abouRpbrxEuH8OTblRmF/br4qW0rmE
 github.com/aerogo/markdown v0.1.6/go.mod h1:k5F7+1QVz3JRyKCX/pUC+IiQxHJr2SKxG21WzXoUKqA=
 github.com/aerogo/mirror v0.1.3 h1:813FatCdChOvgWen2EcZNnRfxAeo9zmu/TgDNOnsDx0=
 github.com/aerogo/mirror v0.1.3/go.mod h1:Un87Jq8RIRrb2bU1CxVToJjVZgSMLUQXxVLCXln4rUU=
-github.com/aerogo/mirror v0.2.0 h1:iaQtEejSU3PytPOHrHSEWBYmAoM0Pc63YGFQUMTXWjY=
-github.com/aerogo/mirror v0.2.0/go.mod h1:Un87Jq8RIRrb2bU1CxVToJjVZgSMLUQXxVLCXln4rUU=
+github.com/aerogo/mirror v0.2.2 h1:kASC9ZsTDBPwzZehb2o5qLbNv+bj8t9V167ExjEMRS0=
+github.com/aerogo/mirror v0.2.2/go.mod h1:Un87Jq8RIRrb2bU1CxVToJjVZgSMLUQXxVLCXln4rUU=
 github.com/aerogo/nano v0.2.0 h1:qcCdCsAtN1Qpw8DhZQXiLVJYsjmpQMmZ7TPFD2GkwVw=
 github.com/aerogo/nano v0.2.0/go.mod h1:tbR/fVGJb2rRFdPp9+D0INJgkhzQ+9XKefLTI11xNFU=
 github.com/aerogo/packet v0.1.4 h1:435YxvxMiH1KaBPELU+jCLqj0T9noLBSY4zk53t1gpQ=
@@ -124,8 +124,8 @@ github.com/xrash/smetrics v0.0.0-20170218160415-a3153f7040e9/go.mod h1:N3UwUGtsr
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20190426145343-a29dc8fdc734 h1:p/H982KKEjUnLJkM3tt/LemDnOc1GiZL5FCVlORJ5zo=
 golang.org/x/crypto v0.0.0-20190426145343-a29dc8fdc734/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
-golang.org/x/crypto v0.0.0-20190506204251-e1dfcc566284 h1:rlLehGeYg6jfoyz/eDqDU1iRXLKfR42nnNh57ytKEWo=
-golang.org/x/crypto v0.0.0-20190506204251-e1dfcc566284/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
+golang.org/x/crypto v0.0.0-20190510104115-cbcb75029529 h1:iMGN4xG0cnqj3t+zOM8wUB0BiPKHEwSxEZCvzcbZuvk=
+golang.org/x/crypto v0.0.0-20190510104115-cbcb75029529/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
 golang.org/x/net v0.0.0-20180218175443-cbe0f9307d01/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
 golang.org/x/net v0.0.0-20181114220301-adae6a3d119a/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
 golang.org/x/net v0.0.0-20181220203305-927f97764cc3/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
@@ -147,8 +147,6 @@ golang.org/x/sys v0.0.0-20190429190828-d89cdac9e872 h1:cGjJzUd8RgBw428LXP65YXni0
 golang.org/x/sys v0.0.0-20190429190828-d89cdac9e872/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20190502175342-a43fa875dd82 h1:vsphBvatvfbhlb4PO1BYSr9dzugGxJ/SQHoNufZJq1w=
 golang.org/x/sys v0.0.0-20190502175342-a43fa875dd82/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
-golang.org/x/sys v0.0.0-20190507160741-ecd444e8653b h1:ag/x1USPSsqHud38I9BAC88qdNLDHHtQ4mlgQIZPPNA=
-golang.org/x/sys v0.0.0-20190507160741-ecd444e8653b/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20190509141414-a5b02f93d862 h1:rM0ROo5vb9AdYJi1110yjWGMej9ITfKddS89P3Fkhug=
 golang.org/x/sys v0.0.0-20190509141414-a5b02f93d862/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
