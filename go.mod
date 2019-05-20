@@ -3,7 +3,7 @@ module github.com/animenotifier/arn
 go 1.12
 
 require (
-	github.com/aerogo/aero v1.1.13
+	github.com/aerogo/aero v1.1.15
 	github.com/aerogo/api v0.1.7
 	github.com/aerogo/cluster v0.1.7 // indirect
 	github.com/aerogo/flow v0.1.4
