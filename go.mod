@@ -5,14 +5,12 @@ go 1.12
 require (
 	github.com/aerogo/aero v1.2.1
 	github.com/aerogo/api v0.1.7
-	github.com/aerogo/cluster v0.1.7 // indirect
 	github.com/aerogo/flow v0.1.4
 	github.com/aerogo/http v1.0.6
 	github.com/aerogo/markdown v0.1.8
 	github.com/aerogo/mirror v0.2.3
-	github.com/aerogo/nano v0.2.1
-	github.com/aerogo/packet v0.1.6 // indirect
-	github.com/akyoto/color v1.8.4
+	github.com/aerogo/nano v0.3.1
+	github.com/akyoto/color v1.8.5
 	github.com/akyoto/go-matroska v0.1.1
 	github.com/akyoto/imageserver v0.3.6
 	github.com/akyoto/webpush-go v0.1.2
@@ -27,7 +25,6 @@ require (
 	github.com/animenotifier/twist v0.2.3
 	github.com/json-iterator/go v1.1.6
 	github.com/logpacker/PayPal-Go-SDK v1.1.4
-	github.com/mattn/go-colorable v0.1.2 // indirect
 	github.com/stretchr/testify v1.3.0
 	github.com/teris-io/shortid v0.0.0-20171029131806-771a37caa5cf // indirect
 	github.com/ungerik/go-gravatar v0.0.0-20120802094239-6ab22628222a
@@ -35,7 +32,7 @@ require (
 	github.com/xrash/smetrics v0.0.0-20170218160415-a3153f7040e9
 	golang.org/x/crypto v0.0.0-20190513172903-22d7a77e9e5f // indirect
 	golang.org/x/net v0.0.0-20190522155817-f3200d17e092 // indirect
-	golang.org/x/sys v0.0.0-20190523142557-0e01d883c5c5 // indirect
+	golang.org/x/sys v0.0.0-20190524152521-dbbf3f1254d4 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 )
