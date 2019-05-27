@@ -39,7 +39,7 @@ type ConnectionAnalytics struct {
 }
 
 // GetAnalytics returns the analytics for the given user ID.
-func GetAnalytics(userID string) (*Analytics, error) {
+func GetAnalytics(userID UserID) (*Analytics, error) {
 	obj, err := DB.Get("Analytics", userID)
 
 	if err != nil {

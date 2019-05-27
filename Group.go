@@ -55,7 +55,7 @@ func (group *Group) String() string {
 }
 
 // FindMember returns the group member by user ID, if available.
-func (group *Group) FindMember(userID string) *GroupMember {
+func (group *Group) FindMember(userID UserID) *GroupMember {
 	group.membersMutex.Lock()
 	defer group.membersMutex.Unlock()
 
@@ -69,7 +69,7 @@ func (group *Group) FindMember(userID string) *GroupMember {
 }
 
 // HasMember returns true if the user is a member of the group.
-func (group *Group) HasMember(userID string) bool {
+func (group *Group) HasMember(userID UserID) bool {
 	return group.FindMember(userID) != nil
 }
 
@@ -191,7 +191,7 @@ func (group *Group) OnJoin(user *User) {
 }
 
 // SendNotification sends a notification to all group members except for the excluded user ID.
-func (group *Group) SendNotification(notification *PushNotification, excludeUserID string) {
+func (group *Group) SendNotification(notification *PushNotification, excludeUserID UserID) {
 	for _, user := range group.Users() {
 		if user.ID == excludeUserID {
 			continue

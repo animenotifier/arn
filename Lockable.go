@@ -9,8 +9,8 @@ import (
 
 // Lockable ...
 type Lockable interface {
-	Lock(userID string)
-	Unlock(userID string)
+	Lock(userID UserID)
+	Unlock(userID UserID)
 	IsLocked() bool
 	Save()
 }

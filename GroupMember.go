@@ -2,7 +2,7 @@ package arn
 
 // GroupMember ...
 type GroupMember struct {
-	UserID string `json:"userId"`
+	UserID UserID `json:"userId"`
 	Role   string `json:"role"`
 	Joined string `json:"joined"`
 

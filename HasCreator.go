@@ -7,7 +7,7 @@ import (
 // HasCreator includes user ID and date for the creation of this object.
 type HasCreator struct {
 	Created   string `json:"created"`
-	CreatedBy string `json:"createdBy"`
+	CreatedBy UserID `json:"createdBy"`
 }
 
 // Creator returns the user who created this object.
@@ -17,7 +17,7 @@ func (obj *HasCreator) Creator() *User {
 }
 
 // CreatorID returns the ID of the user who created this object.
-func (obj *HasCreator) CreatorID() string {
+func (obj *HasCreator) CreatorID() UserID {
 	return obj.CreatedBy
 }
 
@@ -27,7 +27,7 @@ func (obj *HasCreator) GetCreated() string {
 }
 
 // GetCreatedBy returns the ID of the user who created this object.
-func (obj *HasCreator) GetCreatedBy() string {
+func (obj *HasCreator) GetCreatedBy() UserID {
 	return obj.CreatedBy
 }
 

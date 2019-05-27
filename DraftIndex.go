@@ -18,7 +18,7 @@ type DraftIndex struct {
 }
 
 // NewDraftIndex ...
-func NewDraftIndex(userID string) *DraftIndex {
+func NewDraftIndex(userID UserID) *DraftIndex {
 	return &DraftIndex{
 		UserID: userID,
 	}

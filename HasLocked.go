@@ -6,12 +6,12 @@ type HasLocked struct {
 }
 
 // Lock locks the object.
-func (obj *HasLocked) Lock(userID string) {
+func (obj *HasLocked) Lock(userID UserID) {
 	obj.Locked = true
 }
 
 // Unlock unlocks the object.
-func (obj *HasLocked) Unlock(userID string) {
+func (obj *HasLocked) Unlock(userID UserID) {
 	obj.Locked = false
 }
 

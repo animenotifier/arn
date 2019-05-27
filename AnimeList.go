@@ -11,7 +11,7 @@ import (
 
 // AnimeList is a list of anime list items.
 type AnimeList struct {
-	UserID string           `json:"userId"`
+	UserID UserID           `json:"userId"`
 	Items  []*AnimeListItem `json:"items"`
 
 	sync.Mutex
@@ -496,7 +496,7 @@ func AllAnimeLists() ([]*AnimeList, error) {
 }
 
 // GetAnimeList ...
-func GetAnimeList(userID string) (*AnimeList, error) {
+func GetAnimeList(userID UserID) (*AnimeList, error) {
 	animeList, err := DB.Get("AnimeList", userID)
 
 	if err != nil {

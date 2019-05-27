@@ -26,7 +26,7 @@ func (purchase *Purchase) User() *User {
 }
 
 // NewPurchase creates a new Purchase object with a generated ID.
-func NewPurchase(userID string, itemID string, quantity int, price int, currency string) *Purchase {
+func NewPurchase(userID UserID, itemID string, quantity int, price int, currency string) *Purchase {
 	return &Purchase{
 		ID:       GenerateID("Purchase"),
 		UserID:   userID,

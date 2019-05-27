@@ -4,7 +4,7 @@ import "errors"
 
 // PushSubscriptions is a list of push subscriptions made by a user.
 type PushSubscriptions struct {
-	UserID string              `json:"userId"`
+	UserID UserID              `json:"userId"`
 	Items  []*PushSubscription `json:"items"`
 }
 

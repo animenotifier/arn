@@ -33,8 +33,12 @@ func init() {
 	}
 }
 
+// UserID represents a user ID.
+type UserID = string
+
 // User is a registered person.
 type User struct {
+	ID           UserID       `json:"id"`
 	Nick         string       `json:"nick" editable:"true"`
 	FirstName    string       `json:"firstName" private:"true"`
 	LastName     string       `json:"lastName" private:"true"`
@@ -59,7 +63,6 @@ type User struct {
 	OS           UserOS       `json:"os" private:"true"`
 	Location     *Location    `json:"location" private:"true"`
 
-	HasID
 	HasPosts
 
 	eventStreams struct {
@@ -71,9 +74,7 @@ type User struct {
 // NewUser creates an empty user object with a unique ID.
 func NewUser() *User {
 	user := &User{
-		HasID: HasID{
-			ID: GenerateID("User"),
-		},
+		ID: GenerateID("User"),
 
 		// Avoid nil value fields
 		Location: &Location{},
@@ -310,6 +311,11 @@ func (user *User) Link() string {
 	return "/+" + user.Nick
 }
 
+// GetID returns the ID.
+func (user *User) GetID() string {
+	return user.ID
+}
+
 // HasAvatar tells you whether the user has an avatar or not.
 func (user *User) HasAvatar() bool {
 	return user.Avatar.Extension != ""
@@ -454,7 +460,7 @@ func (user *User) Creator() *User {
 }
 
 // CreatorID needs to be implemented for the PostParent interface.
-func (user *User) CreatorID() string {
+func (user *User) CreatorID() UserID {
 	return user.ID
 }
 

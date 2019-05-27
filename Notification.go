@@ -34,7 +34,7 @@ func (notification *Notification) String() string {
 }
 
 // NewNotification creates a new notification.
-func NewNotification(userID string, pushNotification *PushNotification) *Notification {
+func NewNotification(userID UserID, pushNotification *PushNotification) *Notification {
 	return &Notification{
 		ID:               GenerateID("Notification"),
 		UserID:           userID,

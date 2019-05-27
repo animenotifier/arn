@@ -12,7 +12,7 @@ type ActivityCreate struct {
 }
 
 // NewActivityCreate creates a new activity.
-func NewActivityCreate(objectType string, objectID string, userID string) *ActivityCreate {
+func NewActivityCreate(objectType string, objectID string, userID UserID) *ActivityCreate {
 	return &ActivityCreate{
 		HasID: HasID{
 			ID: GenerateID("ActivityCreate"),

@@ -15,7 +15,7 @@ type PostParent interface {
 	PostsRelevantFirst(count int) []*Post
 	CountPosts() int
 	Creator() *User
-	CreatorID() string
+	CreatorID() UserID
 	AddPost(string)
 	RemovePost(string) bool
 }

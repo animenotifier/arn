@@ -14,7 +14,7 @@ type Activity interface {
 	TypeName() string
 	GetID() string
 	GetCreated() string
-	GetCreatedBy() string
+	GetCreatedBy() UserID
 	GetCreatedTime() time.Time
 }
 

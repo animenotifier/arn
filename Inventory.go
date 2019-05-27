@@ -9,7 +9,7 @@ const DefaultInventorySlotCount = 24
 
 // Inventory has inventory slots that store shop item IDs and their quantity.
 type Inventory struct {
-	UserID string           `json:"userId"`
+	UserID UserID           `json:"userId"`
 	Slots  []*InventorySlot `json:"slots"`
 }
 
@@ -63,7 +63,7 @@ func (inventory *Inventory) SwapSlots(a, b int) error {
 }
 
 // NewInventory creates a new inventory with the default number of slots.
-func NewInventory(userID string) *Inventory {
+func NewInventory(userID UserID) *Inventory {
 	inventory := &Inventory{
 		UserID: userID,
 		Slots:  make([]*InventorySlot, DefaultInventorySlotCount),
@@ -77,7 +77,7 @@ func NewInventory(userID string) *Inventory {
 }
 
 // GetInventory ...
-func GetInventory(userID string) (*Inventory, error) {
+func GetInventory(userID UserID) (*Inventory, error) {
 	obj, err := DB.Get("Inventory", userID)
 
 	if err != nil {

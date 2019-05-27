@@ -14,7 +14,7 @@ type ActivityConsumeAnime struct {
 }
 
 // NewActivityConsumeAnime creates a new activity.
-func NewActivityConsumeAnime(animeID string, fromEpisode int, toEpisode int, userID string) *ActivityConsumeAnime {
+func NewActivityConsumeAnime(animeID string, fromEpisode int, toEpisode int, userID UserID) *ActivityConsumeAnime {
 	return &ActivityConsumeAnime{
 		HasID: HasID{
 			ID: GenerateID("ActivityConsumeAnime"),

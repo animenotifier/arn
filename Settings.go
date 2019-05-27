@@ -163,7 +163,7 @@ func DefaultNotificationSettings() NotificationSettings {
 }
 
 // GetSettings ...
-func GetSettings(userID string) (*Settings, error) {
+func GetSettings(userID UserID) (*Settings, error) {
 	obj, err := DB.Get("Settings", userID)
 
 	if err != nil {

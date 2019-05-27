@@ -6,7 +6,7 @@ type HasLikes struct {
 }
 
 // Like makes the given user ID like the object.
-func (obj *HasLikes) Like(userID string) {
+func (obj *HasLikes) Like(userID UserID) {
 	for _, id := range obj.Likes {
 		if id == userID {
 			return
@@ -17,7 +17,7 @@ func (obj *HasLikes) Like(userID string) {
 }
 
 // Unlike makes the given user ID unlike the object.
-func (obj *HasLikes) Unlike(userID string) {
+func (obj *HasLikes) Unlike(userID UserID) {
 	for index, id := range obj.Likes {
 		if id == userID {
 			obj.Likes = append(obj.Likes[:index], obj.Likes[index+1:]...)
@@ -27,7 +27,7 @@ func (obj *HasLikes) Unlike(userID string) {
 }
 
 // LikedBy checks to see if the user has liked the object.
-func (obj *HasLikes) LikedBy(userID string) bool {
+func (obj *HasLikes) LikedBy(userID UserID) bool {
 	for _, id := range obj.Likes {
 		if id == userID {
 			return true

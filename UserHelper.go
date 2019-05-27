@@ -8,7 +8,7 @@ import (
 )
 
 // GetUser fetches the user with the given ID from the database.
-func GetUser(id string) (*User, error) {
+func GetUser(id UserID) (*User, error) {
 	obj, err := DB.Get("User", id)
 
 	if err != nil {

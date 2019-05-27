@@ -8,12 +8,12 @@ import (
 
 // UserFollows is a list including IDs to users you follow.
 type UserFollows struct {
-	UserID string   `json:"userId"`
+	UserID UserID   `json:"userId"`
 	Items  []string `json:"items"`
 }
 
 // NewUserFollows creates a new UserFollows list.
-func NewUserFollows(userID string) *UserFollows {
+func NewUserFollows(userID UserID) *UserFollows {
 	return &UserFollows{
 		UserID: userID,
 		Items:  []string{},
@@ -21,7 +21,7 @@ func NewUserFollows(userID string) *UserFollows {
 }
 
 // Add adds an user to the list if it hasn't been added yet.
-func (list *UserFollows) Add(userID string) error {
+func (list *UserFollows) Add(userID UserID) error {
 	if userID == list.UserID {
 		return errors.New("You can't follow yourself")
 	}
@@ -57,7 +57,7 @@ func (list *UserFollows) Add(userID string) error {
 }
 
 // Remove removes the user ID from the list.
-func (list *UserFollows) Remove(userID string) bool {
+func (list *UserFollows) Remove(userID UserID) bool {
 	for index, item := range list.Items {
 		if item == userID {
 			list.Items = append(list.Items[:index], list.Items[index+1:]...)
@@ -69,7 +69,7 @@ func (list *UserFollows) Remove(userID string) bool {
 }
 
 // Contains checks if the list contains the user ID already.
-func (list *UserFollows) Contains(userID string) bool {
+func (list *UserFollows) Contains(userID UserID) bool {
 	for _, item := range list.Items {
 		if item == userID {
 			return true
@@ -121,7 +121,7 @@ func UserFollowerCountMap() map[string]int {
 }
 
 // GetUserFollows ...
-func GetUserFollows(id string) (*UserFollows, error) {
+func GetUserFollows(id UserID) (*UserFollows, error) {
 	obj, err := DB.Get("UserFollows", id)
 
 	if err != nil {

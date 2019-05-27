@@ -10,9 +10,9 @@ import (
 
 // Likeable ...
 type Likeable interface {
-	Like(userID string)
-	Unlike(userID string)
-	LikedBy(userID string) bool
+	Like(userID UserID)
+	Unlike(userID UserID)
+	LikedBy(userID UserID) bool
 	CountLikes() int
 	Link() string
 	Save()

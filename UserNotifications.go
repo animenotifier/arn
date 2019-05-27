@@ -8,12 +8,12 @@ import (
 
 // UserNotifications is a list including IDs to your notifications.
 type UserNotifications struct {
-	UserID string   `json:"userId"`
+	UserID UserID   `json:"userId"`
 	Items  []string `json:"items"`
 }
 
 // NewUserNotifications creates a new UserNotifications list.
-func NewUserNotifications(userID string) *UserNotifications {
+func NewUserNotifications(userID UserID) *UserNotifications {
 	return &UserNotifications{
 		UserID: userID,
 		Items:  []string{},
@@ -84,7 +84,7 @@ func (list *UserNotifications) Notifications() []*Notification {
 }
 
 // GetUserNotifications ...
-func GetUserNotifications(id string) (*UserNotifications, error) {
+func GetUserNotifications(id UserID) (*UserNotifications, error) {
 	obj, err := DB.Get("UserNotifications", id)
 
 	if err != nil {
