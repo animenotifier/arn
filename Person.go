@@ -13,21 +13,21 @@ type Person struct {
 	Name  PersonName  `json:"name" editable:"true"`
 	Image PersonImage `json:"image"`
 
-	HasID
-	HasPosts
-	HasCreator
-	HasEditor
-	HasLikes
-	HasDraft
+	hasID
+	hasPosts
+	hasCreator
+	hasEditor
+	hasLikes
+	hasDraft
 }
 
 // NewPerson creates a new person.
 func NewPerson() *Person {
 	return &Person{
-		HasID: HasID{
+		hasID: hasID{
 			ID: GenerateID("Person"),
 		},
-		HasCreator: HasCreator{
+		hasCreator: hasCreator{
 			Created: DateTimeUTC(),
 		},
 	}

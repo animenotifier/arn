@@ -14,12 +14,12 @@ type Thread struct {
 	Tags   []string `json:"tags" editable:"true"`
 	Edited string   `json:"edited"`
 
-	HasID
-	HasText
-	HasPosts
-	HasCreator
-	HasLikes
-	HasLocked
+	hasID
+	hasText
+	hasPosts
+	hasCreator
+	hasLikes
+	hasLocked
 
 	html string
 }

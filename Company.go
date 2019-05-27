@@ -14,33 +14,33 @@ type Company struct {
 	Links       []*Link     `json:"links" editable:"true"`
 
 	// Mixins
-	HasID
-	HasMappings
-	HasLikes
-	HasDraft
+	hasID
+	hasMappings
+	hasLikes
+	hasDraft
 
 	// Other editable fields
 	Location *Location `json:"location" editable:"true"`
 	Tags     []string  `json:"tags" editable:"true"`
 
 	// Editing dates
-	HasCreator
-	HasEditor
+	hasCreator
+	hasEditor
 }
 
 // NewCompany creates a new company.
 func NewCompany() *Company {
 	return &Company{
-		HasID: HasID{
+		hasID: hasID{
 			ID: GenerateID("Company"),
 		},
 		Name:  CompanyName{},
 		Links: []*Link{},
 		Tags:  []string{},
-		HasCreator: HasCreator{
+		hasCreator: hasCreator{
 			Created: DateTimeUTC(),
 		},
-		HasMappings: HasMappings{
+		hasMappings: hasMappings{
 			Mappings: []*Mapping{},
 		},
 	}

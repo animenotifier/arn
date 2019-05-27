@@ -81,13 +81,13 @@ type Anime struct {
 	Trailers      []*ExternalMedia `json:"trailers" editable:"true"`
 
 	// Mixins
-	HasID
-	HasMappings
-	HasPosts
-	HasLikes
-	HasCreator
-	HasEditor
-	HasDraft
+	hasID
+	hasMappings
+	hasPosts
+	hasLikes
+	hasCreator
+	hasEditor
+	hasDraft
 
 	// Company IDs
 	StudioIDs   []string `json:"studios" editable:"true"`
@@ -104,17 +104,17 @@ type Anime struct {
 // NewAnime creates a new anime.
 func NewAnime() *Anime {
 	return &Anime{
-		HasID: HasID{
+		hasID: hasID{
 			ID: GenerateID("Anime"),
 		},
 		Title:      &AnimeTitle{},
 		Rating:     &AnimeRating{},
 		Popularity: &AnimePopularity{},
 		Trailers:   []*ExternalMedia{},
-		HasCreator: HasCreator{
+		hasCreator: hasCreator{
 			Created: DateTimeUTC(),
 		},
-		HasMappings: HasMappings{
+		hasMappings: hasMappings{
 			Mappings: []*Mapping{},
 		},
 	}

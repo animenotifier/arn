@@ -17,22 +17,22 @@ type Character struct {
 	Spoilers    []Spoiler             `json:"spoilers" editable:"true"`
 	Attributes  []*CharacterAttribute `json:"attributes" editable:"true"`
 
-	HasID
-	HasPosts
-	HasMappings
-	HasCreator
-	HasEditor
-	HasLikes
-	HasDraft
+	hasID
+	hasPosts
+	hasMappings
+	hasCreator
+	hasEditor
+	hasLikes
+	hasDraft
 }
 
 // NewCharacter creates a new character.
 func NewCharacter() *Character {
 	return &Character{
-		HasID: HasID{
+		hasID: hasID{
 			ID: GenerateID("Character"),
 		},
-		HasCreator: HasCreator{
+		hasCreator: hasCreator{
 			Created: DateTimeUTC(),
 		},
 	}

@@ -17,11 +17,11 @@ type Post struct {
 	ParentType string   `json:"parentType"`
 	Edited     string   `json:"edited"`
 
-	HasID
-	HasText
-	HasPosts
-	HasCreator
-	HasLikes
+	hasID
+	hasText
+	hasPosts
+	hasCreator
+	hasLikes
 
 	html string
 }

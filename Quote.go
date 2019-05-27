@@ -18,12 +18,12 @@ type Quote struct {
 	EpisodeNumber int       `json:"episode" editable:"true"`
 	Time          int       `json:"time" editable:"true"`
 
-	HasID
-	HasPosts
-	HasCreator
-	HasEditor
-	HasLikes
-	HasDraft
+	hasID
+	hasPosts
+	hasCreator
+	hasEditor
+	hasLikes
+	hasDraft
 }
 
 // IsMainQuote returns true if the quote is the main quote of the character.

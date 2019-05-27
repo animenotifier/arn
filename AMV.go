@@ -23,12 +23,12 @@ type AMV struct {
 	Tags           []string   `json:"tags" editable:"true"`
 	Info           video.Info `json:"info"`
 
-	HasID
-	HasPosts
-	HasCreator
-	HasEditor
-	HasLikes
-	HasDraft
+	hasID
+	hasPosts
+	hasCreator
+	hasEditor
+	hasLikes
+	hasDraft
 }
 
 // Link returns the permalink for the AMV.

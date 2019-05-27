@@ -63,7 +63,7 @@ type User struct {
 	OS           UserOS       `json:"os" private:"true"`
 	Location     *Location    `json:"location" private:"true"`
 
-	HasPosts
+	hasPosts
 
 	eventStreams struct {
 		sync.Mutex

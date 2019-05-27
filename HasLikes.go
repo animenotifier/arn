@@ -1,12 +1,12 @@
 package arn
 
 // HasLikes implements common like and unlike methods.
-type HasLikes struct {
+type hasLikes struct {
 	Likes []string `json:"likes"`
 }
 
 // Like makes the given user ID like the object.
-func (obj *HasLikes) Like(userID UserID) {
+func (obj *hasLikes) Like(userID UserID) {
 	for _, id := range obj.Likes {
 		if id == userID {
 			return
@@ -17,7 +17,7 @@ func (obj *HasLikes) Like(userID UserID) {
 }
 
 // Unlike makes the given user ID unlike the object.
-func (obj *HasLikes) Unlike(userID UserID) {
+func (obj *hasLikes) Unlike(userID UserID) {
 	for index, id := range obj.Likes {
 		if id == userID {
 			obj.Likes = append(obj.Likes[:index], obj.Likes[index+1:]...)
@@ -27,7 +27,7 @@ func (obj *HasLikes) Unlike(userID UserID) {
 }
 
 // LikedBy checks to see if the user has liked the object.
-func (obj *HasLikes) LikedBy(userID UserID) bool {
+func (obj *hasLikes) LikedBy(userID UserID) bool {
 	for _, id := range obj.Likes {
 		if id == userID {
 			return true
@@ -38,6 +38,6 @@ func (obj *HasLikes) LikedBy(userID UserID) bool {
 }
 
 // CountLikes returns the number of likes the object has received.
-func (obj *HasLikes) CountLikes() int {
+func (obj *hasLikes) CountLikes() int {
 	return len(obj.Likes)
 }

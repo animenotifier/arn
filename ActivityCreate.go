@@ -7,17 +7,17 @@ type ActivityCreate struct {
 	ObjectType string `json:"objectType"`
 	ObjectID   string `json:"objectId"`
 
-	HasID
-	HasCreator
+	hasID
+	hasCreator
 }
 
 // NewActivityCreate creates a new activity.
 func NewActivityCreate(objectType string, objectID string, userID UserID) *ActivityCreate {
 	return &ActivityCreate{
-		HasID: HasID{
+		hasID: hasID{
 			ID: GenerateID("ActivityCreate"),
 		},
-		HasCreator: HasCreator{
+		hasCreator: hasCreator{
 			Created:   DateTimeUTC(),
 			CreatedBy: userID,
 		},

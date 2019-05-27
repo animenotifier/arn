@@ -11,7 +11,7 @@ type ClientErrorReport struct {
 	LineNumber   int    `json:"lineNumber"`
 	ColumnNumber int    `json:"columnNumber"`
 
-	HasCreator
+	hasCreator
 }
 
 // StreamClientErrorReports returns a stream of all characters.

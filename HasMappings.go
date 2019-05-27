@@ -1,12 +1,12 @@
 package arn
 
 // HasMappings implements common mapping methods.
-type HasMappings struct {
+type hasMappings struct {
 	Mappings []*Mapping `json:"mappings" editable:"true"`
 }
 
 // SetMapping sets the ID of an external site to the obj.
-func (obj *HasMappings) SetMapping(serviceName string, serviceID string) {
+func (obj *hasMappings) SetMapping(serviceName string, serviceID string) {
 	// Is the ID valid?
 	if serviceID == "" {
 		return
@@ -28,7 +28,7 @@ func (obj *HasMappings) SetMapping(serviceName string, serviceID string) {
 }
 
 // GetMapping returns the external ID for the given service.
-func (obj *HasMappings) GetMapping(name string) string {
+func (obj *hasMappings) GetMapping(name string) string {
 	for _, external := range obj.Mappings {
 		if external.Service == name {
 			return external.ServiceID
@@ -39,7 +39,7 @@ func (obj *HasMappings) GetMapping(name string) string {
 }
 
 // RemoveMapping removes all mappings with the given service name and ID.
-func (obj *HasMappings) RemoveMapping(name string) bool {
+func (obj *hasMappings) RemoveMapping(name string) bool {
 	for index, external := range obj.Mappings {
 		if external.Service == name {
 			obj.Mappings = append(obj.Mappings[:index], obj.Mappings[index+1:]...)

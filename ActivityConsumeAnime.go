@@ -8,18 +8,18 @@ type ActivityConsumeAnime struct {
 	FromEpisode int    `json:"fromEpisode"`
 	ToEpisode   int    `json:"toEpisode"`
 
-	HasID
-	HasCreator
-	HasLikes
+	hasID
+	hasCreator
+	hasLikes
 }
 
 // NewActivityConsumeAnime creates a new activity.
 func NewActivityConsumeAnime(animeID string, fromEpisode int, toEpisode int, userID UserID) *ActivityConsumeAnime {
 	return &ActivityConsumeAnime{
-		HasID: HasID{
+		hasID: hasID{
 			ID: GenerateID("ActivityConsumeAnime"),
 		},
-		HasCreator: HasCreator{
+		hasCreator: hasCreator{
 			Created:   DateTimeUTC(),
 			CreatedBy: userID,
 		},

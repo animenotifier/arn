@@ -15,7 +15,7 @@ type IgnoreAnimeDifference struct {
 	ID        string `json:"id"`
 	ValueHash uint64 `json:"valueHash"`
 
-	HasCreator
+	hasCreator
 }
 
 // GetIgnoreAnimeDifference ...

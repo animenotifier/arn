@@ -25,11 +25,11 @@ type Group struct {
 	// Applications []UserApplication `json:"applications"`
 
 	// Mixins
-	HasID
-	HasPosts
-	HasCreator
-	HasEditor
-	HasDraft
+	hasID
+	hasPosts
+	hasCreator
+	hasEditor
+	hasDraft
 
 	// Mutex
 	membersMutex sync.Mutex
