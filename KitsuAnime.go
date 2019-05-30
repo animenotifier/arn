@@ -106,7 +106,7 @@ func NewAnimeFromKitsuAnime(kitsuAnime *kitsu.Anime) (*Anime, *AnimeCharacters, 
 }
 
 // StreamKitsuAnime returns a stream of all Kitsu anime.
-func StreamKitsuAnime() chan *kitsu.Anime {
+func StreamKitsuAnime() <-chan *kitsu.Anime {
 	channel := make(chan *kitsu.Anime, nano.ChannelBufferSize)
 
 	go func() {

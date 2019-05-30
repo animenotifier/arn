@@ -15,7 +15,7 @@ type ClientErrorReport struct {
 }
 
 // StreamClientErrorReports returns a stream of all characters.
-func StreamClientErrorReports() chan *ClientErrorReport {
+func StreamClientErrorReports() <-chan *ClientErrorReport {
 	channel := make(chan *ClientErrorReport, nano.ChannelBufferSize)
 
 	go func() {

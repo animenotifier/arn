@@ -139,7 +139,7 @@ func GetThreadsByUser(user *User) []*Thread {
 }
 
 // StreamThreads ...
-func StreamThreads() chan *Thread {
+func StreamThreads() <-chan *Thread {
 	channel := make(chan *Thread, nano.ChannelBufferSize)
 
 	go func() {

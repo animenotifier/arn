@@ -47,7 +47,7 @@ func IsAnimeDifferenceIgnored(animeID string, dataProvider string, malAnimeID st
 }
 
 // StreamIgnoreAnimeDifferences returns a stream of all ignored differences.
-func StreamIgnoreAnimeDifferences() chan *IgnoreAnimeDifference {
+func StreamIgnoreAnimeDifferences() <-chan *IgnoreAnimeDifference {
 	channel := make(chan *IgnoreAnimeDifference, nano.ChannelBufferSize)
 
 	go func() {

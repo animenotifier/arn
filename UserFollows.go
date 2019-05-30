@@ -132,7 +132,7 @@ func GetUserFollows(id UserID) (*UserFollows, error) {
 }
 
 // StreamUserFollows returns a stream of all user follows.
-func StreamUserFollows() chan *UserFollows {
+func StreamUserFollows() <-chan *UserFollows {
 	channel := make(chan *UserFollows, nano.ChannelBufferSize)
 
 	go func() {

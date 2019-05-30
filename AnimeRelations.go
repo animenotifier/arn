@@ -112,7 +112,7 @@ func GetAnimeRelations(animeID string) (*AnimeRelations, error) {
 }
 
 // StreamAnimeRelations returns a stream of all anime relations.
-func StreamAnimeRelations() chan *AnimeRelations {
+func StreamAnimeRelations() <-chan *AnimeRelations {
 	channel := make(chan *AnimeRelations, nano.ChannelBufferSize)
 
 	go func() {

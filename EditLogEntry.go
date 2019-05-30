@@ -116,7 +116,7 @@ func (entry *EditLogEntry) ActionHumanReadable() string {
 }
 
 // StreamEditLogEntries returns a stream of all log entries.
-func StreamEditLogEntries() chan *EditLogEntry {
+func StreamEditLogEntries() <-chan *EditLogEntry {
 	channel := make(chan *EditLogEntry, nano.ChannelBufferSize)
 
 	go func() {

@@ -95,7 +95,7 @@ func GetUserNotifications(id UserID) (*UserNotifications, error) {
 }
 
 // StreamUserNotifications returns a stream of all user notifications.
-func StreamUserNotifications() chan *UserNotifications {
+func StreamUserNotifications() <-chan *UserNotifications {
 	channel := make(chan *UserNotifications, nano.ChannelBufferSize)
 
 	go func() {

@@ -43,7 +43,7 @@ func GetShopItem(id string) (*ShopItem, error) {
 }
 
 // StreamShopItems returns a stream of all shop items.
-func StreamShopItems() chan *ShopItem {
+func StreamShopItems() <-chan *ShopItem {
 	channel := make(chan *ShopItem, nano.ChannelBufferSize)
 
 	go func() {

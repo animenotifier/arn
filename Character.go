@@ -217,7 +217,7 @@ func SortCharactersByLikes(characters []*Character) {
 }
 
 // StreamCharacters returns a stream of all characters.
-func StreamCharacters() chan *Character {
+func StreamCharacters() <-chan *Character {
 	channel := make(chan *Character, nano.ChannelBufferSize)
 
 	go func() {

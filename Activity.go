@@ -26,7 +26,7 @@ func SortActivitiesLatestFirst(entries []Activity) {
 }
 
 // StreamActivities returns a stream of all activities.
-func StreamActivities() chan Activity {
+func StreamActivities() <-chan Activity {
 	channel := make(chan Activity, nano.ChannelBufferSize)
 	wg := sync.WaitGroup{}
 	wg.Add(2)

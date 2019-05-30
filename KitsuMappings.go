@@ -6,7 +6,7 @@ import (
 )
 
 // StreamKitsuMappings returns a stream of all Kitsu mappings.
-func StreamKitsuMappings() chan *kitsu.Mapping {
+func StreamKitsuMappings() <-chan *kitsu.Mapping {
 	channel := make(chan *kitsu.Mapping, nano.ChannelBufferSize)
 
 	go func() {

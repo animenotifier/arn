@@ -125,7 +125,7 @@ func SortPersonsByLikes(persons []*Person) {
 }
 
 // StreamPersons returns a stream of all persons.
-func StreamPersons() chan *Person {
+func StreamPersons() <-chan *Person {
 	channel := make(chan *Person, nano.ChannelBufferSize)
 
 	go func() {

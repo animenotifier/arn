@@ -39,7 +39,7 @@ func NewPurchase(userID UserID, itemID string, quantity int, price int, currency
 }
 
 // StreamPurchases returns a stream of all purchases.
-func StreamPurchases() chan *Purchase {
+func StreamPurchases() <-chan *Purchase {
 	channel := make(chan *Purchase, nano.ChannelBufferSize)
 
 	go func() {

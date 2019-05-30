@@ -358,7 +358,7 @@ func GetSoundTrack(id string) (*SoundTrack, error) {
 }
 
 // StreamSoundTracks returns a stream of all soundtracks.
-func StreamSoundTracks() chan *SoundTrack {
+func StreamSoundTracks() <-chan *SoundTrack {
 	channel := make(chan *SoundTrack, nano.ChannelBufferSize)
 
 	go func() {

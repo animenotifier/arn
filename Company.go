@@ -116,7 +116,7 @@ func GetCompany(id string) (*Company, error) {
 }
 
 // StreamCompanies returns a stream of all companies.
-func StreamCompanies() chan *Company {
+func StreamCompanies() <-chan *Company {
 	channel := make(chan *Company, nano.ChannelBufferSize)
 
 	go func() {

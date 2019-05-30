@@ -468,7 +468,7 @@ func (list *AnimeList) RemoveDuplicates() {
 }
 
 // StreamAnimeLists returns a stream of all anime.
-func StreamAnimeLists() chan *AnimeList {
+func StreamAnimeLists() <-chan *AnimeList {
 	channel := make(chan *AnimeList, nano.ChannelBufferSize)
 
 	go func() {

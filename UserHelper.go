@@ -93,7 +93,7 @@ func GetUserByGoogleID(googleID string) (*User, error) {
 }
 
 // StreamUsers returns a stream of all users.
-func StreamUsers() chan *User {
+func StreamUsers() <-chan *User {
 	channel := make(chan *User, nano.ChannelBufferSize)
 
 	go func() {

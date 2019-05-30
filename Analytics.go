@@ -50,7 +50,7 @@ func GetAnalytics(userID UserID) (*Analytics, error) {
 }
 
 // StreamAnalytics returns a stream of all analytics.
-func StreamAnalytics() chan *Analytics {
+func StreamAnalytics() <-chan *Analytics {
 	channel := make(chan *Analytics, nano.ChannelBufferSize)
 
 	go func() {

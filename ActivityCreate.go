@@ -48,7 +48,7 @@ func (activity *ActivityCreate) Self() Loggable {
 }
 
 // StreamActivityCreates returns a stream of all ActivityCreate objects.
-func StreamActivityCreates() chan *ActivityCreate {
+func StreamActivityCreates() <-chan *ActivityCreate {
 	channel := make(chan *ActivityCreate, nano.ChannelBufferSize)
 
 	go func() {

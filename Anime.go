@@ -779,7 +779,7 @@ func (anime *Anime) Self() Loggable {
 }
 
 // StreamAnime returns a stream of all anime.
-func StreamAnime() chan *Anime {
+func StreamAnime() <-chan *Anime {
 	channel := make(chan *Anime, nano.ChannelBufferSize)
 
 	go func() {

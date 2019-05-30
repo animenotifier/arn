@@ -224,7 +224,7 @@ func GetAMV(id string) (*AMV, error) {
 }
 
 // StreamAMVs returns a stream of all AMVs.
-func StreamAMVs() chan *AMV {
+func StreamAMVs() <-chan *AMV {
 	channel := make(chan *AMV, nano.ChannelBufferSize)
 
 	go func() {

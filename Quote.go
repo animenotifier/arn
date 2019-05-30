@@ -161,7 +161,7 @@ func GetQuote(id string) (*Quote, error) {
 }
 
 // StreamQuotes returns a stream of all quotes.
-func StreamQuotes() chan *Quote {
+func StreamQuotes() <-chan *Quote {
 	channel := make(chan *Quote, nano.ChannelBufferSize)
 
 	go func() {

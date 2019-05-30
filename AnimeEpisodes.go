@@ -131,7 +131,7 @@ func (episodes *AnimeEpisodes) ListString() string {
 }
 
 // StreamAnimeEpisodes returns a stream of all anime episodes.
-func StreamAnimeEpisodes() chan *AnimeEpisodes {
+func StreamAnimeEpisodes() <-chan *AnimeEpisodes {
 	channel := make(chan *AnimeEpisodes, nano.ChannelBufferSize)
 
 	go func() {

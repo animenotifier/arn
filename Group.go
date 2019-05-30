@@ -268,7 +268,7 @@ func GetGroup(id string) (*Group, error) {
 }
 
 // StreamGroups returns a stream of all groups.
-func StreamGroups() chan *Group {
+func StreamGroups() <-chan *Group {
 	channel := make(chan *Group, nano.ChannelBufferSize)
 
 	go func() {

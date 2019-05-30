@@ -40,7 +40,7 @@ func (payment *PayPalPayment) Save() {
 }
 
 // StreamPayPalPayments returns a stream of all paypal payments.
-func StreamPayPalPayments() chan *PayPalPayment {
+func StreamPayPalPayments() <-chan *PayPalPayment {
 	channel := make(chan *PayPalPayment, nano.ChannelBufferSize)
 
 	go func() {

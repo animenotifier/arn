@@ -157,7 +157,7 @@ func GetPost(id string) (*Post, error) {
 }
 
 // StreamPosts returns a stream of all posts.
-func StreamPosts() chan *Post {
+func StreamPosts() <-chan *Post {
 	channel := make(chan *Post, nano.ChannelBufferSize)
 
 	go func() {

@@ -56,7 +56,7 @@ func GetNotification(id string) (*Notification, error) {
 }
 
 // StreamNotifications returns a stream of all notifications.
-func StreamNotifications() chan *Notification {
+func StreamNotifications() <-chan *Notification {
 	channel := make(chan *Notification, nano.ChannelBufferSize)
 
 	go func() {

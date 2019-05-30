@@ -119,7 +119,7 @@ func GetAnimeCharacters(animeID string) (*AnimeCharacters, error) {
 }
 
 // StreamAnimeCharacters returns a stream of all anime characters.
-func StreamAnimeCharacters() chan *AnimeCharacters {
+func StreamAnimeCharacters() <-chan *AnimeCharacters {
 	channel := make(chan *AnimeCharacters, nano.ChannelBufferSize)
 
 	go func() {
