@@ -22,7 +22,7 @@ var (
 )
 
 // Authorize returns an error if the given API POST request is not authorized.
-func (user *User) Authorize(ctx *aero.Context, action string) error {
+func (user *User) Authorize(ctx aero.Context, action string) error {
 	editor := GetUserFromContext(ctx)
 
 	if editor == nil {
@@ -37,7 +37,7 @@ func (user *User) Authorize(ctx *aero.Context, action string) error {
 }
 
 // Edit updates the user object.
-func (user *User) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
+func (user *User) Edit(ctx aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
 	switch key {
 	case "Nick":
 		newNick := newValue.String()
@@ -236,7 +236,7 @@ func (user *User) Filter() {
 }
 
 // ShouldFilter tells whether data needs to be filtered in the given context.
-func (user *User) ShouldFilter(ctx *aero.Context) bool {
+func (user *User) ShouldFilter(ctx aero.Context) bool {
 	ctxUser := GetUserFromContext(ctx)
 
 	if ctxUser != nil && ctxUser.Role == "admin" {

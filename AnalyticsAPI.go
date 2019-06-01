@@ -12,12 +12,12 @@ var (
 )
 
 // Authorize returns an error if the given API POST request is not authorized.
-func (analytics *Analytics) Authorize(ctx *aero.Context, action string) error {
+func (analytics *Analytics) Authorize(ctx aero.Context, action string) error {
 	return AuthorizeIfLoggedIn(ctx)
 }
 
 // Create creates a new analytics object.
-func (analytics *Analytics) Create(ctx *aero.Context) error {
+func (analytics *Analytics) Create(ctx aero.Context) error {
 	body, err := ctx.Request().Body().Bytes()
 
 	if err != nil {

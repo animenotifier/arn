@@ -17,7 +17,7 @@ var (
 )
 
 // Edit ...
-func (item *AnimeListItem) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
+func (item *AnimeListItem) Edit(ctx aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
 	user := GetUserFromContext(ctx)
 
 	if user == nil {
@@ -88,7 +88,7 @@ func (item *AnimeListItem) Edit(ctx *aero.Context, key string, value reflect.Val
 }
 
 // AfterEdit is called after the item is edited.
-func (item *AnimeListItem) AfterEdit(ctx *aero.Context) error {
+func (item *AnimeListItem) AfterEdit(ctx aero.Context) error {
 	item.Rating.Clamp()
 	item.Edited = DateTimeUTC()
 	return nil

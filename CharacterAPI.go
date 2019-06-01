@@ -38,7 +38,7 @@ func init() {
 }
 
 // Create sets the data for a new character with data we received from the API request.
-func (character *Character) Create(ctx *aero.Context) error {
+func (character *Character) Create(ctx aero.Context) error {
 	user := GetUserFromContext(ctx)
 
 	if user == nil {
@@ -57,7 +57,7 @@ func (character *Character) Create(ctx *aero.Context) error {
 }
 
 // Authorize returns an error if the given API request is not authorized.
-func (character *Character) Authorize(ctx *aero.Context, action string) error {
+func (character *Character) Authorize(ctx aero.Context, action string) error {
 	user := GetUserFromContext(ctx)
 
 	if user == nil {
@@ -77,22 +77,22 @@ func (character *Character) Authorize(ctx *aero.Context, action string) error {
 }
 
 // Edit creates an edit log entry.
-func (character *Character) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {
+func (character *Character) Edit(ctx aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {
 	return edit(character, ctx, key, value, newValue)
 }
 
 // OnAppend saves a log entry.
-func (character *Character) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
+func (character *Character) OnAppend(ctx aero.Context, key string, index int, obj interface{}) {
 	onAppend(character, ctx, key, index, obj)
 }
 
 // OnRemove saves a log entry.
-func (character *Character) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
+func (character *Character) OnRemove(ctx aero.Context, key string, index int, obj interface{}) {
 	onRemove(character, ctx, key, index, obj)
 }
 
 // DeleteInContext deletes the character in the given context.
-func (character *Character) DeleteInContext(ctx *aero.Context) error {
+func (character *Character) DeleteInContext(ctx aero.Context) error {
 	user := GetUserFromContext(ctx)
 
 	// Write log entry

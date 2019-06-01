@@ -15,12 +15,12 @@ var (
 )
 
 // Authorize returns an error if the given API POST request is not authorized.
-func (settings *Settings) Authorize(ctx *aero.Context, action string) error {
+func (settings *Settings) Authorize(ctx aero.Context, action string) error {
 	return AuthorizeIfLoggedInAndOwnData(ctx, "id")
 }
 
 // Edit updates the settings object.
-func (settings *Settings) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
+func (settings *Settings) Edit(ctx aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
 	// nolint:gocritic (because this should stay as a switch statement)
 	switch key {
 	case "Theme":
@@ -42,7 +42,7 @@ func (settings *Settings) Filter() {
 }
 
 // ShouldFilter tells whether data needs to be filtered in the given context.
-func (settings *Settings) ShouldFilter(ctx *aero.Context) bool {
+func (settings *Settings) ShouldFilter(ctx aero.Context) bool {
 	ctxUser := GetUserFromContext(ctx)
 
 	if ctxUser != nil && ctxUser.Role == "admin" {

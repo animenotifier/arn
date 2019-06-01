@@ -37,7 +37,7 @@ func init() {
 }
 
 // Authorize returns an error if the given API POST request is not authorized.
-func (post *Post) Authorize(ctx *aero.Context, action string) error {
+func (post *Post) Authorize(ctx aero.Context, action string) error {
 	if !ctx.HasSession() {
 		return errors.New("Neither logged in nor in session")
 	}
@@ -54,7 +54,7 @@ func (post *Post) Authorize(ctx *aero.Context, action string) error {
 }
 
 // Create sets the data for a new post with data we received from the API request.
-func (post *Post) Create(ctx *aero.Context) error {
+func (post *Post) Create(ctx aero.Context) error {
 	data, err := ctx.Request().Body().JSONObject()
 
 	if err != nil {
@@ -185,7 +185,7 @@ func (post *Post) Create(ctx *aero.Context) error {
 }
 
 // Edit saves a log entry for the edit.
-func (post *Post) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
+func (post *Post) Edit(ctx aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
 	consumed := false
 	user := GetUserFromContext(ctx)
 
@@ -216,24 +216,24 @@ func (post *Post) Edit(ctx *aero.Context, key string, value reflect.Value, newVa
 }
 
 // OnAppend saves a log entry.
-func (post *Post) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
+func (post *Post) OnAppend(ctx aero.Context, key string, index int, obj interface{}) {
 	onAppend(post, ctx, key, index, obj)
 }
 
 // OnRemove saves a log entry.
-func (post *Post) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
+func (post *Post) OnRemove(ctx aero.Context, key string, index int, obj interface{}) {
 	onRemove(post, ctx, key, index, obj)
 }
 
 // AfterEdit sets the edited date on the post object.
-func (post *Post) AfterEdit(ctx *aero.Context) error {
+func (post *Post) AfterEdit(ctx aero.Context) error {
 	post.Edited = DateTimeUTC()
 	post.html = markdown.Render(post.Text)
 	return nil
 }
 
 // DeleteInContext deletes the post in the given context.
-func (post *Post) DeleteInContext(ctx *aero.Context) error {
+func (post *Post) DeleteInContext(ctx aero.Context) error {
 	user := GetUserFromContext(ctx)
 
 	// Write log entry

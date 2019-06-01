@@ -15,7 +15,7 @@ var (
 )
 
 // Authorize returns an error if the given API POST request is not authorized.
-func (activity *ActivityConsumeAnime) Authorize(ctx *aero.Context, action string) error {
+func (activity *ActivityConsumeAnime) Authorize(ctx aero.Context, action string) error {
 	user := GetUserFromContext(ctx)
 
 	if user == nil {
@@ -35,7 +35,7 @@ func (activity *ActivityConsumeAnime) Save() {
 }
 
 // DeleteInContext deletes the activity in the given context.
-func (activity *ActivityConsumeAnime) DeleteInContext(ctx *aero.Context) error {
+func (activity *ActivityConsumeAnime) DeleteInContext(ctx aero.Context) error {
 	return activity.Delete()
 }
 
@@ -64,7 +64,7 @@ func (activity *ActivityConsumeAnime) Delete() error {
 // }
 
 // // Authorize returns an error if the given API request is not authorized.
-// func (activity *Activity) Authorize(ctx *aero.Context, action string) error {
+// func (activity *Activity) Authorize(ctx aero.Context, action string) error {
 // 	user := GetUserFromContext(ctx)
 
 // 	if user == nil {
@@ -75,6 +75,6 @@ func (activity *ActivityConsumeAnime) Delete() error {
 // }
 
 // // DeleteInContext deletes the activity in the given context.
-// func (activity *Activity) DeleteInContext(ctx *aero.Context) error {
+// func (activity *Activity) DeleteInContext(ctx aero.Context) error {
 // 	return activity.Delete()
 // }

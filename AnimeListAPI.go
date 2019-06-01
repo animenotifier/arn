@@ -23,7 +23,7 @@ func init() {
 }
 
 // Authorize returns an error if the given API request is not authorized.
-func (list *AnimeList) Authorize(ctx *aero.Context, action string) error {
+func (list *AnimeList) Authorize(ctx aero.Context, action string) error {
 	return AuthorizeIfLoggedInAndOwnData(ctx, "id")
 }
 

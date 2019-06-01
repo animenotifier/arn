@@ -39,7 +39,7 @@ func init() {
 }
 
 // Create sets the data for a new quote with data we received from the API request.
-func (quote *Quote) Create(ctx *aero.Context) error {
+func (quote *Quote) Create(ctx aero.Context) error {
 	user := GetUserFromContext(ctx)
 
 	if user == nil {
@@ -60,7 +60,7 @@ func (quote *Quote) Create(ctx *aero.Context) error {
 }
 
 // Edit saves a log entry for the edit.
-func (quote *Quote) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
+func (quote *Quote) Edit(ctx aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
 	user := GetUserFromContext(ctx)
 
 	// Write log entry
@@ -76,7 +76,7 @@ func (quote *Quote) Save() {
 }
 
 // DeleteInContext deletes the quote in the given context.
-func (quote *Quote) DeleteInContext(ctx *aero.Context) error {
+func (quote *Quote) DeleteInContext(ctx aero.Context) error {
 	user := GetUserFromContext(ctx)
 
 	// Write log entry
@@ -116,7 +116,7 @@ func (quote *Quote) Delete() error {
 }
 
 // Authorize returns an error if the given API request is not authorized.
-func (quote *Quote) Authorize(ctx *aero.Context, action string) error {
+func (quote *Quote) Authorize(ctx aero.Context, action string) error {
 	user := GetUserFromContext(ctx)
 
 	if user == nil {

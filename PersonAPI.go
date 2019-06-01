@@ -38,7 +38,7 @@ func init() {
 }
 
 // Authorize returns an error if the given API request is not authorized.
-func (person *Person) Authorize(ctx *aero.Context, action string) error {
+func (person *Person) Authorize(ctx aero.Context, action string) error {
 	user := GetUserFromContext(ctx)
 
 	if user == nil {
@@ -49,7 +49,7 @@ func (person *Person) Authorize(ctx *aero.Context, action string) error {
 }
 
 // Create sets the data for a new person with data we received from the API request.
-func (person *Person) Create(ctx *aero.Context) error {
+func (person *Person) Create(ctx aero.Context) error {
 	user := GetUserFromContext(ctx)
 
 	if user == nil {
@@ -68,22 +68,22 @@ func (person *Person) Create(ctx *aero.Context) error {
 }
 
 // Edit creates an edit log entry.
-func (person *Person) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {
+func (person *Person) Edit(ctx aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {
 	return edit(person, ctx, key, value, newValue)
 }
 
 // OnAppend saves a log entry.
-func (person *Person) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
+func (person *Person) OnAppend(ctx aero.Context, key string, index int, obj interface{}) {
 	onAppend(person, ctx, key, index, obj)
 }
 
 // OnRemove saves a log entry.
-func (person *Person) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
+func (person *Person) OnRemove(ctx aero.Context, key string, index int, obj interface{}) {
 	onRemove(person, ctx, key, index, obj)
 }
 
 // DeleteInContext deletes the person in the given context.
-func (person *Person) DeleteInContext(ctx *aero.Context) error {
+func (person *Person) DeleteInContext(ctx aero.Context) error {
 	user := GetUserFromContext(ctx)
 
 	// Write log entry

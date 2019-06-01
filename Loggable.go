@@ -15,7 +15,7 @@ type Loggable interface {
 }
 
 // edit creates an edit log entry.
-func edit(loggable Loggable, ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {
+func edit(loggable Loggable, ctx aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {
 	user := GetUserFromContext(ctx)
 
 	// Write log entry
@@ -26,14 +26,14 @@ func edit(loggable Loggable, ctx *aero.Context, key string, value reflect.Value,
 }
 
 // onAppend saves a log entry.
-func onAppend(loggable Loggable, ctx *aero.Context, key string, index int, obj interface{}) {
+func onAppend(loggable Loggable, ctx aero.Context, key string, index int, obj interface{}) {
 	user := GetUserFromContext(ctx)
 	logEntry := NewEditLogEntry(user.ID, "arrayAppend", loggable.TypeName(), loggable.GetID(), fmt.Sprintf("%s[%d]", key, index), "", fmt.Sprint(obj))
 	logEntry.Save()
 }
 
 // onRemove saves a log entry.
-func onRemove(loggable Loggable, ctx *aero.Context, key string, index int, obj interface{}) {
+func onRemove(loggable Loggable, ctx aero.Context, key string, index int, obj interface{}) {
 	user := GetUserFromContext(ctx)
 	logEntry := NewEditLogEntry(user.ID, "arrayRemove", loggable.TypeName(), loggable.GetID(), fmt.Sprintf("%s[%d]", key, index), fmt.Sprint(obj), "")
 	logEntry.Save()

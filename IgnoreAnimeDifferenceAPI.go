@@ -14,7 +14,7 @@ var (
 )
 
 // Authorize returns an error if the given API POST request is not authorized.
-func (ignore *IgnoreAnimeDifference) Authorize(ctx *aero.Context, action string) error {
+func (ignore *IgnoreAnimeDifference) Authorize(ctx aero.Context, action string) error {
 	user := GetUserFromContext(ctx)
 
 	if user == nil {
@@ -29,7 +29,7 @@ func (ignore *IgnoreAnimeDifference) Authorize(ctx *aero.Context, action string)
 }
 
 // Create constructs the values for this new object with the data we received from the API request.
-func (ignore *IgnoreAnimeDifference) Create(ctx *aero.Context) error {
+func (ignore *IgnoreAnimeDifference) Create(ctx aero.Context) error {
 	data, err := ctx.Request().Body().JSONObject()
 
 	if err != nil {

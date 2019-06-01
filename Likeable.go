@@ -28,7 +28,7 @@ func LikeAction() *api.Action {
 	return &api.Action{
 		Name:  "like",
 		Route: "/like",
-		Run: func(obj interface{}, ctx *aero.Context) error {
+		Run: func(obj interface{}, ctx aero.Context) error {
 			field := reflect.ValueOf(obj).Elem().FieldByName("IsDraft")
 
 			if field.IsValid() && field.Bool() {
@@ -62,7 +62,7 @@ func UnlikeAction() *api.Action {
 	return &api.Action{
 		Name:  "unlike",
 		Route: "/unlike",
-		Run: func(obj interface{}, ctx *aero.Context) error {
+		Run: func(obj interface{}, ctx aero.Context) error {
 			likeable := obj.(Likeable)
 			user := GetUserFromContext(ctx)
 

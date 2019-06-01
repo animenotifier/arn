@@ -21,7 +21,7 @@ func init() {
 		{
 			Name:  "add",
 			Route: "/add",
-			Run: func(obj interface{}, ctx *aero.Context) error {
+			Run: func(obj interface{}, ctx aero.Context) error {
 				subscriptions := obj.(*PushSubscriptions)
 
 				// Parse body
@@ -55,7 +55,7 @@ func init() {
 		{
 			Name:  "remove",
 			Route: "/remove",
-			Run: func(obj interface{}, ctx *aero.Context) error {
+			Run: func(obj interface{}, ctx aero.Context) error {
 				subscriptions := obj.(*PushSubscriptions)
 
 				// Parse body
@@ -95,7 +95,7 @@ func (list *PushSubscriptions) Filter() {
 }
 
 // ShouldFilter tells whether data needs to be filtered in the given context.
-func (list *PushSubscriptions) ShouldFilter(ctx *aero.Context) bool {
+func (list *PushSubscriptions) ShouldFilter(ctx aero.Context) bool {
 	ctxUser := GetUserFromContext(ctx)
 
 	if ctxUser != nil && ctxUser.Role == "admin" {
@@ -106,7 +106,7 @@ func (list *PushSubscriptions) ShouldFilter(ctx *aero.Context) bool {
 }
 
 // Authorize returns an error if the given API request is not authorized.
-func (list *PushSubscriptions) Authorize(ctx *aero.Context, action string) error {
+func (list *PushSubscriptions) Authorize(ctx aero.Context, action string) error {
 	return AuthorizeIfLoggedInAndOwnData(ctx, "id")
 }
 

@@ -26,7 +26,7 @@ func LockAction() *api.Action {
 	return &api.Action{
 		Name:  "lock",
 		Route: "/lock",
-		Run: func(obj interface{}, ctx *aero.Context) error {
+		Run: func(obj interface{}, ctx aero.Context) error {
 			lockable := obj.(Lockable)
 			user := GetUserFromContext(ctx)
 
@@ -54,7 +54,7 @@ func UnlockAction() *api.Action {
 	return &api.Action{
 		Name:  "unlock",
 		Route: "/unlock",
-		Run: func(obj interface{}, ctx *aero.Context) error {
+		Run: func(obj interface{}, ctx aero.Context) error {
 			lockable := obj.(Lockable)
 			user := GetUserFromContext(ctx)
 

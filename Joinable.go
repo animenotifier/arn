@@ -17,7 +17,7 @@ func JoinAction() *api.Action {
 	return &api.Action{
 		Name:  "join",
 		Route: "/join",
-		Run: func(obj interface{}, ctx *aero.Context) error {
+		Run: func(obj interface{}, ctx aero.Context) error {
 			user := GetUserFromContext(ctx)
 			joinable := obj.(Joinable)
 			err := joinable.Join(user)
@@ -37,7 +37,7 @@ func LeaveAction() *api.Action {
 	return &api.Action{
 		Name:  "leave",
 		Route: "/leave",
-		Run: func(obj interface{}, ctx *aero.Context) error {
+		Run: func(obj interface{}, ctx aero.Context) error {
 			user := GetUserFromContext(ctx)
 			joinable := obj.(Joinable)
 			err := joinable.Leave(user)

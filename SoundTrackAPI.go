@@ -41,7 +41,7 @@ func init() {
 }
 
 // Create sets the data for a new track with data we received from the API request.
-func (track *SoundTrack) Create(ctx *aero.Context) error {
+func (track *SoundTrack) Create(ctx aero.Context) error {
 	user := GetUserFromContext(ctx)
 
 	if user == nil {
@@ -60,7 +60,7 @@ func (track *SoundTrack) Create(ctx *aero.Context) error {
 }
 
 // Edit updates the external media object.
-func (track *SoundTrack) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
+func (track *SoundTrack) Edit(ctx aero.Context, key string, value reflect.Value, newValue reflect.Value) (bool, error) {
 	user := GetUserFromContext(ctx)
 
 	// Write log entry
@@ -91,17 +91,17 @@ func (track *SoundTrack) Edit(ctx *aero.Context, key string, value reflect.Value
 }
 
 // OnAppend saves a log entry.
-func (track *SoundTrack) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
+func (track *SoundTrack) OnAppend(ctx aero.Context, key string, index int, obj interface{}) {
 	onAppend(track, ctx, key, index, obj)
 }
 
 // OnRemove saves a log entry.
-func (track *SoundTrack) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
+func (track *SoundTrack) OnRemove(ctx aero.Context, key string, index int, obj interface{}) {
 	onRemove(track, ctx, key, index, obj)
 }
 
 // DeleteInContext deletes the track in the given context.
-func (track *SoundTrack) DeleteInContext(ctx *aero.Context) error {
+func (track *SoundTrack) DeleteInContext(ctx aero.Context) error {
 	user := GetUserFromContext(ctx)
 
 	// Write log entry
@@ -132,7 +132,7 @@ func (track *SoundTrack) Delete() error {
 }
 
 // Authorize returns an error if the given API POST request is not authorized.
-func (track *SoundTrack) Authorize(ctx *aero.Context, action string) error {
+func (track *SoundTrack) Authorize(ctx aero.Context, action string) error {
 	user := GetUserFromContext(ctx)
 
 	if user == nil {

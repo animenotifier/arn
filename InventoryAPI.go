@@ -14,7 +14,7 @@ func init() {
 		{
 			Name:  "use",
 			Route: "/use/:slot",
-			Run: func(obj interface{}, ctx *aero.Context) error {
+			Run: func(obj interface{}, ctx aero.Context) error {
 				inventory := obj.(*Inventory)
 				slotIndex, err := ctx.GetInt("slot")
 
@@ -64,7 +64,7 @@ func init() {
 		{
 			Name:  "swap",
 			Route: "/swap/:slot1/:slot2",
-			Run: func(obj interface{}, ctx *aero.Context) error {
+			Run: func(obj interface{}, ctx aero.Context) error {
 				inventory := obj.(*Inventory)
 				a, err := ctx.GetInt("slot1")
 
@@ -93,7 +93,7 @@ func init() {
 }
 
 // Authorize returns an error if the given API request is not authorized.
-func (inventory *Inventory) Authorize(ctx *aero.Context, action string) error {
+func (inventory *Inventory) Authorize(ctx aero.Context, action string) error {
 	return AuthorizeIfLoggedInAndOwnData(ctx, "id")
 }
 

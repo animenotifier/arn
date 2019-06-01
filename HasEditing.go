@@ -20,7 +20,7 @@ package arn
 // )
 
 // // Authorize returns an error if the given API POST request is not authorized.
-// func (editable *hasEditing) Authorize(ctx *aero.Context, action string) error {
+// func (editable *hasEditing) Authorize(ctx aero.Context, action string) error {
 // 	user := GetUserFromContext(ctx)
 
 // 	if user == nil || (user.Role != "editor" && user.Role != "admin") {
@@ -31,17 +31,17 @@ package arn
 // }
 
 // // Edit creates an edit log entry.
-// func (editable *hasEditing) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {
+// func (editable *hasEditing) Edit(ctx aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {
 // 	return edit(editable.Self(), ctx, key, value, newValue)
 // }
 
 // // OnAppend saves a log entry.
-// func (editable *hasEditing) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
+// func (editable *hasEditing) OnAppend(ctx aero.Context, key string, index int, obj interface{}) {
 // 	onAppend(editable.Self(), ctx, key, index, obj)
 // }
 
 // // OnRemove saves a log entry.
-// func (editable *hasEditing) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
+// func (editable *hasEditing) OnRemove(ctx aero.Context, key string, index int, obj interface{}) {
 // 	onRemove(editable.Self(), ctx, key, index, obj)
 // }
 

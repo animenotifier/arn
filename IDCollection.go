@@ -19,7 +19,7 @@ func AddAction() *api.Action {
 	return &api.Action{
 		Name:  "add",
 		Route: "/add/:item-id",
-		Run: func(obj interface{}, ctx *aero.Context) error {
+		Run: func(obj interface{}, ctx aero.Context) error {
 			list := obj.(IDCollection)
 			itemID := ctx.Get("item-id")
 			err := list.Add(itemID)
@@ -39,7 +39,7 @@ func RemoveAction() *api.Action {
 	return &api.Action{
 		Name:  "remove",
 		Route: "/remove/:item-id",
-		Run: func(obj interface{}, ctx *aero.Context) error {
+		Run: func(obj interface{}, ctx aero.Context) error {
 			list := obj.(IDCollection)
 			itemID := ctx.Get("item-id")
 

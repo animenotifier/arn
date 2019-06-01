@@ -36,7 +36,7 @@ func init() {
 }
 
 // Edit creates an edit log entry.
-func (anime *Anime) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {
+func (anime *Anime) Edit(ctx aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {
 	user := GetUserFromContext(ctx)
 
 	if key == "Status" {
@@ -71,17 +71,17 @@ func (anime *Anime) Edit(ctx *aero.Context, key string, value reflect.Value, new
 }
 
 // OnAppend saves a log entry.
-func (anime *Anime) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
+func (anime *Anime) OnAppend(ctx aero.Context, key string, index int, obj interface{}) {
 	onAppend(anime, ctx, key, index, obj)
 }
 
 // OnRemove saves a log entry.
-func (anime *Anime) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
+func (anime *Anime) OnRemove(ctx aero.Context, key string, index int, obj interface{}) {
 	onRemove(anime, ctx, key, index, obj)
 }
 
 // Authorize returns an error if the given API POST request is not authorized.
-func (anime *Anime) Authorize(ctx *aero.Context, action string) error {
+func (anime *Anime) Authorize(ctx aero.Context, action string) error {
 	user := GetUserFromContext(ctx)
 
 	if user == nil || (user.Role != "editor" && user.Role != "admin") {
@@ -92,7 +92,7 @@ func (anime *Anime) Authorize(ctx *aero.Context, action string) error {
 }
 
 // DeleteInContext deletes the anime in the given context.
-func (anime *Anime) DeleteInContext(ctx *aero.Context) error {
+func (anime *Anime) DeleteInContext(ctx aero.Context) error {
 	user := GetUserFromContext(ctx)
 
 	// Write log entry

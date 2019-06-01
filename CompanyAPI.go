@@ -37,7 +37,7 @@ func init() {
 }
 
 // Create sets the data for a new company with data we received from the API request.
-func (company *Company) Create(ctx *aero.Context) error {
+func (company *Company) Create(ctx aero.Context) error {
 	user := GetUserFromContext(ctx)
 
 	if user == nil {
@@ -57,17 +57,17 @@ func (company *Company) Create(ctx *aero.Context) error {
 }
 
 // Edit creates an edit log entry.
-func (company *Company) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {
+func (company *Company) Edit(ctx aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {
 	return edit(company, ctx, key, value, newValue)
 }
 
 // OnAppend saves a log entry.
-func (company *Company) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
+func (company *Company) OnAppend(ctx aero.Context, key string, index int, obj interface{}) {
 	onAppend(company, ctx, key, index, obj)
 }
 
 // OnRemove saves a log entry.
-func (company *Company) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
+func (company *Company) OnRemove(ctx aero.Context, key string, index int, obj interface{}) {
 	onRemove(company, ctx, key, index, obj)
 }
 
@@ -77,7 +77,7 @@ func (company *Company) Save() {
 }
 
 // DeleteInContext deletes the company in the given context.
-func (company *Company) DeleteInContext(ctx *aero.Context) error {
+func (company *Company) DeleteInContext(ctx aero.Context) error {
 	user := GetUserFromContext(ctx)
 
 	// Write log entry
@@ -124,7 +124,7 @@ func (company *Company) Delete() error {
 }
 
 // Authorize returns an error if the given API request is not authorized.
-func (company *Company) Authorize(ctx *aero.Context, action string) error {
+func (company *Company) Authorize(ctx aero.Context, action string) error {
 	user := GetUserFromContext(ctx)
 
 	if user == nil {

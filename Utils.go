@@ -56,7 +56,7 @@ func GenerateID(collection string) string {
 }
 
 // GetUserFromContext returns the logged in user for the given context.
-func GetUserFromContext(ctx *aero.Context) *User {
+func GetUserFromContext(ctx aero.Context) *User {
 	if !ctx.HasSession() {
 		return nil
 	}

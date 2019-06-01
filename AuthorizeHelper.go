@@ -8,7 +8,7 @@ import (
 
 // AuthorizeIfLoggedInAndOwnData authorizes the given request if a user is logged in
 // and the user ID matches the ID in the request.
-func AuthorizeIfLoggedInAndOwnData(ctx *aero.Context, userIDParameterName string) error {
+func AuthorizeIfLoggedInAndOwnData(ctx aero.Context, userIDParameterName string) error {
 	err := AuthorizeIfLoggedIn(ctx)
 
 	if err != nil {
@@ -25,7 +25,7 @@ func AuthorizeIfLoggedInAndOwnData(ctx *aero.Context, userIDParameterName string
 }
 
 // AuthorizeIfLoggedIn authorizes the given request if a user is logged in.
-func AuthorizeIfLoggedIn(ctx *aero.Context) error {
+func AuthorizeIfLoggedIn(ctx aero.Context) error {
 	if !ctx.HasSession() {
 		return errors.New("Neither logged in nor in session")
 	}

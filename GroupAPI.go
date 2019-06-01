@@ -38,7 +38,7 @@ func init() {
 }
 
 // Create ...
-func (group *Group) Create(ctx *aero.Context) error {
+func (group *Group) Create(ctx aero.Context) error {
 	user := GetUserFromContext(ctx)
 
 	if user == nil {
@@ -71,17 +71,17 @@ func (group *Group) Create(ctx *aero.Context) error {
 }
 
 // Edit creates an edit log entry.
-func (group *Group) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {
+func (group *Group) Edit(ctx aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {
 	return edit(group, ctx, key, value, newValue)
 }
 
 // OnAppend saves a log entry.
-func (group *Group) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
+func (group *Group) OnAppend(ctx aero.Context, key string, index int, obj interface{}) {
 	onAppend(group, ctx, key, index, obj)
 }
 
 // OnRemove saves a log entry.
-func (group *Group) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
+func (group *Group) OnRemove(ctx aero.Context, key string, index int, obj interface{}) {
 	onRemove(group, ctx, key, index, obj)
 }
 
@@ -102,7 +102,7 @@ func (group *Group) Delete() error {
 }
 
 // DeleteInContext deletes the amv in the given context.
-func (group *Group) DeleteInContext(ctx *aero.Context) error {
+func (group *Group) DeleteInContext(ctx aero.Context) error {
 	user := GetUserFromContext(ctx)
 
 	// Write log entry
@@ -113,7 +113,7 @@ func (group *Group) DeleteInContext(ctx *aero.Context) error {
 }
 
 // Authorize returns an error if the given API POST request is not authorized.
-func (group *Group) Authorize(ctx *aero.Context, action string) error {
+func (group *Group) Authorize(ctx aero.Context, action string) error {
 	user := GetUserFromContext(ctx)
 
 	if user == nil {

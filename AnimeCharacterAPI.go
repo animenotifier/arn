@@ -11,7 +11,7 @@ var (
 )
 
 // Create sets the data for new anime characters.
-func (character *AnimeCharacter) Create(ctx *aero.Context) error {
+func (character *AnimeCharacter) Create(ctx aero.Context) error {
 	character.Role = "supporting"
 	return nil
 }

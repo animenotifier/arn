@@ -11,7 +11,7 @@ var (
 )
 
 // Create sets the data for new external media.
-func (media *ExternalMedia) Create(ctx *aero.Context) error {
+func (media *ExternalMedia) Create(ctx aero.Context) error {
 	media.Service = "Youtube"
 	return nil
 }

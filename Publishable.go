@@ -24,7 +24,7 @@ func PublishAction() *api.Action {
 	return &api.Action{
 		Name:  "publish",
 		Route: "/publish",
-		Run: func(obj interface{}, ctx *aero.Context) error {
+		Run: func(obj interface{}, ctx aero.Context) error {
 			draft := obj.(Publishable)
 			err := draft.Publish()
 
@@ -43,7 +43,7 @@ func UnpublishAction() *api.Action {
 	return &api.Action{
 		Name:  "unpublish",
 		Route: "/unpublish",
-		Run: func(obj interface{}, ctx *aero.Context) error {
+		Run: func(obj interface{}, ctx aero.Context) error {
 			draft := obj.(Publishable)
 			err := draft.Unpublish()
 

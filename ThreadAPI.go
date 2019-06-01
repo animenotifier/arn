@@ -44,7 +44,7 @@ func init() {
 }
 
 // Authorize returns an error if the given API POST request is not authorized.
-func (thread *Thread) Authorize(ctx *aero.Context, action string) error {
+func (thread *Thread) Authorize(ctx aero.Context, action string) error {
 	if !ctx.HasSession() {
 		return errors.New("Neither logged in nor in session")
 	}
@@ -61,7 +61,7 @@ func (thread *Thread) Authorize(ctx *aero.Context, action string) error {
 }
 
 // Create sets the data for a new thread with data we received from the API request.
-func (thread *Thread) Create(ctx *aero.Context) error {
+func (thread *Thread) Create(ctx aero.Context) error {
 	data, err := ctx.Request().Body().JSONObject()
 
 	if err != nil {
@@ -124,22 +124,22 @@ func (thread *Thread) Create(ctx *aero.Context) error {
 }
 
 // Edit creates an edit log entry.
-func (thread *Thread) Edit(ctx *aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {
+func (thread *Thread) Edit(ctx aero.Context, key string, value reflect.Value, newValue reflect.Value) (consumed bool, err error) {
 	return edit(thread, ctx, key, value, newValue)
 }
 
 // OnAppend saves a log entry.
-func (thread *Thread) OnAppend(ctx *aero.Context, key string, index int, obj interface{}) {
+func (thread *Thread) OnAppend(ctx aero.Context, key string, index int, obj interface{}) {
 	onAppend(thread, ctx, key, index, obj)
 }
 
 // OnRemove saves a log entry.
-func (thread *Thread) OnRemove(ctx *aero.Context, key string, index int, obj interface{}) {
+func (thread *Thread) OnRemove(ctx aero.Context, key string, index int, obj interface{}) {
 	onRemove(thread, ctx, key, index, obj)
 }
 
 // AfterEdit sets the edited date on the thread object.
-func (thread *Thread) AfterEdit(ctx *aero.Context) error {
+func (thread *Thread) AfterEdit(ctx aero.Context) error {
 	thread.Edited = DateTimeUTC()
 	thread.html = markdown.Render(thread.Text)
 	return nil
@@ -151,7 +151,7 @@ func (thread *Thread) Save() {
 }
 
 // DeleteInContext deletes the thread in the given context.
-func (thread *Thread) DeleteInContext(ctx *aero.Context) error {
+func (thread *Thread) DeleteInContext(ctx aero.Context) error {
 	user := GetUserFromContext(ctx)
 
 	// Write log entry

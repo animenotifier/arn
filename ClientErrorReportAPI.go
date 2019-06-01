@@ -12,7 +12,7 @@ var (
 )
 
 // Create sets the data for a new report with data we received from the API request.
-func (report *ClientErrorReport) Create(ctx *aero.Context) error {
+func (report *ClientErrorReport) Create(ctx aero.Context) error {
 	data, err := ctx.Request().Body().JSONObject()
 
 	if err != nil {
@@ -45,7 +45,7 @@ func (report *ClientErrorReport) Save() {
 }
 
 // Authorize returns an error if the given API request is not authorized.
-func (report *ClientErrorReport) Authorize(ctx *aero.Context, action string) error {
+func (report *ClientErrorReport) Authorize(ctx aero.Context, action string) error {
 	if action == "create" {
 		return nil
 	}
