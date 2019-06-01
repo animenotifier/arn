@@ -17,6 +17,7 @@ type AnimeList struct {
 	sync.Mutex
 }
 
+
 // Add adds an anime to the list if it hasn't been added yet.
 func (list *AnimeList) Add(animeID string) error {
 	if list.Contains(animeID) {
@@ -236,6 +237,40 @@ func (list *AnimeList) Top(count int) []*AnimeListItem {
 	tmp := make([]*AnimeListItem, count)
 	copy(tmp, list.Items[:count])
 	return tmp
+}
+
+// CompareAnimeListItemByRating compare 2 AnimeListItems by their overall rating. return true if the first item has a strictly higher rating than the second.
+func CompareAnimeListItemByRating(item *AnimeListItem, otherItem *AnimeListItem) bool {
+	if item.Rating.Overall == otherItem.Rating.Overall {
+		return item.Anime().Title.Canonical < otherItem.Anime().Title.Canonical
+	}
+
+	return item.Rating.Overall > otherItem.Rating.Overall
+}
+
+// SortByAlgo sorts the anime list by anime title.
+func (list *AnimeList) SortByAlgo(algo string, user *User) {
+	list.Lock()
+	defer list.Unlock()
+
+	sort.Slice(list.Items, func(i, j int) bool {
+		anime := list.Items[i].Anime()
+		otherAnime := list.Items[j].Anime()
+		switch algo {
+		case sortByTitle:
+			return CompareAnimeByTile(anime, otherAnime, user)
+		case sortByStartDate:
+			return CompareAnimeByStartDate(anime, otherAnime)
+		case sortByEpisodeCount:
+			return CompareAnimeByEpisodeCount(anime, otherAnime)
+		case sortByEpisodeLength:
+			return CompareAnimeByEpisodeLength(anime, otherAnime)
+		default:
+			item := list.Items[i]
+			otherItem := list.Items[j]
+			return CompareAnimeListItemByRating(item, otherItem)
+		}
+	})
 }
 
 // Watching ...

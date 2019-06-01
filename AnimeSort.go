@@ -21,6 +21,10 @@ const (
 	movieBonus                = 0.28
 	agePenalty                = 11.0
 	ageThreshold              = 6 * 30 * 24 * time.Hour
+	sortByTitle               = "Title"
+	sortByStartDate           = "StartDate"
+	sortByEpisodeCount        = "EpisodeCount"
+	sortByEpisodeLength       = "EpisodeLength"
 )
 
 // SortAnimeByPopularity sorts the given slice of anime by popularity.
@@ -47,27 +51,88 @@ func SortAnimeByQualityDetailed(animes []*Anime, filterStatus string) {
 	sort.Slice(animes, func(i, j int) bool {
 		a := animes[i]
 		b := animes[j]
-
-		scoreA := a.Score()
-		scoreB := b.Score()
-
-		// If we show currently running shows, rank shows that started a long time ago a bit lower
-		if filterStatus == "current" {
-			if a.StartDate != "" && time.Since(a.StartDateTime()) > ageThreshold {
-				scoreA -= agePenalty
-			}
-
-			if b.StartDate != "" && time.Since(b.StartDateTime()) > ageThreshold {
-				scoreB -= agePenalty
-			}
-		}
-
-		if scoreA == scoreB {
-			return a.Title.Canonical < b.Title.Canonical
-		}
-
-		return scoreA > scoreB
+		return CompareAnimeByQualityDetailed(a, b, filterStatus)
 	})
+}
+
+// SortAnimeWithAlgo sorts the given slice of anime by the specified algo.
+func SortAnimeWithAlgo(animes []*Anime, filterStatus string, algo string, user *User) {
+	sort.Slice(animes, func(i, j int) bool {
+		anime := animes[i]
+		otherAnime := animes[j]
+
+		switch algo {
+		case sortByTitle:
+			return CompareAnimeByTile(anime, otherAnime, user)
+		case sortByStartDate:
+			return CompareAnimeByStartDate(anime, otherAnime)
+		case sortByEpisodeCount:
+			return CompareAnimeByEpisodeCount(anime, otherAnime)
+		case sortByEpisodeLength:
+			return CompareAnimeByEpisodeLength(anime, otherAnime)
+		default:
+			return CompareAnimeByQualityDetailed(anime, otherAnime, filterStatus)
+		}
+	})
+}
+
+// CompareAnimeByTile compare 2 Animes by their title. Use the user preferred title if a user is passed; otherwise, it uses the canonical one.
+func CompareAnimeByTile(anime *Anime, otherAnime *Anime, user *User) bool {
+	if anime.Title.ByUser(user) == otherAnime.Title.ByUser(user) {
+		return anime.Rating.Overall < otherAnime.Rating.Overall
+	}
+
+	return anime.Title.ByUser(user) < otherAnime.Title.ByUser(user)
+}
+
+// CompareAnimeByStartDate compare 2 Animes by their start date. return true if the first anime was aired strictly before the second.
+func CompareAnimeByStartDate(anime *Anime, otherAnime *Anime) bool {
+	if anime.StartDate == otherAnime.StartDate {
+		return anime.Title.Canonical < otherAnime.Title.Canonical
+	}
+
+	return anime.StartDate > otherAnime.StartDate
+}
+
+// CompareAnimeByEpisodeCount compare 2 Animes by their episode counts. return true if the first anime has strictly more episodes the second.
+func CompareAnimeByEpisodeCount(anime *Anime, otherAnime *Anime) bool {
+	if anime.EpisodeCount == otherAnime.EpisodeCount {
+		return anime.Title.Canonical < otherAnime.Title.Canonical
+	}
+
+	return anime.EpisodeCount > otherAnime.EpisodeCount
+}
+
+// CompareAnimeByEpisodeLength compare 2 Animes by their episode length. return true if the first anime episode are strictly longer the second.
+func CompareAnimeByEpisodeLength(anime *Anime, otherAnime *Anime) bool {
+	if anime.EpisodeLength == otherAnime.EpisodeLength {
+		return anime.EpisodeLength < otherAnime.EpisodeLength
+	}
+
+	return anime.EpisodeLength > otherAnime.EpisodeLength
+}
+
+// CompareAnimeByQualityDetailed compare 2 Anime by their quality. return true if the first anime has a strictly better score than second.
+func CompareAnimeByQualityDetailed(anime *Anime, otherAnime *Anime, filterStatus string) bool {
+	scoreA := anime.Score()
+	scoreB := otherAnime.Score()
+
+	// If we show currently running shows, rank shows that started a long time ago a bit lower
+	if filterStatus == "current" {
+		if anime.StartDate != "" && time.Since(anime.StartDateTime()) > ageThreshold {
+			scoreA -= agePenalty
+		}
+
+		if otherAnime.StartDate != "" && time.Since(otherAnime.StartDateTime()) > ageThreshold {
+			scoreB -= agePenalty
+		}
+	}
+
+	if scoreA == scoreB {
+		return anime.Title.Canonical < otherAnime.Title.Canonical
+	}
+
+	return scoreA > scoreB
 }
 
 // Score returns the score used for the anime ranking.
